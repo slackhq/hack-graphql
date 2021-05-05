@@ -1,0 +1,53 @@
+{
+  "name": "slack/hack-graphql",
+  "description": "GraphQL server implementation for Hack.",
+  "type": "library",
+  "license": [
+    "MIT"
+  ],
+  "authors": [
+    {
+      "name": "Michael Hahn",
+      "email": "mh@slack-corp.com"
+    }
+  ],
+  "require": {
+    "hhvm/hsl": "^4.41.0",
+    "slack/hack-graphql-common": "v0.1",
+    "slack/hack-graphql-tokenizer": "v0.1",
+    "slack/hack-graphql-parser": "v0.3"
+  },
+  "require-dev": {
+    "hhvm/hhast": "^4.53.4",
+    "facebook/fbexpect": "^2.7.4",
+    "hhvm/hacktest": "^2.1.2"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:mwildehahn/graphpinator-common.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:mwildehahn/graphpinator-tokenizer.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:mwildehahn/graphpinator-parser.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:mwildehahn/utils.git"
+    }
+  ]
+}
