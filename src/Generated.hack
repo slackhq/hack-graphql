@@ -1,14 +1,15 @@
 namespace Generated;
 
 final class Resolver {
-    public static function resolve(
+    public static async function resolve(
         \Graphpinator\Parser\ParsedRequest $request,
-    ): shape('data' => ?dict<string, mixed>, ?'errors' => vec<string>) {
+    ): Awaitable<shape('data' => ?dict<string, mixed>, ?'errors' => vec<string>)> {
+        // TODO: what does the spec say should actually be contained in the output?
         $out = shape('data' => dict[]);
         foreach ($request->getOperations() as $operation) {
             $data = dict[];
             foreach ($operation->getFields() as $field) {
-                self::resolveField($field, null, inout $data);
+                $data[$field->getName()] = await self::resolveField($field, null);
             }
 
             $out['data'][$operation->getType()] = $data;
@@ -17,44 +18,43 @@ final class Resolver {
         return $out;
     }
 
-    private static function resolveField(
+    private static async function resolveField(
         \Graphpinator\Parser\Field\Field $field,
         mixed $parent,
-        inout dict<string, mixed> $data,
-    ): void {
+    ): Awaitable<mixed> {
         $field_name = $field->getName();
 
         $resolved_type = null;
         $resolved_field = null;
 
         if ($parent is null) {
-            $resolved_field = Query::resolveField($field_name);
+            $resolved_field = await Query::resolveField($field_name);
             $resolved_type = Query::resolveType($field_name);
         } else if ($parent is \User) {
-            $resolved_field = User::resolveField($field_name, $parent);
+            $resolved_field = await User::resolveField($field_name, $parent);
             $resolved_type = User::resolveType($field_name);
         } else if ($parent is \Team) {
-            $resolved_field = Team::resolveField($field_name, $parent);
+            $resolved_field = await Team::resolveField($field_name, $parent);
             $resolved_type = Team::resolveType($field_name);
         }
 
         if ($resolved_type is \Types\GQLObject) {
             $child_data = dict[];
             foreach ($field->getFields() ?? vec[] as $child_field) {
-                self::resolveField($child_field, $resolved_field, inout $child_data);
+                $child_data[$child_field->getName()] = await self::resolveField($child_field, $resolved_field);
             }
-            $data[$field_name] = $child_data;
-        } else {
-            $data[$field_name] = $resolved_field;
+            return $child_data;
         }
+
+        return $resolved_field;
     }
 }
 
 final abstract class Query {
-    public static function resolveField(string $field_name): mixed {
+    public static async function resolveField(string $field_name): Awaitable<mixed> {
         switch ($field_name) {
             case 'viewer':
-                return self::getViewer();
+                return await self::getViewer();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
@@ -69,13 +69,13 @@ final abstract class Query {
         }
     }
 
-    public static function getViewer(): \User {
+    public static async function getViewer(): Awaitable<\User> {
         return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
     }
 }
 
 final abstract class Team {
-    public static function resolveField(string $field_name, \Team $resolved_parent): mixed {
+    public static async function resolveField(string $field_name, \Team $resolved_parent): Awaitable<mixed> {
         switch ($field_name) {
             case 'id':
                 return $resolved_parent->getId();
@@ -99,7 +99,7 @@ final abstract class Team {
 }
 
 final abstract class User {
-    public static function resolveField(string $field_name, \User $resolved_parent): mixed {
+    public static async function resolveField(string $field_name, \User $resolved_parent): Awaitable<mixed> {
         switch ($field_name) {
             case 'id':
                 return $resolved_parent->getId();
