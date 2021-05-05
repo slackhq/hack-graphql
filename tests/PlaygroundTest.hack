@@ -20,4 +20,8 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $out = await \Generated\Resolver::resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
     }
+
+    public async function testGenerator(): Awaitable<void> {
+        await generate();
+    }
 }
