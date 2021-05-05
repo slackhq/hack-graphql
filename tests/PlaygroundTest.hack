@@ -1,5 +1,6 @@
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
+use namespace Slack\GraphQL;
 
 final class PlaygroundTest extends \Facebook\HackTest\HackTest {
     public async function testSelectTeamId(): Awaitable<void> {
@@ -22,6 +23,6 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
     }
 
     public async function testGenerator(): Awaitable<void> {
-        await generate();
+        await GraphQL\Generator::generate();
     }
 }

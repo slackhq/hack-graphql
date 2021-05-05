@@ -37,6 +37,8 @@ query {
 
 */
 
+use namespace Slack\GraphQL;
+
 <<__Memoize>>
 function getTeams(): dict<int, Team> {
     return dict[
@@ -44,43 +46,43 @@ function getTeams(): dict<int, Team> {
     ];
 }
 
-<<GraphQLObject('User', 'User')>>
+<<GraphQL\Object('User', 'User')>>
 final class User {
     public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
 
-    <<GraphQLField('id', 'ID of the user')>>
+    <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int {
         return $this->data['id'];
     }
 
-    <<GraphQLField('name', 'Name of the user')>>
+    <<GraphQL\Field('name', 'Name of the user')>>
     public function getName(): string {
         return $this->data['name'];
     }
 
-    <<GraphQLField('team', 'Team the user belongs to')>>
+    <<GraphQL\Field('team', 'Team the user belongs to')>>
     public function getTeam(): \Team {
         return getTeams()[$this->data['team_id']];
     }
 }
 
-<<GraphQLObject('Team', 'Team')>>
+<<GraphQL\Object('Team', 'Team')>>
 final class Team {
     public function __construct(private shape('id' => int, 'name' => string) $data) {}
 
-    <<GraphQLField('id', 'ID of the team')>>
+    <<GraphQL\Field('id', 'ID of the team')>>
     public function getId(): int {
         return $this->data['id'];
     }
 
-    <<GraphQLField('name', 'Name of the team')>>
+    <<GraphQL\Field('name', 'Name of the team')>>
     public function getName(): string {
         return $this->data['name'];
     }
 }
 
 abstract final class UserQueryAttributes {
-    <<GraphQLQueryRootField('viewer', 'Authenticated viewer')>>
+    <<GraphQL\QueryRootField('viewer', 'Authenticated viewer')>>
     public static async function getViewer(): Awaitable<\User> {
         return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
     }

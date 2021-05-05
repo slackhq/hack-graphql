@@ -38,7 +38,7 @@ final class Resolver {
             $resolved_type = Team::resolveType($field_name);
         }
 
-        if ($resolved_type is \Types\GQLObject) {
+        if ($resolved_type is \Slack\GraphQL\Types\ObjectType) {
             $child_data = dict[];
             foreach ($field->getFields() ?? vec[] as $child_field) {
                 $child_data[$child_field->getName()] = await self::resolveField($child_field, $resolved_field);
@@ -60,10 +60,10 @@ final abstract class Query {
         }
     }
 
-    public static function resolveType(string $field_name): \Types\Base {
+    public static function resolveType(string $field_name): \Slack\GraphQL\Types\BaseType {
         switch ($field_name) {
             case 'viewer':
-                return new \Types\GQLObject();
+                return new \Slack\GraphQL\Types\ObjectType();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
@@ -82,12 +82,12 @@ final abstract class Team {
         }
     }
 
-    public static function resolveType(string $field_name): \Types\Base {
+    public static function resolveType(string $field_name): \Slack\GraphQL\Types\BaseType {
         switch ($field_name) {
             case 'id':
-                return new \Types\GQLInt();
+                return new \Slack\GraphQL\Types\IntType();
             case 'name':
-                return new \Types\GQLString();
+                return new \Slack\GraphQL\Types\StringType();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
@@ -108,14 +108,14 @@ final abstract class User {
         }
     }
 
-    public static function resolveType(string $field_name): \Types\Base {
+    public static function resolveType(string $field_name): \Slack\GraphQL\Types\BaseType {
         switch ($field_name) {
             case 'id':
-                return new \Types\GQLInt();
+                return new \Slack\GraphQL\Types\IntType();
             case 'name':
-                return new \Types\GQLInt();
+                return new \Slack\GraphQL\Types\IntType();
             case 'team':
-                return new \Types\GQLObject();
+                return new \Slack\GraphQL\Types\ObjectType();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }

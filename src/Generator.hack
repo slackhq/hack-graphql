@@ -1,3 +1,5 @@
+namespace Slack\GraphQL;
+
 use namespace Facebook\HHAST;
 
 // - [x] support searching for classes and printing out the name
@@ -6,29 +8,33 @@ use namespace Facebook\HHAST;
 // - [ ] support codegening a class for any GraphQLObject
 // - [ ] support codegening the resolver
 
-async function generate(): Awaitable<void> {
-    $script = await HHAST\from_file_async(HHAST\File::fromPath(__DIR__.'/Playground.hack'));
+final abstract class Generator {
 
-    foreach ($script->getDescendantsOfType(HHAST\ClassishDeclaration::class) as $classish) {
-        $has_attribute = $classish->getFirstDescendantOfType(HHAST\OldAttributeSpecification::class) is nonnull;
-        if (!$has_attribute) continue;
+    public static async function generate(): Awaitable<void> {
+        $script = await HHAST\from_file_async(HHAST\File::fromPath(__DIR__.'/Playground.hack'));
 
-        $rc = new ReflectionClass($classish->getName()->getText());
-        $graphql_object = $rc->getAttributeClass(GraphQLObject::class);
-        if ($graphql_object is nonnull) {
-            print_r(dict['name' => $classish->getName()->getText(), 'graphql_object' => $graphql_object]);
+        foreach ($script->getDescendantsOfType(HHAST\ClassishDeclaration::class) as $classish) {
+            $has_attribute = $classish->getFirstDescendantOfType(HHAST\OldAttributeSpecification::class) is nonnull;
+            if (!$has_attribute) continue;
 
-            foreach ($classish->getDescendantsOfType(HHAST\MethodishDeclaration::class) as $methodish) {
-                if (!$methodish->hasAttribute()) continue;
+            $rc = new \ReflectionClass($classish->getName()->getText());
+            $graphql_object = $rc->getAttributeClass(Object::class);
+            if ($graphql_object is nonnull) {
+                \print_r(dict['name' => $classish->getName()->getText(), 'graphql_object' => $graphql_object]);
 
-                $method_name = $methodish->getFunctionDeclHeader()->getName()->getText();
-                $rm = new ReflectionMethod($classish->getName()->getText(), $method_name);
-                $graphql_field = $rm->getAttributeClass(GraphQLField::class);
-                if ($graphql_field is nonnull) {
-                    print_r(dict['name' => $method_name, 'graphql_field' => $graphql_field]);
+                foreach ($classish->getDescendantsOfType(HHAST\MethodishDeclaration::class) as $methodish) {
+                    if (!$methodish->hasAttribute()) continue;
+
+                    $method_name = $methodish->getFunctionDeclHeader()->getName()->getText();
+                    $rm = new \ReflectionMethod($classish->getName()->getText(), $method_name);
+                    $graphql_field = $rm->getAttributeClass(Field::class);
+                    if ($graphql_field is nonnull) {
+                        \print_r(dict['name' => $method_name, 'graphql_field' => $graphql_field]);
+                    }
                 }
             }
-        }
 
+        }
     }
+
 }
