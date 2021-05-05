@@ -4,8 +4,125 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c599c66522fac8f1fa924165a4c1305",
+    "content-hash": "e3fa7436cd68c3454fe44d4ce2cab073",
     "packages": [
+        {
+            "name": "facebook/hack-codegen",
+            "version": "v4.3.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hack-codegen.git",
+                "reference": "329e87a3deba512e7ee681ab6bb10a2869839460"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hack-codegen/zipball/329e87a3deba512e7ee681ab6bb10a2869839460",
+                "reference": "329e87a3deba512e7ee681ab6bb10a2869839460",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^4.25",
+                "hhvm/hhvm-autoload": "^2.0|^3.0",
+                "hhvm/hsl": "^4.0"
+            },
+            "require-dev": {
+                "facebook/difflib": "^1.0",
+                "facebook/fbexpect": "^2.6.1",
+                "hhvm/hacktest": "^2.0",
+                "hhvm/hhast": "^4.0",
+                "hhvm/type-assert": "^3.1|^4.0"
+            },
+            "bin": [
+                "bin/hh-codegen-verify-signatures",
+                "bin/hh-codegen-verify-signatures.hack"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Fred Emmott",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Drew Hoskins",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Gaurav Kumar",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Alejandro Marcu",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Matthieu Martin",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Hack Codegen is a library for programatically generating Hack code",
+            "keywords": [
+                "code generation",
+                "hack"
+            ],
+            "support": {
+                "issues": "https://github.com/hhvm/hack-codegen/issues",
+                "source": "https://github.com/hhvm/hack-codegen/tree/v4.3.12"
+            },
+            "time": "2020-09-21T21:12:16+00:00"
+        },
+        {
+            "name": "hhvm/hhvm-autoload",
+            "version": "v3.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hhvm-autoload.git",
+                "reference": "9fbe10a1a11783085f3165cceb102b67af403aca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/9fbe10a1a11783085f3165cceb102b67af403aca",
+                "reference": "9fbe10a1a11783085f3165cceb102b67af403aca",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "hhvm": "^4.25",
+                "hhvm/hsl": "^4.0"
+            },
+            "replace": {
+                "facebook/hhvm-autoload": "1.*"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1",
+                "hhvm/hacktest": "^2.0"
+            },
+            "bin": [
+                "bin/hh-autoload",
+                "bin/hh-autoload.hack"
+            ],
+            "type": "composer-plugin",
+            "extra": {
+                "class": [
+                    "Facebook\\AutoloadMap\\ComposerPlugin"
+                ],
+                "branch-alias": {
+                    "dev-master": "2.x-dev",
+                    "dev-CI_current_pull_request": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "ComposerPlugin.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/hhvm/hhvm-autoload/issues",
+                "source": "https://github.com/hhvm/hhvm-autoload/tree/v3.1.6"
+            },
+            "time": "2020-11-09T23:44:33+00:00"
+        },
         {
             "name": "hhvm/hsl",
             "version": "v4.41.0",
@@ -462,58 +579,6 @@
                 "source": "https://github.com/hhvm/hhast/tree/v4.53.4"
             },
             "time": "2020-05-21T15:55:34+00:00"
-        },
-        {
-            "name": "hhvm/hhvm-autoload",
-            "version": "v3.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/hhvm-autoload.git",
-                "reference": "9fbe10a1a11783085f3165cceb102b67af403aca"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/9fbe10a1a11783085f3165cceb102b67af403aca",
-                "reference": "9fbe10a1a11783085f3165cceb102b67af403aca",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0|^2.0",
-                "hhvm": "^4.25",
-                "hhvm/hsl": "^4.0"
-            },
-            "replace": {
-                "facebook/hhvm-autoload": "1.*"
-            },
-            "require-dev": {
-                "facebook/fbexpect": "^2.1",
-                "hhvm/hacktest": "^2.0"
-            },
-            "bin": [
-                "bin/hh-autoload",
-                "bin/hh-autoload.hack"
-            ],
-            "type": "composer-plugin",
-            "extra": {
-                "class": [
-                    "Facebook\\AutoloadMap\\ComposerPlugin"
-                ],
-                "branch-alias": {
-                    "dev-master": "2.x-dev",
-                    "dev-CI_current_pull_request": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "ComposerPlugin.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "support": {
-                "issues": "https://github.com/hhvm/hhvm-autoload/issues",
-                "source": "https://github.com/hhvm/hhvm-autoload/tree/v3.1.6"
-            },
-            "time": "2020-11-09T23:44:33+00:00"
         },
         {
             "name": "hhvm/hsl-experimental",
