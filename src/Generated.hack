@@ -54,7 +54,7 @@ final abstract class Query {
     public static async function resolveField(string $field_name): Awaitable<mixed> {
         switch ($field_name) {
             case 'viewer':
-                return await self::getViewer();
+                return await \UserQueryAttributes::getViewer();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
@@ -67,10 +67,6 @@ final abstract class Query {
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
-    }
-
-    public static async function getViewer(): Awaitable<\User> {
-        return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
     }
 }
 
