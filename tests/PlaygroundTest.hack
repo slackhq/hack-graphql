@@ -8,7 +8,9 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
-        $out = await \Generated\Resolver::resolve($request);
+        $resolver = new GraphQL\Resolver(\Generated\Schema::class);
+
+        $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['id'])->toBeSame(1);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['id'])->toBeSame(1);
     }
@@ -18,11 +20,12 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
-        $out = await \Generated\Resolver::resolve($request);
+        $resolver = new GraphQL\Resolver(\Generated\Schema::class);
+        $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
     }
 
     public async function testGenerator(): Awaitable<void> {
-        await GraphQL\Generator::generate();
+        await GraphQL\Generator::generate(__DIR__.'/../src/playground/Playground.hack');
     }
 }

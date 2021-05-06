@@ -1,24 +1,7 @@
 namespace Generated;
 
-final class Resolver {
-    public static async function resolve(
-        \Graphpinator\Parser\ParsedRequest $request,
-    ): Awaitable<shape('data' => ?dict<string, mixed>, ?'errors' => vec<string>)> {
-        // TODO: what does the spec say should actually be contained in the output?
-        $out = shape('data' => dict[]);
-        foreach ($request->getOperations() as $operation) {
-            $data = dict[];
-            foreach ($operation->getFields() as $field) {
-                $data[$field->getName()] = await self::resolveField($field, null);
-            }
-
-            $out['data'][$operation->getType()] = $data;
-        }
-
-        return $out;
-    }
-
-    private static async function resolveField(
+final abstract class Schema extends \Slack\GraphQL\BaseSchema {
+    public static async function resolveField(
         \Graphpinator\Parser\Field\Field $field,
         mixed $parent,
     ): Awaitable<mixed> {

@@ -10,8 +10,8 @@ use namespace Facebook\HHAST;
 
 final abstract class Generator {
 
-    public static async function generate(): Awaitable<void> {
-        $script = await HHAST\from_file_async(HHAST\File::fromPath(__DIR__.'/Playground.hack'));
+    public static async function generate(string $path): Awaitable<void> {
+        $script = await HHAST\from_file_async(HHAST\File::fromPath($path));
 
         foreach ($script->getDescendantsOfType(HHAST\ClassishDeclaration::class) as $classish) {
             $has_attribute = $classish->getFirstDescendantOfType(HHAST\OldAttributeSpecification::class) is nonnull;
