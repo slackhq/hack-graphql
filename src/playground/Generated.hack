@@ -1,40 +1,24 @@
 namespace Generated;
 
+use namespace HH\Lib\Dict;
+
 final abstract class Schema extends \Slack\GraphQL\BaseSchema {
-    public static async function resolveField(
-        \Graphpinator\Parser\Field\Field $field,
-        mixed $parent,
-    ): Awaitable<mixed> {
-        $field_name = $field->getName();
+    public static async function resolveQuery(\Graphpinator\Parser\Operation\Operation $operation): Awaitable<mixed> {
+        $query = new Query();
 
-        $resolved_type = null;
-        $resolved_field = null;
-
-        if ($parent is null) {
-            $resolved_field = await Query::resolveField($field_name);
-            $resolved_type = Query::resolveType($field_name);
-        } else if ($parent is \User) {
-            $resolved_field = await User::resolveField($field_name, $parent);
-            $resolved_type = User::resolveType($field_name);
-        } else if ($parent is \Team) {
-            $resolved_field = await Team::resolveField($field_name, $parent);
-            $resolved_type = Team::resolveType($field_name);
+        $data = dict[];
+        foreach ($operation->getFields() as $field) {
+            $data[$field->getName()] = self::resolveField($field, $query, null);
         }
 
-        if ($resolved_type is \Slack\GraphQL\Types\ObjectType) {
-            $child_data = dict[];
-            foreach ($field->getFields() ?? vec[] as $child_field) {
-                $child_data[$child_field->getName()] = await self::resolveField($child_field, $resolved_field);
-            }
-            return $child_data;
-        }
-
-        return $resolved_field;
+        return await Dict\from_async($data);
     }
 }
 
-final abstract class Query {
-    public static async function resolveField(string $field_name): Awaitable<mixed> {
+final class Query extends \Slack\GraphQL\Types\ObjectType {
+    const type THackType = null;
+
+    public static async function resolveField(string $field_name, self::THackType $_): Awaitable<mixed> {
         switch ($field_name) {
             case 'viewer':
                 return await \UserQueryAttributes::getViewer();
@@ -46,15 +30,17 @@ final abstract class Query {
     public static function resolveType(string $field_name): \Slack\GraphQL\Types\BaseType {
         switch ($field_name) {
             case 'viewer':
-                return new \Slack\GraphQL\Types\ObjectType();
+                return new User();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }
     }
 }
 
-final abstract class Team {
-    public static async function resolveField(string $field_name, \Team $resolved_parent): Awaitable<mixed> {
+final class Team extends \Slack\GraphQL\Types\ObjectType {
+    const type THackType = \Team;
+
+    public static async function resolveField(string $field_name, self::THackType $resolved_parent): Awaitable<mixed> {
         switch ($field_name) {
             case 'id':
                 return $resolved_parent->getId();
@@ -77,8 +63,10 @@ final abstract class Team {
     }
 }
 
-final abstract class User {
-    public static async function resolveField(string $field_name, \User $resolved_parent): Awaitable<mixed> {
+final class User extends \Slack\GraphQL\Types\ObjectType {
+    const type THackType = \User;
+
+    public static async function resolveField(string $field_name, self::THackType $resolved_parent): Awaitable<mixed> {
         switch ($field_name) {
             case 'id':
                 return $resolved_parent->getId();
@@ -98,7 +86,7 @@ final abstract class User {
             case 'name':
                 return new \Slack\GraphQL\Types\IntType();
             case 'team':
-                return new \Slack\GraphQL\Types\ObjectType();
+                return new Team();
             default:
                 throw new \Error('Unknown field: '.$field_name);
         }

@@ -11,12 +11,16 @@ final class Resolver {
         // TODO: what does the spec say should actually be contained in the output?
         $out = shape('data' => dict[]);
         foreach ($request->getOperations() as $operation) {
-            $data = dict[];
-            foreach ($operation->getFields() as $field) {
-                $data[$field->getName()] = await $schema::resolveField($field, null);
+            $operation_type = $operation->getType();
+            switch ($operation_type) {
+                case 'query':
+                    $data = await $schema::resolveQuery($operation);
+                    break;
+                default:
+                    throw new \Error('Unsupported operation: '.$operation_type);
             }
 
-            $out['data'][$operation->getType()] = $data;
+            $out['data'][$operation_type] = $data;
         }
 
         return $out;
