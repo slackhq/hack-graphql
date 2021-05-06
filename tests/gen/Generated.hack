@@ -4,7 +4,7 @@
  * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<d1d7af1711847a5e3a63b8d2938a1e62>>
+ * @generated SignedSource<<31cd4688584f8f6dff7297d23cbb8403>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace HH\Lib\Dict;
@@ -102,6 +102,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return $resolved_parent->getId();
       case 'name':
         return $resolved_parent->getName();
+      case 'num_users':
+        return await $resolved_parent->getNumUsers();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -115,6 +117,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return new \Slack\GraphQL\Types\IntType();
       case 'name':
         return new \Slack\GraphQL\Types\StringType();
+      case 'num_users':
+        return new \Slack\GraphQL\Types\IntType();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }

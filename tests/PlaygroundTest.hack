@@ -25,7 +25,7 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
     }
 
     public async function testSelectTeamName(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { viewer { team { name } } }');
+        $source = new \Graphpinator\Source\StringSource('query { viewer { team { name, num_users } } }');
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
@@ -33,5 +33,6 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
+        expect(($out['data'] as dynamic)['query']['viewer']['team']['num_users'])->toBeSame(3);
     }
 }
