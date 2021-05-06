@@ -4,11 +4,39 @@
  * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<cb129122d26fb4c63d2d690e01970cc9>>
+ * @generated SignedSource<<c7db2fcf2903aa1d7a28bef0f5557c15>>
  */
 namespace Slack\GraphQL\Test\Generated;
 
-class User extends \Slack\GraphQL\Types\ObjectType {
+final class Query extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = null;
+
+  public static async function resolveField(
+    string $field_name,
+    self::THackType $_,
+  ): Awaitable<mixed> {
+    switch ($field_name) {
+      case 'viewer':
+        return await \UserQueryAttributes::getViewer();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+
+  public static function resolveType(
+    string $field_name,
+  ): \Slack\GraphQL\Types\BaseType {
+    switch ($field_name) {
+      case 'viewer':
+        return new User();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class User extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \User;
 
@@ -44,7 +72,7 @@ class User extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-class Team extends \Slack\GraphQL\Types\ObjectType {
+final class Team extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Team;
 
