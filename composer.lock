@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3fa7436cd68c3454fe44d4ce2cab073",
+    "content-hash": "c6b22634a453155a14efb88bdfbf8422",
     "packages": [
         {
             "name": "facebook/hack-codegen",
@@ -213,22 +213,22 @@
         },
         {
             "name": "slack/hack-graphql-parser",
-            "version": "v0.3",
+            "version": "v0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mwildehahn/graphpinator-parser.git",
-                "reference": "ef58408519ca28d8070c19fb39a6332ef665ddba"
+                "reference": "439bddae5e575e958bae35561f3aa61a299cdcf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mwildehahn/graphpinator-parser/zipball/ef58408519ca28d8070c19fb39a6332ef665ddba",
-                "reference": "ef58408519ca28d8070c19fb39a6332ef665ddba",
+                "url": "https://api.github.com/repos/mwildehahn/graphpinator-parser/zipball/439bddae5e575e958bae35561f3aa61a299cdcf8",
+                "reference": "439bddae5e575e958bae35561f3aa61a299cdcf8",
                 "shasum": ""
             },
             "require": {
                 "hhvm/hsl": "^4.41.0",
                 "slack/hack-graphql-common": "v0.1",
-                "slack/hack-graphql-tokenizer": "v0.1",
+                "slack/hack-graphql-tokenizer": "v0.2",
                 "slack/hack-graphql-utils": "v0.1"
             },
             "require-dev": {
@@ -258,22 +258,22 @@
             ],
             "description": "Parser subproject for GraPHPinator: GraphQL server implementation for PHP.",
             "support": {
-                "source": "https://github.com/mwildehahn/graphpinator-parser/tree/v0.3"
+                "source": "https://github.com/mwildehahn/graphpinator-parser/tree/v0.4"
             },
-            "time": "2021-04-30T05:31:37+00:00"
+            "time": "2021-05-06T16:50:38+00:00"
         },
         {
             "name": "slack/hack-graphql-tokenizer",
-            "version": "v0.1",
+            "version": "v0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mwildehahn/graphpinator-tokenizer.git",
-                "reference": "49ae30fba889e935c2db2f59af1b0f3cafb27e1a"
+                "reference": "872528b312394e0b3e66953f43f08e919392ab83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mwildehahn/graphpinator-tokenizer/zipball/49ae30fba889e935c2db2f59af1b0f3cafb27e1a",
-                "reference": "49ae30fba889e935c2db2f59af1b0f3cafb27e1a",
+                "url": "https://api.github.com/repos/mwildehahn/graphpinator-tokenizer/zipball/872528b312394e0b3e66953f43f08e919392ab83",
+                "reference": "872528b312394e0b3e66953f43f08e919392ab83",
                 "shasum": ""
             },
             "require": {
@@ -307,9 +307,9 @@
             ],
             "description": "Tokenizer subproject for GraPHPinator: GraphQL server implementation for PHP.",
             "support": {
-                "source": "https://github.com/mwildehahn/graphpinator-tokenizer/tree/v0.1"
+                "source": "https://github.com/mwildehahn/graphpinator-tokenizer/tree/v0.3"
             },
-            "time": "2021-04-29T19:02:26+00:00"
+            "time": "2021-05-06T16:48:37+00:00"
         },
         {
             "name": "slack/hack-graphql-utils",

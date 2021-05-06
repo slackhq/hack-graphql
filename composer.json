@@ -15,8 +15,8 @@
     "hhvm/hsl": "^4.41.0",
     "facebook/hack-codegen": "^v4.3.12",
     "slack/hack-graphql-common": "v0.1",
-    "slack/hack-graphql-tokenizer": "v0.1",
-    "slack/hack-graphql-parser": "v0.3"
+    "slack/hack-graphql-tokenizer": "v0.2",
+    "slack/hack-graphql-parser": "v0.4"
   },
   "require-dev": {
     "hhvm/hhast": "^4.53.4",

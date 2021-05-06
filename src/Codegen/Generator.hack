@@ -198,6 +198,8 @@ class Field {
                 return \Slack\GraphQL\Types\IntType::class
                     |> Str\format('\%s', $$);
             default:
+                // TODO: this doesn't handle custom types, how do we make this
+                // better?
                 $rc = new \ReflectionClass($simple_return_type);
                 $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\Object::class);
                 if ($graphql_object is null) {
