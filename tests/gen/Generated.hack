@@ -4,9 +4,26 @@
  * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<c7db2fcf2903aa1d7a28bef0f5557c15>>
+ * @generated SignedSource<<d1d7af1711847a5e3a63b8d2938a1e62>>
  */
 namespace Slack\GraphQL\Test\Generated;
+use namespace HH\Lib\Dict;
+
+abstract final class Schema extends \Slack\GraphQL\BaseSchema {
+
+  public static async function resolveQuery(
+    \Graphpinator\Parser\Operation\Operation $operation,
+  ): Awaitable<mixed> {
+    $query = new Query();
+
+    $data = dict[];
+    foreach ($operation->getFields() as $field) {
+      $data[$field->getName()] = self::resolveField($field, $query, null);
+    }
+
+    return await Dict\from_async($data);
+  }
+}
 
 final class Query extends \Slack\GraphQL\Types\ObjectType {
 

@@ -248,7 +248,9 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->setNamespace('Slack\GraphQL\Test\Generated');
+            ->setNamespace('Slack\GraphQL\Test\Generated')
+            ->useNamespace('HH\Lib\Dict')
+            ->addClass($this->generateSchemaType($this->cg));
 
         foreach ($objects as $object) {
             $class = $object->generateObjectType($this->cg)
@@ -259,6 +261,36 @@ final class Generator {
 
         $file->save();
         return $file;
+    }
+
+    private function generateSchemaType(HackCodegenFactory $cg): CodegenClass {
+        $class = $cg->codegenClass('Schema')
+            ->setIsAbstract(true)
+            ->setIsFinal(true)
+            ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class);
+
+        $resolve_query_method = $cg->codegenMethod('resolveQuery')
+            ->setPublic()
+            ->setIsStatic(true)
+            ->setIsAsync(true)
+            ->setReturnType('Awaitable<mixed>')
+            ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class);
+
+        $hb = hb($cg)
+            ->addAssignment('$query', 'new Query()', HackBuilderValues::literal())
+            ->ensureEmptyLine()
+            ->addAssignment('$data', 'dict[]', HackBuilderValues::literal())
+            ->startForeachLoop('$operation->getFields()', null, '$field')
+            ->addLine('$data[$field->getName()] = self::resolveField($field, $query, null);')
+            ->endForeachLoop()
+            ->ensureEmptyLine()
+            ->addReturn('await Dict\from_async($data)', HackBuilderValues::literal());
+
+        $resolve_query_method->setBody($hb->getCode());
+
+        $class->addMethod($resolve_query_method);
+
+        return $class;
     }
 
     private async function collectObjects<T as Field>(string $from_path): Awaitable<vec<GeneratableObjectType>> {

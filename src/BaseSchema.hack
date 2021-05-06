@@ -2,6 +2,7 @@ namespace Slack\GraphQL;
 
 use namespace Facebook\TypeAssert;
 
+// TODO: this should be private
 abstract class BaseSchema {
     abstract public static function resolveQuery(\Graphpinator\Parser\Operation\Operation $operation): Awaitable<mixed>;
 

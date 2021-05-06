@@ -17,7 +17,7 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Generated\Schema::class);
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
 
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['id'])->toBeSame(1);
@@ -29,7 +29,8 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Generated\Schema::class);
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
     }
