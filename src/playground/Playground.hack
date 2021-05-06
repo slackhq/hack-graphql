@@ -42,7 +42,7 @@ use namespace Slack\GraphQL;
 <<__Memoize>>
 function getTeams(): dict<int, Team> {
     return dict[
-        1 => new Team(shape('id' => 1, 'name' => 'Test Team 1')),
+        1 => new Team(shape('id' => 1, 'name' => 'Test Team 1', 'num_users' => 3)),
     ];
 }
 
@@ -61,14 +61,14 @@ final class User {
     }
 
     <<GraphQL\Field('team', 'Team the user belongs to')>>
-    public function getTeam(): \Team {
+    public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
 }
 
 <<GraphQL\Object('Team', 'Team')>>
 final class Team {
-    public function __construct(private shape('id' => int, 'name' => string) $data) {}
+    public function __construct(private shape('id' => int, 'name' => string, 'num_users' => int) $data) {}
 
     <<GraphQL\Field('id', 'ID of the team')>>
     public function getId(): int {
@@ -78,6 +78,11 @@ final class Team {
     <<GraphQL\Field('name', 'Name of the team')>>
     public function getName(): string {
         return $this->data['name'];
+    }
+
+    <<GraphQL\Field('num_users', 'Number of users on the team')>>
+    public async function getNumUsers(): Awaitable<int> {
+        return $this->data['num_users'];
     }
 }
 
