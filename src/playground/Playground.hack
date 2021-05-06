@@ -61,7 +61,7 @@ final class User {
     }
 
     <<GraphQL\Field('team', 'Team the user belongs to')>>
-    public function getTeam(): \Team {
+    public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
 }

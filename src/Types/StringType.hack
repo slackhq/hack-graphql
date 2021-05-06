@@ -1,5 +1,5 @@
 namespace Slack\GraphQL\Types;
 
 final class StringType extends BaseType {
-    const type THackType = int;
+    const type THackType = string;
 }
