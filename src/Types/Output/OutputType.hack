@@ -14,5 +14,18 @@ abstract class OutputType extends BaseType {
         return $this->isNullable();
     }
 
+    /**
+     * Use these to get a singleton list type instance wrapping this type.
+     */
+    <<__Memoize>>
+    public function nonNullableListOf(): ListOutputType<this> {
+        return new ListOutputType($this, false);
+    }
+
+    <<__Memoize>>
+    public function nullableListOf(): ListOutputType<this> {
+        return new ListOutputType($this, true);
+    }
+
     // abstract public function accept(OutputTypeVisitor $visitor): mixed;
 }

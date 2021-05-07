@@ -43,4 +43,17 @@ abstract class InputType<TCoerced> extends BaseType {
      * 2. Variable values were validated/coerced.
      */
     abstract protected function assertValidVariableValue(mixed $value): TCoerced;
+
+    /**
+     * Use these to get a singleton list type instance wrapping this type.
+     */
+    <<__Memoize>>
+    public function nonNullableListOf(): ListInputType<TCoerced> {
+        return new ListInputType($this);
+    }
+
+    <<__Memoize>>
+    public function nullableListOf(): NullableInputType<vec<TCoerced>> {
+        return new NullableInputType($this->nonNullableListOf());
+    }
 }

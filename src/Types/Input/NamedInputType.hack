@@ -28,7 +28,7 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
     }
 
     /**
-     * Use these to get an instance or any related list type.
+     * Use these to get the singleton instance of this type.
      */
     <<__MemoizeLSB>>
     final public static function nonNullable(): this {
@@ -38,15 +38,5 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
     <<__MemoizeLSB>>
     final public static function nullable(): NullableInputType<this::TCoerced> {
         return new NullableInputType(static::nonNullable());
-    }
-
-    <<__Memoize>>
-    public function nonNullableListOf(): ListInputType<this::TCoerced> {
-        return new ListInputType($this);
-    }
-
-    <<__Memoize>>
-    public function nullableListOf(): NullableInputType<vec<this::TCoerced>> {
-        return new NullableInputType($this->nonNullableListOf());
     }
 }

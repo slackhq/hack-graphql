@@ -25,7 +25,7 @@ abstract class NamedOutputType extends OutputType {
     }
 
     /**
-     * Use these to get an instance or any related list type.
+     * Use these to get the singleton instance of this type.
      */
     <<__MemoizeLSB>>
     final public static function nonNullable(): this {
@@ -35,15 +35,5 @@ abstract class NamedOutputType extends OutputType {
     <<__MemoizeLSB>>
     final public static function nullable(): this {
         return new static(true);
-    }
-
-    <<__Memoize>>
-    public function nonNullableListOf(): ListOutputType<this> {
-        return new ListOutputType($this, false);
-    }
-
-    <<__Memoize>>
-    public function nullableListOf(): ListOutputType<this> {
-        return new ListOutputType($this, true);
     }
 }
