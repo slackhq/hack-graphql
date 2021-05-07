@@ -26,7 +26,7 @@ abstract class BaseSchema {
         }
 
         $child_data = dict[];
-        foreach ($field->getFields() ?? vec[] as $child_field) {
+        foreach (($field->getFields() as nonnull)->getFields() as $child_field) { // TODO: ->getFragments()
             $child_data[$child_field->getName()] = await self::resolveField($child_field, $field_type, $field_value);
         }
         return $child_data;

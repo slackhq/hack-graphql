@@ -4,14 +4,14 @@ final class Directive {
 
     public function __construct(
         private string $name,
-        private ?\Graphpinator\Parser\Value\ArgumentValueSet $arguments,
+        private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments,
     ) {}
 
     public function getName(): string {
         return $this->name;
     }
 
-    public function getArguments(): ?\Graphpinator\Parser\Value\ArgumentValueSet {
+    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
         return $this->arguments;
     }
 }

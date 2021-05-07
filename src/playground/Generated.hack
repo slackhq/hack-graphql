@@ -8,7 +8,7 @@ final abstract class Schema extends GraphQL\BaseSchema {
         $query = new Query();
 
         $data = dict[];
-        foreach ($operation->getFields() as $field) {
+        foreach ($operation->getFields()->getFields() as $field) { // TODO: ->getFragments()
             $data[$field->getName()] = self::resolveField($field, $query, null);
         }
 

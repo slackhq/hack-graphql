@@ -1,15 +1,19 @@
 namespace Graphpinator\Parser\Field;
 
-final class FieldSet extends \Infinityloop\Utils\ObjectSet<Field> {
+final class FieldSet {
 
-    private \Graphpinator\Parser\FragmentSpread\FragmentSpreadSet $fragments;
-
-    public function __construct(vec<Field> $fields, \Graphpinator\Parser\FragmentSpread\FragmentSpreadSet $fragments) {
-        parent::__construct($fields);
+    public function __construct(
+        private vec<Field> $fields,
+        private vec<\Graphpinator\Parser\FragmentSpread\FragmentSpread> $fragments,
+    ) {
         $this->fragments = $fragments;
     }
 
-    public function getFragmentSpreads(): \Graphpinator\Parser\FragmentSpread\FragmentSpreadSet {
+    public function getFields(): vec<Field> {
+        return $this->fields;
+    }
+
+    public function getFragmentSpreads(): vec<\Graphpinator\Parser\FragmentSpread\FragmentSpread> {
         return $this->fragments;
     }
 }

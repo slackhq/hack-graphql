@@ -3,15 +3,15 @@ namespace Graphpinator\Parser;
 final class ParsedRequest {
 
     public function __construct(
-        private \Graphpinator\Parser\Operation\OperationSet $operations,
-        private \Graphpinator\Parser\Fragment\FragmentSet $fragments,
+        private dict<string, \Graphpinator\Parser\Operation\Operation> $operations,
+        private dict<string, \Graphpinator\Parser\Fragment\Fragment> $fragments,
     ) {}
 
-    public function getOperations(): \Graphpinator\Parser\Operation\OperationSet {
+    public function getOperations(): dict<string, \Graphpinator\Parser\Operation\Operation> {
         return $this->operations;
     }
 
-    public function getFragments(): \Graphpinator\Parser\Fragment\FragmentSet {
+    public function getFragments(): dict<string, \Graphpinator\Parser\Fragment\Fragment> {
         return $this->fragments;
     }
 }

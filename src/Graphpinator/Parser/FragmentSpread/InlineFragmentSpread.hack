@@ -3,16 +3,16 @@ namespace Graphpinator\Parser\FragmentSpread;
 final class InlineFragmentSpread implements \Graphpinator\Parser\FragmentSpread\FragmentSpread {
 
     private \Graphpinator\Parser\Field\FieldSet $fields;
-    private \Graphpinator\Parser\Directive\DirectiveSet $directives;
+    private vec<\Graphpinator\Parser\Directive\Directive> $directives;
     private ?\Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond;
 
     public function __construct(
         \Graphpinator\Parser\Field\FieldSet $fields,
-        ?\Graphpinator\Parser\Directive\DirectiveSet $directives = null,
+        ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
         ?\Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond = null,
     ) {
         $this->fields = $fields;
-        $this->directives = $directives ?? new \Graphpinator\Parser\Directive\DirectiveSet();
+        $this->directives = $directives ?? vec[];
         $this->typeCond = $typeCond;
     }
 
@@ -20,7 +20,7 @@ final class InlineFragmentSpread implements \Graphpinator\Parser\FragmentSpread\
         return $this->fields;
     }
 
-    public function getDirectives(): \Graphpinator\Parser\Directive\DirectiveSet {
+    public function getDirectives(): vec<\Graphpinator\Parser\Directive\Directive> {
         return $this->directives;
     }
 

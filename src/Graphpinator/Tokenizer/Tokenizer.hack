@@ -168,9 +168,9 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
                 $this->token = new \Graphpinator\Tokenizer\Token(TokenType::ELLIP, $location);
 
                 return;
+            default:
+                throw new \Graphpinator\Exception\Tokenizer\UnknownSymbol($location);
         }
-
-        throw new \Graphpinator\Exception\Tokenizer\UnknownSymbol($location);
     }
 
     private function createWordToken(\Graphpinator\Common\Location $location): void {
