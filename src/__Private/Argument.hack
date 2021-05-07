@@ -10,4 +10,12 @@ final class Argument {
     public function asString(): string {
         return $this->value as string;
     }
+
+    public function asBool(): bool {
+        return $this->value as bool;
+    }
+
+    public function asMixed(): mixed {
+        return $this->value;
+    }
 }

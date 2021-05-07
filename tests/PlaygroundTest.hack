@@ -4,13 +4,13 @@ use namespace Slack\GraphQL;
 
 final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
-    // public static async function beforeFirstTestAsync(): Awaitable<void> {
-    //     $gen = new GraphQL\Codegen\Generator();
+    public static async function beforeFirstTestAsync(): Awaitable<void> {
+        $gen = new GraphQL\Codegen\Generator();
 
-    //     $from_path = __DIR__.'/../src/playground/Playground.hack';
-    //     $to_path = __DIR__.'/gen/Generated.hack';
-    //     await $gen->generate($from_path, $to_path);
-    // }
+        $from_path = __DIR__.'/../src/playground/Playground.hack';
+        $to_path = __DIR__.'/gen/Generated.hack';
+        await $gen->generate($from_path, $to_path);
+    }
 
     public async function testSelectTeamId(): Awaitable<void> {
         $source = new \Graphpinator\Source\StringSource('query { viewer { id, team { id } } }');
