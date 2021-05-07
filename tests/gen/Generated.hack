@@ -1,10 +1,11 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run
+ * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<31cd4688584f8f6dff7297d23cbb8403>>
+ * @generated SignedSource<<981365a30664f9cfd393e3dba99fbd01>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace HH\Lib\Dict;
@@ -17,7 +18,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     $query = new Query();
 
     $data = dict[];
-    foreach ($operation->getFields() as $field) {
+    foreach ($operation->getFields()->getFields() as $field) {
       $data[$field->getName()] = self::resolveField($field, $query, null);
     }
 

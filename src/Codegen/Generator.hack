@@ -282,7 +282,7 @@ final class Generator {
             ->addAssignment('$query', 'new Query()', HackBuilderValues::literal())
             ->ensureEmptyLine()
             ->addAssignment('$data', 'dict[]', HackBuilderValues::literal())
-            ->startForeachLoop('$operation->getFields()', null, '$field')
+            ->startForeachLoop('$operation->getFields()->getFields()', null, '$field') // TODO: ->getFragments()
             ->addLine('$data[$field->getName()] = self::resolveField($field, $query, null);')
             ->endForeachLoop()
             ->ensureEmptyLine()

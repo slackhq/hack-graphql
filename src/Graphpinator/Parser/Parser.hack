@@ -71,10 +71,7 @@ final class Parser {
                 }
         }
 
-        return new \Graphpinator\Parser\ParsedRequest(
-            new \Graphpinator\Parser\Operation\OperationSet($operations),
-            new \Graphpinator\Parser\Fragment\FragmentSet($fragments),
-        );
+        return new \Graphpinator\Parser\ParsedRequest($operations, $fragments);
     }
 
     /**
@@ -161,7 +158,7 @@ final class Parser {
         return $operationName;
     }
 
-    private function parseAfterOperationName(): ?\Graphpinator\Parser\Variable\VariableSet {
+    private function parseAfterOperationName(): ?dict<string, \Graphpinator\Parser\Variable\Variable> {
         $variables = null;
 
         if ($this->tokenizer->getCurrent()->getType() === TokenType::PAR_O) {
@@ -172,7 +169,7 @@ final class Parser {
         return $variables;
     }
 
-    private function parseAfterOperationVariables(): ?\Graphpinator\Parser\Directive\DirectiveSet {
+    private function parseAfterOperationVariables(): ?vec<\Graphpinator\Parser\Directive\Directive> {
         $directives = null;
 
         if ($this->tokenizer->getCurrent()->getType() === TokenType::DIRECTIVE) {
@@ -223,10 +220,7 @@ final class Parser {
 
         $this->tokenizer->getNext();
 
-        return new \Graphpinator\Parser\Field\FieldSet(
-            $fields,
-            new \Graphpinator\Parser\FragmentSpread\FragmentSpreadSet($fragments),
-        );
+        return new \Graphpinator\Parser\Field\FieldSet($fields, $fragments);
     }
 
     /**
@@ -320,7 +314,7 @@ final class Parser {
      * Expects iterator on previous token - opening parenthesis
      * Leaves iterator to last used token - closing parenthesis
      */
-    private function parseVariables(): \Graphpinator\Parser\Variable\VariableSet {
+    private function parseVariables(): dict<string, \Graphpinator\Parser\Variable\Variable> {
         $variables = dict[];
 
         while ($this->tokenizer->peekNext()->getType() !== TokenType::PAR_C) {
@@ -351,7 +345,7 @@ final class Parser {
 
         $this->tokenizer->getNext();
 
-        return new \Graphpinator\Parser\Variable\VariableSet($variables);
+        return $variables;
     }
 
     /**
@@ -360,8 +354,8 @@ final class Parser {
      * Expects iterator on previous token
      * Leaves iterator to last used token - closing parenthesis
      */
-    private function parseDirectives(): \Graphpinator\Parser\Directive\DirectiveSet {
-        $directives = new \Graphpinator\Parser\Directive\DirectiveSet();
+    private function parseDirectives(): vec<\Graphpinator\Parser\Directive\Directive> {
+        $directives = vec[];
 
         while ($this->tokenizer->peekNext()->getType() === TokenType::DIRECTIVE) {
             $this->tokenizer->getNext();
@@ -374,7 +368,7 @@ final class Parser {
                 $dirArguments = $this->parseArguments();
             }
 
-            $directives->offsetSet(null, new \Graphpinator\Parser\Directive\Directive($dirName, $dirArguments));
+            $directives[] = new \Graphpinator\Parser\Directive\Directive($dirName, $dirArguments);
         }
 
         return $directives;
@@ -386,7 +380,7 @@ final class Parser {
      * Expects iterator on previous token - opening parenthesis
      * Leaves iterator to last used token - closing parenthesis
      */
-    private function parseArguments(): \Graphpinator\Parser\Value\ArgumentValueSet {
+    private function parseArguments(): dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
         $arguments = dict[];
 
         while ($this->tokenizer->peekNext()->getType() !== TokenType::PAR_C) {
@@ -413,7 +407,7 @@ final class Parser {
 
         $this->tokenizer->getNext();
 
-        return new \Graphpinator\Parser\Value\ArgumentValueSet($arguments);
+        return $arguments;
     }
 
     /**

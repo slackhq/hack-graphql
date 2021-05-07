@@ -6,8 +6,8 @@ final class Field {
         private string $name,
         private ?string $alias = null,
         private ?\Graphpinator\Parser\Field\FieldSet $children = null,
-        private ?\Graphpinator\Parser\Value\ArgumentValueSet $arguments = null,
-        private ?\Graphpinator\Parser\Directive\DirectiveSet $directives = null,
+        private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments = null,
+        private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {}
 
     public function getName(): string {
@@ -22,11 +22,11 @@ final class Field {
         return $this->children;
     }
 
-    public function getArguments(): ?\Graphpinator\Parser\Value\ArgumentValueSet {
+    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
         return $this->arguments;
     }
 
-    public function getDirectives(): ?\Graphpinator\Parser\Directive\DirectiveSet {
+    public function getDirectives(): ?vec<\Graphpinator\Parser\Directive\Directive> {
         return $this->directives;
     }
 }

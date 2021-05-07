@@ -9,12 +9,12 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
         $result = $parser->parse();
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(0)->toBeSame($operation->getVariables()->count());
-        expect(0)->toBeSame($operation->getFields()->count());
+        expect(0)->toBeSame(C\count($operation->getVariables()));
+        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
         expect('query')->toBeSame($operation->getType());
         expect('queryName')->toBeSame($operation->getName());
     }
@@ -22,12 +22,12 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
     public function testQuery(): void {
         $result = \Graphpinator\Parser\Parser::parseString('query queryName {}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(0)->toBeSame($operation->getVariables()->count());
-        expect(0)->toBeSame($operation->getFields()->count());
+        expect(0)->toBeSame(C\count($operation->getVariables()));
+        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
         expect('query')->toBeSame($operation->getType());
         expect('queryName')->toBeSame($operation->getName());
     }
@@ -35,12 +35,12 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
     public function testMutation(): void {
         $result = \Graphpinator\Parser\Parser::parseString('mutation mutName {}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(0)->toBeSame($operation->getVariables()->count());
-        expect(0)->toBeSame($operation->getFields()->count());
+        expect(0)->toBeSame(C\count($operation->getVariables()));
+        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
         expect('mutation')->toBeSame($operation->getType());
         expect('mutName')->toBeSame($operation->getName());
     }
@@ -48,24 +48,24 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
     public function testSubscription(): void {
         $result = \Graphpinator\Parser\Parser::parseString('subscription subName {}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
-        expect(0)->toBeSame($result->getOperations()->current()->getVariables()->count());
-        expect(0)->toBeSame($result->getOperations()->current()->getFields()->count());
-        expect('subscription')->toBeSame($result->getOperations()->current()->getType());
-        expect('subName')->toBeSame($result->getOperations()->current()->getName());
+        expect(0)->toBeSame(C\count($result->getOperations() |> C\onlyx($$)->getVariables()));
+        expect(0)->toBeSame(C\count($result->getOperations() |> C\onlyx($$)->getFields()->getFields()));
+        expect('subscription')->toBeSame($result->getOperations() |> C\onlyx($$)->getType());
+        expect('subName')->toBeSame($result->getOperations() |> C\onlyx($$)->getName());
     }
 
     public function testQueryNoName(): void {
         $result = \Graphpinator\Parser\Parser::parseString('query {}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(0)->toBeSame($operation->getVariables()->count());
-        expect(0)->toBeSame($operation->getFields()->count());
+        expect(0)->toBeSame(C\count($operation->getVariables()));
+        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
         expect('query')->toBeSame($operation->getType());
         expect($operation->getName())->toBeSame('');
     }
@@ -73,12 +73,12 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
     public function testQueryShorthand(): void {
         $result = \Graphpinator\Parser\Parser::parseString('{}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(0)->toBeSame($operation->getVariables()->count());
-        expect(0)->toBeSame($operation->getFields()->count());
+        expect(0)->toBeSame(C\count($operation->getVariables()));
+        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
         expect('query')->toBeSame($operation->getType());
         expect($operation->getName())->toBeSame('');
     }
@@ -86,27 +86,27 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
     public function testQueryMultiple(): void {
         $result = \Graphpinator\Parser\Parser::parseString('query qName {} mutation mName {}');
 
-        expect(0)->toBeSame($result->getFragments()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
     }
 
     public function testDirective(): void {
         $result = \Graphpinator\Parser\Parser::parseString('query { field @directiveName(arg1: 123) }');
 
-        expect(0)->toBeSame($result->getFragments()->count());
-        expect(1)->toBeSame($result->getOperations()->count());
+        expect(0)->toBeSame(C\count($result->getFragments()));
+        expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect($operation->getFields()->count())->toBeSame(1);
+        expect(C\count($operation->getFields()->getFields()))->toBeSame(1);
 
-        $field = $operation->getFields()->offsetGet(0);
+        $field = $operation->getFields()->getFields() |> C\onlyx($$);
         $directives = $field->getDirectives() as nonnull;
-        expect($directives->count())->toBeSame(1);
-        expect($directives->offsetGet(0)->getName())->toBeSame('directiveName');
-        $arguments = $directives->offsetGet(0)->getArguments() as nonnull;
-        expect($arguments->count())->toBeSame(1);
-        expect($arguments->offsetExists('arg1'))->toBeTrue();
-        expect($arguments->offsetGet('arg1')->getName())->toBeSame('arg1');
-        expect($arguments->offsetGet('arg1')->getValue()->getRawValue())->toBeSame(123);
+        expect(C\count($directives))->toBeSame(1);
+        expect($directives |> C\onlyx($$)->getName())->toBeSame('directiveName');
+        $arguments = $directives |> C\onlyx($$)->getArguments() as nonnull;
+        expect(C\count($arguments))->toBeSame(1);
+        expect($arguments)->toContainKey('arg1');
+        expect($arguments['arg1']->getName())->toBeSame('arg1');
+        expect($arguments['arg1']->getValue()->getRawValue())->toBeSame(123);
     }
 
     // public function testFragment() : void

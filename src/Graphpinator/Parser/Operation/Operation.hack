@@ -4,23 +4,23 @@ final class Operation {
 
     private string $type;
     private string $name;
-    private \Graphpinator\Parser\Variable\VariableSet $variables;
-    private \Graphpinator\Parser\Directive\DirectiveSet $directives;
+    private dict<string, \Graphpinator\Parser\Variable\Variable> $variables;
+    private vec<\Graphpinator\Parser\Directive\Directive> $directives;
     private \Graphpinator\Parser\Field\FieldSet $children;
 
     public function __construct(
         shape(
             'type' => string,
             'name' => string,
-            ?'variables' => ?\Graphpinator\Parser\Variable\VariableSet,
-            ?'directives' => ?\Graphpinator\Parser\Directive\DirectiveSet,
+            ?'variables' => ?dict<string, \Graphpinator\Parser\Variable\Variable>,
+            ?'directives' => ?vec<\Graphpinator\Parser\Directive\Directive>,
             'children' => \Graphpinator\Parser\Field\FieldSet,
         ) $args,
     ) {
         $this->type = $args['type'];
         $this->name = $args['name'];
-        $this->variables = $args['variables'] ?? new \Graphpinator\Parser\Variable\VariableSet();
-        $this->directives = $args['directives'] ?? new \Graphpinator\Parser\Directive\DirectiveSet();
+        $this->variables = $args['variables'] ?? dict[];
+        $this->directives = $args['directives'] ?? vec[];
         $this->children = $args['children'];
     }
 
@@ -36,11 +36,11 @@ final class Operation {
         return $this->children;
     }
 
-    public function getVariables(): \Graphpinator\Parser\Variable\VariableSet {
+    public function getVariables(): dict<string, \Graphpinator\Parser\Variable\Variable> {
         return $this->variables;
     }
 
-    public function getDirectives(): \Graphpinator\Parser\Directive\DirectiveSet {
+    public function getDirectives(): vec<\Graphpinator\Parser\Directive\Directive> {
         return $this->directives;
     }
 }

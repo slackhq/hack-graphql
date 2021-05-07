@@ -5,7 +5,7 @@ final class Fragment {
     public function __construct(
         private string $name,
         private \Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond,
-        private \Graphpinator\Parser\Directive\DirectiveSet $directives,
+        private vec<\Graphpinator\Parser\Directive\Directive> $directives,
         private \Graphpinator\Parser\Field\FieldSet $fields,
     ) {}
 
@@ -21,7 +21,7 @@ final class Fragment {
         return $this->typeCond;
     }
 
-    public function getDirectives(): \Graphpinator\Parser\Directive\DirectiveSet {
+    public function getDirectives(): vec<\Graphpinator\Parser\Directive\Directive> {
         return $this->directives;
     }
 }
