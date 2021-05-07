@@ -1,0 +1,12 @@
+namespace Graphpinator\Directive;
+
+enum ExecutableDirectiveLocation: string as string {
+    QUERY = 'QUERY';
+    MUTATION = 'MUTATION';
+    SUBSCRIPTION = 'SUBSCRIPTION';
+    FIELD = 'FIELD';
+    INLINE_FRAGMENT = 'INLINE_FRAGMENT';
+    FRAGMENT_SPREAD = 'FRAGMENT_SPREAD';
+    FRAGMENT_DEFINITION = 'FRAGMENT_DEFINITION';
+    VARIABLE_DEFINITION = 'VARIABLE_DEFINITION';
+}
