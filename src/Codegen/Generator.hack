@@ -15,22 +15,6 @@ use type Facebook\HackCodegen\{
     HackBuilderValues,
 };
 
-// - [x] support searching for classes and printing out the name
-// - [x] support searching for methods tagged with GraphQLField
-// - [ ] support inspecting the method args for any method tagged GraphQLField
-// - [x] support codegening a class for any GraphQLObject
-// - [x] support codegening the query
-// - [ ] support codegening the schema
-
-// collect the objects
-// - name of the graphql object
-// - name of the class it decorates
-// - fields in the object
-
-// collect the fields in an object
-// - name of the field
-// - method + arg info for the method
-
 function hb(HackCodegenFactory $cg): HackBuilder {
     return new HackBuilder($cg->getConfig());
 }
@@ -52,7 +36,8 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
             ->setPublic()
             ->setReturnType('Awaitable<mixed>')
             ->addParameter('string $field_name')
-            ->addParameter($this->getResolveFieldResolvedParentParameter());
+            ->addParameter($this->getResolveFieldResolvedParentParameter())
+            ->addParameter($this->getResolveFieldArgumentsParameter());
 
         $hb = hb($cg);
         $hb->startSwitch('$field_name')
@@ -70,6 +55,11 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
         $method->setBody($hb->getCode());
 
         return $method;
+    }
+
+    private function getResolveFieldArgumentsParameter(): string {
+        $var_name = C\any($this->fields, $field ==> $field->hasArguments()) ? '$args' : '$_args';
+        return Str\format('vec<\Slack\GraphQL\__Private\Argument> %s', $var_name);
     }
 
     protected function generateResolveType(HackCodegenFactory $cg): CodegenMethod {
@@ -167,9 +157,10 @@ class Field {
         }
 
         $hb->returnCasef(
-            '%s$resolved_parent->%s()',
+            '%s$resolved_parent->%s(%s)',
             $return_prefix,
             $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
+            $this->getArgumentInvocationString(),
         );
     }
 
@@ -212,6 +203,33 @@ class Field {
         }
     }
 
+    public function hasArguments(): bool {
+        return $this->reflection_method->getNumberOfParameters() > 0;
+    }
+
+    protected function getArgumentInvocationString(): string {
+        $invocations = vec[];
+        foreach ($this->reflection_method->getParameters() as $index => $param) {
+            $as_type = $this->getArgumentAsTypeString($param);
+            $invocations[] = Str\format('$args[%d]->%s()', $index, $as_type);
+        }
+
+        return Str\join($invocations, ', ');
+    }
+
+    private function getArgumentAsTypeString(\ReflectionParameter $param): string {
+        switch ($param->getTypeText()) {
+            case 'HH\string':
+                return 'asString';
+            case 'HH\int':
+                return 'asInt';
+            case 'HH\bool':
+                return 'asBool';
+            default:
+                return 'asMixed';
+        }
+    }
+
 }
 
 class QueryField extends Field {
@@ -227,10 +245,11 @@ class QueryField extends Field {
         }
 
         $hb->returnCasef(
-            '%s\%s::%s()',
+            '%s\%s::%s(%s)',
             $return_prefix,
             $class_name,
             $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
+            $this->getArgumentInvocationString(),
         );
     }
 }
@@ -250,7 +269,6 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->setNamespace('Slack\GraphQL\Test\Generated')
             ->useNamespace('HH\Lib\Dict')
             ->addClass($this->generateSchemaType($this->cg));
 
@@ -261,7 +279,6 @@ final class Generator {
             $file->addClass($class);
         }
 
-        $file->save();
         return $file;
     }
 
@@ -276,14 +293,15 @@ final class Generator {
             ->setIsStatic(true)
             ->setIsAsync(true)
             ->setReturnType('Awaitable<mixed>')
-            ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class);
+            ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
+            ->addParameterf('\%s $variables', \Slack\GraphQL\__Private\Variables::class);
 
         $hb = hb($cg)
             ->addAssignment('$query', 'new Query()', HackBuilderValues::literal())
             ->ensureEmptyLine()
             ->addAssignment('$data', 'dict[]', HackBuilderValues::literal())
             ->startForeachLoop('$operation->getFields()->getFields()', null, '$field') // TODO: ->getFragments()
-            ->addLine('$data[$field->getName()] = self::resolveField($field, $query, null);')
+            ->addLine('$data[$field->getName()] = self::resolveField($field, $query, null, $variables);')
             ->endForeachLoop()
             ->ensureEmptyLine()
             ->addReturn('await Dict\from_async($data)', HackBuilderValues::literal());
