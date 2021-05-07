@@ -38,6 +38,7 @@ query {
 */
 
 use namespace Slack\GraphQL;
+use namespace HH\Lib\{Math, Vec};
 
 <<__Memoize>>
 function getTeams(): dict<int, Team> {
@@ -95,5 +96,10 @@ abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
     public static async function getUser(int $id): Awaitable<\User> {
         return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+    }
+
+    <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
+    public static function getNestedListSum(vec<vec<int>> $numbers): int {
+        return Math\sum(Vec\map($numbers, $inner ==> Math\sum($inner)));
     }
 }

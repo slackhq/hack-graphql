@@ -5,9 +5,10 @@
  * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<6038758170ed55545b1df61d19a1dbf9>>
+ * @generated SignedSource<<6e643145b86cdea84ab0f737331c75dc>>
  */
 namespace Slack\GraphQL\Test\Generated;
+use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Dict;
 
 abstract final class Schema extends \Slack\GraphQL\BaseSchema {
@@ -35,13 +36,16 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
   public static async function resolveField(
     string $field_name,
     self::THackType $_,
-    vec<\Slack\GraphQL\__Private\Argument> $args,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $args,
+    \Slack\GraphQL\__Private\Variables $vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
       case 'viewer':
         return await \UserQueryAttributes::getViewer();
       case 'user':
-        return await \UserQueryAttributes::getUser($args[0]->asInt());
+        return await \UserQueryAttributes::getUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
+      case 'nested_list_sum':
+        return \UserQueryAttributes::getNestedListSum(Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars));
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -55,6 +59,8 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return User::nullable();
       case 'user':
         return User::nullable();
+      case 'nested_list_sum':
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -69,7 +75,8 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
   public static async function resolveField(
     string $field_name,
     self::THackType $resolved_parent,
-    vec<\Slack\GraphQL\__Private\Argument> $_args,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
+    \Slack\GraphQL\__Private\Variables $_vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
       case 'id':
@@ -107,7 +114,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   public static async function resolveField(
     string $field_name,
     self::THackType $resolved_parent,
-    vec<\Slack\GraphQL\__Private\Argument> $_args,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
+    \Slack\GraphQL\__Private\Variables $_vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
       case 'id':
