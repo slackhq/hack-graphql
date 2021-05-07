@@ -9,7 +9,10 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
         $from_path = __DIR__.'/../src/playground/Playground.hack';
         $to_path = __DIR__.'/gen/Generated.hack';
-        await $gen->generate($from_path, $to_path);
+
+        $file = await $gen->generate($from_path, $to_path);
+        $file->setNamespace('Slack\GraphQL\Test\Generated');
+        $file->save();
     }
 
     public async function testSelectTeamId(): Awaitable<void> {

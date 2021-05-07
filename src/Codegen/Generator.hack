@@ -269,7 +269,6 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->setNamespace('Slack\GraphQL\Test\Generated')
             ->useNamespace('HH\Lib\Dict')
             ->addClass($this->generateSchemaType($this->cg));
 
@@ -280,7 +279,6 @@ final class Generator {
             $file->addClass($class);
         }
 
-        $file->save();
         return $file;
     }
 
