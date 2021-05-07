@@ -1,10 +1,10 @@
 namespace Graphpinator\Parser\Value;
 
-final class ObjectVal implements \Graphpinator\Parser\Value\Value {
+final class ObjectVal implements Value {
 
-    public function __construct(private dict<string, \Graphpinator\Parser\Value\Value> $value) {}
+    public function __construct(private dict<string, Value> $value) {}
 
-    public function getValue(): dict<string, \Graphpinator\Parser\Value\Value> {
+    public function getValue(): dict<string, Value> {
         return $this->value;
     }
 
@@ -12,8 +12,6 @@ final class ObjectVal implements \Graphpinator\Parser\Value\Value {
         $return = dict[];
 
         foreach ($this->value as $key => $value) {
-            \assert($value is Value);
-
             $return[$key] = $value->getRawValue();
         }
 

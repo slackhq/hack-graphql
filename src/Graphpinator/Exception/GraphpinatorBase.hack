@@ -47,7 +47,7 @@ abstract class GraphpinatorBase extends \Exception implements \JsonSerializable 
             $result['path'] = $this->path;
         }
 
-        if (\is_array($this->extensions)) {
+        if ($this->extensions is nonnull) {
             $result['extensions'] = $this->extensions;
         }
 

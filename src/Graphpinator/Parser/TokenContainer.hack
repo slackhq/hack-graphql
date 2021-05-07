@@ -28,7 +28,11 @@ final class TokenContainer implements \IteratorAggregate<\Graphpinator\Tokenizer
     }
 
     public function getPrev(): \Graphpinator\Tokenizer\Token {
-        \assert(\array_key_exists($this->currentIndex - 1, $this->tokens));
+        invariant(
+            \array_key_exists($this->currentIndex - 1, $this->tokens),
+            '%s called on the first token',
+            __METHOD__,
+        );
 
         --$this->currentIndex;
 

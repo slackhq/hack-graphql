@@ -84,9 +84,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
         switch ($this->source->getChar()) {
             case '"':
                 $quotes = $this->eatChars(
-                    static function(string $char): bool {
-                        return $char === '"';
-                    },
+                    $char ==> $char === '"',
                     3,
                 );
 
@@ -161,9 +159,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
 
                 return;
             case '.':
-                $dots = $this->eatChars(static function(string $char): bool {
-                    return $char === '.';
-                });
+                $dots = $this->eatChars($char ==> $char === '.');
 
                 if (\strlen($dots) !== 3) {
                     throw new \Graphpinator\Exception\Tokenizer\InvalidEllipsis($location);
@@ -193,7 +189,6 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
                 $this->token = new \Graphpinator\Tokenizer\Token(TokenType::SUBSCRIPTION, $location);
 
                 return;
-
             default:
         }
 
@@ -253,15 +248,11 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
     }
 
     private function skipWhiteSpace(): void {
-        $this->eatChars(static function(string $char): bool {
-            return $char !== \PHP_EOL && \ctype_space($char);
-        });
+        $this->eatChars($char ==> $char !== \PHP_EOL && \ctype_space($char));
     }
 
     private function eatComment(): string {
-        return $this->eatChars(static function(string $char): bool {
-            return $char !== \PHP_EOL;
-        });
+        return $this->eatChars($char ==> $char !== \PHP_EOL);
     }
 
     private function eatString(\Graphpinator\Common\Location $location): string {
@@ -294,9 +285,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
             switch ($this->source->getChar()) {
                 case '"':
                     $quotes = $this->eatChars(
-                        static function(string $char): bool {
-                            return $char === '"';
-                        },
+                        $char ==> $char === '"',
                         3,
                     );
 
@@ -310,9 +299,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
                 case '\\':
                     $this->source->next();
                     $quotes = $this->eatChars(
-                        static function(string $char): bool {
-                            return $char === '"';
-                        },
+                        $char ==> $char === '"',
                         3,
                     );
 
@@ -388,9 +375,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
         if ($escapedChar === 'u') {
             $this->source->next();
             $hexDec = $this->eatChars(
-                static function(string $char): bool {
-                    return \ctype_xdigit($char);
-                },
+                $char ==> \ctype_xdigit($char),
                 4,
             );
 
@@ -424,9 +409,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
             $this->source->next();
         }
 
-        $digits = $this->eatChars(static function(string $char): bool {
-            return \ctype_digit($char);
-        });
+        $digits = $this->eatChars($char ==> \ctype_digit($char));
         $digitCount = \strlen($digits);
 
         if ($digitCount === 0) {
@@ -441,9 +424,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
     }
 
     private function eatName(): string {
-        return $this->eatChars(static function(string $char): bool {
-            return $char === '_' || \ctype_alnum($char);
-        });
+        return $this->eatChars($char ==> $char === '_' || \ctype_alnum($char));
     }
 
     private function eatChars((function(string): bool) $condition, int $limit = \PHP_INT_MAX): string {

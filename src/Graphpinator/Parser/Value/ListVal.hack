@@ -1,6 +1,6 @@
 namespace Graphpinator\Parser\Value;
 
-final class ListVal implements \Graphpinator\Parser\Value\Value {
+final class ListVal implements Value {
 
     public function __construct(private vec<Value> $value) {}
 
@@ -12,7 +12,6 @@ final class ListVal implements \Graphpinator\Parser\Value\Value {
         $return = vec[];
 
         foreach ($this->value as $value) {
-            \assert($value is Value);
             $return[] = $value->getRawValue();
         }
 
