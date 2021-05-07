@@ -49,6 +49,18 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(3);
     }
 
+    public async function testNestedVariable(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource(
+            'query TestQuery($num: Int!) { nested_list_sum(numbers: [21, [$num, 14]]) }',
+        );
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        $request = $parser->parse();
+        $out = await $resolver->resolve($request, dict['num' => 7]);
+        expect(($out['data'] as dynamic)['query']['nested_list_sum'])->toBeSame(42);
+    }
+
     public async function testInlineArguments(): Awaitable<void> {
         $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id } }');
         $parser = new \Graphpinator\Parser\Parser($source);

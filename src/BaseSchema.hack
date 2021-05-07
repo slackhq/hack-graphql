@@ -16,24 +16,11 @@ abstract class BaseSchema {
         $field_name = $field->getName();
         $field_type = $parent_type::resolveType($field_name);
 
-        $field_args = vec[];
-        foreach ($field->getArguments() ?? vec[] as $field_arg) {
-            $value_type = $field_arg->getValue();
-
-            if ($value_type is \Graphpinator\Parser\Value\VariableRef) {
-                $value = $variables[$value_type->getVarName()];
-            } else {
-                $value = $field_arg->getValue()->getRawValue();
-            }
-
-            $field_args[] = new __Private\Argument($value);
-        }
-
         invariant($field_type is Types\NamedOutputType, 'TODO: List support');
 
         // assertValidValue enforces that resolveType and resolveField are consistent for $field_name.
         $field_value = $field_type->assertValidValue(
-            await $parent_type::resolveField($field_name, $parent, $field_args),
+            await $parent_type::resolveField($field_name, $parent, $field->getArguments() ?? dict[], $variables),
         );
 
         if (!$field_type is \Slack\GraphQL\Types\ObjectType) {

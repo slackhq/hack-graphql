@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
+use namespace Slack\GraphQL\Types;
 use namespace Facebook\HHAST;
 use namespace HH\Lib\{Str, Vec, C};
 use type Facebook\HackCodegen\{
@@ -37,7 +38,8 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
             ->setReturnType('Awaitable<mixed>')
             ->addParameter('string $field_name')
             ->addParameter($this->getResolveFieldResolvedParentParameter())
-            ->addParameter($this->getResolveFieldArgumentsParameter());
+            ->addParameter($this->getResolveFieldArgumentsParameter())
+            ->addParameter($this->getResolveFieldVariablesParameter());
 
         $hb = hb($cg);
         $hb->startSwitch('$field_name')
@@ -59,7 +61,12 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
 
     private function getResolveFieldArgumentsParameter(): string {
         $var_name = C\any($this->fields, $field ==> $field->hasArguments()) ? '$args' : '$_args';
-        return Str\format('vec<\Slack\GraphQL\__Private\Argument> %s', $var_name);
+        return Str\format('dict<string, \Graphpinator\Parser\Value\ArgumentValue> %s', $var_name);
+    }
+
+    private function getResolveFieldVariablesParameter(): string {
+        $var_name = C\any($this->fields, $field ==> $field->hasArguments()) ? '$vars' : '$_vars';
+        return Str\format('\Slack\GraphQL\__Private\Variables %s', $var_name);
     }
 
     protected function generateResolveType(HackCodegenFactory $cg): CodegenMethod {
@@ -214,26 +221,47 @@ class Field {
     protected function getArgumentInvocationString(): string {
         $invocations = vec[];
         foreach ($this->reflection_method->getParameters() as $index => $param) {
-            $as_type = $this->getArgumentAsTypeString($param);
-            $invocations[] = Str\format('$args[%d]->%s()', $index, $as_type);
+            $invocations[] = Str\format(
+                '%s->coerceNode($args[%s]->getValue(), $vars)',
+                self::hackTypeToInputTypeFactoryCall($param->getTypeText()),
+                \var_export($param->getName(), true),
+            );
         }
 
         return Str\join($invocations, ', ');
     }
 
-    private function getArgumentAsTypeString(\ReflectionParameter $param): string {
-        switch ($param->getTypeText()) {
-            case 'HH\string':
-                return 'asString';
-            case 'HH\int':
-                return 'asInt';
-            case 'HH\bool':
-                return 'asBool';
-            default:
-                return 'asMixed';
+    /**
+     * Examples:
+     *   int       -> IntInputType::nonNullable()
+     *   ?int      -> IntInputType::nullable()
+     *   ?vec<int> -> IntInputType::nonNullable()->nullableListOf()
+     */
+    private static function hackTypeToInputTypeFactoryCall(string $hack_type, bool $nullable = false): string {
+        if (Str\starts_with($hack_type, '?')) {
+            return self::hackTypeToInputTypeFactoryCall(Str\strip_prefix($hack_type, '?'), true);
         }
+        if (Str\starts_with($hack_type, 'HH\vec<')) {
+            return
+                self::hackTypeToInputTypeFactoryCall(
+                    Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
+                ).
+                ($nullable ? '->nullableListOf()' : '->nonNullableListOf()');
+        }
+        switch ($hack_type) {
+            case 'HH\int':
+                $class = Types\IntInputType::class;
+                break;
+            case 'HH\string':
+                $class = Types\StringInputType::class;
+                break;
+            default:
+                invariant_violation('not yet implemented');
+        }
+        return
+            Str\strip_prefix($class, 'Slack\\GraphQL\\').
+            ($nullable ? '::nullable()' : '::nonNullable()');
     }
-
 }
 
 class QueryField extends Field {
@@ -273,7 +301,8 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->useNamespace('HH\Lib\Dict')
+            ->useNamespace('Slack\\GraphQL\\Types')
+            ->useNamespace('HH\\Lib\\Dict')
             ->addClass($this->generateSchemaType($this->cg));
 
         foreach ($objects as $object) {
