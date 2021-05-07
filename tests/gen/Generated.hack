@@ -1,10 +1,11 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run
+ * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<75ebd5727cc237efda4eb10f6dceec7b>>
+ * @generated SignedSource<<6038758170ed55545b1df61d19a1dbf9>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace HH\Lib\Dict;
@@ -15,7 +16,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     \Graphpinator\Parser\Operation\Operation $operation,
     \Slack\GraphQL\__Private\Variables $variables,
   ): Awaitable<mixed> {
-    $query = new Query();
+    $query = Query::nullable();
 
     $data = dict[];
     foreach ($operation->getFields()->getFields() as $field) {
@@ -29,6 +30,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
 final class Query extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = null;
+  const NAME = 'Query';
 
   public static async function resolveField(
     string $field_name,
@@ -50,9 +52,9 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
       case 'viewer':
-        return new User();
+        return User::nullable();
       case 'user':
-        return new User();
+        return User::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -62,6 +64,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
 final class User extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \User;
+  const NAME = 'User';
 
   public static async function resolveField(
     string $field_name,
@@ -85,11 +88,11 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
       case 'id':
-        return new \Slack\GraphQL\Types\IntType();
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
-        return new \Slack\GraphQL\Types\StringType();
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'team':
-        return new Team();
+        return Team::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -99,6 +102,7 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
 final class Team extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Team;
+  const NAME = 'Team';
 
   public static async function resolveField(
     string $field_name,
@@ -122,11 +126,11 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
       case 'id':
-        return new \Slack\GraphQL\Types\IntType();
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
-        return new \Slack\GraphQL\Types\StringType();
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'num_users':
-        return new \Slack\GraphQL\Types\IntType();
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }

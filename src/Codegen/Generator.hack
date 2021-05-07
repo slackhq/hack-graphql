@@ -98,6 +98,7 @@ class Query extends BaseObject<QueryField> {
             $cg->codegenClassConstant('THackType')->setType('type')->setValue(null, HackBuilderValues::export());
 
         $class->addConstant($hack_type_constant);
+        $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
 
         $class
             ->addMethod($this->generateResolveField($cg))
@@ -127,6 +128,9 @@ class Object extends BaseObject<Field> {
             ->setValue('\\'.$this->class_decl->getName()->getText(), HackBuilderValues::literal());
 
         $class->addConstant($hack_type_constant);
+        $class->addConstant(
+            $cg->codegenClassConstant('NAME')->setValue($this->graphql_object->getType(), HackBuilderValues::export())
+        );
 
         $class
             ->addMethod($this->generateResolveField($cg))
@@ -168,7 +172,7 @@ class Field {
         $graphql_type = $this->getGraphQLType();
         $hb
             ->addCase($this->graphql_field->getName(), HackBuilderValues::export())
-            ->returnCasef('new %s()', $graphql_type);
+            ->returnCasef('%s::nullable()', $graphql_type);
     }
 
     private function getGraphQLType(): string {
@@ -183,10 +187,10 @@ class Field {
 
         switch ($simple_return_type) {
             case 'string':
-                return \Slack\GraphQL\Types\StringType::class
+                return \Slack\GraphQL\Types\StringOutputType::class
                     |> Str\format('\%s', $$);
             case 'int':
-                return \Slack\GraphQL\Types\IntType::class
+                return \Slack\GraphQL\Types\IntOutputType::class
                     |> Str\format('\%s', $$);
             default:
                 // TODO: this doesn't handle custom types, how do we make this
@@ -297,7 +301,7 @@ final class Generator {
             ->addParameterf('\%s $variables', \Slack\GraphQL\__Private\Variables::class);
 
         $hb = hb($cg)
-            ->addAssignment('$query', 'new Query()', HackBuilderValues::literal())
+            ->addAssignment('$query', 'Query::nullable()', HackBuilderValues::literal())
             ->ensureEmptyLine()
             ->addAssignment('$data', 'dict[]', HackBuilderValues::literal())
             ->startForeachLoop('$operation->getFields()->getFields()', null, '$field') // TODO: ->getFragments()

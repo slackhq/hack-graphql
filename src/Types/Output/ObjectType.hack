@@ -1,6 +1,7 @@
 namespace Slack\GraphQL\Types;
 
-abstract class ObjectType extends BaseType {
+abstract class ObjectType extends NamedOutputType {
+
     abstract public static function resolveField(
         string $field_name,
         this::THackType $resolved_parent,

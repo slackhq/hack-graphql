@@ -1,7 +1,5 @@
 namespace Slack\GraphQL;
 
-use namespace Facebook\TypeAssert;
-
 // TODO: this should be private
 abstract class BaseSchema {
     abstract public static function resolveQuery(
@@ -31,10 +29,10 @@ abstract class BaseSchema {
             $field_args[] = new __Private\Argument($value);
         }
 
-        // This TypeAssert enforces that resolveType and resolveField are
-        // consistent for $field_name.
-        $field_value = TypeAssert\matches_type_structure(
-            \HH\type_structure($field_type, 'THackType'),
+        invariant($field_type is Types\NamedOutputType, 'TODO: List support');
+
+        // assertValidValue enforces that resolveType and resolveField are consistent for $field_name.
+        $field_value = $field_type->assertValidValue(
             await $parent_type::resolveField($field_name, $parent, $field_args),
         );
 
