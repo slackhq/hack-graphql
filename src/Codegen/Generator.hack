@@ -15,22 +15,6 @@ use type Facebook\HackCodegen\{
     HackBuilderValues,
 };
 
-// - [x] support searching for classes and printing out the name
-// - [x] support searching for methods tagged with GraphQLField
-// - [ ] support inspecting the method args for any method tagged GraphQLField
-// - [x] support codegening a class for any GraphQLObject
-// - [x] support codegening the query
-// - [ ] support codegening the schema
-
-// collect the objects
-// - name of the graphql object
-// - name of the class it decorates
-// - fields in the object
-
-// collect the fields in an object
-// - name of the field
-// - method + arg info for the method
-
 function hb(HackCodegenFactory $cg): HackBuilder {
     return new HackBuilder($cg->getConfig());
 }

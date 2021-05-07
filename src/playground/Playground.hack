@@ -91,4 +91,9 @@ abstract final class UserQueryAttributes {
     public static async function getViewer(): Awaitable<\User> {
         return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
     }
+
+    <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
+    public static async function getUser(int $id): Awaitable<\User> {
+        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+    }
 }
