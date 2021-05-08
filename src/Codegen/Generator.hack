@@ -111,6 +111,29 @@ class Query extends BaseObject<QueryField> {
     }
 }
 
+class Mutation extends BaseObject<MutationField> {
+    public function __construct(protected vec<MutationField> $fields) {}
+
+    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+        $class = $cg->codegenClass('Mutation');
+
+        $hack_type_constant =
+            $cg->codegenClassConstant('THackType')->setType('type')->setValue(null, HackBuilderValues::export());
+
+        $class->addConstant($hack_type_constant);
+
+        $class
+            ->addMethod($this->generateResolveField($cg))
+            ->addMethod($this->generateResolveType($cg));
+
+        return $class;
+    }
+
+    protected function getResolveFieldResolvedParentParameter(): string {
+        return 'self::THackType $_';
+    }
+}
+
 class Object extends BaseObject<Field> {
     public function __construct(
         private HHAST\ClassishDeclaration $class_decl,
@@ -254,6 +277,8 @@ class QueryField extends Field {
     }
 }
 
+class MutationField extends QueryField {}
+
 final class Generator {
     private HackCodegenFactory $cg;
 
@@ -318,6 +343,8 @@ final class Generator {
 
         $objects = vec[];
         $query_fields = vec[];
+        $mutation_fields = vec[];
+
         foreach ($script->getDescendantsOfType(HHAST\ClassishDeclaration::class) as $class_decl) {
             if ($class_decl->hasAttribute()) {
                 $rc = new \ReflectionClass($class_decl->getName()->getText());
@@ -348,14 +375,30 @@ final class Generator {
                 $method_name = $method_decl->getFunctionDeclHeader()->getName()->getText();
                 $rm = new \ReflectionMethod($class_decl->getName()->getText(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
-                if ($query_root_field is null) continue;
+                if ($query_root_field is nonnull) {
+                    $query_fields[] = new QueryField($class_decl, $method_decl, $rm, $query_root_field);
+                    continue;
+                }
 
-                $query_fields[] = new QueryField($class_decl, $method_decl, $rm, $query_root_field);
+                // TODO: maybe throw an error if a field is tagged with both query + mutation field?
+                $mutation_root_field = $rm->getAttributeClass(\Slack\GraphQL\MutationRootField::class);
+                if ($mutation_root_field is nonnull) {
+                    $mutation_fields[] = new MutationField($class_decl, $method_decl, $rm, $mutation_root_field);
+                }
+
             }
         }
 
+        // TODO: throw an error if no query fields?
+
         if (!C\is_empty($query_fields)) {
-            $objects = Vec\concat(vec[new Query($query_fields)], $objects);
+            $top_level_objects = vec[new Query($query_fields)];
+
+            if (!C\is_empty($mutation_fields)) {
+                $top_level_objects[] = new Mutation($mutation_fields);
+            }
+
+            $objects = Vec\concat($top_level_objects, $objects);
         }
 
         return $objects;

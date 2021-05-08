@@ -97,3 +97,10 @@ abstract final class UserQueryAttributes {
         return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
     }
 }
+
+abstract final class UserMutationAttributes {
+    <<GraphQL\MutationRootField('pokeUser', 'Poke a user by ID')>>
+    public static async function pokeUser(int $id): Awaitable<\User> {
+        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+    }
+}

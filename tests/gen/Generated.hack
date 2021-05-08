@@ -4,7 +4,7 @@
  * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<75ebd5727cc237efda4eb10f6dceec7b>>
+ * @generated SignedSource<<c7b8214e237fac052417e8f64dbb89ca>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace HH\Lib\Dict;
@@ -52,6 +52,35 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case 'viewer':
         return new User();
       case 'user':
+        return new User();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Mutation extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = null;
+
+  public static async function resolveField(
+    string $field_name,
+    self::THackType $_,
+    vec<\Slack\GraphQL\__Private\Argument> $args,
+  ): Awaitable<mixed> {
+    switch ($field_name) {
+      case 'pokeUser':
+        return await \UserMutationAttributes::pokeUser($args[0]->asInt());
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+
+  public static function resolveType(
+    string $field_name,
+  ): \Slack\GraphQL\Types\BaseType {
+    switch ($field_name) {
+      case 'pokeUser':
         return new User();
       default:
         throw new \Error('Unknown field: '.$field_name);
