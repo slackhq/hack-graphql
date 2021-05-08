@@ -1,11 +1,10 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run
- * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<6e643145b86cdea84ab0f737331c75dc>>
+ * @generated SignedSource<<3c38c9418d997f681ee827931c88b071>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -85,6 +84,8 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         return $resolved_parent->getName();
       case 'team':
         return await $resolved_parent->getTeam();
+      case 'isAdmin':
+        return $resolved_parent->isAdmin();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -100,6 +101,8 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'team':
         return Team::nullable();
+      case 'isAdmin':
+        return \Slack\GraphQL\Types\BooleanOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -114,16 +117,16 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   public static async function resolveField(
     string $field_name,
     self::THackType $resolved_parent,
-    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
-    \Slack\GraphQL\__Private\Variables $_vars,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $args,
+    \Slack\GraphQL\__Private\Variables $vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
       case 'id':
         return $resolved_parent->getId();
       case 'name':
         return $resolved_parent->getName();
-      case 'num_users':
-        return await $resolved_parent->getNumUsers();
+      case 'numUsers':
+        return await $resolved_parent->getNumUsers(Types\BooleanInputType::nonNullable()->coerceNode($args['include_admins']->getValue(), $vars));
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -137,7 +140,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
         return \Slack\GraphQL\Types\StringOutputType::nullable();
-      case 'num_users':
+      case 'numUsers':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);

@@ -65,6 +65,11 @@ final class User {
     public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
+
+    <<GraphQL\Field('isAdmin', 'Boolean for whether the user is an admin')>>
+    public function isAdmin(): bool {
+        return $this->data['id'] > 1;
+    }
 }
 
 <<GraphQL\Object('Team', 'Team')>>
@@ -81,8 +86,8 @@ final class Team {
         return $this->data['name'];
     }
 
-    <<GraphQL\Field('num_users', 'Number of users on the team')>>
-    public async function getNumUsers(): Awaitable<int> {
+    <<GraphQL\Field('numUsers', 'Number of users on the team')>>
+    public async function getNumUsers(bool $include_admins): Awaitable<int> {
         return $this->data['num_users'];
     }
 }

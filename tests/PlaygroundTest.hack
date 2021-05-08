@@ -28,7 +28,9 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
     }
 
     public async function testSelectTeamName(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { viewer { team { name, num_users } } }');
+        $source = new \Graphpinator\Source\StringSource(
+            'query { viewer { team { name, numUsers(include_admins: true) } } }',
+        );
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
@@ -36,7 +38,7 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
-        expect(($out['data'] as dynamic)['query']['viewer']['team']['num_users'])->toBeSame(3);
+        expect(($out['data'] as dynamic)['query']['viewer']['team']['numUsers'])->toBeSame(3);
     }
 
     public async function testVariables(): Awaitable<void> {
@@ -69,5 +71,23 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $request = $parser->parse();
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(2);
+    }
+
+    public async function testBooleanOutputs(): Awaitable<void> {
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id, isAdmin } }');
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $request = $parser->parse();
+        $out = await $resolver->resolve($request);
+        expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(2);
+        expect(($out['data'] as dynamic)['query']['user']['isAdmin'])->toBeTrue('user id > 1 is admin');
+
+        $source = new \Graphpinator\Source\StringSource('query { user(id: 1) { id, isAdmin } }');
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $request = $parser->parse();
+        $out = await $resolver->resolve($request);
+        expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(1);
+        expect(($out['data'] as dynamic)['query']['user']['isAdmin'])->toBeFalse('user id == 1 is not admin');
     }
 }

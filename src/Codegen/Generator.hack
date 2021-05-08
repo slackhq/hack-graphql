@@ -136,7 +136,7 @@ class Object extends BaseObject<Field> {
 
         $class->addConstant($hack_type_constant);
         $class->addConstant(
-            $cg->codegenClassConstant('NAME')->setValue($this->graphql_object->getType(), HackBuilderValues::export())
+            $cg->codegenClassConstant('NAME')->setValue($this->graphql_object->getType(), HackBuilderValues::export()),
         );
 
         $class
@@ -199,6 +199,9 @@ class Field {
             case 'int':
                 return \Slack\GraphQL\Types\IntOutputType::class
                     |> Str\format('\%s', $$);
+            case 'bool':
+                return \Slack\GraphQL\Types\BooleanOutputType::class
+                    |> Str\format('\%s', $$);
             default:
                 // TODO: this doesn't handle custom types, how do we make this
                 // better?
@@ -242,10 +245,9 @@ class Field {
             return self::hackTypeToInputTypeFactoryCall(Str\strip_prefix($hack_type, '?'), true);
         }
         if (Str\starts_with($hack_type, 'HH\vec<')) {
-            return
-                self::hackTypeToInputTypeFactoryCall(
-                    Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
-                ).
+            return self::hackTypeToInputTypeFactoryCall(
+                Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
+            ).
                 ($nullable ? '->nullableListOf()' : '->nonNullableListOf()');
         }
         switch ($hack_type) {
@@ -255,12 +257,13 @@ class Field {
             case 'HH\string':
                 $class = Types\StringInputType::class;
                 break;
+            case 'HH\bool':
+                $class = Types\BooleanInputType::class;
+                break;
             default:
                 invariant_violation('not yet implemented');
         }
-        return
-            Str\strip_prefix($class, 'Slack\\GraphQL\\').
-            ($nullable ? '::nullable()' : '::nonNullable()');
+        return Str\strip_prefix($class, 'Slack\\GraphQL\\').($nullable ? '::nullable()' : '::nonNullable()');
     }
 }
 
