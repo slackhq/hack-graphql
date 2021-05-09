@@ -5,7 +5,7 @@
  * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<cca213f8925c6ab1081e99ef87a487f8>>
+ * @generated SignedSource<<6e098cf42d0b8d3a1ebd7bd8c48ed1be>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -118,8 +118,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   public static async function resolveField(
     string $field_name,
     self::THackType $resolved_parent,
-    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
-    \Slack\GraphQL\__Private\Variables $_vars,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $args,
+    \Slack\GraphQL\__Private\Variables $vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
       case 'id':
@@ -128,6 +128,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return $resolved_parent->getName();
       case 'num_users':
         return await $resolved_parent->getNumUsers();
+      case 'description':
+        return $resolved_parent->getDescription(Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars));
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -143,6 +145,8 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'num_users':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
+      case 'description':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }

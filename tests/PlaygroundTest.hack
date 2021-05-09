@@ -81,4 +81,19 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $out = await $resolver->resolve($request);
         expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(2);
     }
+
+    public async function testBooleanInput(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource(
+            'query TestQuery($short: Boolean!) { user(id: 2) { id, team { description(short: $short) } } }'
+        );
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        $request = $parser->parse();
+        $out = await $resolver->resolve($request, dict['short' => true]);
+        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Short description");
+
+        $out = await $resolver->resolve($request, dict['short' => false]);
+        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Much longer description");
+    }
 }
