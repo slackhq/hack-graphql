@@ -5,7 +5,7 @@
  * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<067493692cc81d7001c160c6060a6d93>>
+ * @generated SignedSource<<f2751b01e9e6d9e117719f010ce5da9e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -122,14 +122,14 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     \Slack\GraphQL\__Private\Variables $_vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
-      case 'favorite_color':
-        return $resolved_parent->getFavoriteColor();
       case 'id':
         return $resolved_parent->getId();
       case 'name':
         return $resolved_parent->getName();
       case 'team':
         return await $resolved_parent->getTeam();
+      case 'favorite_color':
+        return $resolved_parent->getFavoriteColor();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -139,14 +139,14 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
-      case 'favorite_color':
-        return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'id':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'team':
         return Team::nullable();
+      case 'favorite_color':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -165,14 +165,14 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
     \Slack\GraphQL\__Private\Variables $_vars,
   ): Awaitable<mixed> {
     switch ($field_name) {
-      case 'primary_function':
-        return $resolved_parent->getPrimaryFunction();
       case 'id':
         return $resolved_parent->getId();
       case 'name':
         return $resolved_parent->getName();
       case 'team':
         return await $resolved_parent->getTeam();
+      case 'primary_function':
+        return $resolved_parent->getPrimaryFunction();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
@@ -182,14 +182,14 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
-      case 'primary_function':
-        return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'id':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'team':
         return Team::nullable();
+      case 'primary_function':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }

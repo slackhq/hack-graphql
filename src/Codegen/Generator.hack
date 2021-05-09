@@ -374,7 +374,7 @@ final class Generator {
 
                 $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\Object::class);
                 if ($graphql_object is nonnull) {
-                    $fields = $this->collectObjectFields($class_decl);
+                    $fields = vec[];
 
                     // Add interface fields.
                     // This feels a bit hacky - is there a better way?
@@ -382,6 +382,8 @@ final class Generator {
                         $interface = $interfaces[$interface_name];
                         $fields = Vec\concat($fields, $interface->getFields());
                     }
+
+                    $fields = Vec\concat($fields, $this->collectObjectFields($class_decl));
 
                     $objects[] = new Object($class_decl, $graphql_object, $rc, $fields);
                 }
