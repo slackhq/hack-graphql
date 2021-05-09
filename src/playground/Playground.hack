@@ -95,6 +95,11 @@ final class Team {
     public async function getNumUsers(): Awaitable<int> {
         return $this->data['num_users'];
     }
+
+    <<GraphQL\Field('description', 'Description of the team')>>
+    public function getDescription(bool $short): string {
+        return $short ? 'Short description' : 'Much longer description';
+    }
 }
 
 abstract final class UserQueryAttributes {

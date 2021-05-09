@@ -258,6 +258,9 @@ class Field {
             case 'HH\string':
                 $class = Types\StringInputType::class;
                 break;
+            case 'HH\bool':
+                $class = Types\BooleanInputType::class;
+                break;
             default:
                 invariant_violation('not yet implemented');
         }
