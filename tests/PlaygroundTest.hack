@@ -94,4 +94,15 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         expect(async () ==> await $resolver->resolve($request))
             ->toThrow(\Exception::class, "Unknown field: favorite_color");
     }
+
+    public async function testSelectInvalidFieldOnConcreteImplementation(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource('query { bot(id: 2) { id, name, favorite_color } }');
+        $parser = new \Graphpinator\Parser\Parser($source);
+
+        $request = $parser->parse();
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        expect(async () ==> await $resolver->resolve($request))
+            ->toThrow(\Exception::class, "Unknown field: favorite_color");
+    }
 }
