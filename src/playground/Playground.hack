@@ -65,6 +65,11 @@ final class User {
     public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
+
+    <<GraphQL\Field('is_active', 'Whether the user is active')>>
+    public function isActive(): bool {
+        return true;
+    }
 }
 
 <<GraphQL\Object('Team', 'Team')>>
