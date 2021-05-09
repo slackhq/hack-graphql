@@ -2,10 +2,10 @@
  * This file is generated. Do not modify it manually!
  *
  * To re-generate this file run
- * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
+ * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<6e643145b86cdea84ab0f737331c75dc>>
+ * @generated SignedSource<<067493692cc81d7001c160c6060a6d93>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -44,6 +44,8 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return await \UserQueryAttributes::getViewer();
       case 'user':
         return await \UserQueryAttributes::getUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
+      case 'human':
+        return await \UserQueryAttributes::getHuman(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
       case 'nested_list_sum':
         return \UserQueryAttributes::getNestedListSum(Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars));
       default:
@@ -59,6 +61,8 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return User::nullable();
       case 'user':
         return User::nullable();
+      case 'human':
+        return Human::nullable();
       case 'nested_list_sum':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
@@ -94,6 +98,92 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): \Slack\GraphQL\Types\BaseType {
     switch ($field_name) {
+      case 'id':
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
+      case 'name':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
+      case 'team':
+        return Team::nullable();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Human extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \Human;
+  const NAME = 'Human';
+
+  public static async function resolveField(
+    string $field_name,
+    self::THackType $resolved_parent,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
+    \Slack\GraphQL\__Private\Variables $_vars,
+  ): Awaitable<mixed> {
+    switch ($field_name) {
+      case 'favorite_color':
+        return $resolved_parent->getFavoriteColor();
+      case 'id':
+        return $resolved_parent->getId();
+      case 'name':
+        return $resolved_parent->getName();
+      case 'team':
+        return await $resolved_parent->getTeam();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+
+  public static function resolveType(
+    string $field_name,
+  ): \Slack\GraphQL\Types\BaseType {
+    switch ($field_name) {
+      case 'favorite_color':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
+      case 'id':
+        return \Slack\GraphQL\Types\IntOutputType::nullable();
+      case 'name':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
+      case 'team':
+        return Team::nullable();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Bot extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \Bot;
+  const NAME = 'Bot';
+
+  public static async function resolveField(
+    string $field_name,
+    self::THackType $resolved_parent,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $_args,
+    \Slack\GraphQL\__Private\Variables $_vars,
+  ): Awaitable<mixed> {
+    switch ($field_name) {
+      case 'primary_function':
+        return $resolved_parent->getPrimaryFunction();
+      case 'id':
+        return $resolved_parent->getId();
+      case 'name':
+        return $resolved_parent->getName();
+      case 'team':
+        return await $resolved_parent->getTeam();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+
+  public static function resolveType(
+    string $field_name,
+  ): \Slack\GraphQL\Types\BaseType {
+    switch ($field_name) {
+      case 'primary_function':
+        return \Slack\GraphQL\Types\StringOutputType::nullable();
       case 'id':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       case 'name':
