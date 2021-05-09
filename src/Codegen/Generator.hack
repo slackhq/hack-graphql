@@ -199,6 +199,9 @@ class Field {
             case 'int':
                 return \Slack\GraphQL\Types\IntOutputType::class
                     |> Str\format('\%s', $$);
+            case 'bool':
+                return \Slack\GraphQL\Types\BooleanOutputType::class
+                    |> Str\format('\%s', $$);
             default:
                 // TODO: this doesn't handle custom types, how do we make this
                 // better?
