@@ -49,7 +49,12 @@ function getTeams(): dict<int, Team> {
 
 <<GraphQL\Object('User', 'User')>>
 final class User {
-    public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
+    public function __construct(private shape(
+        'id' => int,
+        'name' => string,
+        'team_id' => int,
+        'is_active' => bool
+    ) $data) {}
 
     <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int {
@@ -68,7 +73,7 @@ final class User {
 
     <<GraphQL\Field('is_active', 'Whether the user is active')>>
     public function isActive(): bool {
-        return true;
+        return $this->data['is_active'];
     }
 }
 
@@ -95,12 +100,12 @@ final class Team {
 abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('viewer', 'Authenticated viewer')>>
     public static async function getViewer(): Awaitable<\User> {
-        return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
+        return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
     public static async function getUser(int $id): Awaitable<\User> {
-        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
