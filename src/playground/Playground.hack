@@ -59,7 +59,7 @@ interface User {
     public function getTeam(): Awaitable<\Team>;
 }
 
-// TODO: Should we rename this to `User` and annotate with GraphQL\GQLInterface it directly?
+// TODO: Should we rename this to `User` and annotate it with GraphQL\GQLInterface directly?
 abstract class BaseUser implements User {
     public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
 
