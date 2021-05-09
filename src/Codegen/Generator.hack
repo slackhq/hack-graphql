@@ -50,7 +50,7 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
                 },
             )
             ->addDefault()
-            ->addLine("throw new \Error('Unknown field: '.\$field_name);")
+            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
             ->endDefault()
             ->endSwitch();
 
@@ -85,7 +85,7 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
                 },
             )
             ->addDefault()
-            ->addLine("throw new \Error('Unknown field: '.\$field_name);")
+            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
             ->endDefault()
             ->endSwitch();
 

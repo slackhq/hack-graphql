@@ -83,4 +83,15 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         expect(($out['data'] as dynamic)['query']['human']['name'])->toBeSame('User 2');
         expect(($out['data'] as dynamic)['query']['human']['favorite_color'])->toBeSame('blue');
     }
+
+    public async function testSelectInvalidFieldOnInterface(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id, name, favorite_color } }');
+        $parser = new \Graphpinator\Parser\Parser($source);
+
+        $request = $parser->parse();
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        expect(async () ==> await $resolver->resolve($request))
+            ->toThrow(\Exception::class, "Unknown field: favorite_color");
+    }
 }

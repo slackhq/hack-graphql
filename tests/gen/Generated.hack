@@ -5,7 +5,7 @@
  * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<f2751b01e9e6d9e117719f010ce5da9e>>
+ * @generated SignedSource<<92cca1f0f0fdff06e1a27c1fc9dcc0e8>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -46,10 +46,12 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return await \UserQueryAttributes::getUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
       case 'human':
         return await \UserQueryAttributes::getHuman(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
+      case 'bot':
+        return await \UserQueryAttributes::getBot(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
       case 'nested_list_sum':
         return \UserQueryAttributes::getNestedListSum(Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars));
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -63,10 +65,12 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return User::nullable();
       case 'human':
         return Human::nullable();
+      case 'bot':
+        return Bot::nullable();
       case 'nested_list_sum':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
@@ -90,7 +94,7 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
       case 'team':
         return await $resolved_parent->getTeam();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -105,7 +109,7 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
       case 'team':
         return Team::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
@@ -131,7 +135,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
       case 'favorite_color':
         return $resolved_parent->getFavoriteColor();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -148,7 +152,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
       case 'favorite_color':
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
@@ -174,7 +178,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
       case 'primary_function':
         return $resolved_parent->getPrimaryFunction();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -191,7 +195,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
       case 'primary_function':
         return \Slack\GraphQL\Types\StringOutputType::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
@@ -215,7 +219,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
       case 'num_users':
         return await $resolved_parent->getNumUsers();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -230,7 +234,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
       case 'num_users':
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }

@@ -59,8 +59,8 @@ interface User {
     public function getTeam(): Awaitable<\Team>;
 }
 
-<<GraphQL\Object('Human', 'Human')>>
-final class Human implements User {
+// TODO: Should we rename this to `User` and annotate with GraphQL\GQLInterface it directly?
+abstract class BaseUser implements User {
     public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
 
     public function getId(): int {
@@ -74,7 +74,10 @@ final class Human implements User {
     public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
+}
 
+<<GraphQL\Object('Human', 'Human')>>
+final class Human extends BaseUser {
     <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
     public function getFavoriteColor(): string {
         return 'blue';
@@ -82,24 +85,10 @@ final class Human implements User {
 }
 
 <<GraphQL\Object('Bot', 'Bot')>>
-final class Bot implements User {
-    public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
-
-    public function getId(): int {
-        return $this->data['id'];
-    }
-
-    public function getName(): string {
-        return $this->data['name'];
-    }
-
-    public async function getTeam(): Awaitable<\Team> {
-        return getTeams()[$this->data['team_id']];
-    }
-
+final class Bot extends BaseUser {
     <<GraphQL\Field('primary_function', 'Intended use of the bot')>>
     public function getPrimaryFunction(): string {
-        return 'spam';
+        return 'send spam';
     }
 }
 
@@ -137,6 +126,11 @@ abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('human', 'Fetch a human by ID')>>
     public static async function getHuman(int $id): Awaitable<\Human> {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+    }
+
+    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
+    public static async function getBot(int $id): Awaitable<\Bot> {
+        return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
     }
 
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
