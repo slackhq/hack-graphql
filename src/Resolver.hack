@@ -18,6 +18,10 @@ final class Resolver {
                 case 'query':
                     $data = await $schema::resolveQuery($operation, $variables ?? dict[]);
                     break;
+                case 'mutation':
+                    invariant($schema::SUPPORTS_MUTATIONS, 'mutation operation not supported for schema');
+                    $data = await $schema::resolveMutation($operation, $variables ?? dict[]);
+                    break;
                 default:
                     throw new \Error('Unsupported operation: '.$operation_type);
             }

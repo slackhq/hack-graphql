@@ -1,17 +1,22 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run
- * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
+<<<<<<< HEAD
  * @generated SignedSource<<f4299677d710f664aaea82e2e9c8106b>>
+=======
+ * @generated SignedSource<<270634303dbd4ce488941dba25d8f486>>
+>>>>>>> e108f56e5de7002a0494c02b10481dcd7535c79d
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Dict;
 
 abstract final class Schema extends \Slack\GraphQL\BaseSchema {
+
+  const bool SUPPORTS_MUTATIONS = true;
 
   public static async function resolveQuery(
     \Graphpinator\Parser\Operation\Operation $operation,
@@ -22,6 +27,20 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     $data = dict[];
     foreach ($operation->getFields()->getFields() as $field) {
       $data[$field->getName()] = self::resolveField($field, $query, null, $variables);
+    }
+
+    return await Dict\from_async($data);
+  }
+
+  public static async function resolveMutation(
+    \Graphpinator\Parser\Operation\Operation $operation,
+    \Slack\GraphQL\__Private\Variables $variables,
+  ): Awaitable<mixed> {
+    $mutation = Mutation::nullable();
+
+    $data = dict[];
+    foreach ($operation->getFields()->getFields() as $field) {
+      $data[$field->getName()] = self::resolveField($field, $mutation, null, $variables);
     }
 
     return await Dict\from_async($data);
@@ -71,6 +90,37 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return \Slack\GraphQL\Types\IntOutputType::nullable();
       default:
         throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Mutation extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = null;
+  const NAME = 'Mutation';
+
+  public static async function resolveField(
+    string $field_name,
+    self::THackType $_,
+    dict<string, \Graphpinator\Parser\Value\ArgumentValue> $args,
+    \Slack\GraphQL\__Private\Variables $vars,
+  ): Awaitable<mixed> {
+    switch ($field_name) {
+      case 'pokeUser':
+        return await \UserMutationAttributes::pokeUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
+      default:
+        throw new \Error('Unknown field: '.$field_name);
+    }
+  }
+
+  public static function resolveType(
+    string $field_name,
+  ): \Slack\GraphQL\Types\BaseType {
+    switch ($field_name) {
+      case 'pokeUser':
+        return User::nullable();
+      default:
+        throw new \Error('Unknown field: '.$field_name);
     }
   }
 }

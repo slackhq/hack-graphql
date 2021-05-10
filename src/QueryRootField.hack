@@ -1,4 +1,3 @@
 namespace Slack\GraphQL;
 
-class QueryRootField extends Field {
-}
+class QueryRootField extends Field {}

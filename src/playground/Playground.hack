@@ -154,3 +154,10 @@ abstract final class UserQueryAttributes {
         return Math\sum(Vec\map($numbers, $inner ==> Math\sum($inner)));
     }
 }
+
+abstract final class UserMutationAttributes {
+    <<GraphQL\MutationRootField('pokeUser', 'Poke a user by ID')>>
+    public static async function pokeUser(int $id): Awaitable<\User> {
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    }
+}
