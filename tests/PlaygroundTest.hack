@@ -27,6 +27,17 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         expect(($out['data'] as dynamic)['query']['viewer']['team']['id'])->toBeSame(1);
     }
 
+    public async function testSelectIsActive(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource('query { viewer { is_active } }');
+        $parser = new \Graphpinator\Parser\Parser($source);
+
+        $request = $parser->parse();
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        $out = await $resolver->resolve($request);
+        expect(($out['data'] as dynamic)['query']['viewer']['is_active'])->toBeTrue();
+    }
+
     public async function testSelectTeamName(): Awaitable<void> {
         $source = new \Graphpinator\Source\StringSource('query { viewer { team { name, num_users } } }');
         $parser = new \Graphpinator\Parser\Parser($source);
@@ -104,5 +115,20 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
         expect(async () ==> await $resolver->resolve($request))
             ->toThrow(\Exception::class, "Unknown field: favorite_color");
+    }
+
+    public async function testBooleanInput(): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource(
+            'query TestQuery($short: Boolean!) { user(id: 2) { id, team { description(short: $short) } } }'
+        );
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+
+        $request = $parser->parse();
+        $out = await $resolver->resolve($request, dict['short' => true]);
+        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Short description");
+
+        $out = await $resolver->resolve($request, dict['short' => false]);
+        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Much longer description");
     }
 }

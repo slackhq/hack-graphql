@@ -57,11 +57,18 @@ interface User {
 
     <<GraphQL\Field('team', 'Team the user belongs to')>>
     public function getTeam(): Awaitable<\Team>;
+
+    <<GraphQL\Field('is_active', 'Whether the user is active')>>
+    public function isActive(): bool;
 }
 
-// TODO: Should we rename this to `User` and annotate it with GraphQL\GQLInterface directly?
 abstract class BaseUser implements User {
-    public function __construct(private shape('id' => int, 'name' => string, 'team_id' => int) $data) {}
+    public function __construct(private shape(
+        'id' => int,
+        'name' => string,
+        'team_id' => int,
+        'is_active' => bool
+    ) $data) {}
 
     public function getId(): int {
         return $this->data['id'];
@@ -73,6 +80,10 @@ abstract class BaseUser implements User {
 
     public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
+    }
+
+    public function isActive(): bool {
+        return $this->data['is_active'];
     }
 }
 
@@ -110,27 +121,32 @@ final class Team {
     public async function getNumUsers(): Awaitable<int> {
         return $this->data['num_users'];
     }
+
+    <<GraphQL\Field('description', 'Description of the team')>>
+    public function getDescription(bool $short): string {
+        return $short ? 'Short description' : 'Much longer description';
+    }
 }
 
 abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('viewer', 'Authenticated viewer')>>
     public static async function getViewer(): Awaitable<\User> {
-        return new \Human(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1));
+        return new \Human(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
     public static async function getUser(int $id): Awaitable<\User> {
-        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
-    <<GraphQL\QueryRootField('human', 'Fetch a human by ID')>>
+    <<GraphQL\QueryRootField('human', 'Fetch a user by ID')>>
     public static async function getHuman(int $id): Awaitable<\Human> {
-        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
     public static async function getBot(int $id): Awaitable<\Bot> {
-        return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+        return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
