@@ -13,7 +13,8 @@
   ],
   "require": {
     "hhvm/hsl": "^4.41.0",
-    "facebook/hack-codegen": "^v4.3.12"
+    "facebook/hack-codegen": "^v4.3.12",
+    "facebook/definition-finder": "^v2.13.5"
   },
   "require-dev": {
     "hhvm/hhast": "^4.53.4",
