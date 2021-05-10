@@ -1,14 +1,11 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run
+ * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
-<<<<<<< HEAD
- * @generated SignedSource<<f4299677d710f664aaea82e2e9c8106b>>
-=======
- * @generated SignedSource<<270634303dbd4ce488941dba25d8f486>>
->>>>>>> e108f56e5de7002a0494c02b10481dcd7535c79d
+ * @generated SignedSource<<f384c08d133ed2dde1167a0ed55336e9>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL\Types;
@@ -109,7 +106,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       case 'pokeUser':
         return await \UserMutationAttributes::pokeUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars));
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 
@@ -120,7 +117,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       case 'pokeUser':
         return User::nullable();
       default:
-        throw new \Error('Unknown field: '.$field_name);
+        throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
