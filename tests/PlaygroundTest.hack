@@ -5,12 +5,13 @@ use namespace Slack\GraphQL;
 final class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
     public static async function beforeFirstTestAsync(): Awaitable<void> {
-        $gen = new GraphQL\Codegen\Generator();
+        $file = await GraphQL\Codegen\Generator::forFile(
+            __DIR__.'/../src/playground/Playground.hack',
+            shape(
+                'output_path' => __DIR__.'/gen/Generated.hack',
+            ),
+        );
 
-        $from_path = __DIR__.'/../src/playground/Playground.hack';
-        $to_path = __DIR__.'/gen/Generated.hack';
-
-        $file = await $gen->generate($from_path, $to_path);
         $file->setNamespace('Slack\GraphQL\Test\Generated');
         $file->save();
     }

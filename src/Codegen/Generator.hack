@@ -2,6 +2,7 @@ namespace Slack\GraphQL\Codegen;
 
 use namespace Slack\GraphQL\Types;
 use namespace Facebook\HHAST;
+use namespace Facebook\DefinitionFinder;
 use namespace HH\Lib\{Str, Vec, C};
 use type Facebook\HackCodegen\{
     CodegenFile,
@@ -93,7 +94,7 @@ class Mutation extends BaseObject<MutationField> {
 
 abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extends BaseObject<Field> {
     public function __construct(
-        private HHAST\ClassishDeclaration $class_decl,
+        private DefinitionFinder\ScannedClass $class,
         private T $composite_type,
         private \ReflectionClass $reflection_class,
         protected vec<Field> $fields,
@@ -108,11 +109,11 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
-            ->setValue('\\'.$this->class_decl->getName()->getText(), HackBuilderValues::literal());
+            ->setValue('\\'.$this->class->getName(), HackBuilderValues::literal());
 
         $class->addConstant($hack_type_constant);
         $class->addConstant(
-            $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export())
+            $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export()),
         );
 
         $class->addMethod($this->generateGetFieldDefinition($cg));
@@ -127,8 +128,8 @@ class Object extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
 class Field {
     public function __construct(
-        protected HHAST\ClassishDeclaration $class_decl,
-        protected HHAST\MethodishDeclaration $method_decl,
+        protected DefinitionFinder\ScannedClass $class,
+        protected DefinitionFinder\ScannedMethod $method,
         protected \ReflectionMethod $reflection_method,
         protected \Slack\GraphQL\Field $graphql_field,
     ) {}
@@ -151,7 +152,7 @@ class Field {
             'async ($parent, $args, $vars) ==> %s%s%s(',
             $return_prefix,
             $this->getMethodCallPrefix(),
-            $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
+            $this->method->getName(),
         );
         $args = $this->getArgumentInvocationStrings();
         if (!C\is_empty($args)) {
@@ -173,13 +174,14 @@ class Field {
 
     final protected function getGraphQLType(): string {
         // TODO: must be a better way to do this
-        $simple_return_type = $this->method_decl
-            ->getFunctionDeclHeader()
-            ->getChildren()['type']->getDescendantsOfType(HHAST\SimpleTypeSpecifier::class)
-            |> Vec\map($$, $node ==> $node->getCode())
-            |> Vec\filter_nulls($$)
-            |> Str\join($$, '')
-            |> Str\trim($$);
+        $return_type = $this->method->getReturnType() as nonnull;
+
+        if ($return_type->isGeneric()) {
+            $simple_return_type = Vec\map($return_type->getGenericTypes() as nonnull, $g ==> $g->getTypeText())
+                |> Str\join($$, '');
+        } else {
+            $simple_return_type = $return_type->getTypeText();
+        }
 
         switch ($simple_return_type) {
             case 'string':
@@ -195,7 +197,8 @@ class Field {
                 // TODO: this doesn't handle custom types, how do we make this
                 // better?
                 $rc = new \ReflectionClass($simple_return_type);
-                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ?? $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
+                    $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_object is null) {
                     throw new \Error(
                         'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\Object(...)>> or <<GraphQL\GQLInterface(...)>>',
@@ -233,10 +236,9 @@ class Field {
             return self::hackTypeToInputTypeFactoryCall(Str\strip_prefix($hack_type, '?'), true);
         }
         if (Str\starts_with($hack_type, 'HH\vec<')) {
-            return
-                self::hackTypeToInputTypeFactoryCall(
-                    Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
-                ).
+            return self::hackTypeToInputTypeFactoryCall(
+                Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
+            ).
                 ($nullable ? '->nullableListOf()' : '->nonNullableListOf()');
         }
         switch ($hack_type) {
@@ -252,16 +254,14 @@ class Field {
             default:
                 invariant_violation('not yet implemented');
         }
-        return
-            Str\strip_prefix($class, 'Slack\\GraphQL\\').
-            ($nullable ? '::nullable()' : '::nonNullable()');
+        return Str\strip_prefix($class, 'Slack\\GraphQL\\').($nullable ? '::nullable()' : '::nonNullable()');
     }
 }
 
 class QueryField extends Field {
     <<__Override>>
     protected function getMethodCallPrefix(): string {
-        return '\\'.$this->class_decl->getName()->getText().'::';
+        return '\\'.$this->class->getName().'::';
     }
 }
 
@@ -271,15 +271,32 @@ final class Generator {
     private HackCodegenFactory $cg;
     private bool $has_mutations = false;
 
-    public function __construct(private ?IHackCodegenConfig $hackCodegenConfig = null) {
-        $this->cg = new HackCodegenFactory($hackCodegenConfig ?? new HackCodegenConfig());
+    const type TGeneratorConfig = shape(
+        'output_path' => string,
+        ?'codegen_config' => IHackCodegenConfig,
+    );
+
+    private function __construct(private DefinitionFinder\BaseParser $parser, private self::TGeneratorConfig $conifg) {
+        $this->cg = new HackCodegenFactory($conifg['codegen_config'] ?? new HackCodegenConfig());
     }
 
-    public async function generate(string $from_path, string $to_path): Awaitable<CodegenFile> {
-        $objects = await $this->collectObjects($from_path);
+    public static async function forPath(string $path, self::TGeneratorConfig $conifg): Awaitable<CodegenFile> {
+        $defs = await DefinitionFinder\TreeParser::fromPathAsync($path);
+        $gen = new self($defs, $conifg);
+        return await $gen->generate();
+    }
+
+    public static async function forFile(string $filename, self::TGeneratorConfig $conifg): Awaitable<CodegenFile> {
+        $defs = await DefinitionFinder\FileParser::fromFileAsync($filename);
+        $gen = new self($defs, $conifg);
+        return await $gen->generate();
+    }
+
+    public async function generate(): Awaitable<CodegenFile> {
+        $objects = await $this->collectObjects();
 
         $file = $this->cg
-            ->codegenFile($to_path)
+            ->codegenFile($this->conifg['output_path'])
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
@@ -356,22 +373,20 @@ final class Generator {
         return $resolve_method;
     }
 
-    private async function collectObjects<T as Field>(string $from_path): Awaitable<vec<GeneratableObjectType>> {
-        $script = await HHAST\from_file_async(HHAST\File::fromPath($from_path));
-
+    private async function collectObjects<T as Field>(): Awaitable<vec<GeneratableObjectType>> {
         $interfaces = dict[];
         $objects = vec[];
         $query_fields = vec[];
         $mutation_fields = vec[];
-        foreach ($script->getDescendantsOfType(HHAST\ClassishDeclaration::class) as $class_decl) {
-            if ($class_decl->hasAttribute()) {
-                $rc = new \ReflectionClass($class_decl->getName()->getText());
+        foreach ($this->parser->getClasses() as $class) {
+            if (!C\is_empty($class->getAttributes())) {
+                $rc = new \ReflectionClass($class->getName());
 
                 $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_interface is nonnull) {
-                    $fields = $this->collectObjectFields($class_decl);
-                    $object = new GQLInterface($class_decl, $graphql_interface, $rc, $fields);
-                    $interfaces[$class_decl->getName()->getText()] = $object;
+                    $fields = $this->collectObjectFields($class);
+                    $object = new GQLInterface($class, $graphql_interface, $rc, $fields);
+                    $interfaces[$class->getName()] = $object;
                     $objects[] = $object;
                 }
 
@@ -386,22 +401,21 @@ final class Generator {
                         $fields = Vec\concat($fields, $interface->getFields());
                     }
 
-                    $fields = Vec\concat($fields, $this->collectObjectFields($class_decl));
-
-                    $objects[] = new Object($class_decl, $graphql_object, $rc, $fields);
+                    $fields = Vec\concat($fields, $this->collectObjectFields($class));
+                    $objects[] = new Object($class, $graphql_object, $rc, $fields);
                 }
             }
 
-            foreach ($class_decl->getDescendantsOfType(HHAST\MethodishDeclaration::class) as $method_decl) {
+            foreach ($class->getMethods() as $method) {
                 // TODO: right now these need to be static, not sure how we
                 // would do it otherwise. Should validate that here.
-                if (!$method_decl->hasAttribute()) continue;
+                if (C\is_empty($method->getAttributes())) continue;
 
-                $method_name = $method_decl->getFunctionDeclHeader()->getName()->getText();
-                $rm = new \ReflectionMethod($class_decl->getName()->getText(), $method_name);
+                $method_name = $method->getName();
+                $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[] = new QueryField($class_decl, $method_decl, $rm, $query_root_field);
+                    $query_fields[] = new QueryField($class, $method, $rm, $query_root_field);
                     continue;
                 }
 
@@ -410,7 +424,7 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[] = new MutationField($class_decl, $method_decl, $rm, $mutation_root_field);
+                    $mutation_fields[] = new MutationField($class, $method, $rm, $mutation_root_field);
                 }
             }
         }
@@ -430,18 +444,18 @@ final class Generator {
         return $objects;
     }
 
-    private function collectObjectFields(HHAST\ClassishDeclaration $class_decl): vec<Field> {
+    private function collectObjectFields(DefinitionFinder\ScannedClass $class): vec<Field> {
         $fields = vec[];
-        foreach ($class_decl->getDescendantsOfType(HHAST\MethodishDeclaration::class) as $method_decl) {
-            if (!$method_decl->hasAttribute()) continue;
+        foreach ($class->getMethods() as $method) {
+            if (C\is_empty($method->getAttributes())) continue;
 
-            $method_name = $method_decl->getFunctionDeclHeader()->getName()->getText();
-            $rm = new \ReflectionMethod($class_decl->getName()->getText(), $method_name);
+            $rm = new \ReflectionMethod($class->getName(), $method->getName());
             $graphql_field = $rm->getAttributeClass(\Slack\GraphQL\Field::class);
             if ($graphql_field is null) continue;
 
-            $fields[] = new Field($class_decl, $method_decl, $rm, $graphql_field);
+            $fields[] = new Field($class, $method, $rm, $graphql_field);
         }
+
         return $fields;
     }
 }
