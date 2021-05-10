@@ -9,7 +9,7 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedOutputType extends OutputType {
+abstract class NamedOutputType extends OutputType<this::THackType> {
 
     <<__Enforceable>>
     abstract const type THackType;
@@ -20,20 +20,16 @@ abstract class NamedOutputType extends OutputType {
         return static::NAME;
     }
 
-    final public function assertValidValue(mixed $value): this::THackType {
-        return $value as this::THackType;
-    }
-
     /**
      * Use these to get the singleton instance of this type.
      */
     <<__MemoizeLSB>>
     final public static function nonNullable(): this {
-        return new static(false);
+        return new static();
     }
 
     <<__MemoizeLSB>>
-    final public static function nullable(): this {
-        return new static(true);
+    final public static function nullable(): NullableOutputType<this::THackType> {
+        return new NullableOutputType(static::nonNullable());
     }
 }
