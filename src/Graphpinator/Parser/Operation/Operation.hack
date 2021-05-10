@@ -1,6 +1,6 @@
 namespace Graphpinator\Parser\Operation;
 
-final class Operation {
+final class Operation implements \Graphpinator\Parser\Field\IHasFieldSet {
 
     private string $type;
     private string $name;
