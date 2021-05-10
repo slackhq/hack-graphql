@@ -122,7 +122,7 @@ class Query extends BaseObject<QueryField> {
 abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extends BaseObject<Field> {
     public function __construct(
         private HHAST\ClassishDeclaration $class_decl,
-        private T $classish_attribute,
+        private T $composite_type,
         private \ReflectionClass $reflection_class,
         protected vec<Field> $fields,
     ) {}
@@ -132,7 +132,7 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
     }
 
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass($this->classish_attribute->getType());
+        $class = $cg->codegenClass($this->composite_type->getType());
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
@@ -140,7 +140,7 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
 
         $class->addConstant($hack_type_constant);
         $class->addConstant(
-            $cg->codegenClassConstant('NAME')->setValue($this->classish_attribute->getType(), HackBuilderValues::export())
+            $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export())
         );
 
         $class
