@@ -17,3 +17,7 @@ final class FieldSet {
         return $this->fragments;
     }
 }
+
+interface IHasFieldSet {
+    public function getFields(): ?FieldSet;
+}

@@ -1,6 +1,6 @@
 namespace Graphpinator\Parser\Field;
 
-final class Field {
+final class Field implements IHasFieldSet {
 
     public function __construct(
         private string $name,
