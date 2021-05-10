@@ -1,4 +1,4 @@
-namespace Slack\GraphQL\Types;
+namespace Slack\GraphQL\__Private\Types;
 
 use namespace HH\Lib\Vec;
 use namespace Graphpinator\Parser\Value;

@@ -1,4 +1,4 @@
-namespace Slack\GraphQL\Types;
+namespace Slack\GraphQL\__Private\Types;
 
 final class ListOutputType<TInner as OutputType> extends OutputType {
 

@@ -1,4 +1,4 @@
-namespace Slack\GraphQL\Types;
+namespace Slack\GraphQL\__Private\Types;
 
 /**
  * Named type is any non-wrapping type.
@@ -9,22 +9,19 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedInputType extends InputType<this::TCoerced> {
+abstract class NamedOutputType extends OutputType {
 
     <<__Enforceable>>
-    abstract const type TCoerced as nonnull;
+    abstract const type THackType;
     abstract const string NAME;
-
-    final private function __construct() {}
 
     <<__Override>>
     final public function getName(): string {
         return static::NAME;
     }
 
-    <<__Override>>
-    final protected function assertValidVariableValue(mixed $value): this::TCoerced {
-        return $value as this::TCoerced;
+    final public function assertValidValue(mixed $value): this::THackType {
+        return $value as this::THackType;
     }
 
     /**
@@ -32,11 +29,11 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
      */
     <<__MemoizeLSB>>
     final public static function nonNullable(): this {
-        return new static();
+        return new static(false);
     }
 
     <<__MemoizeLSB>>
-    final public static function nullable(): NullableInputType<this::TCoerced> {
-        return new NullableInputType(static::nonNullable());
+    final public static function nullable(): this {
+        return new static(true);
     }
 }

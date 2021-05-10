@@ -1,6 +1,6 @@
-namespace Slack\GraphQL\Codegen;
+namespace Slack\GraphQL\__Private\Codegen;
 
-use namespace Slack\GraphQL\Types;
+use namespace Slack\GraphQL\__Private\Types;
 use namespace Facebook\HHAST;
 use namespace HH\Lib\{Str, Vec, C};
 use type Facebook\HackCodegen\{
@@ -73,7 +73,7 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
         $method = $cg->codegenMethod('resolveType')
             ->setIsStatic(true)
             ->setPublic()
-            ->setReturnTypef('\%s', \Slack\GraphQL\Types\BaseType::class)
+            ->setReturnTypef('\%s', \Slack\GraphQL\__Private\Types\BaseType::class)
             ->addParameter('string $field_name');
 
         $hb = hb($cg);
@@ -194,13 +194,13 @@ class Field {
 
         switch ($simple_return_type) {
             case 'string':
-                return \Slack\GraphQL\Types\StringOutputType::class
+                return \Slack\GraphQL\__Private\Types\StringOutputType::class
                     |> Str\format('\%s', $$);
             case 'int':
-                return \Slack\GraphQL\Types\IntOutputType::class
+                return \Slack\GraphQL\__Private\Types\IntOutputType::class
                     |> Str\format('\%s', $$);
             case 'bool':
-                return \Slack\GraphQL\Types\BooleanOutputType::class
+                return \Slack\GraphQL\__Private\Types\BooleanOutputType::class
                     |> Str\format('\%s', $$);
             default:
                 // TODO: this doesn't handle custom types, how do we make this
@@ -253,19 +253,19 @@ class Field {
         }
         switch ($hack_type) {
             case 'HH\int':
-                $class = Types\IntInputType::class;
+                $class = \Slack\GraphQL\__Private\Types\IntInputType::class;
                 break;
             case 'HH\string':
-                $class = Types\StringInputType::class;
+                $class = \Slack\GraphQL\__Private\Types\StringInputType::class;
                 break;
             case 'HH\bool':
-                $class = Types\BooleanInputType::class;
+                $class = \Slack\GraphQL\__Private\Types\BooleanInputType::class;
                 break;
             default:
                 invariant_violation('not yet implemented');
         }
         return
-            Str\strip_prefix($class, 'Slack\\GraphQL\\').
+            Str\strip_prefix($class, 'Slack\\GraphQL\\__Private\\').
             ($nullable ? '::nullable()' : '::nonNullable()');
     }
 }
@@ -307,14 +307,14 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->useNamespace('Slack\\GraphQL\\Types')
+            ->useNamespace('Slack\\GraphQL\\__Private\\Types')
             ->useNamespace('HH\\Lib\\Dict')
             ->addClass($this->generateSchemaType($this->cg));
 
         foreach ($objects as $object) {
             $class = $object->generateObjectType($this->cg)
                 ->setIsFinal(true)
-                ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
+                ->setExtendsf('\%s', \Slack\GraphQL\__Private\Types\ObjectType::class);
             $file->addClass($class);
         }
 
@@ -325,7 +325,7 @@ final class Generator {
         $class = $cg->codegenClass('Schema')
             ->setIsAbstract(true)
             ->setIsFinal(true)
-            ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class);
+            ->setExtendsf('\%s', \Slack\GraphQL\__Private\BaseSchema::class);
 
         $resolve_query_method = $cg->codegenMethod('resolveQuery')
             ->setPublic()

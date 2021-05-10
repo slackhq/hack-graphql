@@ -1,4 +1,4 @@
-namespace Slack\GraphQL\Types;
+namespace Slack\GraphQL\__Private\Types;
 
 // TODO: Implement introspection: https://spec.graphql.org/draft/#sec-Introspection
 // It may or may not be a good idea to reuse the existing codegen to generate the introspection types.

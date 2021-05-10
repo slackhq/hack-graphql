@@ -1,17 +1,17 @@
-namespace Slack\GraphQL;
+namespace Slack\GraphQL\__Private;
 
 // TODO: this should be private
 abstract class BaseSchema {
     abstract public static function resolveQuery(
         \Graphpinator\Parser\Operation\Operation $operation,
-        __Private\Variables $variables,
+        Variables $variables,
     ): Awaitable<mixed>;
 
-    public static async function resolveField<TGraphQLType as \Slack\GraphQL\Types\ObjectType, THackType>(
+    public static async function resolveField<TGraphQLType as Types\ObjectType, THackType>(
         \Graphpinator\Parser\Field\Field $field,
         TGraphQLType $parent_type,
         THackType $parent,
-        __Private\Variables $variables,
+        Variables $variables,
     ): Awaitable<mixed> where THackType = TGraphQLType::THackType {
         $field_name = $field->getName();
         $field_type = $parent_type::resolveType($field_name);
@@ -23,7 +23,7 @@ abstract class BaseSchema {
             await $parent_type::resolveField($field_name, $parent, $field->getArguments() ?? dict[], $variables),
         );
 
-        if (!$field_type is \Slack\GraphQL\Types\ObjectType) {
+        if (!$field_type is \Slack\GraphQL\__Private\Types\ObjectType) {
             return $field_value;
         }
 

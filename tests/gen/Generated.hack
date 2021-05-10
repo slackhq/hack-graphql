@@ -5,13 +5,13 @@
  * /Users/ianhoffman/slack/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<6e098cf42d0b8d3a1ebd7bd8c48ed1be>>
+ * @generated SignedSource<<b07763814146c571d4a5a4e5f9c06fcf>>
  */
 namespace Slack\GraphQL\Test\Generated;
-use namespace Slack\GraphQL\Types;
+use namespace Slack\GraphQL\__Private\Types;
 use namespace HH\Lib\Dict;
 
-abstract final class Schema extends \Slack\GraphQL\BaseSchema {
+abstract final class Schema extends \Slack\GraphQL\__Private\BaseSchema {
 
   public static async function resolveQuery(
     \Graphpinator\Parser\Operation\Operation $operation,
@@ -28,7 +28,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
   }
 }
 
-final class Query extends \Slack\GraphQL\Types\ObjectType {
+final class Query extends \Slack\GraphQL\__Private\Types\ObjectType {
 
   const type THackType = null;
   const NAME = 'Query';
@@ -53,21 +53,21 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
 
   public static function resolveType(
     string $field_name,
-  ): \Slack\GraphQL\Types\BaseType {
+  ): \Slack\GraphQL\__Private\Types\BaseType {
     switch ($field_name) {
       case 'viewer':
         return User::nullable();
       case 'user':
         return User::nullable();
       case 'nested_list_sum':
-        return \Slack\GraphQL\Types\IntOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\IntOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
   }
 }
 
-final class User extends \Slack\GraphQL\Types\ObjectType {
+final class User extends \Slack\GraphQL\__Private\Types\ObjectType {
 
   const type THackType = \User;
   const NAME = 'User';
@@ -94,23 +94,23 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
 
   public static function resolveType(
     string $field_name,
-  ): \Slack\GraphQL\Types\BaseType {
+  ): \Slack\GraphQL\__Private\Types\BaseType {
     switch ($field_name) {
       case 'id':
-        return \Slack\GraphQL\Types\IntOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\IntOutputType::nullable();
       case 'name':
-        return \Slack\GraphQL\Types\StringOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\StringOutputType::nullable();
       case 'team':
         return Team::nullable();
       case 'is_active':
-        return \Slack\GraphQL\Types\BooleanOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\BooleanOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
   }
 }
 
-final class Team extends \Slack\GraphQL\Types\ObjectType {
+final class Team extends \Slack\GraphQL\__Private\Types\ObjectType {
 
   const type THackType = \Team;
   const NAME = 'Team';
@@ -137,16 +137,16 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
 
   public static function resolveType(
     string $field_name,
-  ): \Slack\GraphQL\Types\BaseType {
+  ): \Slack\GraphQL\__Private\Types\BaseType {
     switch ($field_name) {
       case 'id':
-        return \Slack\GraphQL\Types\IntOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\IntOutputType::nullable();
       case 'name':
-        return \Slack\GraphQL\Types\StringOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\StringOutputType::nullable();
       case 'num_users':
-        return \Slack\GraphQL\Types\IntOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\IntOutputType::nullable();
       case 'description':
-        return \Slack\GraphQL\Types\StringOutputType::nullable();
+        return \Slack\GraphQL\__Private\Types\StringOutputType::nullable();
       default:
         throw new \Error('Unknown field: '.$field_name);
     }
