@@ -93,6 +93,31 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
 
         return $method;
     }
+
+    protected function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
+        $method = $cg->codegenMethod('getFieldDefinition')
+            ->setPublic()
+            ->setReturnType('GraphQL\\IFieldDefinition<this::THackType>')
+            ->addParameter('string $field_name');
+
+        $hb = hb($cg);
+        $hb->startSwitch('$field_name')
+            ->addCaseBlocks(
+                $this->fields,
+                ($field, $hb) ==> {
+                    $field->addGetFieldDefinitionCase($hb);
+                    $hb->unindent();
+                },
+            )
+            ->addDefault()
+            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
+            ->endDefault()
+            ->endSwitch();
+
+        $method->setBody($hb->getCode());
+
+        return $method;
+    }
 }
 
 class Query extends BaseObject<QueryField> {
@@ -101,15 +126,17 @@ class Query extends BaseObject<QueryField> {
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass('Query');
 
-        $hack_type_constant =
-            $cg->codegenClassConstant('THackType')->setType('type')->setValue(null, HackBuilderValues::export());
+        $hack_type_constant = $cg->codegenClassConstant('THackType')
+            ->setType('type')
+            ->setValue('GraphQL\\Root', HackBuilderValues::literal());
 
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
 
         $class
-            ->addMethod($this->generateResolveField($cg))
-            ->addMethod($this->generateResolveType($cg));
+            ->addMethod($this->generateGetFieldDefinition($cg));
+            //->addMethod($this->generateResolveField($cg))
+            //->addMethod($this->generateResolveType($cg));
 
         return $class;
     }
@@ -125,15 +152,17 @@ class Mutation extends BaseObject<MutationField> {
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass('Mutation');
 
-        $hack_type_constant =
-            $cg->codegenClassConstant('THackType')->setType('type')->setValue(null, HackBuilderValues::export());
+        $hack_type_constant = $cg->codegenClassConstant('THackType')
+            ->setType('type')
+            ->setValue('GraphQL\\Root', HackBuilderValues::literal());
 
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Mutation', HackBuilderValues::export()));
 
         $class
-            ->addMethod($this->generateResolveField($cg))
-            ->addMethod($this->generateResolveType($cg));
+            ->addMethod($this->generateGetFieldDefinition($cg));
+            //->addMethod($this->generateResolveField($cg))
+            //->addMethod($this->generateResolveType($cg));
 
         return $class;
     }
@@ -168,8 +197,9 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
         );
 
         $class
-            ->addMethod($this->generateResolveField($cg))
-            ->addMethod($this->generateResolveType($cg));
+            ->addMethod($this->generateGetFieldDefinition($cg));
+            //->addMethod($this->generateResolveField($cg))
+            //->addMethod($this->generateResolveType($cg));
 
         return $class;
     }
@@ -214,7 +244,29 @@ class Field {
             ->returnCasef('%s::nullable()', $graphql_type);
     }
 
-    private function getGraphQLType(): string {
+    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
+        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
+
+        $return_prefix = '';
+        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
+            $return_prefix = 'await ';
+        }
+
+        $hb->addMultilineCall(
+            'return new GraphQL\\FieldDefinition',
+            vec[
+                $this->getGraphQLType().'::nullable()',
+                Str\format(
+                    'async ($parent, $args, $vars) ==> %s$parent->%s(%s)',
+                    $return_prefix,
+                    $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
+                    $this->getArgumentInvocationString(),
+                ),
+            ],
+        );
+    }
+
+    final protected function getGraphQLType(): string {
         // TODO: must be a better way to do this
         $simple_return_type = $this->method_decl
             ->getFunctionDeclHeader()
@@ -322,6 +374,31 @@ class QueryField extends Field {
             $this->getArgumentInvocationString(),
         );
     }
+
+    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
+        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
+
+        $class_name = $this->class_decl->getName()->getText();
+
+        $return_prefix = '';
+        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
+            $return_prefix = 'await ';
+        }
+
+        $hb->addMultilineCall(
+            'return new GraphQL\\FieldDefinition',
+            vec[
+                $this->getGraphQLType().'::nullable()',
+                Str\format(
+                    'async ($parent, $args, $vars) ==> %s\%s::%s(%s)',
+                    $return_prefix,
+                    $class_name,
+                    $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
+                    $this->getArgumentInvocationString(),
+                ),
+            ],
+        );
+    }
 }
 
 class MutationField extends QueryField {}
@@ -342,6 +419,7 @@ final class Generator {
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
+            ->useNamespace('Slack\\GraphQL')
             ->useNamespace('Slack\\GraphQL\\Types')
             ->useNamespace('HH\\Lib\\Dict')
             ->addClass($this->generateSchemaType($this->cg));
@@ -405,19 +483,12 @@ final class Generator {
             ->setPublic()
             ->setIsStatic(true)
             ->setIsAsync(true)
-            ->setReturnType('Awaitable<mixed>')
+            ->setReturnType('Awaitable<GraphQL\\ValidFieldResult>')
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
             ->addParameterf('\%s $variables', \Slack\GraphQL\__Private\Variables::class);
 
         $hb = hb($cg)
-            ->addAssignment($variable_name, $variable_value, HackBuilderValues::literal())
-            ->ensureEmptyLine()
-            ->addAssignment('$data', 'dict[]', HackBuilderValues::literal())
-            ->startForeachLoop('$operation->getFields()->getFields()', null, '$field') // TODO: ->getFragments()
-            ->addLinef('$data[$field->getName()] = self::resolveField($field, %s, null, $variables);', $variable_name)
-            ->endForeachLoop()
-            ->ensureEmptyLine()
-            ->addReturn('await Dict\from_async($data)', HackBuilderValues::literal());
+            ->addReturnf('await %s->resolveAsync(new GraphQL\\Root(), $operation, $variables)', $variable_value);
 
         $resolve_method->setBody($hb->getCode());
 
