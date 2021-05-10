@@ -26,7 +26,7 @@ final class Resolver {
                     throw new \Error('Unsupported operation: '.$operation_type);
             }
 
-            $out['data'][$operation_type] = $data;
+            $out['data'][$operation_type] = $data->getValue();
         }
 
         return $out;
