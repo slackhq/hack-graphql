@@ -1,7 +1,7 @@
 namespace Slack\GraphQL;
 
 final class Resolver {
-    public function __construct(private classname<\Slack\GraphQL\__Private\BaseSchema> $schema) {}
+    public function __construct(private classname<__Private\BaseSchema> $schema) {}
 
     public async function resolve(
         \Graphpinator\Parser\ParsedRequest $request,

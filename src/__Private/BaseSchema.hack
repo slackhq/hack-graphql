@@ -23,7 +23,7 @@ abstract class BaseSchema {
             await $parent_type::resolveField($field_name, $parent, $field->getArguments() ?? dict[], $variables),
         );
 
-        if (!$field_type is \Slack\GraphQL\__Private\Types\ObjectType) {
+        if (!$field_type is Types\ObjectType) {
             return $field_value;
         }
 
