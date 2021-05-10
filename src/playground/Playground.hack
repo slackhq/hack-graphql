@@ -47,7 +47,7 @@ function getTeams(): dict<int, Team> {
     ];
 }
 
-<<GraphQL\GQLInterface('User', 'User')>>
+<<GraphQL\InterfaceType('User', 'User')>>
 interface User {
     <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int;
@@ -87,7 +87,7 @@ abstract class BaseUser implements User {
     }
 }
 
-<<GraphQL\Object('Human', 'Human')>>
+<<GraphQL\ObjectType('Human', 'Human')>>
 final class Human extends BaseUser {
     <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
     public function getFavoriteColor(): string {
@@ -95,7 +95,7 @@ final class Human extends BaseUser {
     }
 }
 
-<<GraphQL\Object('Bot', 'Bot')>>
+<<GraphQL\ObjectType('Bot', 'Bot')>>
 final class Bot extends BaseUser {
     <<GraphQL\Field('primary_function', 'Intended use of the bot')>>
     public function getPrimaryFunction(): string {
@@ -103,7 +103,7 @@ final class Bot extends BaseUser {
     }
 }
 
-<<GraphQL\Object('Team', 'Team')>>
+<<GraphQL\ObjectType('Team', 'Team')>>
 final class Team {
     public function __construct(private shape('id' => int, 'name' => string, 'num_users' => int) $data) {}
 

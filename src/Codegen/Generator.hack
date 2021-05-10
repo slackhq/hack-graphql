@@ -119,7 +119,7 @@ class Query extends BaseObject<QueryField> {
     }
 }
 
-abstract class BaseClassishType<T as \Slack\GraphQL\__Private\Classish> extends BaseObject<Field> {
+abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extends BaseObject<Field> {
     public function __construct(
         private HHAST\ClassishDeclaration $class_decl,
         private T $classish_attribute,
@@ -155,9 +155,9 @@ abstract class BaseClassishType<T as \Slack\GraphQL\__Private\Classish> extends 
     }
 }
 
-class GQLInterface extends BaseClassishType<\Slack\GraphQL\GQLInterface> {}
+class GQLInterface extends CompositeType<\Slack\GraphQL\InterfaceType> {}
 
-class Object extends BaseClassishType<\Slack\GraphQL\Object> {}
+class Object extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
 class Field {
     public function __construct(
@@ -214,7 +214,7 @@ class Field {
                 // TODO: this doesn't handle custom types, how do we make this
                 // better?
                 $rc = new \ReflectionClass($simple_return_type);
-                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\Object::class) ?? $rc->getAttributeClass(\Slack\GraphQL\GQLInterface::class);
+                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ?? $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_object is null) {
                     throw new \Error(
                         'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\Object(...)>> or <<GraphQL\GQLInterface(...)>>',
@@ -370,7 +370,7 @@ final class Generator {
             if ($class_decl->hasAttribute()) {
                 $rc = new \ReflectionClass($class_decl->getName()->getText());
 
-                $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\GQLInterface::class);
+                $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_interface is nonnull) {
                     $fields = $this->collectObjectFields($class_decl);
                     $object = new GQLInterface($class_decl, $graphql_interface, $rc, $fields);
@@ -378,7 +378,7 @@ final class Generator {
                     $objects[] = $object;
                 }
 
-                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\Object::class);
+                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_object is nonnull) {
                     $fields = vec[];
 
