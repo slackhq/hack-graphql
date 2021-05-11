@@ -276,19 +276,19 @@ final class Generator {
         ?'codegen_config' => IHackCodegenConfig,
     );
 
-    private function __construct(private DefinitionFinder\BaseParser $parser, private self::TGeneratorConfig $conifg) {
-        $this->cg = new HackCodegenFactory($conifg['codegen_config'] ?? new HackCodegenConfig());
+    private function __construct(private DefinitionFinder\BaseParser $parser, private self::TGeneratorConfig $config) {
+        $this->cg = new HackCodegenFactory($config['codegen_config'] ?? new HackCodegenConfig());
     }
 
-    public static async function forPath(string $path, self::TGeneratorConfig $conifg): Awaitable<CodegenFile> {
+    public static async function forPath(string $path, self::TGeneratorConfig $config): Awaitable<CodegenFile> {
         $defs = await DefinitionFinder\TreeParser::fromPathAsync($path);
-        $gen = new self($defs, $conifg);
+        $gen = new self($defs, $config);
         return await $gen->generate();
     }
 
-    public static async function forFile(string $filename, self::TGeneratorConfig $conifg): Awaitable<CodegenFile> {
+    public static async function forFile(string $filename, self::TGeneratorConfig $config): Awaitable<CodegenFile> {
         $defs = await DefinitionFinder\FileParser::fromFileAsync($filename);
-        $gen = new self($defs, $conifg);
+        $gen = new self($defs, $config);
         return await $gen->generate();
     }
 
@@ -296,7 +296,7 @@ final class Generator {
         $objects = await $this->collectObjects();
 
         $file = $this->cg
-            ->codegenFile($this->conifg['output_path'])
+            ->codegenFile($this->config['output_path'])
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
             ->setFileType(CodegenFileType::DOT_HACK)
