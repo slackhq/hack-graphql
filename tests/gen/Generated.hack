@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1b33e2a23a3fde327e1a4706574d879d>>
+ * @generated SignedSource<<ac6afcc740499cd651e247d0ff007be2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -221,7 +221,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'favorite_color':
         return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
+          FavoriteColorOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
         );
       default:
@@ -305,4 +305,11 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         throw new \Exception('Unknown field: '.$field_name);
     }
   }
+}
+
+final class FavoriteColorOutputType extends \Slack\GraphQL\Types\EnumType {
+
+  const NAME = 'FavoriteColor';
+  const type THackType = \FavoriteColor;
+  const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
 }

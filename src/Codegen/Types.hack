@@ -56,17 +56,34 @@ function output_type(string $hack_type, bool $force_nullable = true): shape('typ
             $class = Types\BooleanOutputType::class;
             break;
         default:
-            $rc = new \ReflectionClass($unwrapped);
-            $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
-                $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-            if ($graphql_object is null) {
+            $class = get_output_class($unwrapped);
+            if ($class is null) {
                 throw new \Error(
-                    'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\ObjectType(...)>> or <<GraphQL\InterfaceType(...)>>',
+                    'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute'
                 );
             }
-            $class = $graphql_object->getType();
     }
     return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
+}
+
+/**
+ * Get the output class for a hack type which is not a primitive.
+ */
+function get_output_class(string $hack_type): ?string {
+    $rc = new \ReflectionClass($hack_type);
+
+    $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
+        $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+    if ($graphql_object) {
+        $class = $graphql_object->getType();
+    }
+
+    $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
+    if ($graphql_enum) {
+        return $graphql_enum->getOutputType();
+    }
+
+    return null;
 }
 
 /**

@@ -87,11 +87,17 @@ abstract class BaseUser implements User {
     }
 }
 
+<<GraphQL\EnumType('FavoriteColor', 'Favorite Color')>>
+enum FavoriteColor: string {
+    RED = 'red';
+    BLUE = 'blue';
+}
+
 <<GraphQL\ObjectType('Human', 'Human')>>
 final class Human extends BaseUser {
     <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
-    public function getFavoriteColor(): string {
-        return 'blue';
+    public function getFavoriteColor(): FavoriteColor {
+        return FavoriteColor::BLUE;
     }
 }
 

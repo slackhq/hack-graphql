@@ -31,7 +31,7 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
         dict<string, mixed> $expected_response,
     ): Awaitable<void> {
         if (!C\contains_key($expected_response, 'data')) {
-            $expected_response = dict['data' => $expected_response];
+            $expected_response = shape('data' => $expected_response);
         }
 
         $source = new \Graphpinator\Source\StringSource($query);

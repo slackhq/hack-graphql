@@ -40,7 +40,7 @@ final class BasicTest extends PlaygroundTest {
             'select concrete implementation' => tuple(
                 'query { human(id: 2) { id, name, favorite_color } }',
                 dict[],
-                dict['human' => dict['id' => 2, 'name' => 'User 2', 'favorite_color' => 'blue']],
+                dict['human' => dict['id' => 2, 'name' => 'User 2', 'favorite_color' => 'BLUE']],
             ),
             'boolean input true' => tuple(
                 'query TestQuery($short: Boolean!) { user(id: 2) { id, team { description(short: $short) } } }',
