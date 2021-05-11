@@ -133,7 +133,7 @@ class Field {
         protected \Slack\GraphQL\Field $graphql_field,
     ) {}
 
-    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
+    final public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
 
         $return_prefix = '';
@@ -141,18 +141,34 @@ class Field {
             $return_prefix = 'await ';
         }
 
-        $hb->addMultilineCall(
-            'return new GraphQL\\FieldDefinition',
-            vec[
-                $this->getGraphQLType().'::nullable()',
-                Str\format(
-                    'async ($parent, $args, $vars) ==> %s$parent->%s(%s)',
-                    $return_prefix,
-                    $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
-                    $this->getArgumentInvocationString(),
-                ),
-            ],
+        $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
+
+        // Field return type
+        $hb->addLinef('%s::nullable(),', $this->getGraphQLType());
+
+        // Arguments
+        $hb->addf(
+            'async ($parent, $args, $vars) ==> %s%s%s(',
+            $return_prefix,
+            $this->getMethodCallPrefix(),
+            $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
         );
+        $args = $this->getArgumentInvocationStrings();
+        if (!C\is_empty($args)) {
+            $hb->newLine()->indent();
+            foreach ($args as $arg) {
+                $hb->addLinef('%s,', $arg);
+            }
+            $hb->unindent();
+        }
+        $hb->addLine('),');
+
+        // End of new GraphQL\FieldDefinition(
+        $hb->unindent()->addLine(');');
+    }
+
+    protected function getMethodCallPrefix(): string {
+        return '$parent->';
     }
 
     final protected function getGraphQLType(): string {
@@ -194,7 +210,7 @@ class Field {
         return $this->reflection_method->getNumberOfParameters() > 0;
     }
 
-    protected function getArgumentInvocationString(): string {
+    protected function getArgumentInvocationStrings(): vec<string> {
         $invocations = vec[];
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $invocations[] = Str\format(
@@ -203,8 +219,7 @@ class Field {
                 \var_export($param->getName(), true),
             );
         }
-
-        return Str\join($invocations, ', ');
+        return $invocations;
     }
 
     /**
@@ -244,30 +259,9 @@ class Field {
 }
 
 class QueryField extends Field {
-
-    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
-        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
-
-        $class_name = $this->class_decl->getName()->getText();
-
-        $return_prefix = '';
-        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
-            $return_prefix = 'await ';
-        }
-
-        $hb->addMultilineCall(
-            'return new GraphQL\\FieldDefinition',
-            vec[
-                $this->getGraphQLType().'::nullable()',
-                Str\format(
-                    'async ($parent, $args, $vars) ==> %s\%s::%s(%s)',
-                    $return_prefix,
-                    $class_name,
-                    $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
-                    $this->getArgumentInvocationString(),
-                ),
-            ],
-        );
+    <<__Override>>
+    protected function getMethodCallPrefix(): string {
+        return '\\'.$this->class_decl->getName()->getText().'::';
     }
 }
 
