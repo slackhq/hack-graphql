@@ -13,8 +13,8 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
-        $file = await GraphQL\Codegen\Generator::forFile(
-            __DIR__.'/../src/playground/Playground.hack',
+        $file = await GraphQL\Codegen\Generator::forPath(
+            __DIR__.'/../src/playground',
             shape(
                 'output_path' => __DIR__.'/gen/Generated.hack',
             ),
