@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ac6afcc740499cd651e247d0ff007be2>>
+ * @generated SignedSource<<c3144e23b8a885fa0842720d2d926d74>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;

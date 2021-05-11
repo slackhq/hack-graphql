@@ -75,7 +75,7 @@ function get_output_class(string $hack_type): ?string {
     $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
         $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
     if ($graphql_object) {
-        $class = $graphql_object->getType();
+        return $graphql_object->getType();
     }
 
     $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
