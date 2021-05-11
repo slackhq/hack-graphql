@@ -5,7 +5,7 @@
  * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<ed14731bb54504f455d086a748803389>>
+ * @generated SignedSource<<bab62eaa97c20d0d14b9a58a4d7c07ae>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -48,22 +48,30 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case 'user':
         return new GraphQL\FieldDefinition(
           User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
         );
       case 'human':
         return new GraphQL\FieldDefinition(
           Human::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
         );
       case 'bot':
         return new GraphQL\FieldDefinition(
           Bot::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
         );
       case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
           Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
+            Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
+          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -83,7 +91,9 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
           User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -233,7 +243,9 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
       case 'description':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getDescription(Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars)),
+          async ($parent, $args, $vars) ==> $parent->getDescription(
+            Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars),
+          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
