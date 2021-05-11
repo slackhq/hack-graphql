@@ -2,9 +2,17 @@ use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
 
-final class PlaygroundTest extends \Facebook\HackTest\HackTest {
+abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
+    abstract public static function getTestCases(): dict<string, (string, dict<string, mixed>, dict<string, mixed>)>;
+
+    <<__Override>>
     public static async function beforeFirstTestAsync(): Awaitable<void> {
+        await self::runCodegenAsync();
+    }
+
+    <<__Memoize>>
+    private static async function runCodegenAsync(): Awaitable<void> {
         $file = await GraphQL\Codegen\Generator::forFile(
             __DIR__.'/../src/playground/Playground.hack',
             shape(
@@ -16,130 +24,23 @@ final class PlaygroundTest extends \Facebook\HackTest\HackTest {
         $file->save();
     }
 
-    public async function testSelectTeamId(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { viewer { id, team { id } } }');
+    <<\Facebook\HackTest\DataProvider('getTestCases')>>
+    final public async function test(
+        string $query,
+        dict<string, mixed> $variables,
+        dict<string, mixed> $expected_response,
+    ): Awaitable<void> {
+        if (!C\contains_key($expected_response, 'data')) {
+            $expected_response = dict['data' => $expected_response];
+        }
+
+        $source = new \Graphpinator\Source\StringSource($query);
         $parser = new \Graphpinator\Parser\Parser($source);
 
         $request = $parser->parse();
         $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
 
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['query']['viewer']['id'])->toBeSame(1);
-        expect(($out['data'] as dynamic)['query']['viewer']['team']['id'])->toBeSame(1);
-    }
-
-    public async function testSelectIsActive(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { viewer { is_active } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['query']['viewer']['is_active'])->toBeTrue();
-    }
-
-    public async function testSelectTeamName(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { viewer { team { name, num_users } } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['query']['viewer']['team']['name'])->toBeSame('Test Team 1');
-        expect(($out['data'] as dynamic)['query']['viewer']['team']['num_users'])->toBeSame(3);
-    }
-
-    public async function testVariables(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query TestQuery($user_id: ID!) { user(id: $user_id) { id } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $request = $parser->parse();
-        $out = await $resolver->resolve($request, dict['user_id' => 3]);
-        expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(3);
-    }
-
-    public async function testNestedVariable(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource(
-            'query TestQuery($num: Int!) { nested_list_sum(numbers: [21, [$num, 14]]) }',
-        );
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $request = $parser->parse();
-        $out = await $resolver->resolve($request, dict['num' => 7]);
-        expect(($out['data'] as dynamic)['query']['nested_list_sum'])->toBeSame(42);
-    }
-
-    public async function testInlineArguments(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $request = $parser->parse();
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['query']['user']['id'])->toBeSame(2);
-    }
-
-    public async function testSelectConcreteImplementation(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { human(id: 2) { id, name, favorite_color } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['query']['human']['id'])->toBeSame(2);
-        expect(($out['data'] as dynamic)['query']['human']['name'])->toBeSame('User 2');
-        expect(($out['data'] as dynamic)['query']['human']['favorite_color'])->toBeSame('blue');
-    }
-
-    public async function testSelectInvalidFieldOnInterface(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id, name, favorite_color } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        expect(async () ==> await $resolver->resolve($request))
-            ->toThrow(\Exception::class, "Unknown field: favorite_color");
-    }
-
-    public async function testSelectInvalidFieldOnConcreteImplementation(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { bot(id: 2) { id, name, favorite_color } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        expect(async () ==> await $resolver->resolve($request))
-            ->toThrow(\Exception::class, "Unknown field: favorite_color");
-    }
-
-    public async function testBooleanInput(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource(
-            'query TestQuery($short: Boolean!) { user(id: 2) { id, team { description(short: $short) } } }',
-        );
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $request = $parser->parse();
-        $out = await $resolver->resolve($request, dict['short' => true]);
-        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Short description");
-
-        $out = await $resolver->resolve($request, dict['short' => false]);
-        expect(($out['data'] as dynamic)['query']['user']['team']['description'])->toBeSame("Much longer description");
-    }
-
-    public async function testMutation(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('mutation { pokeUser(id: 2) { id } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $request = $parser->parse();
-        $out = await $resolver->resolve($request);
-        expect(($out['data'] as dynamic)['mutation']['pokeUser']['id'])->toBeSame(2);
+        $out = await $resolver->resolve($request, $variables);
+        expect($out)->toEqual($expected_response);
     }
 }

@@ -298,7 +298,7 @@ final class Generator {
         $file = $this->cg
             ->codegenFile($this->config['output_path'])
             ->setDoClobber(true)
-            ->setGeneratedFrom($this->cg->codegenGeneratedFromScript())
+            ->setGeneratedFrom($this->cg->codegenGeneratedFromScript('vendor/bin/hacktest'))
             ->setFileType(CodegenFileType::DOT_HACK)
             ->useNamespace('Slack\\GraphQL')
             ->useNamespace('Slack\\GraphQL\\Types')
