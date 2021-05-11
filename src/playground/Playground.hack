@@ -47,8 +47,22 @@ function getTeams(): dict<int, Team> {
     ];
 }
 
-<<GraphQL\Object('User', 'User')>>
-final class User {
+<<GraphQL\InterfaceType('User', 'User')>>
+interface User {
+    <<GraphQL\Field('id', 'ID of the user')>>
+    public function getId(): int;
+
+    <<GraphQL\Field('name', 'Name of the user')>>
+    public function getName(): string;
+
+    <<GraphQL\Field('team', 'Team the user belongs to')>>
+    public function getTeam(): Awaitable<\Team>;
+
+    <<GraphQL\Field('is_active', 'Whether the user is active')>>
+    public function isActive(): bool;
+}
+
+abstract class BaseUser implements User {
     public function __construct(private shape(
         'id' => int,
         'name' => string,
@@ -56,28 +70,40 @@ final class User {
         'is_active' => bool
     ) $data) {}
 
-    <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int {
         return $this->data['id'];
     }
 
-    <<GraphQL\Field('name', 'Name of the user')>>
     public function getName(): string {
         return $this->data['name'];
     }
 
-    <<GraphQL\Field('team', 'Team the user belongs to')>>
     public async function getTeam(): Awaitable<\Team> {
         return getTeams()[$this->data['team_id']];
     }
 
-    <<GraphQL\Field('is_active', 'Whether the user is active')>>
     public function isActive(): bool {
         return $this->data['is_active'];
     }
 }
 
-<<GraphQL\Object('Team', 'Team')>>
+<<GraphQL\ObjectType('Human', 'Human')>>
+final class Human extends BaseUser {
+    <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
+    public function getFavoriteColor(): string {
+        return 'blue';
+    }
+}
+
+<<GraphQL\ObjectType('Bot', 'Bot')>>
+final class Bot extends BaseUser {
+    <<GraphQL\Field('primary_function', 'Intended use of the bot')>>
+    public function getPrimaryFunction(): string {
+        return 'send spam';
+    }
+}
+
+<<GraphQL\ObjectType('Team', 'Team')>>
 final class Team {
     public function __construct(private shape('id' => int, 'name' => string, 'num_users' => int) $data) {}
 
@@ -105,12 +131,22 @@ final class Team {
 abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('viewer', 'Authenticated viewer')>>
     public static async function getViewer(): Awaitable<\User> {
-        return new \User(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1, 'is_active' => true));
+        return new \Human(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
     public static async function getUser(int $id): Awaitable<\User> {
-        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    }
+
+    <<GraphQL\QueryRootField('human', 'Fetch a user by ID')>>
+    public static async function getHuman(int $id): Awaitable<\Human> {
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    }
+
+    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
+    public static async function getBot(int $id): Awaitable<\Bot> {
+        return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
@@ -122,6 +158,6 @@ abstract final class UserQueryAttributes {
 abstract final class UserMutationAttributes {
     <<GraphQL\MutationRootField('pokeUser', 'Poke a user by ID')>>
     public static async function pokeUser(int $id): Awaitable<\User> {
-        return new \User(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1));
+        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 }
