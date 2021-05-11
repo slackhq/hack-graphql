@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<c3144e23b8a885fa0842720d2d926d74>>
+ * @generated SignedSource<<4076197cabac0f42468f43874c01e2cb>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,11 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
+      case 'error_test':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nullable(),
+          async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
+        );
       case 'output_type_test':
         return new GraphQL\FieldDefinition(
           OutputTypeTest::nullable(),
@@ -133,6 +138,31 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \ErrorTestObj;
+  const NAME = 'ErrorTest';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'user_facing_error':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->user_facing_error(),
+        );
+      case 'hidden_exception':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->hidden_exception(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

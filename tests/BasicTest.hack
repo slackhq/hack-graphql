@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 final class BasicTest extends PlaygroundTest {
 
     <<__Override>>
-    public static function getTestCases(): dict<string, (string, dict<string, mixed>, dict<string, mixed>)> {
+    public static function getTestCases(): this::TTestCases {
         return dict[
             'select team.id' => tuple(
                 'query { viewer { id, team { id } } }',

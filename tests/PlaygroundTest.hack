@@ -4,7 +4,9 @@ use namespace Slack\GraphQL;
 
 abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
-    abstract public static function getTestCases(): dict<string, (string, dict<string, mixed>, dict<string, mixed>)>;
+    const type TTestCases = dict<string, (string, dict<string, mixed>, mixed)>;
+
+    abstract public static function getTestCases(): this::TTestCases;
 
     <<__Override>>
     public static async function beforeFirstTestAsync(): Awaitable<void> {
@@ -28,9 +30,13 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
     final public async function test(
         string $query,
         dict<string, mixed> $variables,
-        dict<string, mixed> $expected_response,
+        mixed $expected_response,
     ): Awaitable<void> {
-        if (!C\contains_key($expected_response, 'data')) {
+        // If $expected_response is not a shape with 'data' and/or 'errors', assume it's the data.
+        if (
+            !$expected_response is shape('data' => mixed, ...) &&
+            !$expected_response is shape('errors' => mixed, ...)
+        ) {
             $expected_response = shape('data' => $expected_response);
         }
 
