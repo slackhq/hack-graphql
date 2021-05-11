@@ -6,7 +6,7 @@ final class Resolver {
     public async function resolve(
         \Graphpinator\Parser\ParsedRequest $request,
         ?dict<string, mixed> $variables = null,
-    ): Awaitable<shape('data' => ?dict<string, mixed>, ?'errors' => vec<string>)> {
+    ): Awaitable<shape(?'data' => mixed, ?'errors' => vec<string>)> {
         // TODO: validate variables against $schema
         $schema = $this->schema;
 
@@ -26,7 +26,7 @@ final class Resolver {
                     throw new \Error('Unsupported operation: '.$operation_type);
             }
 
-            $out['data'][$operation_type] = $data->getValue();
+            $out['data'] = $data->getValue();
         }
 
         return $out;
