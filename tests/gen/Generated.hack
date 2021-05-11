@@ -5,7 +5,7 @@
  * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<198c2c8adff89cd6c2e909ac2ca9b203>>
+ * @generated SignedSource<<ed14731bb54504f455d086a748803389>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -62,7 +62,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars)),
         );
       default:
@@ -102,12 +102,12 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
@@ -117,7 +117,7 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\BooleanOutputType::nullable(),
+          Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       default:
@@ -137,12 +137,12 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
@@ -152,12 +152,12 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\BooleanOutputType::nullable(),
+          Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'favorite_color':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
         );
       default:
@@ -177,12 +177,12 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
@@ -192,12 +192,12 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\BooleanOutputType::nullable(),
+          Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
         );
       default:
@@ -217,22 +217,22 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'num_users':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\IntOutputType::nullable(),
+          Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
-          \Slack\GraphQL\Types\StringOutputType::nullable(),
+          Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getDescription(Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars)),
         );
       default:

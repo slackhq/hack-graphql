@@ -168,13 +168,13 @@ class Field {
         switch ($simple_return_type) {
             case 'string':
                 return \Slack\GraphQL\Types\StringOutputType::class
-                    |> Str\format('\%s', $$);
+                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
             case 'int':
                 return \Slack\GraphQL\Types\IntOutputType::class
-                    |> Str\format('\%s', $$);
+                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
             case 'bool':
                 return \Slack\GraphQL\Types\BooleanOutputType::class
-                    |> Str\format('\%s', $$);
+                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
             default:
                 // TODO: this doesn't handle custom types, how do we make this
                 // better?
