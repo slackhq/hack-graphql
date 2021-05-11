@@ -54,11 +54,13 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
     }
 }
 
+
 class Query extends BaseObject<QueryField> {
     public function __construct(protected vec<QueryField> $fields) {}
 
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass('Query');
+        $class = $cg->codegenClass('Query')
+            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
@@ -77,7 +79,8 @@ class Mutation extends BaseObject<MutationField> {
     public function __construct(protected vec<MutationField> $fields) {}
 
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass('Mutation');
+        $class = $cg->codegenClass('Mutation')
+            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
@@ -105,7 +108,8 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
     }
 
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass($this->composite_type->getType());
+        $class = $cg->codegenClass($this->composite_type->getType())
+            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
@@ -194,6 +198,31 @@ class QueryField extends Field {
 
 class MutationField extends QueryField {}
 
+class EnumOutputType implements GeneratableObjectType {
+    public function __construct(
+        private DefinitionFinder\ScannedEnum $scanned_enum,
+        private \Slack\GraphQL\EnumType $enum_type,
+       ) {}
+
+    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+        return $cg->codegenClass($this->enum_type->getOutputType())
+            ->setExtendsf('\%s', \Slack\GraphQL\Types\EnumType::class)
+            ->addConstant(
+                $cg->codegenClassConstant('NAME')
+                    ->setValue($this->enum_type->getType(), HackBuilderValues::export())
+            )
+            ->addTypeConstant(
+                $cg->codegenTypeConstant('THackType')
+                    ->setValue('\\'.$this->scanned_enum->getName(), HackBuilderValues::literal())
+            )
+            ->addConstant(
+                $cg->codegenClassConstant('HACK_ENUM')
+                    ->setType('\\HH\\enumname<this::THackType>')
+                    ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal())
+            );
+    }
+}
+
 final class Generator {
     private HackCodegenFactory $cg;
     private bool $has_mutations = false;
@@ -234,8 +263,7 @@ final class Generator {
 
         foreach ($objects as $object) {
             $class = $object->generateObjectType($this->cg)
-                ->setIsFinal(true)
-                ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
+                ->setIsFinal(true);
             $file->addClass($class);
         }
 
@@ -359,6 +387,13 @@ final class Generator {
                     $mutation_fields[] = new MutationField($class, $method, $rm, $mutation_root_field);
                 }
             }
+        }
+
+        foreach ($this->parser->getEnums() as $enum) {
+            $rc = new \ReflectionClass($enum->getName());
+            $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
+            if ($enum_type is null) continue;
+            $objects[] = new EnumOutputType($enum, $enum_type);
         }
 
         // TODO: throw an error if no query fields?
