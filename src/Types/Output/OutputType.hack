@@ -26,9 +26,20 @@ abstract class OutputType<TExpected> extends BaseType {
         return new NullableOutputType($this->nonNullableListOf());
     }
 
+    /**
+     * Convert a value returned by the field resolver into what should be put in the GraphQL response, possibly
+     * recursively.
+     */
     abstract public function resolveAsync(
         TExpected $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\__Private\Variables $vars,
     ): Awaitable<GraphQL\FieldResult>;
+
+    /**
+     * Convert an exception thrown by the field resolver into what should be put in the GraphQL response.
+     */
+    public function resolveError(GraphQL\UserFacingError $error): GraphQL\FieldResult {
+        return new GraphQL\InvalidFieldResult(vec[$error]);
+    }
 }

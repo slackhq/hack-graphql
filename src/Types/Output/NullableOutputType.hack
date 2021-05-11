@@ -32,4 +32,8 @@ final class NullableOutputType<TInner> extends OutputType<?TInner> {
             ? $result
             : new GraphQL\ValidFieldResult(null, $result->getErrors());
     }
+
+    public function resolveError(GraphQL\UserFacingError $error): GraphQL\ValidFieldResult {
+        return new GraphQL\ValidFieldResult(null, vec[$error]);
+    }
 }

@@ -27,9 +27,9 @@ final class FieldDefinition<TParent, TRet> implements IFieldDefinition<TParent> 
         try {
             $value = await $resolver($parent, $field->getArguments() ?? dict[], $vars);
         } catch (UserFacingError $e) {
-            return new InvalidFieldResult(vec[$e]);
+            return $this->type->resolveError($e);
         } catch (\Throwable $e) {
-            return new InvalidFieldResult(vec[new FieldResolverError($e)]);
+            return $this->type->resolveError(new FieldResolverError($e));
         }
 
         return await $this->type->resolveAsync($value, $field, $vars);

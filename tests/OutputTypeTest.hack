@@ -8,7 +8,7 @@ use namespace Slack\GraphQL;
 final class OutputTypeTest extends PlaygroundTest {
 
     <<__Override>>
-    public static function getTestCases(): dict<string, (string, dict<string, mixed>, dict<string, mixed>)> {
+    public static function getTestCases(): this::TTestCases {
         return dict[
             'all OutputTypeTestObj fields' => tuple(
                 'query {
