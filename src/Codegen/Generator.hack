@@ -27,73 +27,6 @@ interface GeneratableObjectType {
 abstract class BaseObject<T as Field> implements GeneratableObjectType {
     protected vec<T> $fields;
 
-    abstract public function generateObjectType(HackCodegenFactory $cg): CodegenClass;
-    abstract protected function getResolveFieldResolvedParentParameter(): string;
-
-    protected function generateResolveField(HackCodegenFactory $cg): CodegenMethod {
-        $method = $cg->codegenMethod('resolveField')
-            ->setIsAsync(true)
-            ->setIsStatic(true)
-            ->setPublic()
-            ->setReturnType('Awaitable<mixed>')
-            ->addParameter('string $field_name')
-            ->addParameter($this->getResolveFieldResolvedParentParameter())
-            ->addParameter($this->getResolveFieldArgumentsParameter())
-            ->addParameter($this->getResolveFieldVariablesParameter());
-
-        $hb = hb($cg);
-        $hb->startSwitch('$field_name')
-            ->addCaseBlocks(
-                $this->fields,
-                ($field, $hb) ==> {
-                    $field->addResolveFieldCase($hb);
-                },
-            )
-            ->addDefault()
-            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
-            ->endDefault()
-            ->endSwitch();
-
-        $method->setBody($hb->getCode());
-
-        return $method;
-    }
-
-    private function getResolveFieldArgumentsParameter(): string {
-        $var_name = C\any($this->fields, $field ==> $field->hasArguments()) ? '$args' : '$_args';
-        return Str\format('dict<string, \Graphpinator\Parser\Value\ArgumentValue> %s', $var_name);
-    }
-
-    private function getResolveFieldVariablesParameter(): string {
-        $var_name = C\any($this->fields, $field ==> $field->hasArguments()) ? '$vars' : '$_vars';
-        return Str\format('\Slack\GraphQL\__Private\Variables %s', $var_name);
-    }
-
-    protected function generateResolveType(HackCodegenFactory $cg): CodegenMethod {
-        $method = $cg->codegenMethod('resolveType')
-            ->setIsStatic(true)
-            ->setPublic()
-            ->setReturnTypef('\%s', \Slack\GraphQL\Types\BaseType::class)
-            ->addParameter('string $field_name');
-
-        $hb = hb($cg);
-        $hb->startSwitch('$field_name')
-            ->addCaseBlocks(
-                $this->fields,
-                ($field, $hb) ==> {
-                    $field->addResolveTypeCase($hb);
-                },
-            )
-            ->addDefault()
-            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
-            ->endDefault()
-            ->endSwitch();
-
-        $method->setBody($hb->getCode());
-
-        return $method;
-    }
-
     protected function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
         $method = $cg->codegenMethod('getFieldDefinition')
             ->setPublic()
@@ -133,16 +66,9 @@ class Query extends BaseObject<QueryField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
 
-        $class
-            ->addMethod($this->generateGetFieldDefinition($cg));
-            //->addMethod($this->generateResolveField($cg))
-            //->addMethod($this->generateResolveType($cg));
+        $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
-    }
-
-    protected function getResolveFieldResolvedParentParameter(): string {
-        return 'self::THackType $_';
     }
 }
 
@@ -159,16 +85,9 @@ class Mutation extends BaseObject<MutationField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Mutation', HackBuilderValues::export()));
 
-        $class
-            ->addMethod($this->generateGetFieldDefinition($cg));
-            //->addMethod($this->generateResolveField($cg))
-            //->addMethod($this->generateResolveType($cg));
+        $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
-    }
-
-    protected function getResolveFieldResolvedParentParameter(): string {
-        return 'self::THackType $_';
     }
 }
 
@@ -196,16 +115,9 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
             $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export())
         );
 
-        $class
-            ->addMethod($this->generateGetFieldDefinition($cg));
-            //->addMethod($this->generateResolveField($cg))
-            //->addMethod($this->generateResolveType($cg));
+        $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
-    }
-
-    protected function getResolveFieldResolvedParentParameter(): string {
-        return 'self::THackType $resolved_parent';
     }
 }
 
@@ -220,29 +132,6 @@ class Field {
         protected \ReflectionMethod $reflection_method,
         protected \Slack\GraphQL\Field $graphql_field,
     ) {}
-
-    public function addResolveFieldCase(HackBuilder $hb): void {
-        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
-
-        $return_prefix = '';
-        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
-            $return_prefix = 'await ';
-        }
-
-        $hb->returnCasef(
-            '%s$resolved_parent->%s(%s)',
-            $return_prefix,
-            $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
-            $this->getArgumentInvocationString(),
-        );
-    }
-
-    public function addResolveTypeCase(HackBuilder $hb): void {
-        $graphql_type = $this->getGraphQLType();
-        $hb
-            ->addCase($this->graphql_field->getName(), HackBuilderValues::export())
-            ->returnCasef('%s::nullable()', $graphql_type);
-    }
 
     public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
@@ -356,25 +245,6 @@ class Field {
 
 class QueryField extends Field {
 
-    public function addResolveFieldCase(HackBuilder $hb): void {
-        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
-
-        $class_name = $this->class_decl->getName()->getText();
-
-        $return_prefix = '';
-        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
-            $return_prefix = 'await ';
-        }
-
-        $hb->returnCasef(
-            '%s\%s::%s(%s)',
-            $return_prefix,
-            $class_name,
-            $this->method_decl->getFunctionDeclHeader()->getName()->getText(),
-            $this->getArgumentInvocationString(),
-        );
-    }
-
     public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
 
@@ -467,13 +337,11 @@ final class Generator {
         switch ($operation_type) {
             case \Graphpinator\Tokenizer\OperationType::QUERY:
                 $method_name = 'resolveQuery';
-                $variable_name = '$query';
-                $variable_value = 'Query::nullable()';
+                $root_type = 'Query::nullable()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::MUTATION:
                 $method_name = 'resolveMutation';
-                $variable_name = '$mutation';
-                $variable_value = 'Mutation::nullable()';
+                $root_type = 'Mutation::nullable()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::SUBSCRIPTION:
                 invariant(false, 'TODO: support subscription');
@@ -487,8 +355,7 @@ final class Generator {
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
             ->addParameterf('\%s $variables', \Slack\GraphQL\__Private\Variables::class);
 
-        $hb = hb($cg)
-            ->addReturnf('await %s->resolveAsync(new GraphQL\\Root(), $operation, $variables)', $variable_value);
+        $hb = hb($cg)->addReturnf('await %s->resolveAsync(new GraphQL\\Root(), $operation, $variables)', $root_type);
 
         $resolve_method->setBody($hb->getCode());
 
