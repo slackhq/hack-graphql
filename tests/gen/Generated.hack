@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<945571f40a6716a8089241b62efc534a>>
+ * @generated SignedSource<<1b33e2a23a3fde327e1a4706574d879d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,11 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
+      case 'output_type_test':
+        return new GraphQL\FieldDefinition(
+          OutputTypeTest::nullable(),
+          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
+        );
       case 'viewer':
         return new GraphQL\FieldDefinition(
           User::nullable(),
@@ -128,6 +133,56 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class OutputTypeTest extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \OutputTypeTestObj;
+  const NAME = 'OutputTypeTest';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'scalar':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->scalar(),
+        );
+      case 'nullable':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->nullable(),
+        );
+      case 'awaitable':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> await $parent->awaitable(),
+        );
+      case 'awaitable_nullable':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> await $parent->awaitable_nullable(),
+        );
+      case 'list':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nonNullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->list(),
+        );
+      case 'awaitable_nullable_list':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nonNullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
+        );
+      case 'nested_lists':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable()->nonNullableListOf()->nullableListOf()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->nested_lists(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
