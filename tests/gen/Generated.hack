@@ -1,11 +1,10 @@
 /**
  * This file is generated. Do not modify it manually!
  *
- * To re-generate this file run
- * /home/jjergus/work/code/hack-graphql/vendor/hhvm/hacktest/bin/hacktest
+ * To re-generate this file run /app/vendor/hhvm/hacktest/bin/hacktest
  *
  *
- * @generated SignedSource<<bab62eaa97c20d0d14b9a58a4d7c07ae>>
+ * @generated SignedSource<<bc4c3fa7e3012e4fded841b97e61ec64>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;

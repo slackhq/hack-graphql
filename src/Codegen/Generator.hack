@@ -94,7 +94,7 @@ class Mutation extends BaseObject<MutationField> {
 
 abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extends BaseObject<Field> {
     public function __construct(
-        private DefinitionFinder\ScannedClass $class,
+        private DefinitionFinder\ScannedClassish $class,
         private T $composite_type,
         private \ReflectionClass $reflection_class,
         protected vec<Field> $fields,
@@ -122,13 +122,13 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
     }
 }
 
-class GQLInterface extends CompositeType<\Slack\GraphQL\InterfaceType> {}
+class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
 
-class Object extends CompositeType<\Slack\GraphQL\ObjectType> {}
+class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
 class Field {
     public function __construct(
-        protected DefinitionFinder\ScannedClass $class,
+        protected DefinitionFinder\ScannedClassish $class,
         protected DefinitionFinder\ScannedMethod $method,
         protected \ReflectionMethod $reflection_method,
         protected \Slack\GraphQL\Field $graphql_field,
@@ -201,7 +201,7 @@ class Field {
                     $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_object is null) {
                     throw new \Error(
-                        'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\Object(...)>> or <<GraphQL\GQLInterface(...)>>',
+                        'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\ObjectType(...)>> or <<GraphQL\InterfaceType(...)>>',
                     );
                 }
 
@@ -378,17 +378,22 @@ final class Generator {
         $objects = vec[];
         $query_fields = vec[];
         $mutation_fields = vec[];
+
+        $interface_types = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
+        foreach ($interface_types as $interface_type) {
+            $rc = new \ReflectionClass($interface_type->getName());
+            $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+            if ($graphql_interface is nonnull) {
+                $fields = $this->collectObjectFields($interface_type);
+                $object = new InterfaceType($interface_type, $graphql_interface, $rc, $fields);
+                $interfaces[$interface_type->getName()] = $object;
+                $objects[] = $object;
+            }
+        }
+
         foreach ($this->parser->getClasses() as $class) {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
-
-                $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-                if ($graphql_interface is nonnull) {
-                    $fields = $this->collectObjectFields($class);
-                    $object = new GQLInterface($class, $graphql_interface, $rc, $fields);
-                    $interfaces[$class->getName()] = $object;
-                    $objects[] = $object;
-                }
 
                 $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_object is nonnull) {
@@ -402,7 +407,7 @@ final class Generator {
                     }
 
                     $fields = Vec\concat($fields, $this->collectObjectFields($class));
-                    $objects[] = new Object($class, $graphql_object, $rc, $fields);
+                    $objects[] = new ObjectType($class, $graphql_object, $rc, $fields);
                 }
             }
 
@@ -444,7 +449,7 @@ final class Generator {
         return $objects;
     }
 
-    private function collectObjectFields(DefinitionFinder\ScannedClass $class): vec<Field> {
+    private function collectObjectFields(DefinitionFinder\ScannedClassish $class): vec<Field> {
         $fields = vec[];
         foreach ($class->getMethods() as $method) {
             if (C\is_empty($method->getAttributes())) continue;
