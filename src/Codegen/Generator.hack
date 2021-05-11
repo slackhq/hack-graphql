@@ -137,20 +137,16 @@ class Field {
     final public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
 
-        $return_prefix = '';
-        if ($this->reflection_method->getReturnTypeText() |> Str\starts_with($$, 'HH\Awaitable')) {
-            $return_prefix = 'await ';
-        }
-
         $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
 
         // Field return type
-        $hb->addLinef('%s::nullable(),', $this->getGraphQLType());
+        $type_info = output_type($this->reflection_method->getReturnTypeText());
+        $hb->addLinef('%s,', $type_info['type']);
 
         // Arguments
         $hb->addf(
             'async ($parent, $args, $vars) ==> %s%s%s(',
-            $return_prefix,
+            $type_info['needs_await'] ? 'await ': '',
             $this->getMethodCallPrefix(),
             $this->method->getName(),
         );
@@ -172,43 +168,6 @@ class Field {
         return '$parent->';
     }
 
-    final protected function getGraphQLType(): string {
-        // TODO: must be a better way to do this
-        $return_type = $this->method->getReturnType() as nonnull;
-
-        if ($return_type->isGeneric()) {
-            $simple_return_type = Vec\map($return_type->getGenericTypes() as nonnull, $g ==> $g->getTypeText())
-                |> Str\join($$, '');
-        } else {
-            $simple_return_type = $return_type->getTypeText();
-        }
-
-        switch ($simple_return_type) {
-            case 'string':
-                return \Slack\GraphQL\Types\StringOutputType::class
-                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
-            case 'int':
-                return \Slack\GraphQL\Types\IntOutputType::class
-                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
-            case 'bool':
-                return \Slack\GraphQL\Types\BooleanOutputType::class
-                    |> Str\strip_prefix($$, 'Slack\\GraphQL\\');
-            default:
-                // TODO: this doesn't handle custom types, how do we make this
-                // better?
-                $rc = new \ReflectionClass($simple_return_type);
-                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
-                    $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-                if ($graphql_object is null) {
-                    throw new \Error(
-                        'GraphQL\Field return types must be scalar or be classes annnotated with <<GraphQL\ObjectType(...)>> or <<GraphQL\InterfaceType(...)>>',
-                    );
-                }
-
-                return $graphql_object->getType();
-        }
-    }
-
     public function hasArguments(): bool {
         return $this->reflection_method->getNumberOfParameters() > 0;
     }
@@ -218,43 +177,11 @@ class Field {
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $invocations[] = Str\format(
                 '%s->coerceNode($args[%s]->getValue(), $vars)',
-                self::hackTypeToInputTypeFactoryCall($param->getTypeText()),
+                input_type($param->getTypeText()),
                 \var_export($param->getName(), true),
             );
         }
         return $invocations;
-    }
-
-    /**
-     * Examples:
-     *   int       -> IntInputType::nonNullable()
-     *   ?int      -> IntInputType::nullable()
-     *   ?vec<int> -> IntInputType::nonNullable()->nullableListOf()
-     */
-    private static function hackTypeToInputTypeFactoryCall(string $hack_type, bool $nullable = false): string {
-        if (Str\starts_with($hack_type, '?')) {
-            return self::hackTypeToInputTypeFactoryCall(Str\strip_prefix($hack_type, '?'), true);
-        }
-        if (Str\starts_with($hack_type, 'HH\vec<')) {
-            return self::hackTypeToInputTypeFactoryCall(
-                Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
-            ).
-                ($nullable ? '->nullableListOf()' : '->nonNullableListOf()');
-        }
-        switch ($hack_type) {
-            case 'HH\int':
-                $class = Types\IntInputType::class;
-                break;
-            case 'HH\string':
-                $class = Types\StringInputType::class;
-                break;
-            case 'HH\bool':
-                $class = Types\BooleanInputType::class;
-                break;
-            default:
-                invariant_violation('not yet implemented');
-        }
-        return Str\strip_prefix($class, 'Slack\\GraphQL\\').($nullable ? '::nullable()' : '::nonNullable()');
     }
 }
 
