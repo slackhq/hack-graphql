@@ -14,13 +14,14 @@ abstract class EnumInputType extends NamedInputType {
     <<__Override>>
     public function coerceValue(mixed $value): this::TCoerced {
         $enum = static::HACK_ENUM;
-        GraphQL\assert(
-            $value is string && C\contains_key($enum::getValues(), $value),
-            'Expected a valid value for %s, got %s',
-            static::NAME,
-            (string)$value
-        );
-        return $enum::getValues()[$value as string];
+        if (!$value is string || !C\contains_key($enum::getValues(), $value)) {
+            throw new GraphQL\UserFacingError(
+                'Expected a valid value for %s, got %s',
+                static::NAME,
+                (string)$value
+            );
+        }
+        return $enum::getValues()[$value];
     }
 
     final protected function assertValidVariableValue(mixed $value): this::TCoerced {
@@ -35,13 +36,14 @@ abstract class EnumInputType extends NamedInputType {
     ): this::TCoerced {
         $value = $node->getRawValue();
         $enum = static::HACK_ENUM;
-        GraphQL\assert(
-            $node is Value\EnumLiteral && $value is string && C\contains_key($enum::getValues(), $value),
-            'Expected a valid value for %s, got %s',
-            static::NAME,
-            \get_class($node)
-        );
-        return $enum::getValues()[$value as string];
+        if (!$node is Value\EnumLiteral || !$value is string || !C\contains_key($enum::getValues(), $value)) {
+            throw new GraphQL\UserFacingError(
+                'Expected a valid value for %s, got %s',
+                static::NAME,
+                \get_class($node)
+            );
+        }
+        return $enum::getValues()[$value];
     }
 
 }
