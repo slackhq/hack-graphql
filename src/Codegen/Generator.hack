@@ -234,10 +234,6 @@ class Field {
 
     protected function getArgumentInvocationStrings(): vec<string> {
         $invocations = vec[];
-        // do we need to know about all inputs here? i think we need to generate
-        // a type for each input type so we can define coerceNode that
-        // references the type name as a generic so we can assert the type
-        // structure
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $invocations[] = Str\format(
                 '%s->coerceNode($args[%s]->getValue(), $vars)',
