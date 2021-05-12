@@ -4,7 +4,7 @@ namespace Slack\GraphQL;
  * These classes capture the possible results of resolving a GraphQL field during GraphQL execution.
  */
 <<__Sealed(InvalidFieldResult::class, ValidFieldResult::class)>>
-abstract class FieldResult {
+abstract class FieldResult<+T> {
     public function __construct(private vec<UserFacingError> $errors) {}
 
     final public function getErrors(): vec<UserFacingError> {
@@ -20,15 +20,15 @@ abstract class FieldResult {
  * - non-null value with error, if this object/list field is OK but has 1 or more nullable children with errors
  * - null value with error, if this is a nullable field that failed to resolve
  */
-final class ValidFieldResult extends FieldResult {
+final class ValidFieldResult<+T> extends FieldResult<T> {
     public function __construct(
-        private mixed $value,
+        private T $value,
         vec<UserFacingError> $errors = vec[],
     ) {
         parent::__construct($errors);
     }
 
-    public function getValue(): mixed {
+    public function getValue(): T {
         return $this->value;
     }
 }
@@ -38,5 +38,5 @@ final class ValidFieldResult extends FieldResult {
  * The error needs to be propagated to the closest parent nullable field, at which point a ValidFieldResult will be
  * returned, with null value and the same error.
  */
-final class InvalidFieldResult extends FieldResult {
+final class InvalidFieldResult extends FieldResult<nothing> {
 }

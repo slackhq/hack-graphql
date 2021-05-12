@@ -3,16 +3,16 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
 
-final class ListOutputType<TInner> extends OutputType<vec<TInner>> {
+final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, vec<mixed>> {
 
-    public function __construct(private OutputType<TInner> $innerType) {}
+    public function __construct(private OutputType<TInner, TResolved> $innerType) {}
 
     <<__Override>>
     public function getName(): ?string {
         return null;
     }
 
-    public function getInnerType(): OutputType<TInner> {
+    public function getInnerType(): OutputType<TInner, TResolved> {
         return $this->innerType;
     }
 
@@ -21,7 +21,7 @@ final class ListOutputType<TInner> extends OutputType<vec<TInner>> {
         vec<TInner> $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\__Private\Variables $vars,
-    ): Awaitable<GraphQL\FieldResult> {
+    ): Awaitable<GraphQL\FieldResult<vec<mixed>>> {
         $ret = vec[];
         $errors = vec[];
         $is_valid = true;
@@ -32,7 +32,7 @@ final class ListOutputType<TInner> extends OutputType<vec<TInner>> {
         );
 
         foreach ($results as $idx => $result) {
-            if ($result is GraphQL\ValidFieldResult) {
+            if ($result is GraphQL\ValidFieldResult<_>) {
                 $ret[] = $result->getValue();
             } else {
                 $is_valid = false;

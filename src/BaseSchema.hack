@@ -7,7 +7,7 @@ abstract class BaseSchema {
     abstract public static function resolveQuery(
         \Graphpinator\Parser\Operation\Operation $operation,
         __Private\Variables $variables,
-    ): Awaitable<ValidFieldResult>;
+    ): Awaitable<ValidFieldResult<?dict<string, mixed>>>;
 
     /**
     * Mutations are optional, if the schema supports it, this method will be
@@ -16,7 +16,7 @@ abstract class BaseSchema {
     public static async function resolveMutation(
         \Graphpinator\Parser\Operation\Operation $operation,
         __Private\Variables $variables,
-    ): Awaitable<ValidFieldResult> {
+    ): Awaitable<ValidFieldResult<?dict<string, mixed>>> {
         return new ValidFieldResult(null);
     }
 }

@@ -9,10 +9,11 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedOutputType extends OutputType<this::THackType> {
+abstract class NamedOutputType extends OutputType<this::THackType, this::TCoerced> {
 
     <<__Enforceable>>
     abstract const type THackType;
+    abstract const type TCoerced;
     abstract const string NAME;
 
     <<__Override>>
@@ -29,7 +30,7 @@ abstract class NamedOutputType extends OutputType<this::THackType> {
     }
 
     <<__MemoizeLSB>>
-    final public static function nullable(): NullableOutputType<this::THackType> {
+    final public static function nullable(): NullableOutputType<this::THackType, this::TCoerced> {
         return new NullableOutputType(static::nonNullable());
     }
 }

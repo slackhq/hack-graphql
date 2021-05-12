@@ -8,7 +8,7 @@ final class Resolver {
      * @see https://spec.graphql.org/draft/#sec-Response
      */
     const type TResponse = shape(
-        ?'data' => mixed, // missing data and null data are both valid states with different meanings
+        ?'data' => ?dict<string, mixed>, // missing data and null data are both valid states with different meanings
         ?'errors' => vec<shape( // errors are optional but cannot be null (or empty) if present
             'message' => string,
             ?'location' => shape('line' => int, 'column' => int),
@@ -64,7 +64,7 @@ final class Resolver {
         \Graphpinator\Parser\ParsedRequest $request,
         ?dict<string, mixed> $variables,
         ?string $operation_name,
-    ): Awaitable<(mixed, vec<UserFacingError>)> {
+    ): Awaitable<(?dict<string, mixed>, vec<UserFacingError>)> {
         // TODO: validate variables against $schema
         $schema = $this->schema;
 
