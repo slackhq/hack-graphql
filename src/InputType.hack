@@ -6,7 +6,7 @@ namespace Slack\GraphQL;
 * Annotate shapes with this attribute to support accepting them as inputs within
 * mutations.
 */
-class InputType implements \HH\TypeAliasAttribute {
+class InputObjectType implements \HH\TypeAliasAttribute {
     public function __construct(private string $type, private string $description) {}
 
     public function getType(): string {
