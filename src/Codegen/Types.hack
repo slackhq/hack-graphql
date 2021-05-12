@@ -25,7 +25,7 @@ function input_type(string $hack_type): string {
             $class = get_input_class($unwrapped);
             if ($class is null) {
                 throw new \Error(
-                    'GraphQL\Field argument types must be scalar or be enums annnotated with a GraphQL attribute'
+                    'GraphQL\Field argument types must be scalar or be enums annnotated with a GraphQL attribute',
                 );
             }
     }
@@ -87,10 +87,20 @@ function get_input_class(string $hack_type): ?string {
     try {
         $rc = new \ReflectionClass($hack_type);
         $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
-        if ($graphql_enum) {
+        if ($graphql_enum is nonnull) {
             return $graphql_enum->getInputType();
         }
-    } catch (\ReflectionException $_e) {}
+    } catch (\ReflectionException $_e) {
+    }
+
+    try {
+        $rt = new \ReflectionTypeAlias($hack_type);
+        $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputType::class);
+        if ($graphql_input is nonnull) {
+            return $graphql_input->getType();
+        }
+    } catch (\ReflectionException $_e) {
+    }
 
     return null;
 }

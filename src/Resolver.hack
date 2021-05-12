@@ -78,7 +78,7 @@ final class Resolver {
         } else {
             \Slack\GraphQL\assert(
                 C\count($request->getOperations()) === 1,
-                'Operation name must be specified if the request contains multiple'
+                'Operation name must be specified if the request contains multiple',
             );
             $operation = C\onlyx($request->getOperations());
         }
