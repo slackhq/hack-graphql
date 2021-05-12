@@ -13,12 +13,229 @@ final class ErrorTest extends PlaygroundTest {
                         'error_test' => dict[
                             'user_facing_error' => null,
                             'hidden_exception' => null,
-                        ]
+                        ],
                     ],
                     'errors' => vec[
                         shape(
                             'message' => 'You shall not pass!',
                             'path' => vec['error_test', 'user_facing_error'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'hidden_exception'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'non-nullable kills parent' => tuple(
+                // Note: no_error resolves without errors but is thrown away with the parent.
+                'query { error_test { non_nullable, no_error, hidden_exception } }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'error_test' => null,
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'non_nullable'],
+                        ),
+                        // Note: Error that would *NOT* have killed the parent is present, even though the field that
+                        // raised this error was thrown away with its parent (i.e. when we throw away fields, we don't
+                        // throw away any associated errors).
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'hidden_exception'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'nested nullable' => tuple(
+                'query {
+                    error_test {
+                        nested { non_nullable, no_error, hidden_exception }
+                        no_error
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'error_test' => dict[
+                            'nested' => null,
+                            'no_error' => 42,
+                        ],
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested', 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'nested', 'hidden_exception'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'nested non-nullable' => tuple(
+                'query {
+                    error_test {
+                        nested_nn { non_nullable, no_error, hidden_exception }
+                        no_error
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'error_test' => null,
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested_nn', 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'nested_nn', 'hidden_exception'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'nested nullable lists' => tuple(
+                'query {
+                    error_test {
+                        bad_int_list_n_of_n
+                        bad_int_list_n_of_nn
+                        nested_list_n_of_n { non_nullable, no_error, hidden_exception }
+                        nested_list_n_of_nn { non_nullable, no_error }
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'error_test' => dict[
+                            // 1 error here
+                            'bad_int_list_n_of_n' => vec[1, 2, null, 3, 4],
+                            // 1 error here
+                            'bad_int_list_n_of_nn' => null,
+                            // 4 errors here (2 per list item)
+                            'nested_list_n_of_n' => vec[null, null],
+                            // 2 errors here (1 per list item)
+                            'nested_list_n_of_nn' => null,
+                        ],
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'Integers must be in 32-bit range, got 2147483689',
+                            'path' => vec['error_test', 'bad_int_list_n_of_n', 2],
+                        ),
+                        shape(
+                            'message' => 'Integers must be in 32-bit range, got 2147483689',
+                            'path' => vec['error_test', 'bad_int_list_n_of_nn', 2],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested_list_n_of_n', 0, 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'nested_list_n_of_n', 0, 'hidden_exception'],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested_list_n_of_n', 1, 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test', 'nested_list_n_of_n', 1, 'hidden_exception'],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested_list_n_of_nn', 0, 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test', 'nested_list_n_of_nn', 1, 'non_nullable'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'nested non-nullable lists' => tuple(
+                'query {
+                    a: error_test {
+                        bad_int_list_nn_of_nn
+                    }
+                    b: error_test {
+                        nested_list_nn_of_nn { non_nullable, no_error }
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'a' => null,
+                        'b' => null,
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'Integers must be in 32-bit range, got 2147483689',
+                            'path' => vec['a', 'bad_int_list_nn_of_nn', 2],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['b', 'nested_list_nn_of_nn', 0, 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['b', 'nested_list_nn_of_nn', 1, 'non_nullable'],
+                        ),
+                    ],
+                ),
+            ),
+
+            'one deeply nested field kills the whole response, oops' => tuple(
+                'query {
+                    error_test_nn {
+                        nested_list_nn_of_nn {
+                            nested_nn {
+                                non_nullable  # this is the one
+                                no_error
+                                hidden_exception
+                            }
+                            no_error
+                        }
+                        no_error
+                        hidden_exception
+                    }
+                    error_test { no_error, hidden_exception }
+                }',
+                dict[],
+                shape(
+                    'data' => null,
+                    'errors' => vec[
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test_nn', 'nested_list_nn_of_nn', 0, 'nested_nn', 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test_nn', 'nested_list_nn_of_nn', 0, 'nested_nn', 'hidden_exception'],
+                        ),
+                        shape(
+                            'message' => 'You shall not pass!',
+                            'path' => vec['error_test_nn', 'nested_list_nn_of_nn', 1, 'nested_nn', 'non_nullable'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test_nn', 'nested_list_nn_of_nn', 1, 'nested_nn', 'hidden_exception'],
+                        ),
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['error_test_nn', 'hidden_exception'],
                         ),
                         shape(
                             'message' => 'Caught exception while resolving field.',

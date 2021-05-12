@@ -144,7 +144,10 @@ class Field {
         $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
 
         // Field return type
-        $type_info = output_type($this->reflection_method->getReturnTypeText());
+        $type_info = output_type(
+            $this->reflection_method->getReturnTypeText(),
+            $this->reflection_method->getAttributeClass(\Slack\GraphQL\KillsParentOnException::class) is nonnull,
+        );
         $hb->addLinef('%s,', $type_info['type']);
 
         // Arguments

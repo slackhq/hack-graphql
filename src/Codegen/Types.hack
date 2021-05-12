@@ -32,14 +32,23 @@ function input_type(string $hack_type): string {
  * types to be nullable, so that we can return `null` as the field value in the GraphQL response in case of exceptions.
  * TODO: Add a way to override this.
  */
-function output_type(string $hack_type, bool $force_nullable = true): shape('type' => string, 'needs_await' => bool) {
+function output_type(
+    string $hack_type,
+    bool $kills_parent_on_exception,
+): shape('type' => string, 'needs_await' => bool) {
     $needs_await = false;
     if (Str\starts_with($hack_type, 'HH\\Awaitable<')) {
         $needs_await = true;
         $hack_type = Str\strip_prefix($hack_type, 'HH\\Awaitable<') |> Str\strip_suffix($$, '>');
     }
 
-    if ($force_nullable && !Str\starts_with($hack_type, '?')) {
+    if ($kills_parent_on_exception) {
+        invariant(
+            !Str\starts_with($hack_type, '?'),
+            '<<%s>> cannot be used on methods with a nullable return type.',
+            \Slack\GraphQL\KillsParentOnException::class,
+        );
+    } else if (!Str\starts_with($hack_type, '?')) {
         $hack_type = '?'.$hack_type;
     }
 

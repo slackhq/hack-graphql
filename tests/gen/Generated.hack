@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4076197cabac0f42468f43874c01e2cb>>
+ * @generated SignedSource<<4a258ae7c1b6949e15ddb40c2ab4287c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -43,6 +43,11 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           ErrorTest::nullable(),
           async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
+        );
+      case 'error_test_nn':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nonNullable(),
+          async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
         );
       case 'output_type_test':
         return new GraphQL\FieldDefinition(
@@ -154,6 +159,11 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
+      case 'no_error':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->no_error(),
+        );
       case 'user_facing_error':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
@@ -163,6 +173,51 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->hidden_exception(),
+        );
+      case 'non_nullable':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nonNullable(),
+          async ($parent, $args, $vars) ==> $parent->non_nullable(),
+        );
+      case 'nested':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nullable(),
+          async ($parent, $args, $vars) ==> $parent->nested(),
+        );
+      case 'nested_nn':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nonNullable(),
+          async ($parent, $args, $vars) ==> $parent->nested_nn(),
+        );
+      case 'bad_int_list_n_of_n':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_n(),
+        );
+      case 'bad_int_list_n_of_nn':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nonNullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_nn(),
+        );
+      case 'bad_int_list_nn_of_nn':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nonNullable()->nonNullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->bad_int_list_nn_of_nn(),
+        );
+      case 'nested_list_n_of_n':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->nested_list_n_of_n(),
+        );
+      case 'nested_list_n_of_nn':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nonNullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->nested_list_n_of_nn(),
+        );
+      case 'nested_list_nn_of_nn':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nonNullable()->nonNullableListOf(),
+          async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
