@@ -244,6 +244,38 @@ final class ErrorTest extends PlaygroundTest {
                     ],
                 ),
             ),
+
+            'invalid enum values' => tuple(
+                'query { takes_favorite_color(favorite_color: foo) }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'takes_favorite_color' => null
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'Expected a valid value for FavoriteColor, got Graphpinator\Parser\Value\EnumLiteral',
+                            'path' => vec['takes_favorite_color']
+                        )
+                    ]
+                )
+            ),
+
+            'invalid enum values with arguments' => tuple(
+                'query { takes_favorite_color(favorite_color: $favorite_color) }',
+                dict['favorite_color' => 'foo'],
+                shape(
+                    'data' => dict[
+                        'takes_favorite_color' => null
+                    ],
+                    'errors' => vec[
+                        shape(
+                            'message' => 'Caught exception while resolving field.',
+                            'path' => vec['takes_favorite_color']
+                        )
+                    ]
+                )
+            )
         ];
     }
 }

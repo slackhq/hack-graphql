@@ -23,7 +23,7 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
     }
 
     <<__Override>>
-    final protected function assertValidVariableValue(mixed $value): this::TCoerced {
+    protected function assertValidVariableValue(mixed $value): this::TCoerced {
         return $value as this::TCoerced;
     }
 

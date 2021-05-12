@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Types;
 
-abstract class EnumType extends LeafType {
+abstract class EnumOutputType extends LeafType {
     abstract const type THackType as arraykey;
     abstract const \HH\enumname<this::THackType> HACK_ENUM;
     const type TCoerced = string;

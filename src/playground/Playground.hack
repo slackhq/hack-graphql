@@ -88,9 +88,9 @@ abstract class BaseUser implements User {
 }
 
 <<GraphQL\EnumType('FavoriteColor', 'Favorite Color')>>
-enum FavoriteColor: string {
-    RED = 'red';
-    BLUE = 'blue';
+enum FavoriteColor: int {
+    RED = 1;
+    BLUE = 2;
 }
 
 <<GraphQL\ObjectType('Human', 'Human')>>
@@ -158,6 +158,11 @@ abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>
     public static function getNestedListSum(vec<vec<int>> $numbers): int {
         return Math\sum(Vec\map($numbers, $inner ==> Math\sum($inner)));
+    }
+
+    <<GraphQL\QueryRootField('takes_favorite_color', 'Test for enum arguments')>>
+    public static function takesFavoriteColor(FavoriteColor $favorite_color): bool {
+        return true;
     }
 }
 

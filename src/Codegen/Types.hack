@@ -22,7 +22,12 @@ function input_type(string $hack_type): string {
             $class = Types\BooleanInputType::class;
             break;
         default:
-            invariant_violation('not yet implemented');
+            $class = get_input_class($unwrapped);
+            if ($class is null) {
+                throw new \Error(
+                    'GraphQL\Field argument types must be scalar or be enums annnotated with a GraphQL attribute'
+                );
+            }
     }
     return Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix;
 }
@@ -73,6 +78,21 @@ function output_type(
             }
     }
     return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
+}
+
+/**
+ * Get the input class for a hack type which is not a primitive.
+ */
+function get_input_class(string $hack_type): ?string {
+    try {
+        $rc = new \ReflectionClass($hack_type);
+        $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
+        if ($graphql_enum) {
+            return $graphql_enum->getInputType();
+        }
+    } catch (\ReflectionException $_e) {}
+
+    return null;
 }
 
 /**
