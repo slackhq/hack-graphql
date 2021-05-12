@@ -50,6 +50,7 @@ type TCreateUserInput = shape(
     'name' => string,
     ?'is_active' => bool,
     ?'team' => TCreateTeamInput,
+    ?'favorite_color' => FavoriteColor,
 );
 
 final class TeamStore {

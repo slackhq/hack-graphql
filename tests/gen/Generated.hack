@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<6bfadaf760e52cee58f41774dbbc6b15>>
+ * @generated SignedSource<<799aeafc0808025f3359dfcc90687109>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -423,38 +423,67 @@ final class FavoriteColorOutputType
   const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
 }
 
-final class CreateTeamInput
-  extends \Slack\GraphQL\Types\InputObjectType<\TCreateTeamInput> {
+final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
 
+  const type TCoerced = \TCreateTeamInput;
   const NAME = 'CreateTeamInput';
+  const keyset<string> FIELD_NAMES = keyset [
+    'name',
+  ];
 
   <<__Override>>
-  final public function coerceValue(mixed $value): \TCreateTeamInput {
-    return TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\TCreateTeamInput::class), $value);;
+  public function coerceFieldValues(
+    KeyedContainer<arraykey, mixed> $args,
+  ): this::TCoerced {
+    return shape(
+      'name' => Types\StringInputType::nonNullable()->coerceValue($args['name']),
+    );
   }
 
   <<__Override>>
-  final public function assertValidVariableValue(
-    mixed $value,
-  ): \TCreateTeamInput {
-    return TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\TCreateTeamInput::class), $value);;
+  public function coerceFieldNodes(
+    KeyedContainer<string, \Graphpinator\Parser\Value\Value> $args,
+    dict<string, mixed> $vars,
+  ): this::TCoerced {
+    return shape(
+      'name' => Types\StringInputType::nonNullable()->coerceNode($args['name'], $vars),
+    );
   }
 }
 
-final class CreateUserInput
-  extends \Slack\GraphQL\Types\InputObjectType<\TCreateUserInput> {
+final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
 
+  const type TCoerced = \TCreateUserInput;
   const NAME = 'CreateUserInput';
+  const keyset<string> FIELD_NAMES = keyset [
+    'name',
+    'is_active',
+    'team',
+    'favorite_color',
+  ];
 
   <<__Override>>
-  final public function coerceValue(mixed $value): \TCreateUserInput {
-    return TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\TCreateUserInput::class), $value);;
+  public function coerceFieldValues(
+    KeyedContainer<arraykey, mixed> $args,
+  ): this::TCoerced {
+    return shape(
+      'name' => Types\StringInputType::nonNullable()->coerceValue($args['name']),
+      'is_active' => Types\BooleanInputType::nonNullable()->coerceValue($args['is_active']),
+      'team' => CreateTeamInput::nonNullable()->coerceValue($args['team']),
+      'favorite_color' => FavoriteColorInputType::nonNullable()->coerceValue($args['favorite_color']),
+    );
   }
 
   <<__Override>>
-  final public function assertValidVariableValue(
-    mixed $value,
-  ): \TCreateUserInput {
-    return TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\TCreateUserInput::class), $value);;
+  public function coerceFieldNodes(
+    KeyedContainer<string, \Graphpinator\Parser\Value\Value> $args,
+    dict<string, mixed> $vars,
+  ): this::TCoerced {
+    return shape(
+      'name' => Types\StringInputType::nonNullable()->coerceNode($args['name'], $vars),
+      'is_active' => Types\BooleanInputType::nonNullable()->coerceNode($args['is_active'], $vars),
+      'team' => CreateTeamInput::nonNullable()->coerceNode($args['team'], $vars),
+      'favorite_color' => FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color'], $vars),
+    );
   }
 }
