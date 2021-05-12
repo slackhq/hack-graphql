@@ -25,7 +25,8 @@ function input_type(string $hack_type): string {
             $class = get_input_class($unwrapped);
             if ($class is null) {
                 throw new \Error(
-                    'GraphQL\Field argument types must be scalar or be enums annnotated with a GraphQL attribute',
+                    'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
+                    'attribute, got '.$unwrapped,
                 );
             }
     }

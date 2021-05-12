@@ -130,59 +130,6 @@ class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
 
 class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
-class InputObjectType implements GeneratableClass {
-    public function __construct(
-        private \ReflectionTypeAlias $reflection_type_alias,
-        private \Slack\GraphQL\InputObjectType $input_type,
-    ) {}
-
-    public function getType(): string {
-        return $this->input_type->getType();
-    }
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        $hack_type = $this->reflection_type_alias->getName();
-
-        $class = $cg->codegenClass($this->input_type->getType())
-            ->setExtendsf('\%s<\%s>', \Slack\GraphQL\Types\InputObjectType::class, $hack_type);
-
-        $name_const = $cg
-            ->codegenClassConstant('NAME')
-            ->setValue($this->input_type->getType(), HackBuilderValues::export());
-
-        $class->addConstant($name_const);
-
-        $hb = hb($cg)
-            ->addReturnf(
-                'TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\%s::class), $value);',
-                $hack_type,
-            );
-
-        $coerce_value = $cg->codegenMethod('coerceValue')
-            ->setIsOverride(true)
-            ->setIsFinal(true)
-            ->addParameter('mixed $value')
-            ->setReturnType(Str\format('\%s', $hack_type))
-            ->setBody($hb->getCode());
-
-        $hb = hb($cg)
-            ->addReturnf(
-                'TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\%s::class), $value);',
-                $hack_type,
-            );
-
-        $assert_valid_variable_value = $cg->codegenMethod('assertValidVariableValue')
-            ->setIsOverride(true)
-            ->setIsFinal(true)
-            ->addParameter('mixed $value')
-            ->setReturnType(Str\format('\%s', $hack_type))
-            ->setBody($hb->getCode());
-
-        $class->addMethods(vec[$coerce_value, $assert_valid_variable_value]);
-        return $class;
-    }
-}
-
 class Field {
     public function __construct(
         protected DefinitionFinder\ScannedClassish $class,
