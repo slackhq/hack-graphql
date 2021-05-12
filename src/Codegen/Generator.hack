@@ -21,11 +21,11 @@ function hb(HackCodegenFactory $cg): HackBuilder {
     return new HackBuilder($cg->getConfig());
 }
 
-interface GeneratableObjectType {
-    public function generateObjectType(HackCodegenFactory $cg): CodegenClass;
+interface GeneratableClass {
+    public function generateClass(HackCodegenFactory $cg): CodegenClass;
 }
 
-abstract class BaseObject<T as Field> implements GeneratableObjectType {
+abstract class BaseObject<T as Field> implements GeneratableClass {
     protected vec<T> $fields;
 
     protected function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
@@ -58,7 +58,7 @@ abstract class BaseObject<T as Field> implements GeneratableObjectType {
 class Query extends BaseObject<QueryField> {
     public function __construct(protected vec<QueryField> $fields) {}
 
-    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+    public function generateClass(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass('Query')
             ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
@@ -78,7 +78,7 @@ class Query extends BaseObject<QueryField> {
 class Mutation extends BaseObject<MutationField> {
     public function __construct(protected vec<MutationField> $fields) {}
 
-    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+    public function generateClass(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass('Mutation')
             ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
@@ -107,7 +107,7 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
         return $this->fields;
     }
 
-    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+    public function generateClass(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass($this->composite_type->getType())
             ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
 
@@ -153,7 +153,7 @@ class Field {
         // Arguments
         $hb->addf(
             'async ($parent, $args, $vars) ==> %s%s%s(',
-            $type_info['needs_await'] ? 'await ': '',
+            $type_info['needs_await'] ? 'await ' : '',
             $this->getMethodCallPrefix(),
             $this->method->getName(),
         );
@@ -201,7 +201,7 @@ class QueryField extends Field {
 
 class MutationField extends QueryField {}
 
-abstract class BaseEnumType implements GeneratableObjectType {
+abstract class BaseEnumType implements GeneratableClass {
     public function __construct(
         protected DefinitionFinder\ScannedEnum $scanned_enum,
         protected \Slack\GraphQL\EnumType $enum_type,
@@ -211,21 +211,21 @@ abstract class BaseEnumType implements GeneratableObjectType {
     abstract const string TYPE_CONSTANT_NAME;
     abstract const classname<\Slack\GraphQL\Types\BaseType> ENUM_TYPE;
 
-    public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
+    public function generateClass(HackCodegenFactory $cg): CodegenClass {
         return $cg->codegenClass($this->getGraphQLTypeName())
             ->setExtendsf('\%s', $this::ENUM_TYPE)
             ->addConstant(
                 $cg->codegenClassConstant('NAME')
-                    ->setValue($this->enum_type->getType(), HackBuilderValues::export())
+                    ->setValue($this->enum_type->getType(), HackBuilderValues::export()),
             )
             ->addTypeConstant(
                 $cg->codegenTypeConstant($this::TYPE_CONSTANT_NAME)
-                    ->setValue('\\'.$this->scanned_enum->getName(), HackBuilderValues::literal())
+                    ->setValue('\\'.$this->scanned_enum->getName(), HackBuilderValues::literal()),
             )
             ->addConstant(
                 $cg->codegenClassConstant('HACK_ENUM')
                     ->setTypef('\\HH\\enumname<this::%s>', $this::TYPE_CONSTANT_NAME)
-                    ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal())
+                    ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal()),
             );
     }
 }
@@ -285,7 +285,7 @@ final class Generator {
             ->addClass($this->generateSchemaType($this->cg));
 
         foreach ($objects as $object) {
-            $class = $object->generateObjectType($this->cg)
+            $class = $object->generateClass($this->cg)
                 ->setIsFinal(true);
             $file->addClass($class);
         }
@@ -351,7 +351,7 @@ final class Generator {
         return $resolve_method;
     }
 
-    private async function collectObjects<T as Field>(): Awaitable<vec<GeneratableObjectType>> {
+    private async function collectObjects<T as Field>(): Awaitable<vec<GeneratableClass>> {
         $interfaces = dict[];
         $objects = vec[];
         $query_fields = vec[];

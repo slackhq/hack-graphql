@@ -73,7 +73,7 @@ function output_type(
             $class = get_output_class($unwrapped);
             if ($class is null) {
                 throw new \Error(
-                    'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute'
+                    'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute',
                 );
             }
     }
