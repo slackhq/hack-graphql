@@ -57,6 +57,16 @@ final class BasicTest extends PlaygroundTest {
                 dict[],
                 dict['pokeUser' => dict['id' => 2]],
             ),
+            'enum arguments' => tuple(
+                'query { takes_favorite_color(favorite_color: RED) }',
+                dict[],
+                dict['takes_favorite_color' => true]
+            ),
+            'enum arguments with variables' => tuple(
+                'query { takes_favorite_color(favorite_color: $favorite_color) }',
+                dict['favorite_color' => 'RED'],
+                dict['takes_favorite_color' => true]
+            ),
         ];
     }
 

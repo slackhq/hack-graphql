@@ -8,6 +8,10 @@ final class EnumType implements \HH\EnumAttribute {
         return $this->type;
     }
 
+    public function getInputType(): string {
+        return $this->getType().'InputType';
+    }
+
     public function getOutputType(): string {
         return $this->getType().'OutputType';
     }

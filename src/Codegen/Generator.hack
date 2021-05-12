@@ -201,28 +201,48 @@ class QueryField extends Field {
 
 class MutationField extends QueryField {}
 
-class EnumOutputType implements GeneratableObjectType {
+abstract class BaseEnumType implements GeneratableObjectType {
     public function __construct(
-        private DefinitionFinder\ScannedEnum $scanned_enum,
-        private \Slack\GraphQL\EnumType $enum_type,
-       ) {}
+        protected DefinitionFinder\ScannedEnum $scanned_enum,
+        protected \Slack\GraphQL\EnumType $enum_type,
+    ) {}
+
+    abstract protected function getGraphQLTypeName(): string;
+    abstract const string TYPE_CONSTANT_NAME;
+    abstract const classname<\Slack\GraphQL\Types\BaseType> ENUM_TYPE;
 
     public function generateObjectType(HackCodegenFactory $cg): CodegenClass {
-        return $cg->codegenClass($this->enum_type->getOutputType())
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\EnumType::class)
+        return $cg->codegenClass($this->getGraphQLTypeName())
+            ->setExtendsf('\%s', $this::ENUM_TYPE)
             ->addConstant(
                 $cg->codegenClassConstant('NAME')
                     ->setValue($this->enum_type->getType(), HackBuilderValues::export())
             )
             ->addTypeConstant(
-                $cg->codegenTypeConstant('THackType')
+                $cg->codegenTypeConstant($this::TYPE_CONSTANT_NAME)
                     ->setValue('\\'.$this->scanned_enum->getName(), HackBuilderValues::literal())
             )
             ->addConstant(
                 $cg->codegenClassConstant('HACK_ENUM')
-                    ->setType('\\HH\\enumname<this::THackType>')
+                    ->setTypef('\\HH\\enumname<this::%s>', $this::TYPE_CONSTANT_NAME)
                     ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal())
             );
+    }
+}
+
+class EnumInputType extends BaseEnumType {
+    const TYPE_CONSTANT_NAME = 'TCoerced';
+    const classname<\Slack\GraphQL\Types\EnumInputType> ENUM_TYPE = \Slack\GraphQL\Types\EnumInputType::class;
+    protected function getGraphQLTypeName(): string {
+        return $this->enum_type->getInputType();
+    }
+}
+
+class EnumOutputType extends BaseEnumType {
+    const TYPE_CONSTANT_NAME = 'THackType';
+    const classname<\Slack\GraphQL\Types\EnumOutputType> ENUM_TYPE = \Slack\GraphQL\Types\EnumOutputType::class;
+    protected function getGraphQLTypeName(): string {
+        return $this->enum_type->getOutputType();
     }
 }
 
@@ -396,6 +416,7 @@ final class Generator {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;
+            $objects[] = new EnumInputType($enum, $enum_type);
             $objects[] = new EnumOutputType($enum, $enum_type);
         }
 

@@ -69,14 +69,14 @@ final class Resolver {
         $schema = $this->schema;
 
         if ($operation_name is nonnull) {
-            assert(
+            \Slack\GraphQL\assert(
                 C\contains_key($request->getOperations(), $operation_name),
                 'Operation %s not found in the request',
                 $operation_name,
             );
             $operation = $request->getOperations()[$operation_name];
         } else {
-            assert(
+            \Slack\GraphQL\assert(
                 C\count($request->getOperations()) === 1,
                 'Operation name must be specified if the request contains multiple'
             );

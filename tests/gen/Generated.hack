@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4a258ae7c1b6949e15ddb40c2ab4287c>>
+ * @generated SignedSource<<3ea39fd909ead378947c19291e4a19c2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -85,6 +85,13 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
             Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
+          ),
+        );
+      case 'takes_favorite_color':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
+            FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color']->getValue(), $vars),
           ),
         );
       default:
@@ -392,7 +399,15 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-final class FavoriteColorOutputType extends \Slack\GraphQL\Types\EnumType {
+final class FavoriteColorInputType extends \Slack\GraphQL\Types\EnumInputType {
+
+  const NAME = 'FavoriteColor';
+  const type TCoerced = \FavoriteColor;
+  const \HH\enumname<this::TCoerced> HACK_ENUM = \FavoriteColor::class;
+}
+
+final class FavoriteColorOutputType
+  extends \Slack\GraphQL\Types\EnumOutputType {
 
   const NAME = 'FavoriteColor';
   const type THackType = \FavoriteColor;
