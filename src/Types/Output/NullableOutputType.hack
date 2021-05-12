@@ -22,7 +22,7 @@ final class NullableOutputType<TInner, TResolved> extends OutputType<?TInner, ?T
     public async function resolveAsync(
         ?TInner $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
-        GraphQL\__Private\Variables $vars,
+        GraphQL\Variables $vars,
     ): Awaitable<GraphQL\ValidFieldResult<?TResolved>> {
         if ($value is null) {
             return new GraphQL\ValidFieldResult(null);
