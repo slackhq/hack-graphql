@@ -95,7 +95,7 @@ function get_input_class(string $hack_type): ?string {
 
     try {
         $rt = new \ReflectionTypeAlias($hack_type);
-        $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputType::class);
+        $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
         if ($graphql_input is nonnull) {
             return $graphql_input->getType();
         }

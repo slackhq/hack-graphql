@@ -40,12 +40,12 @@ query {
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Vec};
 
-<<GraphQL\InputType('CreateTeamInput', 'Arguments for creating a team')>>
+<<GraphQL\InputObjectType('CreateTeamInput', 'Arguments for creating a team')>>
 type TCreateTeamInput = shape(
     'name' => string,
 );
 
-<<GraphQL\InputType('CreateUserInput', 'Arguments for creating a user')>>
+<<GraphQL\InputObjectType('CreateUserInput', 'Arguments for creating a user')>>
 type TCreateUserInput = shape(
     'name' => string,
     ?'is_active' => bool,

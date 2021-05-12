@@ -130,10 +130,10 @@ class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
 
 class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
-class InputType implements GeneratableClass {
+class InputObjectType implements GeneratableClass {
     public function __construct(
         private \ReflectionTypeAlias $reflection_type_alias,
-        private \Slack\GraphQL\InputType $input_type,
+        private \Slack\GraphQL\InputObjectType $input_type,
     ) {}
 
     public function getType(): string {
@@ -343,7 +343,7 @@ final class Generator {
                 ->setIsFinal(true);
             $file->addClass($class);
 
-            if ($object is InputType) {
+            if ($object is InputObjectType) {
                 $has_type_assertions = true;
             }
         }
@@ -425,10 +425,10 @@ final class Generator {
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
             $rt = new \ReflectionTypeAlias($type->getName());
-            $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputType::class);
+            $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
             if ($graphql_input is null) continue;
 
-            $inputs[] = new InputType($rt, $graphql_input);
+            $inputs[] = new InputObjectType($rt, $graphql_input);
         }
 
         $interface_types = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
