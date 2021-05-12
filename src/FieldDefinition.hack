@@ -5,12 +5,12 @@ interface IFieldDefinition<TParent> {
         TParent $parent,
         \Graphpinator\Parser\Field\Field $field,
         __Private\Variables $vars,
-    ): Awaitable<FieldResult>;
+    ): Awaitable<FieldResult<mixed>>;
 }
 
-final class FieldDefinition<TParent, TRet> implements IFieldDefinition<TParent> {
+final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinition<TParent> {
     public function __construct(
-        private Types\OutputType<TRet> $type,
+        private Types\OutputType<TRet, TResolved> $type,
         private (function(
             TParent,
             dict<string, \Graphpinator\Parser\Value\ArgumentValue>,
@@ -22,7 +22,7 @@ final class FieldDefinition<TParent, TRet> implements IFieldDefinition<TParent> 
         TParent $parent,
         \Graphpinator\Parser\Field\Field $field,
         __Private\Variables $vars,
-    ): Awaitable<FieldResult> {
+    ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
             $value = await $resolver($parent, $field->getArguments() ?? dict[], $vars);

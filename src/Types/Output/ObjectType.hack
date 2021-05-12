@@ -4,6 +4,7 @@ use namespace HH\Lib\Dict;
 use namespace Slack\GraphQL;
 
 abstract class ObjectType extends NamedOutputType {
+    const type TCoerced = dict<string, mixed>;
 
     abstract public function getFieldDefinition(string $field_name): GraphQL\IFieldDefinition<this::THackType>;
 
@@ -12,7 +13,7 @@ abstract class ObjectType extends NamedOutputType {
         this::THackType $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\__Private\Variables $vars,
-    ): Awaitable<GraphQL\FieldResult> {
+    ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
         $ret = dict[];
         $errors = vec[];
         $is_valid = true;
@@ -29,7 +30,7 @@ abstract class ObjectType extends NamedOutputType {
         );
 
         foreach ($results as $key => $result) {
-            if ($result is GraphQL\ValidFieldResult) {
+            if ($result is GraphQL\ValidFieldResult<_>) {
                 $ret[$key] = $result->getValue();
             } else {
                 $is_valid = false;
