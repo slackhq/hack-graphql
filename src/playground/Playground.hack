@@ -40,11 +40,45 @@ query {
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Vec};
 
-<<__Memoize>>
-function getTeams(): dict<int, Team> {
-    return dict[
-        1 => new Team(shape('id' => 1, 'name' => 'Test Team 1', 'num_users' => 3)),
-    ];
+<<GraphQL\InputType('CreateTeamInput', 'Arguments for creating a team')>>
+type TCreateTeamInput = shape(
+    'name' => string,
+);
+
+<<GraphQL\InputType('CreateUserInput', 'Arguments for creating a user')>>
+type TCreateUserInput = shape(
+    'name' => string,
+    ?'is_active' => bool,
+    ?'team' => TCreateTeamInput,
+);
+
+final class TeamStore {
+    private static ?TeamStore $store;
+
+    private dict<int, Team> $teams;
+    private function __construct() {
+        $this->teams = dict[
+            1 => new Team(shape('id' => 1, 'name' => 'Test Team 1', 'num_users' => 3)),
+        ];
+    }
+
+    public static function getInstance(): this {
+        if (self::$store is null) {
+            self::$store = new self();
+        }
+
+        return self::$store;
+    }
+
+    public async function getById(int $id): Awaitable<Team> {
+        return $this->teams[$id];
+    }
+
+    public async function createTeam(TCreateTeamInput $input): Awaitable<Team> {
+        $team = new Team(shape('id' => 2, 'name' => $input['name'], 'num_users' => 1));
+        $this->teams[2] = $team;
+        return $team;
+    }
 }
 
 <<GraphQL\InterfaceType('User', 'User')>>
@@ -63,12 +97,14 @@ interface User {
 }
 
 abstract class BaseUser implements User {
-    public function __construct(private shape(
-        'id' => int,
-        'name' => string,
-        'team_id' => int,
-        'is_active' => bool
-    ) $data) {}
+    public function __construct(
+        private shape(
+            'id' => int,
+            'name' => string,
+            'team_id' => int,
+            'is_active' => bool,
+        ) $data,
+    ) {}
 
     public function getId(): int {
         return $this->data['id'];
@@ -79,7 +115,7 @@ abstract class BaseUser implements User {
     }
 
     public async function getTeam(): Awaitable<\Team> {
-        return getTeams()[$this->data['team_id']];
+        return await TeamStore::getInstance()->getById($this->data['team_id']);
     }
 
     public function isActive(): bool {
@@ -170,5 +206,22 @@ abstract final class UserMutationAttributes {
     <<GraphQL\MutationRootField('pokeUser', 'Poke a user by ID')>>
     public static async function pokeUser(int $id): Awaitable<\User> {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    }
+
+    <<GraphQL\MutationRootField('createUser', 'Create a new user')>>
+    public static async function createUser(TCreateUserInput $input): Awaitable<\User> {
+        $team_input = $input['team'] ?? null;
+
+        $team = null;
+        if ($team_input is nonnull) {
+            $team = await TeamStore::getInstance()->createTeam($team_input);
+        }
+
+        return new \Human(shape(
+            'id' => 3,
+            'name' => $input['name'],
+            'is_active' => $input['is_active'] ?? true,
+            'team_id' => $team?->getId() ?? 1,
+        ));
     }
 }
