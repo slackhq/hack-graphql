@@ -4,12 +4,14 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3ea39fd909ead378947c19291e4a19c2>>
+ * @generated SignedSource<<0fbb7f9ad91541e4e77ea10eb7096fcf>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Dict;
+use namespace Facebook\TypeAssert;
+use namespace Facebook\TypeCoerce;
 
 abstract final class Schema extends \Slack\GraphQL\BaseSchema {
 
@@ -114,6 +116,13 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           User::nullable(),
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
             Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
+        );
+      case 'createUser':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
+            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
           ),
         );
       default:
@@ -412,4 +421,40 @@ final class FavoriteColorOutputType
   const NAME = 'FavoriteColor';
   const type THackType = \FavoriteColor;
   const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
+}
+
+final class CreateTeamInput
+  extends \Slack\GraphQL\Types\InputObjectType<\TCreateTeamInput> {
+
+  const NAME = 'CreateTeamInput';
+
+  <<__Override>>
+  final public function coerceValue(mixed $value): \TCreateTeamInput {
+    return TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\TCreateTeamInput::class), $value);;
+  }
+
+  <<__Override>>
+  final public function assertValidVariableValue(
+    mixed $value,
+  ): \TCreateTeamInput {
+    return TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\TCreateTeamInput::class), $value);;
+  }
+}
+
+final class CreateUserInput
+  extends \Slack\GraphQL\Types\InputObjectType<\TCreateUserInput> {
+
+  const NAME = 'CreateUserInput';
+
+  <<__Override>>
+  final public function coerceValue(mixed $value): \TCreateUserInput {
+    return TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\TCreateUserInput::class), $value);;
+  }
+
+  <<__Override>>
+  final public function assertValidVariableValue(
+    mixed $value,
+  ): \TCreateUserInput {
+    return TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\TCreateUserInput::class), $value);;
+  }
 }
