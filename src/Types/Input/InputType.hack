@@ -23,10 +23,7 @@ abstract class InputType<TCoerced> extends BaseType {
      * Variable values are assumed to have already been validated/coerced (this is important because coercion is not
      * always idempotent).
      */
-    final public function coerceNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): TCoerced {
+    final public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): TCoerced {
         return $node is Value\VariableRef
             ? $this->assertValidVariableValue($variable_values[$node->getVarName()])
             : $this->coerceNonVariableNode($node, $variable_values);

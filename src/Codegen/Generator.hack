@@ -130,6 +130,59 @@ class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
 
 class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
 
+class InputType implements GeneratableClass {
+    public function __construct(
+        private \ReflectionTypeAlias $reflection_type_alias,
+        private \Slack\GraphQL\InputType $input_type,
+    ) {}
+
+    public function getType(): string {
+        return $this->input_type->getType();
+    }
+
+    public function generateClass(HackCodegenFactory $cg): CodegenClass {
+        $hack_type = $this->reflection_type_alias->getName();
+
+        $class = $cg->codegenClass($this->input_type->getType())
+            ->setExtendsf('\%s<\%s>', \Slack\GraphQL\Types\InputObjectType::class, $hack_type);
+
+        $name_const = $cg
+            ->codegenClassConstant('NAME')
+            ->setValue($this->input_type->getType(), HackBuilderValues::export());
+
+        $class->addConstant($name_const);
+
+        $hb = hb($cg)
+            ->addReturnf(
+                'TypeCoerce\match_type_structure(\HH\type_structure_for_alias(\%s::class), $value);',
+                $hack_type,
+            );
+
+        $coerce_value = $cg->codegenMethod('coerceValue')
+            ->setIsOverride(true)
+            ->setIsFinal(true)
+            ->addParameter('mixed $value')
+            ->setReturnType(Str\format('\%s', $hack_type))
+            ->setBody($hb->getCode());
+
+        $hb = hb($cg)
+            ->addReturnf(
+                'TypeAssert\matches_type_structure(\HH\type_structure_for_alias(\%s::class), $value);',
+                $hack_type,
+            );
+
+        $assert_valid_variable_value = $cg->codegenMethod('assertValidVariableValue')
+            ->setIsOverride(true)
+            ->setIsFinal(true)
+            ->addParameter('mixed $value')
+            ->setReturnType(Str\format('\%s', $hack_type))
+            ->setBody($hb->getCode());
+
+        $class->addMethods(vec[$coerce_value, $assert_valid_variable_value]);
+        return $class;
+    }
+}
+
 class Field {
     public function __construct(
         protected DefinitionFinder\ScannedClassish $class,
@@ -181,6 +234,10 @@ class Field {
 
     protected function getArgumentInvocationStrings(): vec<string> {
         $invocations = vec[];
+        // do we need to know about all inputs here? i think we need to generate
+        // a type for each input type so we can define coerceNode that
+        // references the type name as a generic so we can assert the type
+        // structure
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $invocations[] = Str\format(
                 '%s->coerceNode($args[%s]->getValue(), $vars)',
@@ -284,10 +341,21 @@ final class Generator {
             ->useNamespace('HH\\Lib\\Dict')
             ->addClass($this->generateSchemaType($this->cg));
 
+        $has_type_assertions = false;
         foreach ($objects as $object) {
             $class = $object->generateClass($this->cg)
                 ->setIsFinal(true);
             $file->addClass($class);
+
+            if ($object is InputType) {
+                $has_type_assertions = true;
+            }
+        }
+
+        if ($has_type_assertions) {
+            $file
+                ->useNamespace('Facebook\\TypeAssert')
+                ->useNamespace('Facebook\\TypeCoerce');
         }
 
         return $file;
@@ -354,19 +422,29 @@ final class Generator {
     private async function collectObjects<T as Field>(): Awaitable<vec<GeneratableClass>> {
         $interfaces = dict[];
         $objects = vec[];
+        $inputs = vec[];
         $query_fields = vec[];
         $mutation_fields = vec[];
+
+        $input_types = $this->parser->getTypes();
+        foreach ($input_types as $type) {
+            $rt = new \ReflectionTypeAlias($type->getName());
+            $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputType::class);
+            if ($graphql_input is null) continue;
+
+            $inputs[] = new InputType($rt, $graphql_input);
+        }
 
         $interface_types = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
         foreach ($interface_types as $interface_type) {
             $rc = new \ReflectionClass($interface_type->getName());
             $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-            if ($graphql_interface is nonnull) {
-                $fields = $this->collectObjectFields($interface_type);
-                $object = new InterfaceType($interface_type, $graphql_interface, $rc, $fields);
-                $interfaces[$interface_type->getName()] = $object;
-                $objects[] = $object;
-            }
+            if ($graphql_interface is null) continue;
+
+            $fields = $this->collectObjectFields($interface_type);
+            $object = new InterfaceType($interface_type, $graphql_interface, $rc, $fields);
+            $interfaces[$interface_type->getName()] = $object;
+            $objects[] = $object;
         }
 
         foreach ($this->parser->getClasses() as $class) {
@@ -429,7 +507,7 @@ final class Generator {
                 $top_level_objects[] = new Mutation($mutation_fields);
             }
 
-            $objects = Vec\concat($top_level_objects, $objects);
+            $objects = Vec\concat($top_level_objects, $objects, $inputs);
         }
 
         return $objects;
