@@ -12,7 +12,7 @@ abstract class ObjectType extends NamedOutputType {
     final public async function resolveAsync(
         this::THackType $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
-        GraphQL\__Private\Variables $vars,
+        GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
         $ret = dict[];
         $errors = vec[];
@@ -40,8 +40,6 @@ abstract class ObjectType extends NamedOutputType {
             }
         }
 
-        return $is_valid
-            ? new GraphQL\ValidFieldResult($ret, $errors)
-            : new GraphQL\InvalidFieldResult($errors);
+        return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
     }
 }

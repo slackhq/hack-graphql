@@ -20,7 +20,7 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
     final public async function resolveAsync(
         vec<TInner> $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
-        GraphQL\__Private\Variables $vars,
+        GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<vec<mixed>>> {
         $ret = vec[];
         $errors = vec[];
@@ -42,8 +42,6 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
             }
         }
 
-        return $is_valid
-            ? new GraphQL\ValidFieldResult($ret, $errors)
-            : new GraphQL\InvalidFieldResult($errors);
+        return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
     }
 }

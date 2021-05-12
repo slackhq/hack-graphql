@@ -34,7 +34,7 @@ abstract class OutputType<TExpected, TResolved> extends BaseType {
     abstract public function resolveAsync(
         TExpected $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
-        GraphQL\__Private\Variables $vars,
+        GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<TResolved>>;
 
     /**

@@ -1,3 +1,3 @@
-namespace Slack\GraphQL\__Private;
+namespace Slack\GraphQL;
 
 type Variables = dict<string, mixed>;

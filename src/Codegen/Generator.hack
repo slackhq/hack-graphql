@@ -406,7 +406,7 @@ final class Generator {
             ->setIsAsync(true)
             ->setReturnType('Awaitable<GraphQL\\ValidFieldResult<?dict<string, mixed>>>')
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
-            ->addParameterf('\%s $variables', \Slack\GraphQL\__Private\Variables::class);
+            ->addParameterf('\%s $variables', \Slack\GraphQL\Variables::class);
 
         $hb = hb($cg)->addReturnf('await %s->resolveAsync(new GraphQL\\Root(), $operation, $variables)', $root_type);
 

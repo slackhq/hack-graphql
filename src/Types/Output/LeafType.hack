@@ -14,7 +14,7 @@ abstract class LeafType extends NamedOutputType {
     final public async function resolveAsync(
         this::THackType $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
-        GraphQL\__Private\Variables $vars,
+        GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<this::TCoerced>> {
         try {
             return new GraphQL\ValidFieldResult($this->coerce($value));
