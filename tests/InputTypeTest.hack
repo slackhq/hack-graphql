@@ -15,6 +15,9 @@ final class InputTypeTest extends PlaygroundTest {
                         id
                         is_active
                         name
+                        team {
+                            name
+                        }
                     }
                 }',
                 dict[
@@ -27,6 +30,9 @@ final class InputTypeTest extends PlaygroundTest {
                         'id' => 3,
                         'name' => 'New User',
                         'is_active' => true,
+                        'team' => dict[
+                            'name' => 'Test Team 1',
+                        ],
                     ],
                 ],
             ),
@@ -36,6 +42,9 @@ final class InputTypeTest extends PlaygroundTest {
                         id
                         is_active
                         name
+                        team {
+                            name
+                        }
                     }
                 }',
                 dict[
@@ -49,6 +58,9 @@ final class InputTypeTest extends PlaygroundTest {
                         'id' => 3,
                         'name' => 'New User',
                         'is_active' => false,
+                        'team' => dict[
+                            'name' => 'Test Team 1',
+                        ],
                     ],
                 ],
             ),
