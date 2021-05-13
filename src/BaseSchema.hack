@@ -3,6 +3,8 @@ namespace Slack\GraphQL;
 // TODO: this should be private
 abstract class BaseSchema {
     const SUPPORTS_MUTATIONS = false;
+    abstract const dict<string, classname<Types\NamedInputType>> INPUT_TYPES;
+    abstract const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES;
 
     abstract public static function resolveQuery(
         \Graphpinator\Parser\Operation\Operation $operation,

@@ -13,6 +13,14 @@ class InputObjectType implements GeneratableClass {
         return $this->input_type->getType();
     }
 
+    public function getInputTypeName(): string {
+        return $this->input_type->getType();
+    }
+
+    public function getOutputTypeName(): null {
+        return null;
+    }
+
     public function generateClass(HackCodegenFactory $cg): CodegenClass {
         $hack_type = $this->reflection_type_alias->getName();
 

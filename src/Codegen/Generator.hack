@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Codegen;
 use namespace Slack\GraphQL\Types;
 use namespace Facebook\HHAST;
 use namespace Facebook\DefinitionFinder;
-use namespace HH\Lib\{Str, Vec, C};
+use namespace HH\Lib\{Str, Vec, C, Dict};
 use type Facebook\HackCodegen\{
     CodegenFile,
     CodegenFileType,
@@ -23,6 +23,8 @@ function hb(HackCodegenFactory $cg): HackBuilder {
 
 interface GeneratableClass {
     public function generateClass(HackCodegenFactory $cg): CodegenClass;
+    public function getInputTypeName(): ?string;
+    public function getOutputTypeName(): ?string;
 }
 
 abstract class BaseObject<T as Field> implements GeneratableClass {
@@ -52,6 +54,10 @@ abstract class BaseObject<T as Field> implements GeneratableClass {
 
         return $method;
     }
+
+    public function getInputTypeName(): null {
+        return null;
+    }
 }
 
 
@@ -73,6 +79,10 @@ class Query extends BaseObject<QueryField> {
 
         return $class;
     }
+
+    public function getOutputTypeName(): string {
+        return 'Query';
+    }
 }
 
 class Mutation extends BaseObject<MutationField> {
@@ -92,6 +102,10 @@ class Mutation extends BaseObject<MutationField> {
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
+    }
+
+    public function getOutputTypeName(): string {
+        return 'Mutation';
     }
 }
 
@@ -123,6 +137,10 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
+    }
+
+    public function getOutputTypeName(): string {
+        return $this->composite_type->getType();
     }
 }
 
@@ -236,6 +254,12 @@ class EnumInputType extends BaseEnumType {
     protected function getGraphQLTypeName(): string {
         return $this->enum_type->getInputType();
     }
+    public function getInputTypeName(): string {
+        return $this->enum_type->getType();
+    }
+    public function getOutputTypeName(): null {
+        return null;
+    }
 }
 
 class EnumOutputType extends BaseEnumType {
@@ -243,6 +267,12 @@ class EnumOutputType extends BaseEnumType {
     const classname<\Slack\GraphQL\Types\EnumOutputType> ENUM_TYPE = \Slack\GraphQL\Types\EnumOutputType::class;
     protected function getGraphQLTypeName(): string {
         return $this->enum_type->getOutputType();
+    }
+    public function getInputTypeName(): null {
+        return null;
+    }
+    public function getOutputTypeName(): string {
+        return $this->enum_type->getType();
     }
 }
 
@@ -281,34 +311,59 @@ final class Generator {
             ->setFileType(CodegenFileType::DOT_HACK)
             ->useNamespace('Slack\\GraphQL')
             ->useNamespace('Slack\\GraphQL\\Types')
-            ->useNamespace('HH\\Lib\\{C, Dict}')
-            ->addClass($this->generateSchemaType($this->cg));
+            ->useNamespace('HH\\Lib\\{C, Dict}');
+
+        $input_types = dict[];
+        $output_types = dict[];
 
         $has_type_assertions = false;
         foreach ($objects as $object) {
             $class = $object->generateClass($this->cg)
                 ->setIsFinal(true);
             $file->addClass($class);
-
-            if ($object is InputObjectType) {
-                $has_type_assertions = true;
-            }
+            $input_types = self::add($input_types, $object->getInputTypeName(), $class->getName());
+            $output_types = self::add($output_types, $object->getOutputTypeName(), $class->getName());
         }
 
-        if ($has_type_assertions) {
-            $file
-                ->useNamespace('Facebook\\TypeAssert')
-                ->useNamespace('Facebook\\TypeCoerce');
-        }
+        $file->addClass($this->generateSchemaType($this->cg, $input_types, $output_types));
 
         return $file;
     }
 
-    private function generateSchemaType(HackCodegenFactory $cg): CodegenClass {
+    private static function add(dict<string, string> $dict, ?string $key, string $value): dict<string, string> {
+        if ($key is null) {
+            return $dict;
+        }
+        invariant(
+            !C\contains_key($dict, $key),
+            'Conflicting entry for "%s": "%s" vs "%s"',
+            $key,
+            $dict[$key],
+            $value,
+        );
+        $dict[$key] = $value;
+        return $dict;
+    }
+
+    private function generateSchemaType(
+        HackCodegenFactory $cg,
+        dict<string, string> $input_types,
+        dict<string, string> $output_types,
+    ): CodegenClass {
         $class = $cg->codegenClass('Schema')
             ->setIsAbstract(true)
             ->setIsFinal(true)
-            ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class);
+            ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class)
+            ->addConstant(
+                $cg->codegenClassConstant('INPUT_TYPES')
+                    ->setType('dict<string, classname<Types\NamedInputType>>')
+                    ->setValue(self::classnameDict($input_types), HackBuilderValues::literal()),
+            )
+            ->addConstant(
+                $cg->codegenClassConstant('OUTPUT_TYPES')
+                    ->setType('dict<string, classname<Types\NamedOutputType>>')
+                    ->setValue(self::classnameDict($output_types), HackBuilderValues::literal()),
+            );
 
         $class->addMethod(
             $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::QUERY),
@@ -328,6 +383,15 @@ final class Generator {
         }
 
         return $class;
+    }
+
+    private static function classnameDict(dict<string, string> $dict): string {
+        $lines = vec['dict['];
+        foreach (Dict\sort_by_key($dict) as $key => $value) {
+            $lines[] = Str\format("  %s => %s::class,", \var_export($key, true), $value);
+        }
+        $lines[] = ']';
+        return Str\join($lines, "\n");
     }
 
     private function generateSchemaResolveOperationMethod(
@@ -386,7 +450,7 @@ final class Generator {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) 
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class)
                     ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_attribute is \Slack\GraphQL\InterfaceType) {
                     $objects[] = new InterfaceType($class, $graphql_attribute, $rc, $fields);

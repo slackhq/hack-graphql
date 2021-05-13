@@ -4,33 +4,12 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b703dd24fc9dc008cbe3088dace5d168>>
+ * @generated SignedSource<<d382ad6758699cda769585df93eaf28b>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
-use namespace Facebook\TypeAssert;
-use namespace Facebook\TypeCoerce;
-
-abstract final class Schema extends \Slack\GraphQL\BaseSchema {
-
-  const bool SUPPORTS_MUTATIONS = true;
-
-  public static async function resolveQuery(
-    \Graphpinator\Parser\Operation\Operation $operation,
-    \Slack\GraphQL\Variables $variables,
-  ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Query::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
-  }
-
-  public static async function resolveMutation(
-    \Graphpinator\Parser\Operation\Operation $operation,
-    \Slack\GraphQL\Variables $variables,
-  ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Mutation::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
-  }
-}
 
 final class Query extends \Slack\GraphQL\Types\ObjectType {
 
@@ -594,5 +573,43 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
       $ret['favorite_color'] = FavoriteColorInputType::nullable()->coerceNamedNode('favorite_color', $fields, $vars);
     }
     return $ret;
+  }
+}
+
+abstract final class Schema extends \Slack\GraphQL\BaseSchema {
+
+  const dict<string, classname<Types\NamedInputType>> INPUT_TYPES = dict[
+    'CreateTeamInput' => CreateTeamInput::class,
+    'CreateUserInput' => CreateUserInput::class,
+    'FavoriteColor' => FavoriteColorInputType::class,
+  ];
+  const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES = dict[
+    'Bot' => Bot::class,
+    'Concrete' => Concrete::class,
+    'ErrorTest' => ErrorTest::class,
+    'FavoriteColor' => FavoriteColorOutputType::class,
+    'Human' => Human::class,
+    'InterfaceA' => InterfaceA::class,
+    'InterfaceB' => InterfaceB::class,
+    'Mutation' => Mutation::class,
+    'OutputTypeTest' => OutputTypeTest::class,
+    'Query' => Query::class,
+    'Team' => Team::class,
+    'User' => User::class,
+  ];
+  const bool SUPPORTS_MUTATIONS = true;
+
+  public static async function resolveQuery(
+    \Graphpinator\Parser\Operation\Operation $operation,
+    \Slack\GraphQL\Variables $variables,
+  ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
+    return await Query::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+  }
+
+  public static async function resolveMutation(
+    \Graphpinator\Parser\Operation\Operation $operation,
+    \Slack\GraphQL\Variables $variables,
+  ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
+    return await Mutation::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
   }
 }
