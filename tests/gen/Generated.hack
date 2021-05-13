@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<799aeafc0808025f3359dfcc90687109>>
+ * @generated SignedSource<<2fd9942046ca85bed913f4a4733c55dc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -50,6 +50,21 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           ErrorTest::nonNullable(),
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
+        );
+      case 'getConcrete':
+        return new GraphQL\FieldDefinition(
+          Concrete::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
+        );
+      case 'getInterfaceA':
+        return new GraphQL\FieldDefinition(
+          InterfaceA::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
+        );
+      case 'getInterfaceB':
+        return new GraphQL\FieldDefinition(
+          InterfaceB::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
         );
       case 'output_type_test':
         return new GraphQL\FieldDefinition(
@@ -124,6 +139,51 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
             CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
           ),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class InterfaceA extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \InterfaceA;
+  const NAME = 'InterfaceA';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \InterfaceB;
+  const NAME = 'InterfaceB';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      case 'bar':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->bar(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -234,6 +294,36 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           ErrorTest::nonNullable()->nonNullableListOf(),
           async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Concrete extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \Concrete;
+  const NAME = 'Concrete';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      case 'bar':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->bar(),
+        );
+      case 'baz':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->baz(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
