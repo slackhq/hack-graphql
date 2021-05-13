@@ -36,6 +36,7 @@ final class Concrete implements InterfaceB {
         return 'foo';
     }
 
+    <<GraphQL\Field('bar', 'bar')>>
     public function bar(): string {
         return 'bar';
     }
