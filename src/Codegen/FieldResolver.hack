@@ -5,7 +5,7 @@ use namespace Facebook\DefinitionFinder;
 
 
 /**
- * Utility class which handles traversing the object class and finding all fields for a class.
+ * Utility class which handles traversing the object graph and finding all fields for a class.
  */
 final class FieldResolver {
     private dict<string, DefinitionFinder\ScannedClassish> $scanned_classes;
