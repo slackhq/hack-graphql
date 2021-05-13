@@ -183,6 +183,54 @@ final class InputTypeTest extends PlaygroundTest {
                     ],
                 ],
             ),
+
+            'optional input object field (literal)' => tuple(
+                '{
+                    expect_missing: optional_field_test(input: {name: "foo"})
+                    expect_null:    optional_field_test(input: {name: "foo", favorite_color: null})
+                    expect_nonnull: optional_field_test(input: {name: "foo", favorite_color: RED})
+                }',
+                dict[],
+                dict[
+                    'expect_missing' => 'color is missing',
+                    'expect_null' => 'color is null',
+                    'expect_nonnull' => 'color is non-null',
+                ],
+            ),
+
+            'optional input object field (missing variable)' => tuple(
+                'query ($color: FavoriteColor) {
+                    optional_field_test(input: {name: "foo", favorite_color: $color})
+                }',
+                dict[], // no variables
+                dict['optional_field_test' => 'color is missing'],
+            ),
+
+            'optional input object field (null variable)' => tuple(
+                'query ($color: FavoriteColor) {
+                    optional_field_test(input: {name: "foo", favorite_color: $color})
+                }',
+                dict['color' => null],
+                dict['optional_field_test' => 'color is null'],
+            ),
+
+            /* TODO: doesn't work yet (needs variable coercion)
+            'optional input object field (missing variable with default)' => tuple(
+                'query ($color: FavoriteColor = RED) {
+                    optional_field_test(input: {name: "foo", favorite_color: $color})
+                }',
+                dict[], // no variables
+                dict['optional_field_test' => 'color is non-null'],
+            ),
+            */
+
+            'optional input object field (null variable with default)' => tuple(
+                'query ($color: FavoriteColor = RED) {
+                    optional_field_test(input: {name: "foo", favorite_color: $color})
+                }',
+                dict['color' => null],
+                dict['optional_field_test' => 'color is null'],
+            ),
         ];
     }
 

@@ -1,5 +1,7 @@
 namespace Slack\GraphQL\Types;
 
+use namespace HH\Lib\C;
+use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\Value;
 
 /**
@@ -40,6 +42,45 @@ abstract class InputType<TCoerced> extends BaseType {
      * 2. Variable values were validated/coerced.
      */
     abstract protected function assertValidVariableValue(mixed $value): TCoerced;
+
+    /**
+     * Convenient wrappers around coerceValue() and coerceNode() that throw a more helpful exception if the coercion
+     * being performed is for a specific argument or input object field.
+     */
+    final public function coerceNamedValue(
+        string $name,
+        KeyedContainer<arraykey, mixed> $values,
+    ): TCoerced {
+        try {
+            return $this->coerceValue(idx($values, $name));
+        } catch (GraphQL\UserFacingError $e) {
+            if (C\contains_key($values, $name)) {
+                throw $e->prependMessage('Invalid value for "%s"', $name);
+            } else {
+                throw new GraphQL\UserFacingError('Missing value for "%s"', $name);
+            }
+        }
+    }
+
+    final public function coerceNamedNode(
+        string $name,
+        dict<string, Value\Value> $nodes,
+        dict<string, mixed> $variable_values,
+    ): TCoerced {
+        if (C\contains_key($nodes, $name)) {
+            try {
+                return $this->coerceNode($nodes[$name], $variable_values);
+            } catch (GraphQL\UserFacingError $e) {
+                throw $e->prependMessage('Invalid value for "%s"', $name);
+            }
+        } else {
+            try {
+                return $this->coerceValue(null);
+            } catch (GraphQL\UserFacingError $e) {
+                throw new GraphQL\UserFacingError('Missing value for "%s"', $name);
+            }
+        }
+    }
 
     /**
      * Use these to get a singleton list type instance wrapping this type.

@@ -281,7 +281,7 @@ final class Generator {
             ->setFileType(CodegenFileType::DOT_HACK)
             ->useNamespace('Slack\\GraphQL')
             ->useNamespace('Slack\\GraphQL\\Types')
-            ->useNamespace('HH\\Lib\\Dict')
+            ->useNamespace('HH\\Lib\\{C, Dict}')
             ->addClass($this->generateSchemaType($this->cg));
 
         $has_type_assertions = false;
