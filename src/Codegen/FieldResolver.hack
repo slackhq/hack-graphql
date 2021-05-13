@@ -12,7 +12,7 @@ final class FieldResolver {
     private dict<string, vec<Field>> $resolved_fields = dict[];
 
     public function __construct(vec<DefinitionFinder\ScannedClassish> $classes) {
-        $this->scanned_classes = Dict\pull($classes, $class ==> $class, $class ==> $class->getName());
+        $this->scanned_classes = Dict\from_values($classes, $class ==> $class->getName());
     }
 
     public function resolveFields(): dict<string, vec<Field>> {
