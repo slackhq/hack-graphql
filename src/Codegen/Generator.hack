@@ -378,35 +378,20 @@ final class Generator {
             $inputs[] = new InputObjectType($rt, $graphql_input);
         }
 
-        $interface_types = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
-        foreach ($interface_types as $interface_type) {
-            $rc = new \ReflectionClass($interface_type->getName());
-            $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-            if ($graphql_interface is null) continue;
+        $classish_objects = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
+        $field_resolver = new FieldResolver($classish_objects);
+        $class_fields = $field_resolver->resolveFields();
 
-            $fields = $this->collectObjectFields($interface_type);
-            $object = new InterfaceType($interface_type, $graphql_interface, $rc, $fields);
-            $interfaces[$interface_type->getName()] = $object;
-            $objects[] = $object;
-        }
-
-        foreach ($this->parser->getClasses() as $class) {
+        foreach ($classish_objects as $class) {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
-
-                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
-                if ($graphql_object is nonnull) {
-                    $fields = vec[];
-
-                    // Add interface fields.
-                    // This feels a bit hacky - is there a better way?
-                    foreach ($rc->getInterfaceNames() as $interface_name) {
-                        $interface = $interfaces[$interface_name];
-                        $fields = Vec\concat($fields, $interface->getFields());
-                    }
-
-                    $fields = Vec\concat($fields, $this->collectObjectFields($class));
-                    $objects[] = new ObjectType($class, $graphql_object, $rc, $fields);
+                $fields = $class_fields[$class->getName()];
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) 
+                    ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                if ($graphql_attribute is \Slack\GraphQL\InterfaceType) {
+                    $objects[] = new InterfaceType($class, $graphql_attribute, $rc, $fields);
+                } elseif ($graphql_attribute is \Slack\GraphQL\ObjectType) {
+                    $objects[] = new ObjectType($class, $graphql_attribute, $rc, $fields);
                 }
             }
 
@@ -454,20 +439,5 @@ final class Generator {
         }
 
         return $objects;
-    }
-
-    private function collectObjectFields(DefinitionFinder\ScannedClassish $class): vec<Field> {
-        $fields = vec[];
-        foreach ($class->getMethods() as $method) {
-            if (C\is_empty($method->getAttributes())) continue;
-
-            $rm = new \ReflectionMethod($class->getName(), $method->getName());
-            $graphql_field = $rm->getAttributeClass(\Slack\GraphQL\Field::class);
-            if ($graphql_field is null) continue;
-
-            $fields[] = new Field($class, $method, $rm, $graphql_field);
-        }
-
-        return $fields;
     }
 }
