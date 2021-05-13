@@ -11,7 +11,6 @@ namespace Slack\GraphQL\Types;
 <<__ConsistentConstruct>>
 abstract class NamedOutputType extends OutputType<this::THackType, this::TCoerced> {
 
-    <<__Enforceable>>
     abstract const type THackType;
     abstract const type TCoerced;
     abstract const string NAME;

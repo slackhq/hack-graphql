@@ -437,9 +437,14 @@ final class Generator {
         foreach ($input_types as $type) {
             $rt = new \ReflectionTypeAlias($type->getName());
             $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
-            if ($graphql_input is null) continue;
+            if ($graphql_input is nonnull) {
+                $inputs[] = new InputObjectType($rt, $graphql_input);
+            }
 
-            $inputs[] = new InputObjectType($rt, $graphql_input);
+            $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+            if ($graphql_output is nonnull) {
+                $objects[] = new OutputObjectType($rt, $graphql_output);
+            }
         }
 
         $classish_objects = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());

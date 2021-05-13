@@ -110,17 +110,29 @@ function get_input_class(string $hack_type): ?string {
  * Get the output class for a hack type which is not a primitive.
  */
 function get_output_class(string $hack_type): ?string {
-    $rc = new \ReflectionClass($hack_type);
+    try {
+        $rc = new \ReflectionClass($hack_type);
 
-    $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
-        $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-    if ($graphql_object) {
-        return $graphql_object->getType();
+        $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
+            $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+        if ($graphql_object) {
+            return $graphql_object->getType();
+        }
+
+        $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
+        if ($graphql_enum) {
+            return $graphql_enum->getOutputType();
+        }
+    } catch (\ReflectionException $_e) {
     }
 
-    $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
-    if ($graphql_enum) {
-        return $graphql_enum->getOutputType();
+    try {
+        $rt = new \ReflectionTypeAlias($hack_type);
+        $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+        if ($graphql_output is nonnull) {
+            return $graphql_output->getType();
+        }
+    } catch (\ReflectionException $_e) {
     }
 
     return null;
@@ -138,4 +150,34 @@ function unwrap_type(string $hack_type, bool $nullable = false): (string, string
         return tuple($unwrapped, $suffix.($nullable ? '->nullableListOf()' : '->nonNullableListOf()'));
     }
     return tuple($hack_type, $nullable ? '::nullable()' : '::nonNullable()');
+}
+
+
+/**
+ * Get the type aias for the given type structure.
+ */
+function type_structure_to_type_alias<T>(TypeStructure<T> $ts): string {
+    $alias = Shapes::idx($ts, 'alias');
+    if ($alias is nonnull) {
+        return $alias;
+    }
+
+    switch ($ts['kind']) {
+        case TypeStructureKind::OF_INT:
+            return 'HH\int';
+        case TypeStructureKind::OF_STRING:
+            return 'HH\string';
+        case TypeStructureKind::OF_BOOL:
+            return 'HH\bool';
+        case TypeStructureKind::OF_VEC:
+            return Str\format('HH\vec<%s>', type_structure_to_type_alias($ts['generic_types'] as nonnull[0]));
+        case TypeStructureKind::OF_ENUM:
+        //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
+            return $ts['classname'] as nonnull;
+        default:
+            invariant_violation(
+                'Shape fields %s cannot be used as object fields.',
+                TypeStructureKind::getNames()[$ts['kind']],
+            );
+    }
 }
