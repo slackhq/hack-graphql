@@ -38,10 +38,11 @@ final class FieldResolver {
 
         $fields = dict[];
 
-        $parents = $class->getInterfaceNames();
-        $parent_class_name = $class->getParentClassName();
-        if ($parent_class_name is nonnull) {
-            $parents[] = $parent_class_name;
+        $rc = new \ReflectionClass($class->getName());
+        $parents = $rc->getInterfaceNames();
+        $parent_class = $rc->getParentClass();
+        if ($parent_class is \ReflectionClass) {
+            $parents[] = $parent_class->getName();
         }
 
         foreach ($parents as $parent) {
