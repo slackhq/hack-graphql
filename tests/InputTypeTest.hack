@@ -21,9 +21,9 @@ final class InputTypeTest extends PlaygroundTest {
                     }
                 }',
                 dict[
-                    'input' => dict[
+                    'input' => shape(
                         'name' => 'New User',
-                    ],
+                    ),
                 ],
                 dict[
                     'createUser' => dict[
@@ -48,10 +48,10 @@ final class InputTypeTest extends PlaygroundTest {
                     }
                 }',
                 dict[
-                    'input' => dict[
+                    'input' => shape(
                         'name' => 'New User',
                         'is_active' => false,
-                    ],
+                    ),
                 ],
                 dict[
                     'createUser' => dict[
@@ -76,12 +76,12 @@ final class InputTypeTest extends PlaygroundTest {
                     }
                 }',
                 dict[
-                    'input' => dict[
+                    'input' => shape(
                         'name' => 'New User',
-                        'team' => dict[
+                        'team' => shape(
                             'name' => 'New Team',
-                        ],
-                    ],
+                        ),
+                    ),
                 ],
                 dict[
                     'createUser' => dict[
@@ -172,7 +172,7 @@ final class InputTypeTest extends PlaygroundTest {
                     }
                 }',
                 dict[
-                    'team' => dict['name' => 'New Team'],
+                    'team' => shape('name' => 'New Team'),
                 ],
                 dict[
                     'createUser' => dict[
