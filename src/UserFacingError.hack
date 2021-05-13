@@ -25,6 +25,14 @@ class UserFacingError extends \Exception {
         parent::__construct(\vsprintf($message, $args));
     }
 
+    final public function prependMessage(
+        Str\SprintfFormatString $message,
+        mixed ...$args
+    ): this {
+        $this->message = \vsprintf($message, $args).': '.$this->message;
+        return $this;
+    }
+
     final public function prependPath(arraykey $key): this {
         $this->reversePath[] = $key;
         return $this;

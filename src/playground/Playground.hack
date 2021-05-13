@@ -48,9 +48,9 @@ type TCreateTeamInput = shape(
 <<GraphQL\InputObjectType('CreateUserInput', 'Arguments for creating a user')>>
 type TCreateUserInput = shape(
     'name' => string,
-    ?'is_active' => bool,
-    ?'team' => TCreateTeamInput,
-    ?'favorite_color' => FavoriteColor,
+    ?'is_active' => ?bool,
+    ?'team' => ?TCreateTeamInput,
+    ?'favorite_color' => ?FavoriteColor,
 );
 
 final class TeamStore {
@@ -200,6 +200,14 @@ abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('takes_favorite_color', 'Test for enum arguments')>>
     public static function takesFavoriteColor(FavoriteColor $favorite_color): bool {
         return true;
+    }
+
+    <<GraphQL\QueryRootField('optional_field_test', 'Test for an optional input object field')>>
+    public static function optionalFieldTest(TCreateUserInput $input): string {
+        if (!Shapes::keyExists($input, 'favorite_color')) {
+            return 'color is missing';
+        }
+        return $input['favorite_color'] is null ? 'color is null' : 'color is non-null';
     }
 }
 
