@@ -13,7 +13,10 @@ jobs:
                 ref: ${{ github.event.pull_request.head.sha }}
             - name: Build
               run: |
-                make install
+                docker build -t mwildehahn/hack-graphql .
+            - name: Install
+              run: |
+                docker run -v `pwd`:/app mwildehahn/hack-graphql composer install
             - name: Test
               run: |
-                make test
+                docker run -v `pwd`:/app mwildehahn/hack-graphql ./vendor/bin/hacktest tests
