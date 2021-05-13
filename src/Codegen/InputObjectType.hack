@@ -64,7 +64,7 @@ class InputObjectType implements GeneratableClass {
             );
 
             $name_literal = \var_export($field_name, true);
-            $type = input_type(($is_optional ? '?' : '').self::typeStructureToHackType($field_ts));
+            $type = input_type(($is_optional ? '?' : '').type_structure_to_type_alias($field_ts));
 
             if ($is_optional) {
                 $values->startIfBlockf('C\\contains_key($fields, %s)', $name_literal);
@@ -97,31 +97,5 @@ class InputObjectType implements GeneratableClass {
                 ->setReturnType('this::TCoerced')
                 ->setBody($nodes->getCode()),
         ]);
-    }
-
-    private static function typeStructureToHackType<T>(TypeStructure<T> $ts): string {
-        $alias = Shapes::idx($ts, 'alias');
-        if ($alias is nonnull) {
-            return $alias;
-        }
-
-        switch ($ts['kind']) {
-            case TypeStructureKind::OF_INT:
-                return 'HH\int';
-            case TypeStructureKind::OF_STRING:
-                return 'HH\string';
-            case TypeStructureKind::OF_BOOL:
-                return 'HH\bool';
-            case TypeStructureKind::OF_VEC:
-                return Str\format('HH\vec<%s>', self::typeStructureToHackType($ts['generic_types'] as nonnull[0]));
-            case TypeStructureKind::OF_ENUM:
-            //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
-                return $ts['classname'] as nonnull;
-            default:
-                invariant_violation(
-                    'Shape fields %s cannot be used as input object fields.',
-                    TypeStructureKind::getNames()[$ts['kind']],
-                );
-        }
     }
 }
