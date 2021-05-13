@@ -17,6 +17,3 @@ test:
 
 format:
 	docker run -v `pwd`:/app -it mwildehahn/hack-graphql find {src,tests} -type f -exec hackfmt -i {} \;
-
-install_ci: build
-	docker run -v `pwd`:/app mwildehahn/hack-graphql composer install
