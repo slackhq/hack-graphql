@@ -4,173 +4,17 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<628306589c76b36fe27fb782e5baee0f>>
+ * @generated SignedSource<<d5eadc450c9f50d9237a9a320098416a>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class Query extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = GraphQL\Root;
-  const NAME = 'Query';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'error_test':
-        return new GraphQL\FieldDefinition(
-          ErrorTest::nullable(),
-          async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
-        );
-      case 'error_test_nn':
-        return new GraphQL\FieldDefinition(
-          ErrorTest::nonNullable(),
-          async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
-        );
-      case 'output_type_test':
-        return new GraphQL\FieldDefinition(
-          OutputTypeTest::nullable(),
-          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
-        );
-      case 'getObjectShape':
-        return new GraphQL\FieldDefinition(
-          ObjectShape::nullable(),
-          async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
-        );
-      case 'viewer':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
-        );
-      case 'user':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'human':
-        return new GraphQL\FieldDefinition(
-          Human::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'bot':
-        return new GraphQL\FieldDefinition(
-          Bot::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'nested_list_sum':
-        return new GraphQL\FieldDefinition(
-          Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
-            Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
-          ),
-        );
-      case 'takes_favorite_color':
-        return new GraphQL\FieldDefinition(
-          Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
-            FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color']->getValue(), $vars),
-          ),
-        );
-      case 'optional_field_test':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
-            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
-          ),
-        );
-      case 'getConcrete':
-        return new GraphQL\FieldDefinition(
-          Concrete::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
-        );
-      case 'getInterfaceA':
-        return new GraphQL\FieldDefinition(
-          InterfaceA::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
-        );
-      case 'getInterfaceB':
-        return new GraphQL\FieldDefinition(
-          InterfaceB::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class Mutation extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = GraphQL\Root;
-  const NAME = 'Mutation';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'pokeUser':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'createUser':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
-            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
-          ),
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = \ObjectShape;
-  const NAME = 'ObjectShape';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'foo':
-        return new GraphQL\FieldDefinition(
-          Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent['foo'],
-        );
-      case 'bar':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent['bar'] ?? null,
-        );
-      case 'baz':
-        return new GraphQL\FieldDefinition(
-          AnotherObjectShape::nullable(),
-          async ($parent, $args, $vars) ==> $parent['baz'],
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
 final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \AnotherObjectShape;
   const NAME = 'AnotherObjectShape';
+  const type THackType = \AnotherObjectShape;
 
   public function getFieldDefinition(
     string $field_name,
@@ -187,10 +31,10 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-final class User extends \Slack\GraphQL\Types\ObjectType {
+final class Bot extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \User;
-  const NAME = 'User';
+  const NAME = 'Bot';
+  const type THackType = \Bot;
 
   public function getFieldDefinition(
     string $field_name,
@@ -216,25 +60,10 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class InterfaceA extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = \InterfaceA;
-  const NAME = 'InterfaceA';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'foo':
+      case 'primary_function':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->foo(),
+          async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -242,10 +71,10 @@ final class InterfaceA extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
+final class Concrete extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \InterfaceB;
-  const NAME = 'InterfaceB';
+  const NAME = 'Concrete';
+  const type THackType = \Concrete;
 
   public function getFieldDefinition(
     string $field_name,
@@ -261,16 +90,98 @@ final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->bar(),
         );
+      case 'baz':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->baz(),
+        );
       default:
         throw new \Exception('Unknown field: '.$field_name);
     }
   }
 }
 
+final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
+
+  const NAME = 'CreateTeamInput';
+  const type TCoerced = \TCreateTeamInput;
+  const keyset<string> FIELD_NAMES = keyset [
+    'name',
+  ];
+
+  <<__Override>>
+  public function coerceFieldValues(
+    KeyedContainer<arraykey, mixed> $fields,
+  ): this::TCoerced {
+    $ret = shape();
+    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedValue('name', $fields);
+    return $ret;
+  }
+
+  <<__Override>>
+  public function coerceFieldNodes(
+    dict<string, \Graphpinator\Parser\Value\Value> $fields,
+    dict<string, mixed> $vars,
+  ): this::TCoerced {
+    $ret = shape();
+    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedNode('name', $fields, $vars);
+    return $ret;
+  }
+}
+
+final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
+
+  const NAME = 'CreateUserInput';
+  const type TCoerced = \TCreateUserInput;
+  const keyset<string> FIELD_NAMES = keyset [
+    'name',
+    'is_active',
+    'team',
+    'favorite_color',
+  ];
+
+  <<__Override>>
+  public function coerceFieldValues(
+    KeyedContainer<arraykey, mixed> $fields,
+  ): this::TCoerced {
+    $ret = shape();
+    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedValue('name', $fields);
+    if (C\contains_key($fields, 'is_active')) {
+      $ret['is_active'] = Types\BooleanInputType::nullable()->coerceNamedValue('is_active', $fields);
+    }
+    if (C\contains_key($fields, 'team')) {
+      $ret['team'] = CreateTeamInput::nullable()->coerceNamedValue('team', $fields);
+    }
+    if (C\contains_key($fields, 'favorite_color')) {
+      $ret['favorite_color'] = FavoriteColorInputType::nullable()->coerceNamedValue('favorite_color', $fields);
+    }
+    return $ret;
+  }
+
+  <<__Override>>
+  public function coerceFieldNodes(
+    dict<string, \Graphpinator\Parser\Value\Value> $fields,
+    dict<string, mixed> $vars,
+  ): this::TCoerced {
+    $ret = shape();
+    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedNode('name', $fields, $vars);
+    if ($this->hasValue('is_active', $fields, $vars)) {
+      $ret['is_active'] = Types\BooleanInputType::nullable()->coerceNamedNode('is_active', $fields, $vars);
+    }
+    if ($this->hasValue('team', $fields, $vars)) {
+      $ret['team'] = CreateTeamInput::nullable()->coerceNamedNode('team', $fields, $vars);
+    }
+    if ($this->hasValue('favorite_color', $fields, $vars)) {
+      $ret['favorite_color'] = FavoriteColorInputType::nullable()->coerceNamedNode('favorite_color', $fields, $vars);
+    }
+    return $ret;
+  }
+}
+
 final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \ErrorTestObj;
   const NAME = 'ErrorTest';
+  const type THackType = \ErrorTestObj;
 
   public function getFieldDefinition(
     string $field_name,
@@ -342,10 +253,169 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
+final class FavoriteColorInputType extends \Slack\GraphQL\Types\EnumInputType {
+
+  const NAME = 'FavoriteColor';
+  const type TCoerced = \FavoriteColor;
+  const \HH\enumname<this::TCoerced> HACK_ENUM = \FavoriteColor::class;
+}
+
+final class FavoriteColorOutputType
+  extends \Slack\GraphQL\Types\EnumOutputType {
+
+  const NAME = 'FavoriteColor';
+  const type THackType = \FavoriteColor;
+  const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
+}
+
+final class Human extends \Slack\GraphQL\Types\ObjectType {
+
+  const NAME = 'Human';
+  const type THackType = \Human;
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'id':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getId(),
+        );
+      case 'name':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getName(),
+        );
+      case 'team':
+        return new GraphQL\FieldDefinition(
+          Team::nullable(),
+          async ($parent, $args, $vars) ==> await $parent->getTeam(),
+        );
+      case 'is_active':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->isActive(),
+        );
+      case 'favorite_color':
+        return new GraphQL\FieldDefinition(
+          FavoriteColorOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class InterfaceA extends \Slack\GraphQL\Types\ObjectType {
+
+  const NAME = 'InterfaceA';
+  const type THackType = \InterfaceA;
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
+
+  const NAME = 'InterfaceB';
+  const type THackType = \InterfaceB;
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      case 'bar':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->bar(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class Mutation extends \Slack\GraphQL\Types\ObjectType {
+
+  const NAME = 'Mutation';
+  const type THackType = \Slack\GraphQL\Root;
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'pokeUser':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
+        );
+      case 'createUser':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
+            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
+          ),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
+final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
+
+  const NAME = 'ObjectShape';
+  const type THackType = \ObjectShape;
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent['foo'],
+        );
+      case 'bar':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent['bar'] ?? null,
+        );
+      case 'baz':
+        return new GraphQL\FieldDefinition(
+          AnotherObjectShape::nullable(),
+          async ($parent, $args, $vars) ==> $parent['baz'],
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
 final class OutputTypeTest extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \OutputTypeTestObj;
   const NAME = 'OutputTypeTest';
+  const type THackType = \OutputTypeTestObj;
 
   public function getFieldDefinition(
     string $field_name,
@@ -392,79 +462,96 @@ final class OutputTypeTest extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-final class Human extends \Slack\GraphQL\Types\ObjectType {
+final class Query extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \Human;
-  const NAME = 'Human';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'id':
-        return new GraphQL\FieldDefinition(
-          Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getId(),
-        );
-      case 'name':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getName(),
-        );
-      case 'team':
-        return new GraphQL\FieldDefinition(
-          Team::nullable(),
-          async ($parent, $args, $vars) ==> await $parent->getTeam(),
-        );
-      case 'is_active':
-        return new GraphQL\FieldDefinition(
-          Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->isActive(),
-        );
-      case 'favorite_color':
-        return new GraphQL\FieldDefinition(
-          FavoriteColorOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class Bot extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = \Bot;
-  const NAME = 'Bot';
+  const NAME = 'Query';
+  const type THackType = \Slack\GraphQL\Root;
 
   public function getFieldDefinition(
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'id':
+      case 'error_test':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nullable(),
+          async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
+        );
+      case 'error_test_nn':
+        return new GraphQL\FieldDefinition(
+          ErrorTest::nonNullable(),
+          async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
+        );
+      case 'getConcrete':
+        return new GraphQL\FieldDefinition(
+          Concrete::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
+        );
+      case 'getInterfaceA':
+        return new GraphQL\FieldDefinition(
+          InterfaceA::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
+        );
+      case 'getInterfaceB':
+        return new GraphQL\FieldDefinition(
+          InterfaceB::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
+        );
+      case 'getObjectShape':
+        return new GraphQL\FieldDefinition(
+          ObjectShape::nullable(),
+          async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
+        );
+      case 'output_type_test':
+        return new GraphQL\FieldDefinition(
+          OutputTypeTest::nullable(),
+          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
+        );
+      case 'viewer':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
+        );
+      case 'user':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
+        );
+      case 'human':
+        return new GraphQL\FieldDefinition(
+          Human::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
+        );
+      case 'bot':
+        return new GraphQL\FieldDefinition(
+          Bot::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
+            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
+          ),
+        );
+      case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
           Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getId(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
+            Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
+          ),
         );
-      case 'name':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getName(),
-        );
-      case 'team':
-        return new GraphQL\FieldDefinition(
-          Team::nullable(),
-          async ($parent, $args, $vars) ==> await $parent->getTeam(),
-        );
-      case 'is_active':
+      case 'takes_favorite_color':
         return new GraphQL\FieldDefinition(
           Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->isActive(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
+            FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color']->getValue(), $vars),
+          ),
         );
-      case 'primary_function':
+      case 'optional_field_test':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
+            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
+          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -474,8 +561,8 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
 
 final class Team extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \Team;
   const NAME = 'Team';
+  const type THackType = \Team;
 
   public function getFieldDefinition(
     string $field_name,
@@ -509,125 +596,38 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
-final class Concrete extends \Slack\GraphQL\Types\ObjectType {
+final class User extends \Slack\GraphQL\Types\ObjectType {
 
-  const type THackType = \Concrete;
-  const NAME = 'Concrete';
+  const NAME = 'User';
+  const type THackType = \User;
 
   public function getFieldDefinition(
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'foo':
+      case 'id':
         return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->foo(),
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getId(),
         );
-      case 'bar':
+      case 'name':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->bar(),
+          async ($parent, $args, $vars) ==> $parent->getName(),
         );
-      case 'baz':
+      case 'team':
         return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->baz(),
+          Team::nullable(),
+          async ($parent, $args, $vars) ==> await $parent->getTeam(),
+        );
+      case 'is_active':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
     }
-  }
-}
-
-final class FavoriteColorInputType extends \Slack\GraphQL\Types\EnumInputType {
-
-  const NAME = 'FavoriteColor';
-  const type TCoerced = \FavoriteColor;
-  const \HH\enumname<this::TCoerced> HACK_ENUM = \FavoriteColor::class;
-}
-
-final class FavoriteColorOutputType
-  extends \Slack\GraphQL\Types\EnumOutputType {
-
-  const NAME = 'FavoriteColor';
-  const type THackType = \FavoriteColor;
-  const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
-}
-
-final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
-
-  const type TCoerced = \TCreateTeamInput;
-  const NAME = 'CreateTeamInput';
-  const keyset<string> FIELD_NAMES = keyset [
-    'name',
-  ];
-
-  <<__Override>>
-  public function coerceFieldValues(
-    KeyedContainer<arraykey, mixed> $fields,
-  ): this::TCoerced {
-    $ret = shape();
-    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedValue('name', $fields);
-    return $ret;
-  }
-
-  <<__Override>>
-  public function coerceFieldNodes(
-    dict<string, \Graphpinator\Parser\Value\Value> $fields,
-    dict<string, mixed> $vars,
-  ): this::TCoerced {
-    $ret = shape();
-    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedNode('name', $fields, $vars);
-    return $ret;
-  }
-}
-
-final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
-
-  const type TCoerced = \TCreateUserInput;
-  const NAME = 'CreateUserInput';
-  const keyset<string> FIELD_NAMES = keyset [
-    'name',
-    'is_active',
-    'team',
-    'favorite_color',
-  ];
-
-  <<__Override>>
-  public function coerceFieldValues(
-    KeyedContainer<arraykey, mixed> $fields,
-  ): this::TCoerced {
-    $ret = shape();
-    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedValue('name', $fields);
-    if (C\contains_key($fields, 'is_active')) {
-      $ret['is_active'] = Types\BooleanInputType::nullable()->coerceNamedValue('is_active', $fields);
-    }
-    if (C\contains_key($fields, 'team')) {
-      $ret['team'] = CreateTeamInput::nullable()->coerceNamedValue('team', $fields);
-    }
-    if (C\contains_key($fields, 'favorite_color')) {
-      $ret['favorite_color'] = FavoriteColorInputType::nullable()->coerceNamedValue('favorite_color', $fields);
-    }
-    return $ret;
-  }
-
-  <<__Override>>
-  public function coerceFieldNodes(
-    dict<string, \Graphpinator\Parser\Value\Value> $fields,
-    dict<string, mixed> $vars,
-  ): this::TCoerced {
-    $ret = shape();
-    $ret['name'] = Types\StringInputType::nonNullable()->coerceNamedNode('name', $fields, $vars);
-    if ($this->hasValue('is_active', $fields, $vars)) {
-      $ret['is_active'] = Types\BooleanInputType::nullable()->coerceNamedNode('is_active', $fields, $vars);
-    }
-    if ($this->hasValue('team', $fields, $vars)) {
-      $ret['team'] = CreateTeamInput::nullable()->coerceNamedNode('team', $fields, $vars);
-    }
-    if ($this->hasValue('favorite_color', $fields, $vars)) {
-      $ret['favorite_color'] = FavoriteColorInputType::nullable()->coerceNamedNode('favorite_color', $fields, $vars);
-    }
-    return $ret;
   }
 }
 

@@ -1,13 +1,7 @@
 namespace Slack\GraphQL;
 
 
-final class EnumType implements \HH\EnumAttribute {
-    public function __construct(private string $type, private string $description) {}
-
-    public function getType(): string {
-        return $this->type;
-    }
-
+final class EnumType extends __Private\GraphQLTypeInfo implements \HH\EnumAttribute {
     public function getInputType(): string {
         return $this->getType().'InputType';
     }
