@@ -32,6 +32,7 @@ abstract class OutputType<TExpected, TResolved> extends BaseType {
      * recursively.
      */
     abstract public function resolveAsync(
+        classname<GraphQL\Introspection\IntrospectableSchema> $schema,
         TExpected $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\Variables $vars,

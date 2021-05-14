@@ -30,10 +30,7 @@ abstract class InputObjectType extends NamedInputType {
     abstract protected function coerceFieldValues(KeyedContainer<arraykey, mixed> $values): this::TCoerced;
 
     <<__Override>>
-    protected function coerceNonVariableNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): this::TCoerced {
+    protected function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): this::TCoerced {
         if (!$node is Value\ObjectVal) {
             throw new GraphQL\UserFacingError('Expected an input object literal, got %s', \get_class($node));
         }
@@ -74,5 +71,9 @@ abstract class InputObjectType extends NamedInputType {
             return C\contains_key($variable_values, $value_node->getVarName());
         }
         return true;
+    }
+
+    final public function getTypeKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
     }
 }

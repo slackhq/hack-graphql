@@ -47,10 +47,7 @@ abstract class InputType<+TCoerced> extends BaseType {
      * Convenient wrappers around coerceValue() and coerceNode() that throw a more helpful exception if the coercion
      * being performed is for a specific argument or input object field.
      */
-    final public function coerceNamedValue(
-        string $name,
-        KeyedContainer<arraykey, mixed> $values,
-    ): TCoerced {
+    final public function coerceNamedValue(string $name, KeyedContainer<arraykey, mixed> $values): TCoerced {
         try {
             return $this->coerceValue(idx($values, $name));
         } catch (GraphQL\UserFacingError $e) {

@@ -3,13 +3,18 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Dict;
 use namespace Slack\GraphQL;
 
-abstract class ObjectType extends NamedOutputType {
+abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\IntrospectableObject {
     const type TCoerced = dict<string, mixed>;
 
     abstract public function getFieldDefinition(string $field_name): GraphQL\IFieldDefinition<this::THackType>;
 
+    public function getTypeKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::OBJECT;
+    }
+
     <<__Override>>
     final public async function resolveAsync(
+        classname<GraphQL\Introspection\IntrospectableSchema> $schema,
         this::THackType $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\Variables $vars,
@@ -25,8 +30,8 @@ abstract class ObjectType extends NamedOutputType {
 
         $results = await Dict\map_async(
             $child_fields,
-            async $child_field ==>
-                await $this->getFieldDefinition($child_field->getName())->resolveAsync($value, $child_field, $vars),
+            async $child_field ==> await $this->getFieldDefinition($child_field->getName())
+                ->resolveAsync($schema, $value, $child_field, $vars),
         );
 
         foreach ($results as $key => $result) {
@@ -41,5 +46,17 @@ abstract class ObjectType extends NamedOutputType {
         }
 
         return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
+    }
+
+    public function getFields(bool $include_deprecated = false): ?vec<GraphQL\Introspection\IntrospectableField> {
+        // TODO
+        return null;
+    }
+
+    public function getInterfaces(
+        bool $include_deprecated = false,
+    ): ?vec<GraphQL\Introspection\IntrospectableInterface> {
+        // TODO
+        return null;
     }
 }

@@ -1,7 +1,10 @@
 namespace Slack\GraphQL\Types;
 
-final class StringOutputType extends LeafType {
+use namespace Slack\GraphQL;
+
+final class StringOutputType extends ScalarOutputType {
     const type THackType = string;
+    const GraphQL\Introspection\__TypeKind TYPE_KIND = GraphQL\Introspection\__TypeKind::SCALAR;
     const string NAME = 'String';
 
     <<__Override>>

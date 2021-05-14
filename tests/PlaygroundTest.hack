@@ -39,13 +39,19 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
             $expected_response = shape('data' => $expected_response);
         }
 
-        $source = new \Graphpinator\Source\StringSource($query);
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        $out = await $resolver->resolve($request, $variables);
+        $out = await $this->resolve($query, $variables);
         expect($out)->toHaveSameShapeAs($expected_response);
+    }
+
+    public function getResolver(): GraphQL\Resolver {
+        return new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+    }
+
+    public async function resolve(
+        string $query,
+        dict<string, mixed> $variables = dict[],
+    ): Awaitable<GraphQL\Resolver::TResponse> {
+        $resolver = $this->getResolver();
+        return await $resolver->resolve($query, $variables);
     }
 }

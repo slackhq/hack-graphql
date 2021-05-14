@@ -123,7 +123,7 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
 
     public function generateClass(HackCodegenFactory $cg): CodegenClass {
         $class = $cg->codegenClass($this->composite_type->getType())
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
+            ->setExtends($this->getClassExtends());
 
         $hack_type_constant = $cg->codegenClassConstant('THackType')
             ->setType('type')
@@ -142,11 +142,21 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
     public function getOutputTypeName(): string {
         return $this->composite_type->getType();
     }
+
+    abstract protected function getClassExtends(): string;
 }
 
-class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
+class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {
+    protected function getClassExtends(): string {
+        return Str\format('\%s', \Slack\GraphQL\Types\InterfaceType::class);
+    }
+}
 
-class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
+class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {
+    protected function getClassExtends(): string {
+        return Str\format('\%s', \Slack\GraphQL\Types\ObjectType::class);
+    }
+}
 
 class Field {
     public function __construct(
@@ -170,7 +180,7 @@ class Field {
 
         // Arguments
         $hb->addf(
-            'async ($parent, $args, $vars) ==> %s%s%s(',
+            'async ($schema, $parent, $args, $vars) ==> %s%s%s(',
             $type_info['needs_await'] ? 'await ' : '',
             $this->getMethodCallPrefix(),
             $this->method->getName(),
@@ -200,9 +210,16 @@ class Field {
     protected function getArgumentInvocationStrings(): vec<string> {
         $invocations = vec[];
         foreach ($this->reflection_method->getParameters() as $index => $param) {
+            $type_text = $param->getTypeText();
+            // TODO: can we pass down dynamic context this way too?
+            if ($type_text === 'HH\classname<Slack\GraphQL\Introspection\IntrospectableSchema>') {
+                $invocations[] = '$schema';
+                continue;
+            }
+
             $invocations[] = Str\format(
                 '%s->coerceNode($args[%s]->getValue(), $vars)',
-                input_type($param->getTypeText()),
+                input_type($type_text),
                 \var_export($param->getName(), true),
             );
         }
@@ -325,7 +342,7 @@ final class Generator {
             $output_types = self::add($output_types, $object->getOutputTypeName(), $class->getName());
         }
 
-        $file->addClass($this->generateSchemaType($this->cg, $input_types, $output_types));
+        $file->addClass($this->generateSchemaType($this->cg, $input_types, $output_types, $objects));
 
         return $file;
     }
@@ -334,13 +351,7 @@ final class Generator {
         if ($key is null) {
             return $dict;
         }
-        invariant(
-            !C\contains_key($dict, $key),
-            'Conflicting entry for "%s": "%s" vs "%s"',
-            $key,
-            $dict[$key],
-            $value,
-        );
+        invariant(!C\contains_key($dict, $key), 'Conflicting entry for "%s": "%s" vs "%s"', $key, $dict[$key], $value);
         $dict[$key] = $value;
         return $dict;
     }
@@ -349,6 +360,7 @@ final class Generator {
         HackCodegenFactory $cg,
         dict<string, string> $input_types,
         dict<string, string> $output_types,
+        vec<GeneratableClass> $objects,
     ): CodegenClass {
         $class = $cg->codegenClass('Schema')
             ->setIsAbstract(true)
@@ -369,18 +381,28 @@ final class Generator {
             $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::QUERY),
         );
 
-        if ($this->has_mutations) {
-            $class
-                ->addMethod(
-                    $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::MUTATION),
-                );
+        foreach ($objects as $object) {
+            if ($object is Query) {
+                $query_type_const = $cg->codegenClassConstant('QUERY_TYPE')
+                    ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
+                    ->setValue('Query::class', HackBuilderValues::literal());
 
-            $mutation_const = $cg->codegenClassConstant('SUPPORTS_MUTATIONS')
-                ->setType('bool')
-                ->setValue(true, HackBuilderValues::export());
+                $class->addConstant($query_type_const);
+            } else if ($object is Mutation) {
+                $mutation_type_const = $cg->codegenClassConstant('MUTATION_TYPE')
+                    ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
+                    ->setValue(('Mutation::class'), HackBuilderValues::literal());
 
-            $class->addConstant($mutation_const);
+                $class->addConstant($mutation_type_const)
+                    ->addMethod(
+                        $this->generateSchemaResolveOperationMethod(
+                            $cg,
+                            \Graphpinator\Tokenizer\OperationType::MUTATION,
+                        ),
+                    );
+            }
         }
+
 
         return $class;
     }
@@ -423,7 +445,10 @@ final class Generator {
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
             ->addParameterf('\%s $variables', \Slack\GraphQL\Variables::class);
 
-        $hb = hb($cg)->addReturnf('await %s->resolveAsync(new GraphQL\\Root(), $operation, $variables)', $root_type);
+        $hb = hb($cg)->addReturnf(
+            'await %s->resolveAsync(self::class, new GraphQL\\Root(), $operation, $variables)',
+            $root_type,
+        );
 
         $resolve_method->setBody($hb->getCode());
 
@@ -436,6 +461,8 @@ final class Generator {
         $inputs = vec[];
         $query_fields = vec[];
         $mutation_fields = vec[];
+
+        $introspection_defs = await DefinitionFinder\FileParser::fromFileAsync(__DIR__.'/../Introspection.hack');
 
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
@@ -451,7 +478,10 @@ final class Generator {
             }
         }
 
-        $classish_objects = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
+        $classish_objects = $this->parser->getInterfaces()
+            |> Vec\concat($$, $this->parser->getClasses())
+            |> Vec\concat($$, $introspection_defs->getClasses());
+
         $field_resolver = new FieldResolver($classish_objects);
         $class_fields = $field_resolver->resolveFields();
 
@@ -459,8 +489,8 @@ final class Generator {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class)
-                    ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
+                    $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_attribute is \Slack\GraphQL\InterfaceType) {
                     $objects[] = new InterfaceType($class, $graphql_attribute, $rc, $fields);
                 } elseif ($graphql_attribute is \Slack\GraphQL\ObjectType) {
@@ -484,14 +514,12 @@ final class Generator {
                 // TODO: maybe throw an error if a field is tagged with both query + mutation field?
                 $mutation_root_field = $rm->getAttributeClass(\Slack\GraphQL\MutationRootField::class);
                 if ($mutation_root_field is nonnull) {
-                    $this->has_mutations = true;
-
                     $mutation_fields[] = new MutationField($class, $method, $rm, $mutation_root_field);
                 }
             }
         }
 
-        foreach ($this->parser->getEnums() as $enum) {
+        foreach (Vec\concat($this->parser->getEnums(), $introspection_defs->getEnums()) as $enum) {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;

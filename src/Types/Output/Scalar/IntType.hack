@@ -1,7 +1,10 @@
 namespace Slack\GraphQL\Types;
 
-final class IntOutputType extends LeafType {
+use namespace Slack\GraphQL;
+
+final class IntOutputType extends ScalarOutputType {
     const type THackType = int;
+    const GraphQL\Introspection\__TypeKind TYPE_KIND = GraphQL\Introspection\__TypeKind::SCALAR;
     const string NAME = 'Int';
 
     const int MIN_SAFE_VALUE = -2147483648;

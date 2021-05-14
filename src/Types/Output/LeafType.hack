@@ -12,6 +12,7 @@ abstract class LeafType extends NamedOutputType {
 
     <<__Override>>
     final public async function resolveAsync(
+        classname<GraphQL\Introspection\IntrospectableSchema> $schema,
         this::THackType $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\Variables $vars,

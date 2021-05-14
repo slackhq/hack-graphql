@@ -16,8 +16,13 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
         return $this->innerType;
     }
 
+    public function getTypeKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::LIST;
+    }
+
     <<__Override>>
     final public async function resolveAsync(
+        classname<GraphQL\Introspection\IntrospectableSchema> $schema,
         vec<TInner> $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\Variables $vars,
@@ -28,7 +33,7 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
 
         $results = await Vec\map_async(
             $value,
-            async $item ==> await $this->innerType->resolveAsync($item, $field, $vars),
+            async $item ==> await $this->innerType->resolveAsync($schema, $item, $field, $vars),
         );
 
         foreach ($results as $idx => $result) {

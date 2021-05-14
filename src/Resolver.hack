@@ -26,10 +26,15 @@ final class Resolver {
      * @see https://spec.graphql.org/draft/#sec-Execution
      */
     public async function resolve(
-        \Graphpinator\Parser\ParsedRequest $request,
+        string $input,
         dict<string, mixed> $variables = dict[],
         ?string $operation_name = null,
     ): Awaitable<this::TResponse> {
+        // TODO: catch these errors
+        $source = new \Graphpinator\Source\StringSource($input);
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $request = $parser->parse();
+
         $ret = shape();
         $errors = vec[];
 
@@ -91,7 +96,7 @@ final class Resolver {
                 $result = await $schema::resolveQuery($operation, $coerced_variables);
                 break;
             case 'mutation':
-                invariant($schema::SUPPORTS_MUTATIONS, 'mutation operation not supported for schema');
+                invariant($schema::MUTATION_TYPE is nonnull, 'mutation operation not supported for schema');
                 $result = await $schema::resolveMutation($operation, $coerced_variables);
                 break;
             default:
@@ -125,11 +130,7 @@ final class Resolver {
                 }
                 continue;
             }
-            GraphQL\assert(
-                $type is Types\NullableInputType<_>,
-                'Missing value for required variable "%s"',
-                $name,
-            );
+            GraphQL\assert($type is Types\NullableInputType<_>, 'Missing value for required variable "%s"', $name);
         }
         return $coerced_values;
     }

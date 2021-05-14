@@ -7,7 +7,7 @@ use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, H
 class OutputObjectType implements GeneratableClass {
     public function __construct(
         private \ReflectionTypeAlias $reflection_type_alias,
-        private \Slack\GraphQL\ObjectType $object_type 
+        private \Slack\GraphQL\ObjectType $object_type,
     ) {}
 
     public function getInputTypeName(): null {
@@ -68,9 +68,9 @@ class OutputObjectType implements GeneratableClass {
                     $hb->addLinef('%s,', $type_info['type']);
 
                     $hb->addf(
-                        'async ($parent, $args, $vars) ==> $parent[%s]%s',
+                        'async ($schema, $parent, $args, $vars) ==> $parent[%s]%s',
                         $name_literal,
-                        Shapes::idx($field_ts, 'optional_shape_field', false) ? ' ?? null' : ''
+                        Shapes::idx($field_ts, 'optional_shape_field', false) ? ' ?? null' : '',
                     );
                     $hb->addLine(',');
 

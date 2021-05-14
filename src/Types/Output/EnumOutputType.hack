@@ -1,5 +1,7 @@
 namespace Slack\GraphQL\Types;
 
+use namespace Slack\GraphQL;
+
 abstract class EnumOutputType extends LeafType {
     abstract const type THackType as arraykey;
     abstract const \HH\enumname<this::THackType> HACK_ENUM;
@@ -13,4 +15,9 @@ abstract class EnumOutputType extends LeafType {
         $hack_enum = static::HACK_ENUM;
         return $hack_enum::getNames()[$value];
     }
+
+    public function getTypeKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::ENUM;
+    }
+
 }

@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Types;
 
+use namespace Slack\GraphQL;
 use namespace HH\Lib\Vec;
 use namespace Graphpinator\Parser\Value;
 use type Slack\GraphQL\UserFacingError;
@@ -23,10 +24,7 @@ final class ListInputType<+TInner> extends InputType<vec<TInner>> {
     }
 
     <<__Override>>
-    final public function coerceNonVariableNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): vec<TInner> {
+    final public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): vec<TInner> {
         if (!$node is Value\ListVal) {
             return vec[$this->innerType->coerceNode($node, $variable_values)];
         }
@@ -36,5 +34,9 @@ final class ListInputType<+TInner> extends InputType<vec<TInner>> {
     <<__Override>>
     public function assertValidVariableValue(mixed $value): vec<TInner> {
         return Vec\map($value as vec<_>, $item ==> $this->innerType->coerceValue($item));
+    }
+
+    public function getTypeKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::LIST;
     }
 }

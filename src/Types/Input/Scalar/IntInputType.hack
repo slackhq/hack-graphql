@@ -3,9 +3,10 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class IntInputType extends NamedInputType {
+final class IntInputType extends ScalarInputType {
 
     const type TCoerced = int;
+    const GraphQL\Introspection\__TypeKind TYPE_KIND = GraphQL\Introspection\__TypeKind::SCALAR;
     const string NAME = 'Int';
 
     const int MIN_SAFE_VALUE = -2147483648;
@@ -27,10 +28,7 @@ final class IntInputType extends NamedInputType {
     }
 
     <<__Override>>
-    final public function coerceNonVariableNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): int {
+    final public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): int {
         $value = $node->getRawValue();
         if (!$node is Value\Literal || !$value is int) {
             throw new GraphQL\UserFacingError('Expected an Int literal, got %s', \get_class($node));
