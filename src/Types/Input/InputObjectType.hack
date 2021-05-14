@@ -11,10 +11,6 @@ abstract class InputObjectType extends NamedInputType {
     abstract const type TCoerced as shape(...);
     abstract const keyset<string> FIELD_NAMES;
 
-    final protected function assertValidVariableValue(mixed $value): this::TCoerced {
-        return $value as this::TCoerced;
-    }
-
     <<__Override>>
     public function coerceValue(mixed $value): this::TCoerced {
         if (!$value is KeyedContainer<_, _>) {

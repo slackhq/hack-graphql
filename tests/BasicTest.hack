@@ -23,8 +23,13 @@ final class BasicTest extends PlaygroundTest {
                 dict['viewer' => dict['team' => dict['name' => 'Test Team 1', 'num_users' => 3]]],
             ),
             'variables' => tuple(
-                'query TestQuery($user_id: ID!) { user(id: $user_id) { id } }',
+                'query TestQuery($user_id: Int!) { user(id: $user_id) { id } }',
                 dict['user_id' => 3],
+                dict['user' => dict['id' => 3]],
+            ),
+            'variable with default' => tuple(
+                'query TestQuery($user_id: Int! = 3) { user(id: $user_id) { id } }',
+                dict[],
                 dict['user' => dict['id' => 3]],
             ),
             'nested variables' => tuple(
@@ -63,7 +68,7 @@ final class BasicTest extends PlaygroundTest {
                 dict['takes_favorite_color' => true]
             ),
             'enum arguments with variables' => tuple(
-                'query { takes_favorite_color(favorite_color: $favorite_color) }',
+                'query ($favorite_color: FavoriteColor!) { takes_favorite_color(favorite_color: $favorite_color) }',
                 dict['favorite_color' => 'RED'],
                 dict['takes_favorite_color' => true]
             ),

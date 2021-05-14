@@ -313,8 +313,8 @@ final class Generator {
             ->useNamespace('Slack\\GraphQL\\Types')
             ->useNamespace('HH\\Lib\\{C, Dict}');
 
-        $input_types = dict[];
-        $output_types = dict[];
+        $input_types = BUILTIN_INPUT_TYPES;
+        $output_types = BUILTIN_OUTPUT_TYPES;
 
         $has_type_assertions = false;
         foreach ($objects as $object) {
@@ -388,7 +388,11 @@ final class Generator {
     private static function classnameDict(dict<string, string> $dict): string {
         $lines = vec['dict['];
         foreach (Dict\sort_by_key($dict) as $key => $value) {
-            $lines[] = Str\format("  %s => %s::class,", \var_export($key, true), $value);
+            $lines[] = Str\format(
+                "  %s => %s::class,",
+                \var_export($key, true),
+                Str\strip_prefix($value, 'Slack\\GraphQL\\'),
+            );
         }
         $lines[] = ']';
         return Str\join($lines, "\n");

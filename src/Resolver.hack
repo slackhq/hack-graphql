@@ -1,5 +1,6 @@
 namespace Slack\GraphQL;
 
+use namespace Slack\GraphQL;
 use namespace HH\Lib\{C, Vec};
 
 final class Resolver {
@@ -26,7 +27,7 @@ final class Resolver {
      */
     public async function resolve(
         \Graphpinator\Parser\ParsedRequest $request,
-        ?dict<string, mixed> $variables = null,
+        dict<string, mixed> $variables = dict[],
         ?string $operation_name = null,
     ): Awaitable<this::TResponse> {
         $ret = shape();
@@ -62,40 +63,74 @@ final class Resolver {
 
     public async function resolveImpl(
         \Graphpinator\Parser\ParsedRequest $request,
-        ?dict<string, mixed> $variables,
+        dict<string, mixed> $raw_variables,
         ?string $operation_name,
     ): Awaitable<(?dict<string, mixed>, vec<UserFacingError>)> {
-        // TODO: validate variables against $schema
         $schema = $this->schema;
 
         if ($operation_name is nonnull) {
-            \Slack\GraphQL\assert(
+            GraphQL\assert(
                 C\contains_key($request->getOperations(), $operation_name),
                 'Operation %s not found in the request',
                 $operation_name,
             );
             $operation = $request->getOperations()[$operation_name];
         } else {
-            \Slack\GraphQL\assert(
+            GraphQL\assert(
                 C\count($request->getOperations()) === 1,
                 'Operation name must be specified if the request contains multiple',
             );
             $operation = C\onlyx($request->getOperations());
         }
 
+        $coerced_variables = $this->coerceVariables($operation->getVariables(), $raw_variables);
+
         $operation_type = $operation->getType();
         switch ($operation_type) {
             case 'query':
-                $result = await $schema::resolveQuery($operation, $variables ?? dict[]);
+                $result = await $schema::resolveQuery($operation, $coerced_variables);
                 break;
             case 'mutation':
                 invariant($schema::SUPPORTS_MUTATIONS, 'mutation operation not supported for schema');
-                $result = await $schema::resolveMutation($operation, $variables ?? dict[]);
+                $result = await $schema::resolveMutation($operation, $coerced_variables);
                 break;
             default:
                 throw new \Error('Unsupported operation: '.$operation_type);
         }
 
         return tuple($result->getValue(), $result->getErrors());
+    }
+
+    private function coerceVariables(
+        dict<string, \Graphpinator\Parser\Variable\Variable> $nodes,
+        dict<string, mixed> $raw_values,
+    ): dict<string, mixed> {
+        $coerced_values = dict[];
+        foreach ($nodes as $name => $node) {
+            $type = Types\InputType::fromNode($this->schema, $node->getType());
+            if (C\contains_key($raw_values, $name)) {
+                try {
+                    $coerced_values[$name] = $type->coerceValue($raw_values[$name]);
+                } catch (UserFacingError $e) {
+                    throw $e->prependMessage('Invalid value for variable "%s"', $name);
+                }
+                continue;
+            }
+            $default_node = $node->getDefault();
+            if ($default_node is nonnull) {
+                try {
+                    $coerced_values[$name] = $type->coerceNode($default_node, dict[]);
+                } catch (UserFacingError $e) {
+                    throw $e->prependMessage('Invalid default value for variable "%s"', $name);
+                }
+                continue;
+            }
+            GraphQL\assert(
+                $type is Types\NullableInputType<_>,
+                'Missing value for required variable "%s"',
+                $name,
+            );
+        }
+        return $coerced_values;
     }
 }

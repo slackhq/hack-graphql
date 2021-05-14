@@ -24,13 +24,6 @@ abstract class EnumInputType extends NamedInputType {
         return $enum::getValues()[$value];
     }
 
-    final protected function assertValidVariableValue(mixed $value): this::TCoerced {
-        // TODO: This should just be $value as this::TCoerced, once variables are properly coerced at the beginning
-        // of execution. Otherwise we'd try (and fail) to coerce an already-coerced value here.
-        $enum = static::HACK_ENUM;
-        return $enum::getValues()[$value as string];
-    }
-
     <<__Override>>
     final public function coerceNonVariableNode(
         Value\Value $node,

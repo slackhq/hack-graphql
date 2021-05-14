@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Types;
 
 use namespace Graphpinator\Parser\Value;
 
-final class NullableInputType<TInner as nonnull> extends InputType<?TInner> {
+final class NullableInputType<+TInner as nonnull> extends InputType<?TInner> {
 
     public function __construct(private InputType<TInner> $innerType) {}
 

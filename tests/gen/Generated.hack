@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d525dfcf31476006f570f0c3036e69c5>>
+ * @generated SignedSource<<628306589c76b36fe27fb782e5baee0f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -30,30 +30,15 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ErrorTest::nonNullable(),
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
         );
-      case 'getConcrete':
+      case 'output_type_test':
         return new GraphQL\FieldDefinition(
-          Concrete::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
-        );
-      case 'getInterfaceA':
-        return new GraphQL\FieldDefinition(
-          InterfaceA::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
-        );
-      case 'getInterfaceB':
-        return new GraphQL\FieldDefinition(
-          InterfaceB::nullable(),
-          async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
+          OutputTypeTest::nullable(),
+          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
         );
       case 'getObjectShape':
         return new GraphQL\FieldDefinition(
           ObjectShape::nullable(),
           async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
-        );
-      case 'output_type_test':
-        return new GraphQL\FieldDefinition(
-          OutputTypeTest::nullable(),
-          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
         );
       case 'viewer':
         return new GraphQL\FieldDefinition(
@@ -101,6 +86,21 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
             CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
           ),
+        );
+      case 'getConcrete':
+        return new GraphQL\FieldDefinition(
+          Concrete::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
+        );
+      case 'getInterfaceA':
+        return new GraphQL\FieldDefinition(
+          InterfaceA::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
+        );
+      case 'getInterfaceB':
+        return new GraphQL\FieldDefinition(
+          InterfaceB::nullable(),
+          async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -187,6 +187,41 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
+final class User extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \User;
+  const NAME = 'User';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'id':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getId(),
+        );
+      case 'name':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getName(),
+        );
+      case 'team':
+        return new GraphQL\FieldDefinition(
+          Team::nullable(),
+          async ($parent, $args, $vars) ==> await $parent->getTeam(),
+        );
+      case 'is_active':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->isActive(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
 final class InterfaceA extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \InterfaceA;
@@ -225,41 +260,6 @@ final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->bar(),
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class User extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = \User;
-  const NAME = 'User';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'id':
-        return new GraphQL\FieldDefinition(
-          Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getId(),
-        );
-      case 'name':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getName(),
-        );
-      case 'team':
-        return new GraphQL\FieldDefinition(
-          Team::nullable(),
-          async ($parent, $args, $vars) ==> await $parent->getTeam(),
-        );
-      case 'is_active':
-        return new GraphQL\FieldDefinition(
-          Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -335,36 +335,6 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           ErrorTest::nonNullable()->nonNullableListOf(),
           async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
-        );
-      default:
-        throw new \Exception('Unknown field: '.$field_name);
-    }
-  }
-}
-
-final class Concrete extends \Slack\GraphQL\Types\ObjectType {
-
-  const type THackType = \Concrete;
-  const NAME = 'Concrete';
-
-  public function getFieldDefinition(
-    string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
-    switch ($field_name) {
-      case 'foo':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->foo(),
-        );
-      case 'bar':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->bar(),
-        );
-      case 'baz':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->baz(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
@@ -539,6 +509,36 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
   }
 }
 
+final class Concrete extends \Slack\GraphQL\Types\ObjectType {
+
+  const type THackType = \Concrete;
+  const NAME = 'Concrete';
+
+  public function getFieldDefinition(
+    string $field_name,
+  ): GraphQL\IFieldDefinition<this::THackType> {
+    switch ($field_name) {
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
+        );
+      case 'bar':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->bar(),
+        );
+      case 'baz':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->baz(),
+        );
+      default:
+        throw new \Exception('Unknown field: '.$field_name);
+    }
+  }
+}
+
 final class FavoriteColorInputType extends \Slack\GraphQL\Types\EnumInputType {
 
   const NAME = 'FavoriteColor';
@@ -634,23 +634,29 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
 abstract final class Schema extends \Slack\GraphQL\BaseSchema {
 
   const dict<string, classname<Types\NamedInputType>> INPUT_TYPES = dict[
+    'Boolean' => Types\BooleanInputType::class,
     'CreateTeamInput' => CreateTeamInput::class,
     'CreateUserInput' => CreateUserInput::class,
     'FavoriteColor' => FavoriteColorInputType::class,
+    'Int' => Types\IntInputType::class,
+    'String' => Types\StringInputType::class,
   ];
   const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES = dict[
     'AnotherObjectShape' => AnotherObjectShape::class,
+    'Boolean' => Types\BooleanOutputType::class,
     'Bot' => Bot::class,
     'Concrete' => Concrete::class,
     'ErrorTest' => ErrorTest::class,
     'FavoriteColor' => FavoriteColorOutputType::class,
     'Human' => Human::class,
+    'Int' => Types\IntOutputType::class,
     'InterfaceA' => InterfaceA::class,
     'InterfaceB' => InterfaceB::class,
     'Mutation' => Mutation::class,
     'ObjectShape' => ObjectShape::class,
     'OutputTypeTest' => OutputTypeTest::class,
     'Query' => Query::class,
+    'String' => Types\StringOutputType::class,
     'Team' => Team::class,
     'User' => User::class,
   ];

@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
-use namespace Graphpinator\Parser\Value;
+use namespace Graphpinator\Parser\{TypeRef, Value};
 
 /**
  * GraphQL type that may be used for field/directive arguments and for variable values.
@@ -10,7 +10,7 @@ use namespace Graphpinator\Parser\Value;
  *
  * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
  */
-abstract class InputType<TCoerced> extends BaseType {
+abstract class InputType<+TCoerced> extends BaseType {
 
     /**
      * Validate/coerce a raw value to this type (i.e. a value that is not a parser node because it doesn't come from
@@ -93,5 +93,28 @@ abstract class InputType<TCoerced> extends BaseType {
     <<__Memoize>>
     public function nullableListOf(): NullableInputType<vec<TCoerced>> {
         return new NullableInputType($this->nonNullableListOf());
+    }
+
+    /**
+     * Convert a parser node (e.g. from a variable declaration) to an instance of the input type it represents.
+     */
+    public static function fromNode(
+        classname<GraphQL\BaseSchema> $schema,
+        TypeRef\TypeRef $node,
+        bool $nullable = true,
+    ): InputType<mixed> {
+        if ($node is TypeRef\NotNullRef) {
+            return self::fromNode($schema, $node->getInnerRef(), false);
+        }
+        if ($node is TypeRef\ListTypeRef) {
+            $inner = self::fromNode($schema, $node->getInnerRef());
+            return $nullable ? $inner->nullableListOf() : $inner->nonNullableListOf();
+        }
+        $name = $node as TypeRef\NamedTypeRef->getName();
+        $class = idx($schema::INPUT_TYPES, $name);
+        if ($class is null) {
+            throw new GraphQL\UserFacingError('Undefined input type "%s"', $name);
+        }
+        return $nullable ? $class::nullable() : $class::nonNullable();
     }
 }
