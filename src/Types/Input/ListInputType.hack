@@ -4,7 +4,7 @@ use namespace HH\Lib\Vec;
 use namespace Graphpinator\Parser\Value;
 use type Slack\GraphQL\UserFacingError;
 
-final class ListInputType<TInner> extends InputType<vec<TInner>> {
+final class ListInputType<+TInner> extends InputType<vec<TInner>> {
 
     public function __construct(private InputType<TInner> $innerType) {}
 

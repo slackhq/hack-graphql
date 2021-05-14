@@ -214,7 +214,6 @@ final class InputTypeTest extends PlaygroundTest {
                 dict['optional_field_test' => 'color is null'],
             ),
 
-            /* TODO: doesn't work yet (needs variable coercion)
             'optional input object field (missing variable with default)' => tuple(
                 'query ($color: FavoriteColor = RED) {
                     optional_field_test(input: {name: "foo", favorite_color: $color})
@@ -222,7 +221,6 @@ final class InputTypeTest extends PlaygroundTest {
                 dict[], // no variables
                 dict['optional_field_test' => 'color is non-null'],
             ),
-            */
 
             'optional input object field (null variable with default)' => tuple(
                 'query ($color: FavoriteColor = RED) {

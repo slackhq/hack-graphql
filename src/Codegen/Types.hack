@@ -3,6 +3,18 @@ namespace Slack\GraphQL\Codegen;
 use namespace HH\Lib\Str;
 use namespace Slack\GraphQL\Types;
 
+const dict<string, classname<Types\NamedInputType>> BUILTIN_INPUT_TYPES = dict[
+    Types\IntInputType::NAME => Types\IntInputType::class,
+    Types\StringInputType::NAME => Types\StringInputType::class,
+    Types\BooleanInputType::NAME => Types\BooleanInputType::class,
+];
+
+const dict<string, classname<Types\NamedOutputType>> BUILTIN_OUTPUT_TYPES = dict[
+    Types\IntOutputType::NAME => Types\IntOutputType::class,
+    Types\StringOutputType::NAME => Types\StringOutputType::class,
+    Types\BooleanOutputType::NAME => Types\BooleanOutputType::class,
+];
+
 /**
  * Examples:
  *   int       -> IntInputType::nonNullable()

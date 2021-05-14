@@ -275,7 +275,52 @@ final class ErrorTest extends PlaygroundTest {
                         )
                     ]
                 )
-            )
+            ),
+
+            'missing variable' => tuple(
+                'query ($id: Int!) { user(id: $id) { name } }',
+                dict[],
+                shape(
+                    // Note: No 'data' because variable coercion errors happen before GraphQL execution starts.
+                    'errors' => vec[
+                        shape('message' => 'Missing value for required variable "id"'),
+                    ],
+                ),
+            ),
+
+            'invalid variable value' => tuple(
+                'query ($id: Int!) { user(id: $id) { name } }',
+                dict['id' => 'forty-two'],
+                shape(
+                    'errors' => vec[
+                        shape('message' => 'Invalid value for variable "id": Expected an integer, got forty-two')
+                    ],
+                ),
+            ),
+
+            'invalid variable default' => tuple(
+                'query ($id: Int! = null) { user(id: $id) { name } }',
+                dict[],
+                shape(
+                    'errors' => vec[
+                        shape(
+                            'message' =>
+                                'Invalid default value for variable "id": '.
+                                'Expected an Int literal, got Graphpinator\\Parser\\Value\\Literal',
+                        ),
+                    ],
+                ),
+            ),
+
+            'invalid variable type' => tuple(
+                'query ($id: InvalidType!) { user(id: $id) { name } }',
+                dict[],
+                shape(
+                    'errors' => vec[
+                        shape('message' => 'Undefined input type "InvalidType"'),
+                    ],
+                ),
+            ),
         ];
     }
 }
