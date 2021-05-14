@@ -3,41 +3,19 @@ namespace Slack\GraphQL\Codegen;
 use namespace HH\Lib\{Keyset, Str};
 use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
 
-class InputObjectType implements GeneratableClass {
-    public function __construct(
-        private \ReflectionTypeAlias $reflection_type_alias,
-        private \Slack\GraphQL\InputObjectType $input_type,
-    ) {}
 
-    public function getType(): string {
-        return $this->input_type->getType();
+class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType> {
+
+    const classname<\Slack\GraphQL\Types\InputObjectType> SUPERCLASS = \Slack\GraphQL\Types\InputObjectType::class;
+
+    public function __construct(\Slack\GraphQL\InputObjectType $type_info, private \ReflectionTypeAlias $type_alias) {
+        parent::__construct($type_info, $type_alias->getName());
     }
 
-    public function getInputTypeName(): string {
-        return $this->input_type->getType();
-    }
+    public function build(HackCodegenFactory $cg): CodegenClass {
+        $class = parent::build($cg);
 
-    public function getOutputTypeName(): null {
-        return null;
-    }
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        $hack_type = $this->reflection_type_alias->getName();
-
-        $class = $cg->codegenClass($this->input_type->getType())
-            ->setIsFinal()
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\InputObjectType::class)
-            ->addTypeConstant(
-                $cg->codegenTypeConstant('TCoerced')->setValue('\\'.$hack_type, HackBuilderValues::literal()),
-            );
-
-        $name_const = $cg
-            ->codegenClassConstant('NAME')
-            ->setValue($this->input_type->getType(), HackBuilderValues::export());
-
-        $class->addConstant($name_const);
-
-        $ts = $this->reflection_type_alias->getResolvedTypeStructure();
+        $ts = $this->type_alias->getResolvedTypeStructure();
         invariant(
             $ts['kind'] === \HH\TypeStructureKind::OF_SHAPE && !idx($ts, 'nullable', false),
             'Input objects can only be generated from type aliases of a non-nullable shape type, got %s.',

@@ -1,3 +1,3 @@
 namespace Slack\GraphQL;
 
-class InterfaceType extends \Slack\GraphQL\__Private\CompositeType {}
+class InterfaceType extends __Private\CompositeType {}

@@ -1,7 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
 use namespace Slack\GraphQL\Types;
-use namespace Facebook\HHAST;
 use namespace Facebook\DefinitionFinder;
 use namespace HH\Lib\{Str, Vec, C, Dict};
 use type Facebook\HackCodegen\{
@@ -19,261 +18,6 @@ use type Facebook\HackCodegen\{
 
 function hb(HackCodegenFactory $cg): HackBuilder {
     return new HackBuilder($cg->getConfig());
-}
-
-interface GeneratableClass {
-    public function generateClass(HackCodegenFactory $cg): CodegenClass;
-    public function getInputTypeName(): ?string;
-    public function getOutputTypeName(): ?string;
-}
-
-abstract class BaseObject<T as Field> implements GeneratableClass {
-    protected vec<T> $fields;
-
-    protected function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
-        $method = $cg->codegenMethod('getFieldDefinition')
-            ->setPublic()
-            ->setReturnType('GraphQL\\IFieldDefinition<this::THackType>')
-            ->addParameter('string $field_name');
-
-        $hb = hb($cg);
-        $hb->startSwitch('$field_name')
-            ->addCaseBlocks(
-                $this->fields,
-                ($field, $hb) ==> {
-                    $field->addGetFieldDefinitionCase($hb);
-                    $hb->unindent();
-                },
-            )
-            ->addDefault()
-            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
-            ->endDefault()
-            ->endSwitch();
-
-        $method->setBody($hb->getCode());
-
-        return $method;
-    }
-
-    public function getInputTypeName(): null {
-        return null;
-    }
-}
-
-
-class Query extends BaseObject<QueryField> {
-    public function __construct(protected vec<QueryField> $fields) {}
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass('Query')
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
-
-        $hack_type_constant = $cg->codegenClassConstant('THackType')
-            ->setType('type')
-            ->setValue('GraphQL\\Root', HackBuilderValues::literal());
-
-        $class->addConstant($hack_type_constant);
-        $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
-
-        $class->addMethod($this->generateGetFieldDefinition($cg));
-
-        return $class;
-    }
-
-    public function getOutputTypeName(): string {
-        return 'Query';
-    }
-}
-
-class Mutation extends BaseObject<MutationField> {
-    public function __construct(protected vec<MutationField> $fields) {}
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass('Mutation')
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
-
-        $hack_type_constant = $cg->codegenClassConstant('THackType')
-            ->setType('type')
-            ->setValue('GraphQL\\Root', HackBuilderValues::literal());
-
-        $class->addConstant($hack_type_constant);
-        $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Mutation', HackBuilderValues::export()));
-
-        $class->addMethod($this->generateGetFieldDefinition($cg));
-
-        return $class;
-    }
-
-    public function getOutputTypeName(): string {
-        return 'Mutation';
-    }
-}
-
-abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extends BaseObject<Field> {
-    public function __construct(
-        private DefinitionFinder\ScannedClassish $class,
-        private T $composite_type,
-        private \ReflectionClass $reflection_class,
-        protected vec<Field> $fields,
-    ) {}
-
-    public function getFields(): vec<Field> {
-        return $this->fields;
-    }
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg->codegenClass($this->composite_type->getType())
-            ->setExtendsf('\%s', \Slack\GraphQL\Types\ObjectType::class);
-
-        $hack_type_constant = $cg->codegenClassConstant('THackType')
-            ->setType('type')
-            ->setValue('\\'.$this->class->getName(), HackBuilderValues::literal());
-
-        $class->addConstant($hack_type_constant);
-        $class->addConstant(
-            $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export()),
-        );
-
-        $class->addMethod($this->generateGetFieldDefinition($cg));
-
-        return $class;
-    }
-
-    public function getOutputTypeName(): string {
-        return $this->composite_type->getType();
-    }
-}
-
-class InterfaceType extends CompositeType<\Slack\GraphQL\InterfaceType> {}
-
-class ObjectType extends CompositeType<\Slack\GraphQL\ObjectType> {}
-
-class Field {
-    public function __construct(
-        protected DefinitionFinder\ScannedClassish $class,
-        protected DefinitionFinder\ScannedMethod $method,
-        protected \ReflectionMethod $reflection_method,
-        protected \Slack\GraphQL\Field $graphql_field,
-    ) {}
-
-    final public function addGetFieldDefinitionCase(HackBuilder $hb): void {
-        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
-
-        $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
-
-        // Field return type
-        $type_info = output_type(
-            $this->reflection_method->getReturnTypeText(),
-            $this->reflection_method->getAttributeClass(\Slack\GraphQL\KillsParentOnException::class) is nonnull,
-        );
-        $hb->addLinef('%s,', $type_info['type']);
-
-        // Arguments
-        $hb->addf(
-            'async ($parent, $args, $vars) ==> %s%s%s(',
-            $type_info['needs_await'] ? 'await ' : '',
-            $this->getMethodCallPrefix(),
-            $this->method->getName(),
-        );
-        $args = $this->getArgumentInvocationStrings();
-        if (!C\is_empty($args)) {
-            $hb->newLine()->indent();
-            foreach ($args as $arg) {
-                $hb->addLinef('%s,', $arg);
-            }
-            $hb->unindent();
-        }
-        $hb->addLine('),');
-
-        // End of new GraphQL\FieldDefinition(
-        $hb->unindent()->addLine(');');
-    }
-
-    protected function getMethodCallPrefix(): string {
-        return '$parent->';
-    }
-
-    public function hasArguments(): bool {
-        return $this->reflection_method->getNumberOfParameters() > 0;
-    }
-
-    protected function getArgumentInvocationStrings(): vec<string> {
-        $invocations = vec[];
-        foreach ($this->reflection_method->getParameters() as $index => $param) {
-            $invocations[] = Str\format(
-                '%s->coerceNode($args[%s]->getValue(), $vars)',
-                input_type($param->getTypeText()),
-                \var_export($param->getName(), true),
-            );
-        }
-        return $invocations;
-    }
-}
-
-class QueryField extends Field {
-    <<__Override>>
-    protected function getMethodCallPrefix(): string {
-        return '\\'.$this->class->getName().'::';
-    }
-}
-
-class MutationField extends QueryField {}
-
-abstract class BaseEnumType implements GeneratableClass {
-    public function __construct(
-        protected DefinitionFinder\ScannedEnum $scanned_enum,
-        protected \Slack\GraphQL\EnumType $enum_type,
-    ) {}
-
-    abstract protected function getGraphQLTypeName(): string;
-    abstract const string TYPE_CONSTANT_NAME;
-    abstract const classname<\Slack\GraphQL\Types\BaseType> ENUM_TYPE;
-
-    public function generateClass(HackCodegenFactory $cg): CodegenClass {
-        return $cg->codegenClass($this->getGraphQLTypeName())
-            ->setExtendsf('\%s', $this::ENUM_TYPE)
-            ->addConstant(
-                $cg->codegenClassConstant('NAME')
-                    ->setValue($this->enum_type->getType(), HackBuilderValues::export()),
-            )
-            ->addTypeConstant(
-                $cg->codegenTypeConstant($this::TYPE_CONSTANT_NAME)
-                    ->setValue('\\'.$this->scanned_enum->getName(), HackBuilderValues::literal()),
-            )
-            ->addConstant(
-                $cg->codegenClassConstant('HACK_ENUM')
-                    ->setTypef('\\HH\\enumname<this::%s>', $this::TYPE_CONSTANT_NAME)
-                    ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal()),
-            );
-    }
-}
-
-class EnumInputType extends BaseEnumType {
-    const TYPE_CONSTANT_NAME = 'TCoerced';
-    const classname<\Slack\GraphQL\Types\EnumInputType> ENUM_TYPE = \Slack\GraphQL\Types\EnumInputType::class;
-    protected function getGraphQLTypeName(): string {
-        return $this->enum_type->getInputType();
-    }
-    public function getInputTypeName(): string {
-        return $this->enum_type->getType();
-    }
-    public function getOutputTypeName(): null {
-        return null;
-    }
-}
-
-class EnumOutputType extends BaseEnumType {
-    const TYPE_CONSTANT_NAME = 'THackType';
-    const classname<\Slack\GraphQL\Types\EnumOutputType> ENUM_TYPE = \Slack\GraphQL\Types\EnumOutputType::class;
-    protected function getGraphQLTypeName(): string {
-        return $this->enum_type->getOutputType();
-    }
-    public function getInputTypeName(): null {
-        return null;
-    }
-    public function getOutputTypeName(): string {
-        return $this->enum_type->getType();
-    }
 }
 
 final class Generator {
@@ -318,11 +62,15 @@ final class Generator {
 
         $has_type_assertions = false;
         foreach ($objects as $object) {
-            $class = $object->generateClass($this->cg)
+            $class = $object->build($this->cg)
                 ->setIsFinal(true);
             $file->addClass($class);
-            $input_types = self::add($input_types, $object->getInputTypeName(), $class->getName());
-            $output_types = self::add($output_types, $object->getOutputTypeName(), $class->getName());
+            if ($object is InputTypeBuilder<_>) {
+                $input_types = self::add($input_types, $object->getGraphQLType(), $class->getName());
+            }
+            if ($object is OutputTypeBuilder<_>) {
+                $output_types = self::add($output_types, $object->getGraphQLType(), $class->getName());
+            }
         }
 
         $file->addClass($this->generateSchemaType($this->cg, $input_types, $output_types));
@@ -430,7 +178,7 @@ final class Generator {
         return $resolve_method;
     }
 
-    private async function collectObjects<T as Field>(): Awaitable<vec<GeneratableClass>> {
+    private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
         $interfaces = dict[];
         $objects = vec[];
         $inputs = vec[];
@@ -442,12 +190,12 @@ final class Generator {
             $rt = new \ReflectionTypeAlias($type->getName());
             $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
             if ($graphql_input is nonnull) {
-                $inputs[] = new InputObjectType($rt, $graphql_input);
+                $inputs[] = new InputObjectBuilder($graphql_input, $rt);
             }
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
             if ($graphql_output is nonnull) {
-                $objects[] = new OutputObjectType($rt, $graphql_output);
+                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt);
             }
         }
 
@@ -461,10 +209,8 @@ final class Generator {
                 $fields = $class_fields[$class->getName()];
                 $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class)
                     ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
-                if ($graphql_attribute is \Slack\GraphQL\InterfaceType) {
-                    $objects[] = new InterfaceType($class, $graphql_attribute, $rc, $fields);
-                } elseif ($graphql_attribute is \Slack\GraphQL\ObjectType) {
-                    $objects[] = new ObjectType($class, $graphql_attribute, $rc, $fields);
+                if ($graphql_attribute is nonnull) {
+                    $objects[] = new ObjectBuilder($graphql_attribute, $rc->getName(), $fields);
                 }
             }
 
@@ -477,7 +223,7 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[] = new QueryField($class, $method, $rm, $query_root_field);
+                    $query_fields[] = new QueryFieldBuilder($query_root_field, $rm);
                     continue;
                 }
 
@@ -486,7 +232,7 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[] = new MutationField($class, $method, $rm, $mutation_root_field);
+                    $mutation_fields[] = new MutationFieldBuilder($mutation_root_field, $rm);
                 }
             }
         }
@@ -495,22 +241,32 @@ final class Generator {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;
-            $objects[] = new EnumInputType($enum, $enum_type);
-            $objects[] = new EnumOutputType($enum, $enum_type);
+            $objects[] = new InputEnumBuilder($enum_type, $enum->getName());
+            $objects[] = new OutputEnumBuilder($enum_type, $enum->getName());
         }
 
         // TODO: throw an error if no query fields?
 
         if (!C\is_empty($query_fields)) {
-            $top_level_objects = vec[new Query($query_fields)];
+            $top_level_objects = vec[
+                new ObjectBuilder(
+                    new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
+                    'Slack\\GraphQL\\Root',
+                    $query_fields
+                )
+            ];
 
             if (!C\is_empty($mutation_fields)) {
-                $top_level_objects[] = new Mutation($mutation_fields);
+                $top_level_objects[] = new ObjectBuilder(
+                    new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
+                    'Slack\\GraphQL\\Root',
+                    $mutation_fields
+                );
             }
 
             $objects = Vec\concat($top_level_objects, $objects, $inputs);
         }
 
-        return $objects;
+        return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
     }
 }
