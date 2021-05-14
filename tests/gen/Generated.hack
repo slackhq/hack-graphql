@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e8ca2e45bf3c35dff4a49f2e8883c415>>
+ * @generated SignedSource<<0c9fc8d9f90914d4ad71ad371dbb7dd5>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -196,6 +196,11 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \ObjectShape;
   const NAME = 'ObjectShape';
+  const keyset<string> FIELD_NAMES = keyset[
+    'foo',
+    'bar',
+    'baz',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -203,16 +208,19 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'foo':
         return new GraphQL\FieldDefinition(
+          'foo',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent['foo'],
         );
       case 'bar':
         return new GraphQL\FieldDefinition(
+          'bar',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent['bar'] ?? null,
         );
       case 'baz':
         return new GraphQL\FieldDefinition(
+          'baz',
           AnotherObjectShape::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent['baz'],
         );
@@ -226,6 +234,9 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \AnotherObjectShape;
   const NAME = 'AnotherObjectShape';
+  const keyset<string> FIELD_NAMES = keyset[
+    'abc',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -233,6 +244,7 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'abc':
         return new GraphQL\FieldDefinition(
+          'abc',
           Types\IntOutputType::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent['abc'],
         );
@@ -778,9 +790,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'fields',
           __Field::nonNullable()->nullableListOf(),
-          async ($schema, $parent, $args, $vars) ==> $parent->getFields(
-            Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
-          ),
+          async ($schema, $parent, $args, $vars) ==> $parent->getFields(),
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(
@@ -798,17 +808,13 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'enumValues',
           __EnumValue::nonNullable()->nullableListOf(),
-          async ($schema, $parent, $args, $vars) ==> $parent->getEnumValues(
-            Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
-          ),
+          async ($schema, $parent, $args, $vars) ==> $parent->getEnumValues(),
         );
       case 'inputFields':
         return new GraphQL\FieldDefinition(
           'inputFields',
           __InputValue::nonNullable()->nullableListOf(),
-          async ($schema, $parent, $args, $vars) ==> $parent->getInputFields(
-            Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
-          ),
+          async ($schema, $parent, $args, $vars) ==> $parent->getInputFields(),
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
@@ -1004,7 +1010,7 @@ final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
 
   const type TCoerced = \TCreateTeamInput;
   const NAME = 'CreateTeamInput';
-  const keyset<string> FIELD_NAMES = keyset [
+  const keyset<string> FIELD_NAMES = keyset[
     'name',
   ];
 
@@ -1032,7 +1038,7 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
 
   const type TCoerced = \TCreateUserInput;
   const NAME = 'CreateUserInput';
-  const keyset<string> FIELD_NAMES = keyset [
+  const keyset<string> FIELD_NAMES = keyset[
     'name',
     'is_active',
     'team',

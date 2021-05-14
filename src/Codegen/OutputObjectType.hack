@@ -1,7 +1,13 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{Keyset, Str};
-use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
+use namespace HH\Lib\{Keyset, Str, Vec};
+use type Facebook\HackCodegen\{
+    CodegenClass,
+    CodegenMethod,
+    HackBuilderValues,
+    HackCodegenFactory,
+    CodegenClassConstant,
+};
 
 
 class OutputObjectType implements GeneratableClass {
@@ -32,12 +38,12 @@ class OutputObjectType implements GeneratableClass {
         $class->addConstant(
             $cg->codegenClassConstant('NAME')->setValue($this->object_type->getType(), HackBuilderValues::export()),
         );
+        $class->addConstant($this->generateFieldNamesClassConstant($cg));
 
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
     }
-
 
     protected function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
         $method = $cg->codegenMethod('getFieldDefinition')
@@ -65,6 +71,7 @@ class OutputObjectType implements GeneratableClass {
                     // Field return type
                     $field_ts = $ts['fields'][$field_name];
                     $type_info = output_type(type_structure_to_type_alias($field_ts), false);
+                    $hb->addLinef('%s,', $name_literal);
                     $hb->addLinef('%s,', $type_info['type']);
 
                     $hb->addf(
@@ -87,5 +94,17 @@ class OutputObjectType implements GeneratableClass {
         $method->setBody($hb->getCode());
 
         return $method;
+    }
+
+    final protected function generateFieldNamesClassConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        $ts = $this->reflection_type_alias->getResolvedTypeStructure();
+        $field_names_constant = $cg->codegenClassConstant('FIELD_NAMES')
+            ->setType('keyset<string>')
+            ->setValue(
+                Vec\map_with_key($ts['fields'] as nonnull, ($field_name, $_) ==> $field_name) |> keyset($$),
+                HackBuilderValues::keyset(HackBuilderValues::export()),
+            );
+
+        return $field_names_constant;
     }
 }

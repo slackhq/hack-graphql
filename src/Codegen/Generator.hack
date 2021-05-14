@@ -88,7 +88,10 @@ class Query extends BaseObject<QueryField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
 
-        $class->addConstant($this->generateFieldNamesClassConstant($cg));
+        $field_names_const = $this->generateFieldNamesClassConstant($cg);
+        if ($field_names_const is nonnull) {
+            $class->addConstant($field_names_const);
+        }
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
@@ -113,7 +116,10 @@ class Mutation extends BaseObject<MutationField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Mutation', HackBuilderValues::export()));
 
-        $class->addConstant($this->generateFieldNamesClassConstant($cg));
+        $field_names_const = $this->generateFieldNamesClassConstant($cg);
+        if ($field_names_const is nonnull) {
+            $class->addConstant($field_names_const);
+        }
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
@@ -149,7 +155,10 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
             $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export()),
         );
 
-        $class->addConstant($this->generateFieldNamesClassConstant($cg));
+        $field_names_const = $this->generateFieldNamesClassConstant($cg);
+        if ($field_names_const is nonnull) {
+            $class->addConstant($field_names_const);
+        }
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;

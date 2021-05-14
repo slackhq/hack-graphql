@@ -1,7 +1,13 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{Keyset, Str};
-use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
+use namespace HH\Lib\{Keyset, Str, Vec};
+use type Facebook\HackCodegen\{
+    CodegenClass,
+    CodegenMethod,
+    HackBuilderValues,
+    HackCodegenFactory,
+    CodegenClassConstant,
+};
 
 class InputObjectType implements GeneratableClass {
     public function __construct(
@@ -44,10 +50,7 @@ class InputObjectType implements GeneratableClass {
             TypeStructureKind::getNames()[$ts['kind']],
         );
 
-        $class->addConstant(
-            $cg->codegenClassConstant('keyset<string> FIELD_NAMES')
-                ->setValue(Keyset\keys($ts['fields']), HackBuilderValues::export()),
-        );
+        $class->addConstant($this->generateFieldNamesClassConstant($cg));
 
         // coerceFieldValues() and coerceFieldNodes()
         $values = hb($cg)->addLine('$ret = shape();');
@@ -97,5 +100,17 @@ class InputObjectType implements GeneratableClass {
                 ->setReturnType('this::TCoerced')
                 ->setBody($nodes->getCode()),
         ]);
+    }
+
+    final protected function generateFieldNamesClassConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        $ts = $this->reflection_type_alias->getResolvedTypeStructure();
+        $field_names_constant = $cg->codegenClassConstant('FIELD_NAMES')
+            ->setType('keyset<string>')
+            ->setValue(
+                Vec\map_with_key($ts['fields'] as nonnull, ($field_name, $_) ==> $field_name) |> keyset($$),
+                HackBuilderValues::keyset(HackBuilderValues::export()),
+            );
+
+        return $field_names_constant;
     }
 }

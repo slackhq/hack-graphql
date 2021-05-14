@@ -76,6 +76,13 @@ final class IntrospectionTest extends PlaygroundTest {
                     types {
                         kind
                         name
+                        fields {
+                            name
+                            type {
+                                kind
+                                name
+                            }
+                        }
                     }
                 }
              }',

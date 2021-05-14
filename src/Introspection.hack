@@ -139,9 +139,9 @@ final class __Type {
     }
 
     <<\Slack\GraphQL\Field('fields', 'Fields in the type, only applies to OBJECT and INTERFACE')>>
-    public function getFields(bool $include_deprecated = false): ?vec<__Field> {
+    public function getFields(/* TODO support defaults bool $include_deprecated = false */): ?vec<__Field> {
         if ($this->inner_type is IntrospectableObject || $this->inner_type is IntrospectableInterface) {
-            $fields = $this->inner_type->getFields($include_deprecated);
+            $fields = $this->inner_type->getFields(/* TODO $include_deprecated */);
             return $fields is nonnull ? Vec\map($fields, $field ==> new __Field($field)) : null;
         }
 
@@ -169,9 +169,9 @@ final class __Type {
     }
 
     <<\Slack\GraphQL\Field('enumValues', 'Enum values, only applies to ENUM')>>
-    public function getEnumValues(bool $include_deprecated = false): ?vec<__EnumValue> {
+    public function getEnumValues(/* TODO bool $include_deprecated = false */): ?vec<__EnumValue> {
         if ($this->inner_type is IntrospectableEnum) {
-            $enum_values = $this->inner_type->getEnumValues($include_deprecated);
+            $enum_values = $this->inner_type->getEnumValues(/* TODO $include_deprecated*/);
             return $enum_values is nonnull ? Vec\map($enum_values, $enum_value ==> new __EnumValue($enum_value)) : null;
         }
 
@@ -179,9 +179,9 @@ final class __Type {
     }
 
     <<\Slack\GraphQL\Field('inputFields', 'Input fields, only applies to INPUT_OBJECT')>>
-    public function getInputFields(bool $include_deprecated = false): ?vec<__InputValue> {
+    public function getInputFields(/* TODO bool $include_deprecated = false */): ?vec<__InputValue> {
         if ($this->inner_type is IntrospectableInput) {
-            $input_fields = $this->inner_type->getInputFields($include_deprecated);
+            $input_fields = $this->inner_type->getInputFields(/* TODO $include_deprecated */);
             return $input_fields is nonnull
                 ? Vec\map($input_fields, $input_field ==> new __InputValue($input_field))
                 : null;
