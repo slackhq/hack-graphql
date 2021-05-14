@@ -1,6 +1,6 @@
 namespace Slack\GraphQL;
 
-interface IFieldDefinition<TParent> {
+interface IFieldDefinition<TParent> extends Introspection\IntrospectableField {
     public function resolveAsync(
         classname<Introspection\IntrospectableSchema> $schema,
         TParent $parent,
@@ -11,6 +11,7 @@ interface IFieldDefinition<TParent> {
 
 final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinition<TParent> {
     public function __construct(
+        private string $name,
         private Types\OutputType<TRet, TResolved> $type,
         private (function(
             classname<Introspection\IntrospectableSchema>,
@@ -36,5 +37,33 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinitio
         }
 
         return await $this->type->resolveAsync($schema, $value, $field, $vars);
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getDescription(): ?string {
+        // TODO
+        return null;
+    }
+
+    public function getArgs(): vec<Introspection\IntrospectableInputValue> {
+        // TODO
+        return vec[];
+    }
+
+    public function getType(): Introspection\IntrospectableType {
+        return $this->type;
+    }
+
+    public function isDeprecated(): bool {
+        // TODO
+        return false;
+    }
+
+    public function getDeprecationReason(): ?string {
+        // TODO
+        return null;
     }
 }

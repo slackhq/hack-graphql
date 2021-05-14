@@ -8,7 +8,8 @@ abstract class InterfaceType extends ObjectType implements GraphQL\Introspection
     }
 
     public function getPossibleTypes(): ?vec<GraphQL\Introspection\IntrospectableType> {
-        // TODO
+        // TODO: need to return all the types that implement this interface.
+        // Should have a static property that we can codegen.
         return vec[];
     }
 }

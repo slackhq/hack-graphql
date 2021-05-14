@@ -8,6 +8,7 @@ use type Facebook\HackCodegen\{
     CodegenFile,
     CodegenFileType,
     CodegenClass,
+    CodegenClassConstant,
     CodegenGeneratedFrom,
     CodegenMethod,
     HackBuilder,
@@ -25,6 +26,7 @@ interface GeneratableClass {
     public function generateClass(HackCodegenFactory $cg): CodegenClass;
     public function getInputTypeName(): ?string;
     public function getOutputTypeName(): ?string;
+    protected function generateFieldNamesClassConstant(HackCodegenFactory $cg): ?CodegenClassConstant;
 }
 
 abstract class BaseObject<T as Field> implements GeneratableClass {
@@ -55,6 +57,17 @@ abstract class BaseObject<T as Field> implements GeneratableClass {
         return $method;
     }
 
+    protected function generateFieldNamesClassConstant(HackCodegenFactory $cg): ?CodegenClassConstant {
+        $field_names_constant = $cg->codegenClassConstant('FIELD_NAMES')
+            ->setType('keyset<string>')
+            ->setValue(
+                Vec\map($this->fields, $field ==> $field->getName()) |> keyset($$),
+                HackBuilderValues::keyset(HackBuilderValues::export()),
+            );
+
+        return $field_names_constant;
+    }
+
     public function getInputTypeName(): null {
         return null;
     }
@@ -75,6 +88,7 @@ class Query extends BaseObject<QueryField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Query', HackBuilderValues::export()));
 
+        $class->addConstant($this->generateFieldNamesClassConstant($cg));
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
@@ -99,6 +113,7 @@ class Mutation extends BaseObject<MutationField> {
         $class->addConstant($hack_type_constant);
         $class->addConstant($cg->codegenClassConstant('NAME')->setValue('Mutation', HackBuilderValues::export()));
 
+        $class->addConstant($this->generateFieldNamesClassConstant($cg));
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
@@ -134,6 +149,7 @@ abstract class CompositeType<T as \Slack\GraphQL\__Private\CompositeType> extend
             $cg->codegenClassConstant('NAME')->setValue($this->composite_type->getType(), HackBuilderValues::export()),
         );
 
+        $class->addConstant($this->generateFieldNamesClassConstant($cg));
         $class->addMethod($this->generateGetFieldDefinition($cg));
 
         return $class;
@@ -166,10 +182,15 @@ class Field {
         protected \Slack\GraphQL\Field $graphql_field,
     ) {}
 
+    final public function getName(): string {
+        return $this->graphql_field->getName();
+    }
+
     final public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
 
         $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
+        $hb->addLinef("'%s',", $this->graphql_field->getName());
 
         // Field return type
         $type_info = output_type(
@@ -262,6 +283,10 @@ abstract class BaseEnumType implements GeneratableClass {
                     ->setTypef('\\HH\\enumname<this::%s>', $this::TYPE_CONSTANT_NAME)
                     ->setValue('\\'.$this->scanned_enum->getName().'::class', HackBuilderValues::literal()),
             );
+    }
+
+    protected function generateFieldNamesClassConstant(HackCodegenFactory $cg): ?CodegenClassConstant {
+        return null;
     }
 }
 

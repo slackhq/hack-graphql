@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d238c4673b1dc56e94ff17a79484203b>>
+ * @generated SignedSource<<e8ca2e45bf3c35dff4a49f2e8883c415>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -15,6 +15,24 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = GraphQL\Root;
   const NAME = 'Query';
+  const keyset<string> FIELD_NAMES = keyset[
+    'error_test',
+    'error_test_nn',
+    'getConcrete',
+    'getInterfaceA',
+    'getInterfaceB',
+    'getObjectShape',
+    'output_type_test',
+    'viewer',
+    'user',
+    'human',
+    'bot',
+    'nested_list_sum',
+    'takes_favorite_color',
+    'optional_field_test',
+    '__schema',
+    '__type',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -22,46 +40,55 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'error_test':
         return new GraphQL\FieldDefinition(
+          'error_test',
           ErrorTest::nullable(),
           async ($schema, $parent, $args, $vars) ==> \ErrorTestObj::get(),
         );
       case 'error_test_nn':
         return new GraphQL\FieldDefinition(
+          'error_test_nn',
           ErrorTest::nonNullable(),
           async ($schema, $parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
         );
       case 'getConcrete':
         return new GraphQL\FieldDefinition(
+          'getConcrete',
           Concrete::nullable(),
           async ($schema, $parent, $args, $vars) ==> \Concrete::getConcrete(),
         );
       case 'getInterfaceA':
         return new GraphQL\FieldDefinition(
+          'getInterfaceA',
           InterfaceA::nullable(),
           async ($schema, $parent, $args, $vars) ==> \Concrete::getInterfaceA(),
         );
       case 'getInterfaceB':
         return new GraphQL\FieldDefinition(
+          'getInterfaceB',
           InterfaceB::nullable(),
           async ($schema, $parent, $args, $vars) ==> \Concrete::getInterfaceB(),
         );
       case 'getObjectShape':
         return new GraphQL\FieldDefinition(
+          'getObjectShape',
           ObjectShape::nullable(),
           async ($schema, $parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
         );
       case 'output_type_test':
         return new GraphQL\FieldDefinition(
+          'output_type_test',
           OutputTypeTest::nullable(),
           async ($schema, $parent, $args, $vars) ==> \OutputTypeTestObj::get(),
         );
       case 'viewer':
         return new GraphQL\FieldDefinition(
+          'viewer',
           User::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
         );
       case 'user':
         return new GraphQL\FieldDefinition(
+          'user',
           User::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
             Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
@@ -69,6 +96,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'human':
         return new GraphQL\FieldDefinition(
+          'human',
           Human::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
             Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
@@ -76,6 +104,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'bot':
         return new GraphQL\FieldDefinition(
+          'bot',
           Bot::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
             Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
@@ -83,6 +112,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
+          'nested_list_sum',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
             Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
@@ -90,6 +120,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'takes_favorite_color':
         return new GraphQL\FieldDefinition(
+          'takes_favorite_color',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
             FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color']->getValue(), $vars),
@@ -97,6 +128,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'optional_field_test':
         return new GraphQL\FieldDefinition(
+          'optional_field_test',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
             CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
@@ -104,6 +136,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case '__schema':
         return new GraphQL\FieldDefinition(
+          '__schema',
           __Schema::nullable(),
           async ($schema, $parent, $args, $vars) ==> \Slack\GraphQL\Introspection\IntrospectionQueryFields::getSchema(
             $schema,
@@ -111,6 +144,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         );
       case '__type':
         return new GraphQL\FieldDefinition(
+          '__type',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> \Slack\GraphQL\Introspection\IntrospectionQueryFields::getType(
             $schema,
@@ -127,6 +161,10 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = GraphQL\Root;
   const NAME = 'Mutation';
+  const keyset<string> FIELD_NAMES = keyset[
+    'pokeUser',
+    'createUser',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -134,6 +172,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
+          'pokeUser',
           User::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
             Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
@@ -141,6 +180,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'createUser':
         return new GraphQL\FieldDefinition(
+          'createUser',
           User::nullable(),
           async ($schema, $parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
             CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
@@ -206,6 +246,9 @@ final class InterfaceA extends \Slack\GraphQL\Types\InterfaceType {
 
   const type THackType = \InterfaceA;
   const NAME = 'InterfaceA';
+  const keyset<string> FIELD_NAMES = keyset[
+    'foo',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -213,6 +256,7 @@ final class InterfaceA extends \Slack\GraphQL\Types\InterfaceType {
     switch ($field_name) {
       case 'foo':
         return new GraphQL\FieldDefinition(
+          'foo',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->foo(),
         );
@@ -226,6 +270,10 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
 
   const type THackType = \InterfaceB;
   const NAME = 'InterfaceB';
+  const keyset<string> FIELD_NAMES = keyset[
+    'foo',
+    'bar',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -233,11 +281,13 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
     switch ($field_name) {
       case 'foo':
         return new GraphQL\FieldDefinition(
+          'foo',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->foo(),
         );
       case 'bar':
         return new GraphQL\FieldDefinition(
+          'bar',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->bar(),
         );
@@ -251,6 +301,12 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
 
   const type THackType = \User;
   const NAME = 'User';
+  const keyset<string> FIELD_NAMES = keyset[
+    'id',
+    'name',
+    'team',
+    'is_active',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -258,21 +314,25 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
+          'id',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
+          'team',
           Team::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->getTeam(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
+          'is_active',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->isActive(),
         );
@@ -286,6 +346,20 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \ErrorTestObj;
   const NAME = 'ErrorTest';
+  const keyset<string> FIELD_NAMES = keyset[
+    'no_error',
+    'user_facing_error',
+    'hidden_exception',
+    'non_nullable',
+    'nested',
+    'nested_nn',
+    'bad_int_list_n_of_n',
+    'bad_int_list_n_of_nn',
+    'bad_int_list_nn_of_nn',
+    'nested_list_n_of_n',
+    'nested_list_n_of_nn',
+    'nested_list_nn_of_nn',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -293,61 +367,73 @@ final class ErrorTest extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'no_error':
         return new GraphQL\FieldDefinition(
+          'no_error',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->no_error(),
         );
       case 'user_facing_error':
         return new GraphQL\FieldDefinition(
+          'user_facing_error',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->user_facing_error(),
         );
       case 'hidden_exception':
         return new GraphQL\FieldDefinition(
+          'hidden_exception',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->hidden_exception(),
         );
       case 'non_nullable':
         return new GraphQL\FieldDefinition(
+          'non_nullable',
           Types\IntOutputType::nonNullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->non_nullable(),
         );
       case 'nested':
         return new GraphQL\FieldDefinition(
+          'nested',
           ErrorTest::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested(),
         );
       case 'nested_nn':
         return new GraphQL\FieldDefinition(
+          'nested_nn',
           ErrorTest::nonNullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested_nn(),
         );
       case 'bad_int_list_n_of_n':
         return new GraphQL\FieldDefinition(
+          'bad_int_list_n_of_n',
           Types\IntOutputType::nullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->bad_int_list_n_of_n(),
         );
       case 'bad_int_list_n_of_nn':
         return new GraphQL\FieldDefinition(
+          'bad_int_list_n_of_nn',
           Types\IntOutputType::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->bad_int_list_n_of_nn(),
         );
       case 'bad_int_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
+          'bad_int_list_nn_of_nn',
           Types\IntOutputType::nonNullable()->nonNullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->bad_int_list_nn_of_nn(),
         );
       case 'nested_list_n_of_n':
         return new GraphQL\FieldDefinition(
+          'nested_list_n_of_n',
           ErrorTest::nullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested_list_n_of_n(),
         );
       case 'nested_list_n_of_nn':
         return new GraphQL\FieldDefinition(
+          'nested_list_n_of_nn',
           ErrorTest::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested_list_n_of_nn(),
         );
       case 'nested_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
+          'nested_list_nn_of_nn',
           ErrorTest::nonNullable()->nonNullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
         );
@@ -361,6 +447,11 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Concrete;
   const NAME = 'Concrete';
+  const keyset<string> FIELD_NAMES = keyset[
+    'foo',
+    'bar',
+    'baz',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -368,16 +459,19 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'foo':
         return new GraphQL\FieldDefinition(
+          'foo',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->foo(),
         );
       case 'bar':
         return new GraphQL\FieldDefinition(
+          'bar',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->bar(),
         );
       case 'baz':
         return new GraphQL\FieldDefinition(
+          'baz',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->baz(),
         );
@@ -391,6 +485,15 @@ final class OutputTypeTest extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \OutputTypeTestObj;
   const NAME = 'OutputTypeTest';
+  const keyset<string> FIELD_NAMES = keyset[
+    'scalar',
+    'nullable',
+    'awaitable',
+    'awaitable_nullable',
+    'list',
+    'awaitable_nullable_list',
+    'nested_lists',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -398,36 +501,43 @@ final class OutputTypeTest extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'scalar':
         return new GraphQL\FieldDefinition(
+          'scalar',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->scalar(),
         );
       case 'nullable':
         return new GraphQL\FieldDefinition(
+          'nullable',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->nullable(),
         );
       case 'awaitable':
         return new GraphQL\FieldDefinition(
+          'awaitable',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->awaitable(),
         );
       case 'awaitable_nullable':
         return new GraphQL\FieldDefinition(
+          'awaitable_nullable',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->awaitable_nullable(),
         );
       case 'list':
         return new GraphQL\FieldDefinition(
+          'list',
           Types\StringOutputType::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->list(),
         );
       case 'awaitable_nullable_list':
         return new GraphQL\FieldDefinition(
+          'awaitable_nullable_list',
           Types\IntOutputType::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
         );
       case 'nested_lists':
         return new GraphQL\FieldDefinition(
+          'nested_lists',
           Types\IntOutputType::nullable()->nonNullableListOf()->nullableListOf()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->nested_lists(),
         );
@@ -441,6 +551,13 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Human;
   const NAME = 'Human';
+  const keyset<string> FIELD_NAMES = keyset[
+    'id',
+    'name',
+    'team',
+    'is_active',
+    'favorite_color',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -448,26 +565,31 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
+          'id',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
+          'team',
           Team::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->getTeam(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
+          'is_active',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'favorite_color':
         return new GraphQL\FieldDefinition(
+          'favorite_color',
           FavoriteColorOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getFavoriteColor(),
         );
@@ -481,6 +603,13 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Bot;
   const NAME = 'Bot';
+  const keyset<string> FIELD_NAMES = keyset[
+    'id',
+    'name',
+    'team',
+    'is_active',
+    'primary_function',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -488,26 +617,31 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
+          'id',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
+          'team',
           Team::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->getTeam(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
+          'is_active',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
+          'primary_function',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getPrimaryFunction(),
         );
@@ -521,6 +655,12 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Team;
   const NAME = 'Team';
+  const keyset<string> FIELD_NAMES = keyset[
+    'id',
+    'name',
+    'num_users',
+    'description',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -528,21 +668,25 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'id':
         return new GraphQL\FieldDefinition(
+          'id',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'num_users':
         return new GraphQL\FieldDefinition(
+          'num_users',
           Types\IntOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> await $parent->getNumUsers(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDescription(
             Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars),
@@ -558,6 +702,11 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Slack\GraphQL\Introspection\__Schema;
   const NAME = '__Schema';
+  const keyset<string> FIELD_NAMES = keyset[
+    'types',
+    'queryType',
+    'mutationType',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -565,16 +714,19 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'types':
         return new GraphQL\FieldDefinition(
+          'types',
           __Type::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getTypes(),
         );
       case 'queryType':
         return new GraphQL\FieldDefinition(
+          'queryType',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getQueryType(),
         );
       case 'mutationType':
         return new GraphQL\FieldDefinition(
+          'mutationType',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getMutationType(),
         );
@@ -588,6 +740,17 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Slack\GraphQL\Introspection\__Type;
   const NAME = '__Type';
+  const keyset<string> FIELD_NAMES = keyset[
+    'kind',
+    'name',
+    'description',
+    'fields',
+    'interfaces',
+    'possibleTypes',
+    'enumValues',
+    'inputFields',
+    'ofType',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -595,21 +758,25 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'kind':
         return new GraphQL\FieldDefinition(
+          'kind',
           __TypeKindOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getKind(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'fields':
         return new GraphQL\FieldDefinition(
+          'fields',
           __Field::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getFields(
             Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
@@ -617,16 +784,19 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(
+          'interfaces',
           __Type::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getInterfaces(),
         );
       case 'possibleTypes':
         return new GraphQL\FieldDefinition(
+          'possibleTypes',
           __Type::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getPossibleTypes(),
         );
       case 'enumValues':
         return new GraphQL\FieldDefinition(
+          'enumValues',
           __EnumValue::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getEnumValues(
             Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
@@ -634,6 +804,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'inputFields':
         return new GraphQL\FieldDefinition(
+          'inputFields',
           __InputValue::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getInputFields(
             Types\BooleanInputType::nonNullable()->coerceNode($args['include_deprecated']->getValue(), $vars),
@@ -641,6 +812,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
+          'ofType',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getOfType(),
         );
@@ -654,6 +826,14 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Slack\GraphQL\Introspection\__Field;
   const NAME = '__Field';
+  const keyset<string> FIELD_NAMES = keyset[
+    'name',
+    'description',
+    'args',
+    'type',
+    'isDeprecated',
+    'deprecationReason',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -661,31 +841,37 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'args':
         return new GraphQL\FieldDefinition(
+          'args',
           __InputValue::nonNullable()->nullableListOf(),
           async ($schema, $parent, $args, $vars) ==> $parent->getArgs(),
         );
       case 'type':
         return new GraphQL\FieldDefinition(
+          'type',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getType(),
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
+          'isDeprecated',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->isDeprecated(),
         );
       case 'deprecationReason':
         return new GraphQL\FieldDefinition(
+          'deprecationReason',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDeprecationReason(),
         );
@@ -699,6 +885,12 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Slack\GraphQL\Introspection\__EnumValue;
   const NAME = '__EnumValue';
+  const keyset<string> FIELD_NAMES = keyset[
+    'name',
+    'description',
+    'isDeprecated',
+    'deprecationReason',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -706,21 +898,25 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
+          'isDeprecated',
           Types\BooleanOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->isDeprecated(),
         );
       case 'deprecationReason':
         return new GraphQL\FieldDefinition(
+          'deprecationReason',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDeprecationReason(),
         );
@@ -734,6 +930,12 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
 
   const type THackType = \Slack\GraphQL\Introspection\__InputValue;
   const NAME = '__InputValue';
+  const keyset<string> FIELD_NAMES = keyset[
+    'name',
+    'description',
+    'type',
+    'defaultValue',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -741,21 +943,25 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getName(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'type':
         return new GraphQL\FieldDefinition(
+          'type',
           __Type::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getType(),
         );
       case 'defaultValue':
         return new GraphQL\FieldDefinition(
+          'defaultValue',
           Types\StringOutputType::nullable(),
           async ($schema, $parent, $args, $vars) ==> $parent->getDefaultValue(),
         );

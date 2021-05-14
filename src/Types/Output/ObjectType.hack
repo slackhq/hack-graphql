@@ -1,9 +1,10 @@
 namespace Slack\GraphQL\Types;
 
-use namespace HH\Lib\Dict;
+use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
 abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\IntrospectableObject {
+    abstract const keyset<string> FIELD_NAMES;
     const type TCoerced = dict<string, mixed>;
 
     abstract public function getFieldDefinition(string $field_name): GraphQL\IFieldDefinition<this::THackType>;
@@ -49,14 +50,14 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
     }
 
     public function getFields(bool $include_deprecated = false): ?vec<GraphQL\Introspection\IntrospectableField> {
-        // TODO
-        return null;
+        return Vec\map(static::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name));
     }
 
     public function getInterfaces(
         bool $include_deprecated = false,
     ): ?vec<GraphQL\Introspection\IntrospectableInterface> {
-        // TODO
+        // TODO need to return all the interface types this object implements.
+        // Should have a static property that we can codegen
         return null;
     }
 }
