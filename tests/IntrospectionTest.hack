@@ -36,6 +36,36 @@ final class IntrospectionTest extends PlaygroundTest {
                     ],
                 ],
             ),
+            'get info on an interface' => tuple(
+                '{
+                    __type(name: "InterfaceA") {
+                        kind
+                        name
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'kind' => 'INTERFACE',
+                        'name' => 'InterfaceA',
+                    ],
+                ],
+            ),
+            'get info on an enum' => tuple(
+                '{
+                    __type(name: "FavoriteColor") {
+                        kind
+                        name
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'kind' => 'ENUM',
+                        'name' => 'FavoriteColor',
+                    ],
+                ],
+            ),
         ];
     }
 

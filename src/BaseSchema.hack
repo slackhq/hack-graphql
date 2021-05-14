@@ -39,7 +39,6 @@ abstract class BaseSchema implements Introspection\IntrospectableSchema {
 
     final public static function getType(string $name): ?Introspection\IntrospectableType {
         $type = self::getIntrospectableTypes()[$name] ?? null;
-        \print_r(dict['type' => $type]);
         return $type is nonnull ? $type::literal() : null;
     }
 
