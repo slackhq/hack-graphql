@@ -71,16 +71,13 @@ class MethodFieldBuilder implements IFieldBuilder {
 }
 
 
-class QueryFieldBuilder extends MethodFieldBuilder {
+class StaticFieldBuilder extends MethodFieldBuilder {
     <<__Override>>
     protected function getMethodCallPrefix(): string {
         $class = $this->reflection_method->getDeclaringClass();
         return '\\'.$class->getName().'::';
     }
 }
-
-
-class MutationFieldBuilder extends QueryFieldBuilder {}
 
 
 class ShapeFieldBuilder<T> implements IFieldBuilder {
