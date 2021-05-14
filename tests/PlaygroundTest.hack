@@ -15,15 +15,13 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
 
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
-        $file = await GraphQL\Codegen\Generator::forPath(
+        await GraphQL\Codegen\Generator::forPath(
             __DIR__.'/../src/playground',
             shape(
-                'output_path' => __DIR__.'/gen/Generated.hack',
+                'output_directory' => __DIR__.'/gen',
+                'namespace' => 'Slack\GraphQL\Test\Generated'
             ),
         );
-
-        $file->setNamespace('Slack\GraphQL\Test\Generated');
-        $file->save();
     }
 
     <<\Facebook\HackTest\DataProvider('getTestCases')>>

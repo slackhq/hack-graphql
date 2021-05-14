@@ -1,6 +1,6 @@
 use namespace Slack\GraphQL;
 
-<<GraphQL\ObjectType('OutputTypeTest', 'Test object for fields with various return types')>>
+<<GraphQL\ObjectType('OutputTypeTestObj', 'Test object for fields with various return types')>>
 final class OutputTypeTestObj {
 
     <<GraphQL\QueryRootField('output_type_test', 'Root field to get an instance')>>

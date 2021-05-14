@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 
 final class BooleanInputType extends NamedInputType {
 
-    const type TCoerced = bool;
+    const type THackType = bool;
     const string NAME = 'Boolean';
 
     <<__Override>>

@@ -9,10 +9,10 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedInputType extends InputType<this::TCoerced> {
+abstract class NamedInputType extends InputType<this::THackType> {
 
     <<__Enforceable>>
-    abstract const type TCoerced as nonnull;
+    abstract const type THackType as nonnull;
     abstract const string NAME;
 
     final private function __construct() {}
@@ -23,8 +23,8 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
     }
 
     <<__Override>>
-    final protected function assertValidVariableValue(mixed $value): this::TCoerced {
-        return $value as this::TCoerced;
+    final protected function assertValidVariableValue(mixed $value): this::THackType {
+        return $value as this::THackType;
     }
 
     /**
@@ -36,7 +36,7 @@ abstract class NamedInputType extends InputType<this::TCoerced> {
     }
 
     <<__MemoizeLSB>>
-    final public static function nullable(): NullableInputType<this::TCoerced> {
+    final public static function nullable(): NullableInputType<this::THackType> {
         return new NullableInputType(static::nonNullable());
     }
 }

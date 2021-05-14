@@ -8,11 +8,11 @@ use namespace Slack\GraphQL;
 abstract class EnumInputType extends NamedInputType {
 
     <<__Enforceable>>
-    abstract const type TCoerced as arraykey;
-    abstract const \HH\enumname<this::TCoerced> HACK_ENUM;
+    abstract const type THackType as arraykey;
+    abstract const \HH\enumname<this::THackType> HACK_ENUM;
 
     <<__Override>>
-    public function coerceValue(mixed $value): this::TCoerced {
+    public function coerceValue(mixed $value): this::THackType {
         $enum = static::HACK_ENUM;
         if (!$value is string || !C\contains_key($enum::getValues(), $value)) {
             throw new GraphQL\UserFacingError(
@@ -28,7 +28,7 @@ abstract class EnumInputType extends NamedInputType {
     final public function coerceNonVariableNode(
         Value\Value $node,
         dict<string, mixed> $variable_values,
-    ): this::TCoerced {
+    ): this::THackType {
         $value = $node->getRawValue();
         $enum = static::HACK_ENUM;
         if (!$node is Value\EnumLiteral || !$value is string || !C\contains_key($enum::getValues(), $value)) {
