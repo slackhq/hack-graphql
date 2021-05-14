@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1fd25b01e4dfd43b6245505ef01f43c2>>
+ * @generated SignedSource<<191282d483a5a64911f9a57efa0d6f96>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -30,6 +30,79 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nonNullable(),
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
         );
+      case 'output_type_test':
+        return new GraphQL\FieldDefinition(
+          OutputTypeTestObj::nullable(),
+          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
+        );
+      case 'getObjectShape':
+        return new GraphQL\FieldDefinition(
+          ObjectShape::nullable(),
+          async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
+        );
+      case 'viewer':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
+        );
+      case 'user':
+        return new GraphQL\FieldDefinition(
+          User::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
+            Types\IntInputType::nonNullable()->coerceNamedNode('id', $args, $vars),
+          ),
+        );
+      case 'human':
+        return new GraphQL\FieldDefinition(
+          Human::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
+            Types\IntInputType::nonNullable()->coerceNamedNode('id', $args, $vars),
+          ),
+        );
+      case 'bot':
+        return new GraphQL\FieldDefinition(
+          Bot::nullable(),
+          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
+            Types\IntInputType::nonNullable()->coerceNamedNode('id', $args, $vars),
+          ),
+        );
+      case 'nested_list_sum':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
+            Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNamedNode('numbers', $args, $vars),
+          ),
+        );
+      case 'takes_favorite_color':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
+            FavoriteColorInputType::nonNullable()->coerceNamedNode('favorite_color', $args, $vars),
+          ),
+        );
+      case 'optional_field_test':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
+            CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
+          ),
+        );
+      case 'arg_test':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nullable()->nullableListOf(),
+          async ($parent, $args, $vars) ==> \ArgumentTestObj::argTest(
+            Types\IntInputType::nonNullable()->coerceNamedNode('required', $args, $vars),
+            Types\IntInputType::nullable()->coerceNamedNode('nullable', $args, $vars),
+            Types\IntInputType::nullable()->coerceOptionalNamedNode('optional', $args, $vars, 42),
+          ),
+        );
+      case 'list_arg_test':
+        return new GraphQL\FieldDefinition(
+          Types\IntOutputType::nonNullable()->nullableListOf()->nullableListOf()->nullableListOf(),
+          async ($parent, $args, $vars) ==> \ArgumentTestObj::listArgTest(
+            Types\IntInputType::nonNullable()->nullableListOf()->nonNullableListOf()->nullableListOf()->coerceNamedNode('arg', $args, $vars),
+          ),
+        );
       case 'getConcrete':
         return new GraphQL\FieldDefinition(
           Concrete::nullable(),
@@ -44,63 +117,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           InterfaceB::nullable(),
           async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
-        );
-      case 'getObjectShape':
-        return new GraphQL\FieldDefinition(
-          ObjectShape::nullable(),
-          async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
-        );
-      case 'output_type_test':
-        return new GraphQL\FieldDefinition(
-          OutputTypeTestObj::nullable(),
-          async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
-        );
-      case 'viewer':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
-        );
-      case 'user':
-        return new GraphQL\FieldDefinition(
-          User::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'human':
-        return new GraphQL\FieldDefinition(
-          Human::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'bot':
-        return new GraphQL\FieldDefinition(
-          Bot::nullable(),
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
-            Types\IntInputType::nonNullable()->coerceNode($args['id']->getValue(), $vars),
-          ),
-        );
-      case 'nested_list_sum':
-        return new GraphQL\FieldDefinition(
-          Types\IntOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
-            Types\IntInputType::nonNullable()->nonNullableListOf()->nonNullableListOf()->coerceNode($args['numbers']->getValue(), $vars),
-          ),
-        );
-      case 'takes_favorite_color':
-        return new GraphQL\FieldDefinition(
-          Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
-            FavoriteColorInputType::nonNullable()->coerceNode($args['favorite_color']->getValue(), $vars),
-          ),
-        );
-      case 'optional_field_test':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
-            CreateUserInput::nonNullable()->coerceNode($args['input']->getValue(), $vars),
-          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

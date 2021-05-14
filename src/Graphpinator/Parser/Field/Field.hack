@@ -6,7 +6,7 @@ final class Field implements IHasFieldSet {
         private string $name,
         private ?string $alias = null,
         private ?\Graphpinator\Parser\Field\FieldSet $children = null,
-        private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments = null,
+        private ?dict<string, \Graphpinator\Parser\Value\Value> $arguments = null,
         private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {}
 
@@ -22,7 +22,7 @@ final class Field implements IHasFieldSet {
         return $this->children;
     }
 
-    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
+    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\Value> {
         return $this->arguments;
     }
 

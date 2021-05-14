@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4e09a5b9723a5ede0e952bf155cc27f4>>
+ * @generated SignedSource<<cc6eff24cc8965b8da1d4ce1584decfd>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,7 +39,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getDescription(
-            Types\BooleanInputType::nonNullable()->coerceNode($args['short']->getValue(), $vars),
+            Types\BooleanInputType::nonNullable()->coerceNamedNode('short', $args, $vars),
           ),
         );
       default:

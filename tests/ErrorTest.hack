@@ -254,7 +254,9 @@ final class ErrorTest extends PlaygroundTest {
                     ],
                     'errors' => vec[
                         shape(
-                            'message' => 'Expected a valid value for FavoriteColor, got Graphpinator\Parser\Value\EnumLiteral',
+                            'message' =>
+                                'Invalid value for "favorite_color": '.
+                                'Expected a valid value for FavoriteColor, got Graphpinator\Parser\Value\EnumLiteral',
                             'path' => vec['takes_favorite_color']
                         )
                     ]

@@ -4,13 +4,20 @@ use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\{TypeRef, Value};
 
+interface IInputType {
+    public function coerceValue(mixed $value): mixed;
+    public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
+    public function nullableListOf(): IInputType;
+    public function nonNullableListOf(): IInputType;
+}
+
 /**
  * GraphQL type that may be used for field/directive arguments and for variable values.
  * Includes scalar types, enums and input objects (GraphQL's version of dict).
  *
  * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
  */
-abstract class InputType<+THackType> extends BaseType {
+abstract class InputType<THackType> extends BaseType implements IInputType {
 
     /**
      * Validate/coerce a raw value to this type (i.e. a value that is not a parser node because it doesn't come from
@@ -27,7 +34,7 @@ abstract class InputType<+THackType> extends BaseType {
      */
     final public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): THackType {
         return $node is Value\VariableRef
-            ? $this->assertValidVariableValue($variable_values[$node->getVarName()])
+            ? $this->assertValidVariableValue(idx($variable_values, $node->getVarName()))
             : $this->coerceNonVariableNode($node, $variable_values);
     }
 
@@ -82,6 +89,43 @@ abstract class InputType<+THackType> extends BaseType {
         }
     }
 
+    final public function coerceOptionalNamedNode(
+        string $name,
+        dict<string, Value\Value> $nodes,
+        dict<string, mixed> $variable_values,
+        THackType $default_value,
+    ): THackType {
+        return $this->hasValue($name, $nodes, $variable_values)
+            ? $this->coerceNamedNode($name, $nodes, $variable_values)
+            : $default_value;
+    }
+
+    /**
+     * Follows the GraphQL spec rules for whether an argument's default value should be used, or whether an input object
+     * field should be included in the coerced shape -- either a literal value was provided, or the value is a variable
+     * reference and *that variable was provided*.
+     *
+     * Note that this means that by including/not including a specific variable in the request, a field can be
+     * added/removed from any input object literals that reference the variable, which is powerful but can also be
+     * confusing.
+     *
+     * @see https://spec.graphql.org/draft/#sec-Input-Objects.Input-Coercion
+     */
+    final protected function hasValue(
+        string $field_name,
+        dict<string, Value\Value> $value_nodes,
+        dict<string, mixed> $variable_values,
+    ): bool {
+        if (!C\contains_key($value_nodes, $field_name)) {
+            return false;
+        }
+        $value_node = $value_nodes[$field_name];
+        if ($value_node is Value\VariableRef) {
+            return C\contains_key($variable_values, $value_node->getVarName());
+        }
+        return true;
+    }
+
     /**
      * Use these to get a singleton list type instance wrapping this type.
      */
@@ -102,7 +146,7 @@ abstract class InputType<+THackType> extends BaseType {
         classname<GraphQL\BaseSchema> $schema,
         TypeRef\TypeRef $node,
         bool $nullable = true,
-    ): InputType<mixed> {
+    ): IInputType {
         if ($node is TypeRef\NotNullRef) {
             return self::fromNode($schema, $node->getInnerRef(), false);
         }

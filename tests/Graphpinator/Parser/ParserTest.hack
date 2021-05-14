@@ -105,8 +105,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
         $arguments = $directives |> C\onlyx($$)->getArguments() as nonnull;
         expect(C\count($arguments))->toBeSame(1);
         expect($arguments)->toContainKey('arg1');
-        expect($arguments['arg1']->getName())->toBeSame('arg1');
-        expect($arguments['arg1']->getValue()->getRawValue())->toBeSame(123);
+        expect($arguments['arg1']->getRawValue())->toBeSame(123);
     }
 
     // public function testFragment() : void

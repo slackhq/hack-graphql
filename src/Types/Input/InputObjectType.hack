@@ -52,27 +52,4 @@ abstract class InputObjectType extends NamedInputType {
         dict<string, Value\Value> $value_nodes,
         dict<string, mixed> $variable_values,
     ): this::THackType;
-
-    /**
-     * Follows the GraphQL spec rules for whether a field should be included in the coerced shape -- either a literal
-     * value was provided, or the value is a variable reference and *that variable was provided*. This means that by
-     * including/not including a specific variable in the request, a field can be added/removed from any input object
-     * literals that reference the variable, which is powerful but can also be confusing.
-     *
-     * @see https://spec.graphql.org/draft/#sec-Input-Objects.Input-Coercion
-     */
-    final protected function hasValue(
-        string $field_name,
-        dict<string, Value\Value> $value_nodes,
-        dict<string, mixed> $variable_values,
-    ): bool {
-        if (!C\contains_key($value_nodes, $field_name)) {
-            return false;
-        }
-        $value_node = $value_nodes[$field_name];
-        if ($value_node is Value\VariableRef) {
-            return C\contains_key($variable_values, $value_node->getVarName());
-        }
-        return true;
-    }
 }
