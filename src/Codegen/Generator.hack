@@ -223,7 +223,7 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[] = new QueryFieldBuilder($query_root_field, $rm);
+                    $query_fields[] = new StaticFieldBuilder($query_root_field, $rm);
                     continue;
                 }
 
@@ -232,7 +232,7 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[] = new MutationFieldBuilder($mutation_root_field, $rm);
+                    $mutation_fields[] = new StaticFieldBuilder($mutation_root_field, $rm);
                 }
             }
         }
