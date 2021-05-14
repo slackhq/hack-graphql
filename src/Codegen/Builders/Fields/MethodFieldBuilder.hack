@@ -55,9 +55,11 @@ class MethodFieldBuilder implements IFieldBuilder {
         $invocations = vec[];
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $invocations[] = Str\format(
-                '%s->coerceNode($args[%s]->getValue(), $vars)',
+                '%s->coerce%sNamedNode(%s, $args, $vars%s)',
                 input_type($param->getTypeText()),
+                $param->isOptional() ? 'Optional' : '',
                 \var_export($param->getName(), true),
+                $param->isOptional() ? ', '.$param->getDefaultValueText() : '',
             );
         }
         return $invocations;

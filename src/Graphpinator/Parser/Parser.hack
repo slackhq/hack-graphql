@@ -380,7 +380,7 @@ final class Parser {
      * Expects iterator on previous token - opening parenthesis
      * Leaves iterator to last used token - closing parenthesis
      */
-    private function parseArguments(): dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
+    private function parseArguments(): dict<string, \Graphpinator\Parser\Value\Value> {
         $arguments = dict[];
 
         while ($this->tokenizer->peekNext()->getType() !== TokenType::PAR_C) {
@@ -400,9 +400,7 @@ final class Parser {
             }
 
             $this->tokenizer->assertNext<\Graphpinator\Parser\Exception\ExpectedColon>(TokenType::COLON);
-            $value = $this->parseValue(false);
-
-            $arguments[$name] = new \Graphpinator\Parser\Value\ArgumentValue($value, $name);
+            $arguments[$name] = $this->parseValue(false);
         }
 
         $this->tokenizer->getNext();

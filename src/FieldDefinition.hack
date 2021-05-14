@@ -13,7 +13,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinitio
         private Types\OutputType<TRet, TResolved> $type,
         private (function(
             TParent,
-            dict<string, \Graphpinator\Parser\Value\ArgumentValue>,
+            dict<string, \Graphpinator\Parser\Value\Value>,
             Variables,
         ): Awaitable<TRet>) $resolver,
     ) {}
