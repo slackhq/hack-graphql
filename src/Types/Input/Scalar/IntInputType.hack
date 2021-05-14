@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 
 final class IntInputType extends NamedInputType {
 
-    const type TCoerced = int;
+    const type THackType = int;
     const string NAME = 'Int';
 
     const int MIN_SAFE_VALUE = -2147483648;

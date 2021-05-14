@@ -1,6 +1,6 @@
 use namespace Slack\GraphQL;
 
-<<GraphQL\ObjectType('ErrorTest', 'Test object for error handling')>>
+<<GraphQL\ObjectType('ErrorTestObj', 'Test object for error handling')>>
 final class ErrorTestObj {
 
     <<GraphQL\QueryRootField('error_test', 'Root field to get an instance')>>

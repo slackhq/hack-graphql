@@ -25,7 +25,8 @@ final class Generator {
     private bool $has_mutations = false;
 
     const type TGeneratorConfig = shape(
-        'output_path' => string,
+        'output_directory' => string,
+        'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
     );
 
@@ -33,55 +34,72 @@ final class Generator {
         $this->cg = new HackCodegenFactory($config['codegen_config'] ?? new HackCodegenConfig());
     }
 
-    public static async function forPath(string $path, self::TGeneratorConfig $config): Awaitable<CodegenFile> {
+    public static async function forPath(string $path, self::TGeneratorConfig $config): Awaitable<void> {
         $defs = await DefinitionFinder\TreeParser::fromPathAsync($path);
         $gen = new self($defs, $config);
-        return await $gen->generate();
+        await $gen->generate();
     }
 
-    public static async function forFile(string $filename, self::TGeneratorConfig $config): Awaitable<CodegenFile> {
+    public static async function forFile(string $filename, self::TGeneratorConfig $config): Awaitable<void> {
         $defs = await DefinitionFinder\FileParser::fromFileAsync($filename);
         $gen = new self($defs, $config);
-        return await $gen->generate();
+        await $gen->generate();
     }
 
-    public async function generate(): Awaitable<CodegenFile> {
+    public async function generate(): Awaitable<void> {
         $objects = await $this->collectObjects();
 
-        $file = $this->cg
-            ->codegenFile($this->config['output_path'])
-            ->setDoClobber(true)
-            ->setGeneratedFrom($this->cg->codegenGeneratedFromScript('vendor/bin/hacktest'))
-            ->setFileType(CodegenFileType::DOT_HACK)
-            ->useNamespace('Slack\\GraphQL')
-            ->useNamespace('Slack\\GraphQL\\Types')
-            ->useNamespace('HH\\Lib\\{C, Dict}');
+        self::removeDirectory($this->config['output_directory']);
+        \mkdir($this->config['output_directory']);
 
         $input_types = BUILTIN_INPUT_TYPES;
         $output_types = BUILTIN_OUTPUT_TYPES;
 
-        $has_type_assertions = false;
         foreach ($objects as $object) {
-            $class = $object->build($this->cg)
-                ->setIsFinal(true);
-            $file->addClass($class);
+            $class = $object->build($this->cg);
+            $this->generateFile($class);
             if ($object is InputTypeBuilder<_>) {
                 $input_types = self::add($input_types, $object->getGraphQLType(), $class->getName());
-            }
-            if ($object is OutputTypeBuilder<_>) {
+            } elseif ($object is OutputTypeBuilder<_>) {
                 $output_types = self::add($output_types, $object->getGraphQLType(), $class->getName());
             }
         }
 
-        $file->addClass($this->generateSchemaType($this->cg, $input_types, $output_types));
-
-        return $file;
+        $this->generateFile($this->generateSchemaType($this->cg, $input_types, $output_types));
     }
 
-    private static function add(dict<string, string> $dict, ?string $key, string $value): dict<string, string> {
-        if ($key is null) {
-            return $dict;
+    private static function removeDirectory(string $directory): void {
+        $handles = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($handles as $handle) {
+            if ($handle->isDir()) {
+                \rmdir($handle->getRealPath());
+            } else {
+                \unlink($handle->getRealPath());
+            }
         }
+
+        \rmdir($directory);
+    }
+
+    private function generateFile(CodegenClass $class): void {
+        $this->cg
+            ->codegenFile($this->config['output_directory'].'/'.$class->getName().'.hack')
+            ->setDoClobber(true)
+            ->setGeneratedFrom($this->cg->codegenGeneratedFromScript('vendor/bin/hacktest'))
+            ->setFileType(CodegenFileType::DOT_HACK)
+            ->setNamespace($this->config['namespace'])
+            ->useNamespace('Slack\\GraphQL')
+            ->useNamespace('Slack\\GraphQL\\Types')
+            ->useNamespace('HH\\Lib\\{C, Dict}')
+            ->addClass($class)
+            ->save();
+    }
+
+    private static function add(dict<string, string> $dict, string $key, string $value): dict<string, string> {
         invariant(
             !C\contains_key($dict, $key),
             'Conflicting entry for "%s": "%s" vs "%s"',

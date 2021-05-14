@@ -66,13 +66,13 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             $cg->codegenMethod('coerceFieldValues')
                 ->setIsOverride()
                 ->addParameter('KeyedContainer<arraykey, mixed> $fields')
-                ->setReturnType('this::TCoerced')
+                ->setReturnType('this::THackType')
                 ->setBody($values->getCode()),
             $cg->codegenMethod('coerceFieldNodes')
                 ->setIsOverride()
                 ->addParameterf('dict<string, \\%s> $fields', \Graphpinator\Parser\Value\Value::class)
                 ->addParameter('dict<string, mixed> $vars')
-                ->setReturnType('this::TCoerced')
+                ->setReturnType('this::THackType')
                 ->setBody($nodes->getCode()),
         ]);
     }

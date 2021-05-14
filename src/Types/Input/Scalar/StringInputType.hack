@@ -5,7 +5,7 @@ use type Slack\GraphQL\UserFacingError;
 
 final class StringInputType extends NamedInputType {
 
-    const type TCoerced = string;
+    const type THackType = string;
     const string NAME = 'String';
 
     <<__Override>>

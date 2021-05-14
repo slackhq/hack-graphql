@@ -11,16 +11,13 @@ use type Facebook\HackCodegen\{
 
 
 /**
- * A builder which creates a GraphQL type representing a Hack type,
- * where a HackType is an interface, object, enum, etc.
+ * Base class for all type builders.
+ *
+ * In general, type builders meant to be used by the generator should subclass
+ * `InputTypeBuilder` or `OutputTypeBuilder`. `TypeBuilder` itself is an
+ * internal implementation detail which encapsulates shared logic.
  */
-interface ITypeBuilder {
-    public function getGraphQLType(): string;
-    public function build(HackCodegenFactory $cg): CodegenClass;
-}
-
-
-abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> implements ITypeBuilder {
+abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
 
     abstract const classname<\Slack\GraphQL\Types\BaseType> SUPERCLASS;
 
@@ -39,14 +36,19 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> implem
             ->codegenClass($this->getGeneratedClassName())
             ->setIsFinal()
             ->setExtendsf('\%s', static::SUPERCLASS)
-            ->addConstant($this->buildName($cg))
-            ->addTypeConstant($this->buildTypeConstant($cg));
+            ->addConstant($this->generateNameConstant($cg))
+            ->addTypeConstant($this->generateTypeConstant($cg));
     }
 
-    final private function buildName(HackCodegenFactory $cg): CodegenClassConstant {
-        return $cg->codegenClassConstant('NAME')
+    private function generateNameConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        return $cg
+            ->codegenClassConstant('NAME')
             ->setValue($this->getGraphQLType(), HackBuilderValues::export());
     }
 
-    abstract protected function buildTypeConstant(HackCodegenFactory $cg): CodegenTypeConstant;
+    private function generateTypeConstant(HackCodegenFactory $cg): CodegenTypeConstant {
+        return $cg
+            ->codegenTypeConstant('THackType')
+            ->setValue('\\'.$this->hack_type, HackBuilderValues::literal());
+    }
 }
