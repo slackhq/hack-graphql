@@ -15,11 +15,7 @@ abstract class EnumInputType extends NamedInputType {
     public function coerceValue(mixed $value): this::THackType {
         $enum = static::HACK_ENUM;
         if (!$value is string || !C\contains_key($enum::getValues(), $value)) {
-            throw new GraphQL\UserFacingError(
-                'Expected a valid value for %s, got %s',
-                static::NAME,
-                (string)$value
-            );
+            throw new GraphQL\UserFacingError('Expected a valid value for %s, got %s', static::NAME, (string)$value);
         }
         return $enum::getValues()[$value];
     }
@@ -40,6 +36,11 @@ abstract class EnumInputType extends NamedInputType {
             $node->getRawValue(),
         );
         return $enum::getValues()[$node->getRawValue()];
+    }
+
+    <<__Override>>
+    final public function getKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::ENUM;
     }
 
 }

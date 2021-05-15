@@ -10,7 +10,9 @@ use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, H
  * The annotated Hack type should be either a class, interface, or shape.
  */
 // TODO: It probably makes sense to have a separate builder for interfaces.
-final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
+final class ObjectBuilder<TField as IFieldBuilder>
+    extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType>
+    implements ITypeWithFieldsBuilder {
     const classname<\Slack\GraphQL\Types\ObjectType> SUPERCLASS = \Slack\GraphQL\Types\ObjectType::class;
 
     public function __construct(
@@ -65,5 +67,10 @@ final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Sl
         $method->setBody($hb->getCode());
 
         return $method;
+    }
+
+    final public function getFieldNames(): keyset<string> {
+        return Vec\map($this->fields, $field ==> $field->getName())
+            |> keyset($$);
     }
 }

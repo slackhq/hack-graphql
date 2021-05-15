@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8f34aea15a0d8a6a08a4b4fa108186c0>>
+ * @generated SignedSource<<c9b03f83259b4600fd7882512908bc09>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -15,6 +15,12 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
 
   const NAME = 'Team';
   const type THackType = \Team;
+  const keyset<string> FIELD_NAMES = keyset[
+    'description',
+    'id',
+    'name',
+    'num_users',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -22,6 +28,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'description':
         return new GraphQL\FieldDefinition(
+          'description',
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getDescription(
             Types\BooleanInputType::nonNullable()->coerceNamedNode('short', $args, $vars),
@@ -29,16 +36,19 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'id':
         return new GraphQL\FieldDefinition(
+          'id',
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
+          'name',
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'num_users':
         return new GraphQL\FieldDefinition(
+          'num_users',
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
         );

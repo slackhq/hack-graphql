@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Types;
 
-final class IntOutputType extends LeafType {
+final class IntOutputType extends ScalarOutputType {
     const type THackType = int;
     const string NAME = 'Int';
 

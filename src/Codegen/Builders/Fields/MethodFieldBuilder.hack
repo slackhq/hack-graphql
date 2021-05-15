@@ -14,6 +14,10 @@ class MethodFieldBuilder implements IFieldBuilder {
 
         $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
 
+        // Field name
+        $name_literal = \var_export($this->graphql_field->getName(), true);
+        $hb->addLinef('%s,', $name_literal);
+
         // Field return type
         $type_info = output_type(
             $this->reflection_method->getReturnTypeText(),
@@ -44,7 +48,7 @@ class MethodFieldBuilder implements IFieldBuilder {
     }
 
     protected function getMethodCallPrefix(): string {
-        return '$parent->';
+        return Str\format('$parent%s', $this->reflection_method->isStatic() ? '::' : '->');
     }
 
     public function hasArguments(): bool {
@@ -63,5 +67,9 @@ class MethodFieldBuilder implements IFieldBuilder {
             );
         }
         return $invocations;
+    }
+
+    public function getName(): string {
+        return $this->graphql_field->getName();
     }
 }

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ac823903c5f5fc11c96ac935e69385f6>>
+ * @generated SignedSource<<26591c0d7636b7d47e077a75f179560f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,21 +16,21 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
   const NAME = '__EnumValue';
   const type THackType = \Slack\GraphQL\Introspection\__EnumValue;
   const keyset<string> FIELD_NAMES = keyset[
-    'name',
+    'deprecationReason',
     'description',
     'isDeprecated',
-    'deprecationReason',
+    'name',
   ];
 
   public function getFieldDefinition(
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'name':
+      case 'deprecationReason':
         return new GraphQL\FieldDefinition(
-          'name',
+          'deprecationReason',
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getName(),
+          async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -44,11 +44,11 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->isDeprecated(),
         );
-      case 'deprecationReason':
+      case 'name':
         return new GraphQL\FieldDefinition(
-          'deprecationReason',
+          'name',
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
+          async ($parent, $args, $vars) ==> $parent->getName(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

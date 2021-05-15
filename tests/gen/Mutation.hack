@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d79dead259711aa4e0373e7dff969f9a>>
+ * @generated SignedSource<<c9b77afafde5ef43ac2927a7de64bf58>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -15,6 +15,10 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
 
   const NAME = 'Mutation';
   const type THackType = \Slack\GraphQL\Root;
+  const keyset<string> FIELD_NAMES = keyset[
+    'createUser',
+    'pokeUser',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -22,6 +26,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
     switch ($field_name) {
       case 'createUser':
         return new GraphQL\FieldDefinition(
+          'createUser',
           User::nullable(),
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
             CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
@@ -29,6 +34,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
         );
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
+          'pokeUser',
           User::nullable(),
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
             Types\IntInputType::nonNullable()->coerceNamedNode('id', $args, $vars),

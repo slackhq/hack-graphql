@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class IntInputType extends NamedInputType {
+final class IntInputType extends ScalarInputType {
 
     const type THackType = int;
     const string NAME = 'Int';
@@ -27,10 +27,7 @@ final class IntInputType extends NamedInputType {
     }
 
     <<__Override>>
-    final public function coerceNonVariableNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): int {
+    final public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): int {
         if (!$node is Value\IntLiteral) {
             throw new GraphQL\UserFacingError('Expected an Int literal, got %s', \get_class($node));
         }
