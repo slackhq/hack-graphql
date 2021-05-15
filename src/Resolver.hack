@@ -26,10 +26,15 @@ final class Resolver {
      * @see https://spec.graphql.org/draft/#sec-Execution
      */
     public async function resolve(
-        \Graphpinator\Parser\ParsedRequest $request,
+        string $input,
         dict<string, mixed> $variables = dict[],
         ?string $operation_name = null,
     ): Awaitable<this::TResponse> {
+        // TODO: catch these errors
+        $source = new \Graphpinator\Source\StringSource($input);
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $request = $parser->parse();
+
         $ret = shape();
         $errors = vec[];
 
