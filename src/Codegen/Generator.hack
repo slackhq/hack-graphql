@@ -111,7 +111,6 @@ final class Generator {
         dict<string, string> $output_types,
     ): CodegenClass {
         $class = $cg->codegenClass('Schema')
-            ->setIsAbstract(true)
             ->setIsFinal(true)
             ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class)
             ->addConstant(
@@ -129,17 +128,23 @@ final class Generator {
             $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::QUERY),
         );
 
-        if ($this->has_mutations) {
-            $class
+        $query_type = $output_types['Query'];
+        $query_type_const = $cg->codegenClassConstant('QUERY_TYPE')
+            ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
+            ->setValue('Query::class', HackBuilderValues::literal());
+
+        $class->addConstant($query_type_const);
+
+        $mutation_type = $output_types['Mutation'] ?? null;
+        if ($mutation_type is nonnull) {
+            $mutation_type_const = $cg->codegenClassConstant('MUTATION_TYPE')
+                ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
+                ->setValue(('Mutation::class'), HackBuilderValues::literal());
+
+            $class->addConstant($mutation_type_const)
                 ->addMethod(
                     $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::MUTATION),
                 );
-
-            $mutation_const = $cg->codegenClassConstant('SUPPORTS_MUTATIONS')
-                ->setType('bool')
-                ->setValue(true, HackBuilderValues::export());
-
-            $class->addConstant($mutation_const);
         }
 
         return $class;
