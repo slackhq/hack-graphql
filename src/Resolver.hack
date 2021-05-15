@@ -91,7 +91,7 @@ final class Resolver {
                 $result = await $schema::resolveQuery($operation, $coerced_variables);
                 break;
             case 'mutation':
-                invariant($schema::SUPPORTS_MUTATIONS, 'mutation operation not supported for schema');
+                invariant($schema::MUTATION_TYPE, 'mutation operation not supported for schema');
                 $result = await $schema::resolveMutation($operation, $coerced_variables);
                 break;
             default:
@@ -125,11 +125,7 @@ final class Resolver {
                 }
                 continue;
             }
-            GraphQL\assert(
-                $type is Types\NullableInputType<_>,
-                'Missing value for required variable "%s"',
-                $name,
-            );
+            GraphQL\assert($type is Types\NullableInputType<_>, 'Missing value for required variable "%s"', $name);
         }
         return $coerced_values;
     }
