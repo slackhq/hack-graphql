@@ -53,7 +53,7 @@ final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Sl
     private function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
         $method = $cg->codegenMethod('getFieldDefinition')
             ->setPublic()
-            ->setReturnType('GraphQL\\IFieldDefinition<this::THackType>')
+            ->setReturnType('?GraphQL\\IResolvableFieldDefinition<this::THackType>')
             ->addParameter('string $field_name');
 
         $hb = hb($cg);
@@ -65,7 +65,7 @@ final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Sl
                 },
             )
             ->addDefault()
-            ->addLine("throw new \Exception('Unknown field: '.\$field_name);")
+            ->addLine("return null;")
             ->endDefault()
             ->endSwitch();
 

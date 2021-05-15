@@ -26,14 +26,24 @@ abstract class BaseSchema implements Introspection\__Schema {
         return new ValidFieldResult(null);
     }
 
+    final public function getQueryType(): Types\ObjectType {
+        $query_type = static::QUERY_TYPE;
+        return new $query_type();
+    }
+
+    final public function getMutationType(): ?Types\ObjectType {
+        $mutation_type = static::MUTATION_TYPE;
+        return $mutation_type is nonnull ? new $mutation_type() : null;
+    }
+
     <<__Override>>
-    final public function getQueryType(): Introspection\__Type {
+    final public function getIntrospectionQueryType(): Introspection\__Type {
         $query_type = static::QUERY_TYPE;
         return $query_type::nonNullable();
     }
 
     <<__Override>>
-    final public function getMutationType(): ?Introspection\__Type {
+    final public function getIntrospectionMutationType(): ?Introspection\__Type {
         $mutation_type = static::MUTATION_TYPE;
         return $mutation_type is nonnull ? $mutation_type::nonNullable() : null;
     }

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<32b92f225952bed36e7d2322412c013d>>
+ * @generated SignedSource<<17e5cdd7a1f035ac71884e7dcc433c62>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -27,7 +27,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
 
   public function getFieldDefinition(
     string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
+  ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
       case 'default_list_of_non_nullable_int':
         return new GraphQL\FieldDefinition(
@@ -72,7 +72,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getNullableString(),
         );
       default:
-        throw new \Exception('Unknown field: '.$field_name);
+        return null;
     }
   }
 }

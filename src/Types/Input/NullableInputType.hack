@@ -18,6 +18,11 @@ final class NullableInputType<TInner as nonnull>
     }
 
     <<__Override>>
+    public function getNamedType(): NamedInputType {
+        return $this->inner_type->getNamedType();
+    }
+
+    <<__Override>>
     public function coerceValue(mixed $value): ?TInner {
         return $value is null ? null : $this->inner_type->coerceValue($value);
     }
