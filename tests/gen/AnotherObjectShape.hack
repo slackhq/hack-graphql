@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<606043d082f96b545453067bc58eb77e>>
+ * @generated SignedSource<<4fc4c226e5a31a8d1d547670a72f7ead>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,7 +21,7 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
 
   public function getFieldDefinition(
     string $field_name,
-  ): GraphQL\IFieldDefinition<this::THackType> {
+  ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
       case 'abc':
         return new GraphQL\FieldDefinition(
@@ -30,7 +30,7 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent['abc'],
         );
       default:
-        throw new \Exception('Unknown field: '.$field_name);
+        return null;
     }
   }
 }

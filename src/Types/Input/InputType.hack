@@ -5,10 +5,13 @@ use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\{TypeRef, Value};
 
 interface IInputType {
+    require extends BaseType;
+
     public function coerceValue(mixed $value): mixed;
     public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
     public function nullableListOf(): IInputType;
     public function nonNullableListOf(): IInputType;
+    public function getNamedType(): NamedInputType;
 }
 
 /**

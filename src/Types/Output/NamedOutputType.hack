@@ -22,6 +22,11 @@ abstract class NamedOutputType
         return static::NAME;
     }
 
+    <<__Override>>
+    public function getNamedType(): NamedOutputType {
+        return $this;
+    }
+
     /**
      * Use these to get the singleton instance of this type.
      */

@@ -9,8 +9,8 @@ interface __Schema {
     // public function getTypes(): vec<__Type>;
 
     <<GraphQL\Field('queryType', 'Query root type')>>
-    public function getQueryType(): __Type;
+    public function getIntrospectionQueryType(): __Type;
 
     <<GraphQL\Field('mutationType', 'Mutation root type')>>
-    public function getMutationType(): ?__Type;
+    public function getIntrospectionMutationType(): ?__Type;
 }

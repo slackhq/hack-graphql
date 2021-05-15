@@ -3,11 +3,14 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
-abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\__Type {
+abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\__Type, CompositeType {
     const type TCoerced = dict<string, mixed>;
 
     abstract const keyset<string> FIELD_NAMES;
-    abstract public function getFieldDefinition(string $field_name): GraphQL\IFieldDefinition<this::THackType>;
+
+    abstract public function getFieldDefinition(
+        string $field_name
+    ): ?GraphQL\IResolvableFieldDefinition<this::THackType>;
 
     <<__Override>>
     final public async function resolveAsync(
@@ -26,8 +29,13 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
 
         $results = await Dict\map_async(
             $child_fields,
-            async $child_field ==>
-                await $this->getFieldDefinition($child_field->getName())->resolveAsync($value, $child_field, $vars),
+            async $child_field ==> {
+                $field_definition = $this->getFieldDefinition($child_field->getName());
+                if ($field_definition is null) {
+                    throw new \Exception('Unknown field: '.$child_field->getName());
+                }
+                return await $field_definition->resolveAsync($value, $child_field, $vars);
+            }
         );
 
         foreach ($results as $key => $result) {
@@ -51,6 +59,6 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
 
     <<__Override>>
     final public function getFields(): vec<GraphQL\Introspection\__Field> {
-        return Vec\map($this::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name));
+        return Vec\map($this::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name) as nonnull);
     }
 }

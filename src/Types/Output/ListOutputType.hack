@@ -15,6 +15,11 @@ final class ListOutputType<TInner, TResolved>
     }
 
     <<__Override>>
+    public function getNamedType(): NamedOutputType {
+        return $this->inner_type->getNamedType();
+    }
+
+    <<__Override>>
     final public async function resolveAsync(
         vec<TInner> $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,

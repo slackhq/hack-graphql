@@ -15,6 +15,11 @@ final class NullableOutputType<TInner, TResolved>
         return $this->inner_type as GraphQL\Introspection\__Type;
     }
 
+    <<__Override>>
+    public function getNamedType(): NamedOutputType {
+        return $this->inner_type->getNamedType();
+    }
+
     /**
      * Nullable fields act as an "error boundary". Any InvalidFieldResults are converted to a ValidFieldResult (with
      * null value) here. Note the stronger return type compared to the parent class.

@@ -23,6 +23,11 @@ abstract class NamedInputType extends InputType<this::THackType> implements \Sla
     }
 
     <<__Override>>
+    public function getNamedType(): NamedInputType {
+        return $this;
+    }
+
+    <<__Override>>
     final protected function assertValidVariableValue(mixed $value): this::THackType {
         return $value as this::THackType;
     }

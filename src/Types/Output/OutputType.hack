@@ -1,5 +1,12 @@
 namespace Slack\GraphQL\Types;
+
 use namespace Slack\GraphQL;
+
+interface IOutputType {
+    require extends BaseType;
+
+    public function getNamedType(): NamedOutputType;
+}
 
 /**
  * GraphQL type that may be used for fields.
@@ -12,7 +19,7 @@ use namespace Slack\GraphQL;
  *
  * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
  */
-abstract class OutputType<TExpected, TResolved> extends BaseType {
+abstract class OutputType<TExpected, TResolved> extends BaseType implements IOutputType {
 
     /**
      * Use these to get a singleton list type instance wrapping this type.

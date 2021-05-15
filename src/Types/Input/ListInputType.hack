@@ -9,9 +9,18 @@ final class ListInputType<TInner> extends InputType<vec<TInner>> implements Grap
 
     public function __construct(private InputType<TInner> $inner_type) {}
 
+    public function getInnerType(): InputType<TInner> {
+        return $this->inner_type;
+    }
+
     <<__Override>>
     public function getName(): ?string {
         return null;
+    }
+
+    <<__Override>>
+    public function getNamedType(): NamedInputType {
+        return $this->getInnerType()->getNamedType();
     }
 
     <<__Override>>

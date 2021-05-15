@@ -1,6 +1,10 @@
 namespace Slack\GraphQL;
 
-interface IFieldDefinition<TParent> extends Introspection\__Field {
+interface IFieldDefinition extends Introspection\__Field {
+    public function getType(): Types\IOutputType;
+}
+
+interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
     public function resolveAsync(
         TParent $parent,
         \Graphpinator\Parser\Field\Field $field,
@@ -8,7 +12,7 @@ interface IFieldDefinition<TParent> extends Introspection\__Field {
     ): Awaitable<FieldResult<mixed>>;
 }
 
-final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinition<TParent> {
+final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFieldDefinition<TParent> {
     public function __construct(
         private string $name,
         private Types\OutputType<TRet, TResolved> $type,
@@ -46,5 +50,9 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinitio
         }
 
         return new Introspection\NonNullable($this->type as Introspection\__Type);
+    }
+
+    public function getType(): Types\OutputType<TRet, TResolved> {
+        return $this->type;
     }
 }
