@@ -71,7 +71,7 @@ final class Generator {
     private static function removeDirectory(string $directory): void {
         $handles = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            \RecursiveIteratorIterator::CHILD_FIRST,
         );
 
         foreach ($handles as $handle) {
@@ -100,13 +100,7 @@ final class Generator {
     }
 
     private static function add(dict<string, string> $dict, string $key, string $value): dict<string, string> {
-        invariant(
-            !C\contains_key($dict, $key),
-            'Conflicting entry for "%s": "%s" vs "%s"',
-            $key,
-            $dict[$key],
-            $value,
-        );
+        invariant(!C\contains_key($dict, $key), 'Conflicting entry for "%s": "%s" vs "%s"', $key, $dict[$key], $value);
         $dict[$key] = $value;
         return $dict;
     }
@@ -197,11 +191,12 @@ final class Generator {
     }
 
     private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
-        $interfaces = dict[];
         $objects = vec[];
         $inputs = vec[];
         $query_fields = dict[];
         $mutation_fields = dict[];
+
+        $introspection_parser = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
 
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
@@ -217,7 +212,11 @@ final class Generator {
             }
         }
 
-        $classish_objects = $this->parser->getInterfaces() |> Vec\concat($$, $this->parser->getClasses());
+        $classish_objects = $this->parser->getInterfaces()
+            |> Vec\concat($$, $this->parser->getClasses())
+            |> Vec\concat($$, $introspection_parser->getInterfaces())
+            |> Vec\concat($$, $introspection_parser->getClasses());
+
         $field_resolver = new FieldResolver($classish_objects);
         $class_fields = $field_resolver->resolveFields();
 
@@ -225,8 +224,8 @@ final class Generator {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class)
-                    ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
+                    $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_attribute is nonnull) {
                     $objects[] = new ObjectBuilder($graphql_attribute, $rc->getName(), $fields);
                 }
@@ -258,7 +257,9 @@ final class Generator {
             }
         }
 
-        foreach ($this->parser->getEnums() as $enum) {
+        $enums = $this->parser->getEnums() |> Vec\concat($$, $introspection_parser->getEnums());
+
+        foreach ($enums as $enum) {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;
@@ -274,7 +275,7 @@ final class Generator {
                     new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
                     'Slack\\GraphQL\\Root',
                     vec(Dict\sort_by_key($query_fields)),
-                )
+                ),
             ];
 
             if (!C\is_empty($mutation_fields)) {
