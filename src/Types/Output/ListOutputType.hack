@@ -5,15 +5,11 @@ use namespace Slack\GraphQL;
 
 final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, vec<mixed>> {
 
-    public function __construct(private OutputType<TInner, TResolved> $innerType) {}
+    public function __construct(private OutputType<TInner, TResolved> $inner_type) {}
 
     <<__Override>>
     public function getName(): ?string {
         return null;
-    }
-
-    public function getInnerType(): OutputType<TInner, TResolved> {
-        return $this->innerType;
     }
 
     <<__Override>>
@@ -28,7 +24,7 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
 
         $results = await Vec\map_async(
             $value,
-            async $item ==> await $this->innerType->resolveAsync($item, $field, $vars),
+            async $item ==> await $this->inner_type->resolveAsync($item, $field, $vars),
         );
 
         foreach ($results as $idx => $result) {
@@ -43,5 +39,19 @@ final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, ve
         }
 
         return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
+    }
+
+    <<__Override>>
+    final public function getKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::LIST;
+    }
+
+    <<__Override>>
+    final public function getOfType(): GraphQL\Introspection\__Type {
+        if ($this->inner_type is NullableOutputType<_, _>) {
+            return $this->inner_type;
+        }
+
+        return new GraphQL\Introspection\NonNullable($this->inner_type);
     }
 }

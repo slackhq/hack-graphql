@@ -1,6 +1,8 @@
 namespace Slack\GraphQL\Types;
 
-abstract class EnumOutputType extends LeafType {
+use namespace Slack\GraphQL;
+
+abstract class EnumOutputType extends LeafOutputType {
     abstract const type THackType as arraykey;
     abstract const \HH\enumname<this::THackType> HACK_ENUM;
     const type TCoerced = string;
@@ -12,5 +14,10 @@ abstract class EnumOutputType extends LeafType {
     final protected function coerce(this::THackType $value): string {
         $hack_enum = static::HACK_ENUM;
         return $hack_enum::getNames()[$value];
+    }
+
+    <<__Override>>
+    final public function getKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::ENUM;
     }
 }

@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Types;
 
 use namespace Slack\GraphQL;
 
-abstract class LeafType extends NamedOutputType {
+abstract class LeafOutputType extends NamedOutputType {
     abstract const type TCoerced as mixed = this::THackType;
 
     /**

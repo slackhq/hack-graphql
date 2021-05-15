@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<a0f531af9fb4fb4b4de55baa03a2d7e3>>
+ * @generated SignedSource<<7b3e29ae356c88ea88be40d8164485cf>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,21 +16,21 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
   const NAME = '__InputValue';
   const type THackType = \Slack\GraphQL\Introspection\__InputValue;
   const keyset<string> FIELD_NAMES = keyset[
-    'name',
-    'description',
-    'type',
     'defaultValue',
+    'description',
+    'name',
+    'type',
   ];
 
   public function getFieldDefinition(
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'name':
+      case 'defaultValue':
         return new GraphQL\FieldDefinition(
-          'name',
+          'defaultValue',
           Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getName(),
+          async ($parent, $args, $vars) ==> $parent->getDefaultValue(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -38,17 +38,17 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getDescription(),
         );
+      case 'name':
+        return new GraphQL\FieldDefinition(
+          'name',
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getName(),
+        );
       case 'type':
         return new GraphQL\FieldDefinition(
           'type',
           __Type::nullable(),
           async ($parent, $args, $vars) ==> $parent->getType(),
-        );
-      case 'defaultValue':
-        return new GraphQL\FieldDefinition(
-          'defaultValue',
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getDefaultValue(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

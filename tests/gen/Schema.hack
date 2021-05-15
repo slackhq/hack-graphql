@@ -4,14 +4,14 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<bee96caf3eb85f85d3a292c8b1d83ea6>>
+ * @generated SignedSource<<aa47b1e612aaeb53f673a56a4f8e01bb>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-abstract final class Schema extends \Slack\GraphQL\BaseSchema {
+final class Schema extends \Slack\GraphQL\BaseSchema {
 
   const dict<string, classname<Types\NamedInputType>> INPUT_TYPES = dict[
     'Boolean' => Types\BooleanInputType::class,
@@ -20,6 +20,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     'FavoriteColor' => FavoriteColorInputType::class,
     'Int' => Types\IntInputType::class,
     'String' => Types\StringInputType::class,
+    '__TypeKind' => __TypeKindInputType::class,
   ];
   const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES = dict[
     'AnotherObjectShape' => AnotherObjectShape::class,
@@ -32,6 +33,7 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     'Int' => Types\IntOutputType::class,
     'InterfaceA' => InterfaceA::class,
     'InterfaceB' => InterfaceB::class,
+    'IntrospectionTestObject' => IntrospectionTestObject::class,
     'Mutation' => Mutation::class,
     'ObjectShape' => ObjectShape::class,
     'OutputTypeTestObj' => OutputTypeTestObj::class,
@@ -39,8 +41,15 @@ abstract final class Schema extends \Slack\GraphQL\BaseSchema {
     'String' => Types\StringOutputType::class,
     'Team' => Team::class,
     'User' => User::class,
+    '__EnumValue' => __EnumValue::class,
+    '__Field' => __Field::class,
+    '__InputValue' => __InputValue::class,
+    '__Schema' => __Schema::class,
+    '__Type' => __Type::class,
+    '__TypeKind' => __TypeKindOutputType::class,
   ];
-  const bool SUPPORTS_MUTATIONS = true;
+  const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE = Query::class;
+  const classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = Mutation::class;
 
   public static async function resolveQuery(
     \Graphpinator\Parser\Operation\Operation $operation,

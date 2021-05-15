@@ -2,8 +2,9 @@ namespace Slack\GraphQL\Types;
 
 use namespace Graphpinator\Parser\Value;
 use type Slack\GraphQL\UserFacingError;
+use namespace Slack\GraphQL;
 
-final class StringInputType extends NamedInputType {
+final class StringInputType extends ScalarInputType {
 
     const type THackType = string;
     const string NAME = 'String';
@@ -17,10 +18,7 @@ final class StringInputType extends NamedInputType {
     }
 
     <<__Override>>
-    final public function coerceNonVariableNode(
-        Value\Value $node,
-        dict<string, mixed> $variable_values,
-    ): string {
+    final public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): string {
         if (!$node is Value\StringLiteral) {
             throw new UserFacingError('Expected a String literal, got %s', \get_class($node));
         }

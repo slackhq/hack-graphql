@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Types;
 
-final class BooleanOutputType extends LeafType {
+final class BooleanOutputType extends ScalarOutputType {
     const type THackType = bool;
     const string NAME = 'Boolean';
 

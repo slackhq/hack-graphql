@@ -12,11 +12,8 @@ final class BasicTest extends PlaygroundTest {
                 dict[],
                 dict['viewer' => dict['id' => 1, 'team' => dict['id' => 1]]],
             ),
-            'select is_active' => tuple(
-                'query { viewer { is_active } }',
-                dict[],
-                dict['viewer' => dict['is_active' => true]],
-            ),
+            'select is_active' =>
+                tuple('query { viewer { is_active } }', dict[], dict['viewer' => dict['is_active' => true]]),
             'select team.name' => tuple(
                 'query { viewer { team { name, num_users } } }',
                 dict[],
@@ -37,11 +34,7 @@ final class BasicTest extends PlaygroundTest {
                 dict['num' => 7],
                 dict['nested_list_sum' => 42],
             ),
-            'inline arguments' => tuple(
-                'query { user(id: 2) { id } }',
-                dict[],
-                dict['user' => dict['id' => 2]],
-            ),
+            'inline arguments' => tuple('query { user(id: 2) { id } }', dict[], dict['user' => dict['id' => 2]]),
             'select concrete implementation' => tuple(
                 'query { human(id: 2) { id, name, favorite_color } }',
                 dict[],
@@ -57,43 +50,27 @@ final class BasicTest extends PlaygroundTest {
                 dict['short' => false],
                 dict['user' => dict['id' => 2, 'team' => dict['description' => 'Much longer description']]],
             ),
-            'mutation' => tuple(
-                'mutation { pokeUser(id: 2) { id } }',
-                dict[],
-                dict['pokeUser' => dict['id' => 2]],
-            ),
+            'mutation' => tuple('mutation { pokeUser(id: 2) { id } }', dict[], dict['pokeUser' => dict['id' => 2]]),
             'enum arguments' => tuple(
                 'query { takes_favorite_color(favorite_color: RED) }',
                 dict[],
-                dict['takes_favorite_color' => true]
+                dict['takes_favorite_color' => true],
             ),
             'enum arguments with variables' => tuple(
                 'query ($favorite_color: FavoriteColor!) { takes_favorite_color(favorite_color: $favorite_color) }',
                 dict['favorite_color' => 'RED'],
-                dict['takes_favorite_color' => true]
+                dict['takes_favorite_color' => true],
             ),
         ];
     }
 
     public async function testSelectInvalidFieldOnInterface(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { user(id: 2) { id, name, favorite_color } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        expect(async () ==> await $resolver->resolve($request))
+        expect(async () ==> await $this->resolve('query { user(id: 2) { id, name, favorite_color } }'))
             ->toThrow(\Exception::class, "Unknown field: favorite_color");
     }
 
     public async function testSelectInvalidFieldOnConcreteImplementation(): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource('query { bot(id: 2) { id, name, favorite_color } }');
-        $parser = new \Graphpinator\Parser\Parser($source);
-
-        $request = $parser->parse();
-        $resolver = new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
-
-        expect(async () ==> await $resolver->resolve($request))
+        expect(async () ==> await $this->resolve('query { bot(id: 2) { id, name, favorite_color } }'))
             ->toThrow(\Exception::class, "Unknown field: favorite_color");
     }
 
