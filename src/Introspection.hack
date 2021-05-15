@@ -69,13 +69,13 @@ interface IntrospectableEnumValue extends IntrospectableNamedType {
 final abstract class IntrospectionQueryFields {
     // filter out the schema argument if it is an introspection field?
     <<\Slack\GraphQL\QueryRootField('__schema', 'Introspect the schema')>>
-    public static function getSchema(classname<IntrospectableSchema> $schema): ?__Schema {
-        return new __Schema($schema);
+    public static function getSchema(): ?__Schema {
+        return new __Schema(\Slack\GraphQL\Test\Generated\Schema::class);
     }
 
     <<\Slack\GraphQL\QueryRootField('__type', 'Introspect a specific type')>>
-    public static function getType(classname<IntrospectableSchema> $schema, string $name): ?__Type {
-        $type = $schema::getType($name);
+    public static function getType(string $name): ?__Type {
+        $type = \Slack\GraphQL\Test\Generated\Schema::getType($name);
         return $type is nonnull ? new __Type($type) : null;
     }
 }

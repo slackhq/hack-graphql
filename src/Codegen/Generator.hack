@@ -241,11 +241,11 @@ class Field {
         $invocations = vec[];
         foreach ($this->reflection_method->getParameters() as $index => $param) {
             $type_text = $param->getTypeText();
-            // TODO: can we pass down dynamic context this way too?
-            if ($type_text === 'HH\classname<Slack\GraphQL\Introspection\IntrospectableSchema>') {
-                $invocations[] = '$schema';
-                continue;
-            }
+            // TODO: support passing a custom context down in a similar way to this:J
+            // if ($type_text === 'HH\classname<Slack\GraphQL\Introspection\IntrospectableSchema>') {
+            //     $invocations[] = '$schema';
+            //     continue;
+            // }
 
             $invocations[] = Str\format(
                 '%s->coerceNode($args[%s]->getValue(), $vars)',
