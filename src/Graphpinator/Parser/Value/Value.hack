@@ -1,5 +1,3 @@
 namespace Graphpinator\Parser\Value;
 
-interface Value {
-    public function accept(ValueVisitor $valueVisitor): mixed;
-}
+abstract class Value extends \Graphpinator\Parser\Node {}

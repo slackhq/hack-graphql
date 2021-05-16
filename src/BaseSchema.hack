@@ -3,6 +3,7 @@ namespace Slack\GraphQL;
 use namespace HH\Lib\Dict;
 
 // TODO: this should be private
+<<__ConsistentConstruct>>
 abstract class BaseSchema implements Introspection\__Schema {
     const ?classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = null;
     abstract const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE;
@@ -26,12 +27,12 @@ abstract class BaseSchema implements Introspection\__Schema {
         return new ValidFieldResult(null);
     }
 
-    final public function getQueryType(): Types\ObjectType {
+    final public static function getQueryType(): Types\ObjectType {
         $query_type = static::QUERY_TYPE;
         return new $query_type();
     }
 
-    final public function getMutationType(): ?Types\ObjectType {
+    final public static function getMutationType(): ?Types\ObjectType {
         $mutation_type = static::MUTATION_TYPE;
         return $mutation_type is nonnull ? new $mutation_type() : null;
     }

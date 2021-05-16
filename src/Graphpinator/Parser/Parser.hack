@@ -81,6 +81,7 @@ final class Parser {
      * Leaves iterator to last used token - closing brace
      */
     private function parseFragmentDefinition(): \Graphpinator\Parser\Fragment\Fragment {
+        $location = $this->tokenizer->getCurrent()->getLocation();
         $fragmentName = $this->tokenizer
             ->assertNext<\Graphpinator\Parser\Exception\ExpectedFragmentName>(TokenType::NAME)
             ->getValue() as nonnull;
@@ -90,6 +91,7 @@ final class Parser {
         $this->tokenizer->assertNext<\Graphpinator\Parser\Exception\ExpectedSelectionSet>(TokenType::CUR_O);
 
         return new \Graphpinator\Parser\Fragment\Fragment(
+            $location,
             $fragmentName,
             $typeCond,
             $directives,
@@ -104,10 +106,12 @@ final class Parser {
      * Leaves iterator to last used token - closing brace
      */
     private function parseOperation(): \Graphpinator\Parser\Operation\Operation {
+        $location = $this->tokenizer->getCurrent()->getLocation();
         switch ($this->tokenizer->getCurrent()->getType()) {
             // query shorthand
             case TokenType::CUR_O:
                 return new \Graphpinator\Parser\Operation\Operation(
+                    $location,
                     shape(
                         'type' => \Graphpinator\Tokenizer\OperationType::QUERY,
                         'name' => '',
@@ -138,7 +142,7 @@ final class Parser {
                     'children' => $children,
                 );
 
-                return new \Graphpinator\Parser\Operation\Operation($args);
+                return new \Graphpinator\Parser\Operation\Operation($location, $args);
             default:
                 throw new \Graphpinator\Parser\Exception\ExpectedRoot(
                     $this->tokenizer->getCurrent()->getLocation() as nonnull,
@@ -195,6 +199,7 @@ final class Parser {
      * Leaves iterator to last used token - closing brace
      */
     private function parseSelectionSet(): \Graphpinator\Parser\Field\FieldSet {
+        $location = $this->tokenizer->getCurrent()->getLocation();
         $fields = vec[];
         $fragments = vec[];
 
@@ -220,7 +225,7 @@ final class Parser {
 
         $this->tokenizer->getNext();
 
-        return new \Graphpinator\Parser\Field\FieldSet($fields, $fragments);
+        return new \Graphpinator\Parser\Field\FieldSet($location, $fields, $fragments);
     }
 
     /**
@@ -230,6 +235,7 @@ final class Parser {
      * Leaves iterator to last used token - last token in field definition
      */
     private function parseField(): \Graphpinator\Parser\Field\Field {
+        $location = $this->tokenizer->getCurrent()->getLocation();
         $fieldName = $this->tokenizer->getCurrent()->getValue();
         $aliasName = null;
         $arguments = null;
@@ -257,6 +263,7 @@ final class Parser {
         }
 
         return new \Graphpinator\Parser\Field\Field(
+            $location,
             $fieldName as nonnull,
             $aliasName,
             $children,
@@ -272,9 +279,12 @@ final class Parser {
      * Leaves iterator to last used token - either fragment name or closing brace
      */
     private function parseFragmentSpread(): \Graphpinator\Parser\FragmentSpread\FragmentSpread {
-        switch ($this->tokenizer->getNext()->getType()) {
+        $type = $this->tokenizer->getNext()->getType();
+        $location = $this->tokenizer->getCurrent()->getLocation();
+        switch ($type) {
             case TokenType::NAME:
                 return new \Graphpinator\Parser\FragmentSpread\NamedFragmentSpread(
+                    $location,
                     $this->tokenizer->getCurrent()->getValue() as nonnull,
                     $this->parseDirectives(),
                 );
@@ -285,6 +295,7 @@ final class Parser {
                     ->assertNext<\Graphpinator\Parser\Exception\ExpectedSelectionSet>(TokenType::CUR_O);
 
                 return new \Graphpinator\Parser\FragmentSpread\InlineFragmentSpread(
+                    $location,
                     $this->parseSelectionSet(),
                     $directives,
                     $typeCond as \Graphpinator\Parser\TypeRef\NamedTypeRef,
@@ -296,6 +307,7 @@ final class Parser {
                     ->assertNext<\Graphpinator\Parser\Exception\ExpectedSelectionSet>(TokenType::CUR_O);
 
                 return new \Graphpinator\Parser\FragmentSpread\InlineFragmentSpread(
+                    $location,
                     $this->parseSelectionSet(),
                     $directives,
                     null,
@@ -326,6 +338,7 @@ final class Parser {
             }
 
             $name = $this->tokenizer->getCurrent()->getValue() as nonnull;
+            $location = $this->tokenizer->getCurrent()->getLocation();
             $this->tokenizer->assertNext<\Graphpinator\Parser\Exception\ExpectedColon>(TokenType::COLON);
             $type = $this->parseType(false);
             $default = null;
@@ -336,6 +349,7 @@ final class Parser {
             }
 
             $variables[$name] = new \Graphpinator\Parser\Variable\Variable(
+                $location,
                 $name,
                 $type,
                 $default,
@@ -362,13 +376,14 @@ final class Parser {
 
             $dirName = $this->tokenizer->getCurrent()->getValue() as nonnull;
             $dirArguments = null;
+            $location = $this->tokenizer->getCurrent()->getLocation();
 
             if ($this->tokenizer->peekNext()->getType() === TokenType::PAR_O) {
                 $this->tokenizer->getNext();
                 $dirArguments = $this->parseArguments();
             }
 
-            $directives[] = new \Graphpinator\Parser\Directive\Directive($dirName, $dirArguments);
+            $directives[] = new \Graphpinator\Parser\Directive\Directive($location, $dirName, $dirArguments);
         }
 
         return $directives;
@@ -417,6 +432,7 @@ final class Parser {
      * @param bool $literalOnly
      */
     private function parseValue(bool $literalOnly): \Graphpinator\Parser\Value\Value {
+        $location = $this->tokenizer->getCurrent()->getLocation();
         switch ($this->tokenizer->getNext()->getType()) {
             case TokenType::VARIABLE:
                 if ($literalOnly) {
@@ -426,25 +442,36 @@ final class Parser {
                     );
                 }
 
-                return new \Graphpinator\Parser\Value\VariableRef($this->tokenizer->getCurrent()->getValue()
-                    as nonnull);
+                return new \Graphpinator\Parser\Value\VariableRef(
+                    $location,
+                    $this->tokenizer->getCurrent()->getValue() as nonnull
+                );
             case TokenType::NAME:
-                return new \Graphpinator\Parser\Value\EnumLiteral($this->tokenizer->getCurrent()->getValue()
-                    as nonnull);
+                return new \Graphpinator\Parser\Value\EnumLiteral(
+                    $location,
+                    $this->tokenizer->getCurrent()->getValue() as nonnull
+                );
             case TokenType::STRING:
                 return new \Graphpinator\Parser\Value\StringLiteral(
+                    $location,
                     $this->tokenizer->getCurrent()->getValue() as nonnull,
                 );
             case TokenType::INT:
-                return new \Graphpinator\Parser\Value\IntLiteral((int)$this->tokenizer->getCurrent()->getValue());
+                return new \Graphpinator\Parser\Value\IntLiteral(
+                    $location,
+                    (int)$this->tokenizer->getCurrent()->getValue()
+                );
             case TokenType::FLOAT:
-                return new \Graphpinator\Parser\Value\FloatLiteral((float)$this->tokenizer->getCurrent()->getValue());
+                return new \Graphpinator\Parser\Value\FloatLiteral(
+                    $location,
+                    (float)$this->tokenizer->getCurrent()->getValue()
+                );
             case TokenType::TRUE:
-                return new \Graphpinator\Parser\Value\BooleanLiteral(true);
+                return new \Graphpinator\Parser\Value\BooleanLiteral($location, true);
             case TokenType::FALSE:
-                return new \Graphpinator\Parser\Value\BooleanLiteral(false);
+                return new \Graphpinator\Parser\Value\BooleanLiteral($location, false);
             case TokenType::NULL:
-                return new \Graphpinator\Parser\Value\NullLiteral(null);
+                return new \Graphpinator\Parser\Value\NullLiteral($location, null);
             case TokenType::SQU_O:
                 $values = vec[];
 
@@ -454,7 +481,7 @@ final class Parser {
 
                 $this->tokenizer->getNext();
 
-                return new \Graphpinator\Parser\Value\ListVal($values);
+                return new \Graphpinator\Parser\Value\ListVal($location, $values);
             case TokenType::CUR_O:
                 $values = dict[];
 
@@ -468,7 +495,7 @@ final class Parser {
 
                 $this->tokenizer->getNext();
 
-                return new \Graphpinator\Parser\Value\ObjectVal($values);
+                return new \Graphpinator\Parser\Value\ObjectVal($location, $values);
             default:
                 throw new \Graphpinator\Parser\Exception\ExpectedValue(
                     $this->tokenizer->getNext()->getLocation(),
@@ -487,15 +514,20 @@ final class Parser {
      */
     private function parseType(bool $namedOnly): \Graphpinator\Parser\TypeRef\TypeRef {
         $type = null;
+        $token = $this->tokenizer->getNext();
+        $location = $token->getLocation();
 
-        switch ($this->tokenizer->getNext()->getType()) {
+        switch ($token->getType()) {
             case TokenType::NAME:
-                $type = new \Graphpinator\Parser\TypeRef\NamedTypeRef($this->tokenizer->getCurrent()->getValue()
-                    as nonnull);
+                $type = new \Graphpinator\Parser\TypeRef\NamedTypeRef(
+                    $location,
+                    $this->tokenizer->getCurrent()->getValue()
+                    as nonnull
+                );
 
                 break;
             case TokenType::SQU_O:
-                $type = new \Graphpinator\Parser\TypeRef\ListTypeRef($this->parseType(false));
+                $type = new \Graphpinator\Parser\TypeRef\ListTypeRef($location, $this->parseType(false));
                 $this->tokenizer
                     ->assertNext<\Graphpinator\Parser\Exception\ExpectedClosingBracket>(TokenType::SQU_C);
 
@@ -510,7 +542,7 @@ final class Parser {
         if ($this->tokenizer->peekNext()->getType() === TokenType::EXCL) {
             $this->tokenizer->getNext();
 
-            $type = new \Graphpinator\Parser\TypeRef\NotNullRef($type);
+            $type = new \Graphpinator\Parser\TypeRef\NotNullRef($location, $type);
         }
 
         if ($namedOnly && !$type is \Graphpinator\Parser\TypeRef\NamedTypeRef) {

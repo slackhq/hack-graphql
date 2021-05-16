@@ -1,14 +1,12 @@
 namespace Graphpinator\Parser\Value;
 
-final class ListVal implements Value {
+final class ListVal extends \Graphpinator\Parser\Value\Value {
 
-    public function __construct(private vec<Value> $value) {}
+    public function __construct(\Graphpinator\Common\Location $location, private vec<Value> $value) {
+        parent::__construct($location);
+    }
 
     public function getValue(): vec<Value> {
         return $this->value;
-    }
-
-    public function accept(ValueVisitor $valueVisitor): mixed {
-        return $valueVisitor->visitListVal($this);
     }
 }

@@ -8,16 +8,19 @@ final class ValidationContext {
     private vec<\Slack\GraphQL\UserFacingError> $errors = vec[];
 
     public function __construct(
-        private \Slack\GraphQL\BaseSchema $schema,
+        private classname<\Slack\GraphQL\BaseSchema> $schema,
         // TODO: Pass in parsed AST as well as rules may need it.
         private TypeInfo $type_info,
     ) {}
 
-    // TODO: We need to also record the location at which the error occured, but 
-    // Graphpinator does not store this info on the AST. We should change that.
-    public function reportError(nonnull $_node, Str\SprintfFormatString $message, mixed ...$args): void {
+    public function reportError(
+        \Graphpinator\Parser\Node $node,
+        Str\SprintfFormatString $message,
+        mixed ...$args
+    ): void {
         $error = new \Slack\GraphQL\UserFacingError('%s', \vsprintf($message, $args));
         $error->setPath($this->type_info->getPath());
+        $error->setLocation($node->getLocation());
         $this->errors[] = $error;
     }
 
@@ -25,7 +28,7 @@ final class ValidationContext {
         return $this->errors;
     }
 
-    public function getSchema(): \Slack\GraphQL\BaseSchema {
+    public function getSchema(): classname<\Slack\GraphQL\BaseSchema> {
         return $this->schema;
     }
 

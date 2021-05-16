@@ -1,13 +1,16 @@
 namespace Graphpinator\Parser\Fragment;
 
-final class Fragment {
+final class Fragment extends \Graphpinator\Parser\Node {
 
     public function __construct(
+        \Graphpinator\Common\Location $location,
         private string $name,
         private \Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond,
         private vec<\Graphpinator\Parser\Directive\Directive> $directives,
         private \Graphpinator\Parser\Field\FieldSet $fields,
-    ) {}
+    ) {
+        parent::__construct($location);
+    }
 
     public function getName(): string {
         return $this->name;

@@ -250,17 +250,16 @@ final class ErrorTest extends PlaygroundTest {
                 dict[],
                 shape(
                     'data' => dict[
-                        'takes_favorite_color' => null
+                        'takes_favorite_color' => null,
                     ],
                     'errors' => vec[
                         shape(
-                            'message' =>
-                                'Invalid value for "favorite_color": '.
+                            'message' => 'Invalid value for "favorite_color": '.
                                 'Expected a valid value for FavoriteColor, got "foo"',
-                            'path' => vec['takes_favorite_color']
-                        )
-                    ]
-                )
+                            'path' => vec['takes_favorite_color'],
+                        ),
+                    ],
+                ),
             ),
 
             'invalid enum values with arguments' => tuple(
@@ -268,15 +267,15 @@ final class ErrorTest extends PlaygroundTest {
                 dict['favorite_color' => 'foo'],
                 shape(
                     'data' => dict[
-                        'takes_favorite_color' => null
+                        'takes_favorite_color' => null,
                     ],
                     'errors' => vec[
                         shape(
                             'message' => 'Caught exception while resolving field.',
-                            'path' => vec['takes_favorite_color']
-                        )
-                    ]
-                )
+                            'path' => vec['takes_favorite_color'],
+                        ),
+                    ],
+                ),
             ),
 
             'missing variable' => tuple(
@@ -295,7 +294,7 @@ final class ErrorTest extends PlaygroundTest {
                 dict['id' => 'forty-two'],
                 shape(
                     'errors' => vec[
-                        shape('message' => 'Invalid value for variable "id": Expected an integer, got forty-two')
+                        shape('message' => 'Invalid value for variable "id": Expected an integer, got forty-two'),
                     ],
                 ),
             ),
@@ -306,8 +305,7 @@ final class ErrorTest extends PlaygroundTest {
                 shape(
                     'errors' => vec[
                         shape(
-                            'message' =>
-                                'Invalid default value for variable "id": '.
+                            'message' => 'Invalid default value for variable "id": '.
                                 'Expected an Int literal, got Graphpinator\\Parser\\Value\\NullLiteral',
                         ),
                     ],
@@ -325,21 +323,41 @@ final class ErrorTest extends PlaygroundTest {
             ),
 
             'invalid selection on interface' => tuple(
-                'query { user(id: 2) { id, name, favorite_color } }',
+                'query {
+                    user(id: 2) {
+                        id
+                        name
+                        favorite_color
+                    }
+                }',
                 dict[],
                 shape(
                     'errors' => vec[
-                        shape('message' => 'Unknown field: favorite_color'),
+                        shape(
+                            'message' => 'Cannot query field "favorite_color" on type "User".',
+                            'location' => shape('line' => 5, 'column' => 25),
+                            'path' => vec['user'],
+                        ),
                     ],
                 ),
             ),
 
             'invalid selection on concrete type' => tuple(
-                'query { bot(id: 2) { id, name, favorite_color } }',
+                'query {
+                    bot(id: 2) {
+                        id
+                        name
+                        favorite_color
+                    }
+                }',
                 dict[],
                 shape(
                     'errors' => vec[
-                        shape('message' => 'Unknown field: favorite_color'),
+                        shape(
+                            'message' => 'Cannot query field "favorite_color" on type "Bot".',
+                            'location' => shape('line' => 5, 'column' => 25),
+                            'path' => vec['bot'],
+                        ),
                     ],
                 ),
             ),

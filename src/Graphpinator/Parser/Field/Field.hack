@@ -1,14 +1,17 @@
 namespace Graphpinator\Parser\Field;
 
-final class Field implements IHasFieldSet {
+final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
 
     public function __construct(
+        \Graphpinator\Common\Location $location,
         private string $name,
         private ?string $alias = null,
         private ?\Graphpinator\Parser\Field\FieldSet $children = null,
         private ?dict<string, \Graphpinator\Parser\Value\Value> $arguments = null,
         private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
-    ) {}
+    ) {
+        parent::__construct($location);
+    }
 
     public function getName(): string {
         return $this->name;

@@ -10,11 +10,7 @@ final class Resolver {
      */
     const type TResponse = shape(
         ?'data' => ?dict<string, mixed>, // missing data and null data are both valid states with different meanings
-        ?'errors' => vec<shape( // errors are optional but cannot be null (or empty) if present
-            'message' => string,
-            ?'location' => shape('line' => int, 'column' => int),
-            ?'path' => vec<arraykey>,
-        )>,
+        ?'errors' => vec<UserFacingError::TError>, // errors are optional but cannot be null (or empty) if present
         ?'extensions' => dict<string, mixed>,
     );
 
@@ -36,31 +32,24 @@ final class Resolver {
         $request = $parser->parse();
 
         $ret = shape();
-        $errors = vec[];
+        $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
+        $errors = $validator->validate($request);
 
-        try {
-            list($ret['data'], $errors) = await $this->resolveImpl($request, $variables, $operation_name);
-        } catch (UserFacingError $e) {
-            $errors = vec[$e];
-        } catch (\Throwable $e) {
-            // TODO: This shoud not happen; if it does, it's a bug in the GraphQL framework. Every exception should
-            // either be UserFacingError, or caught somewhere. However, we probably still want to catch arbitrary
-            // exceptions here just in case and return *some* reasonable response.
-            throw $e; // for now, so as to not break existing tests
+        if (C\is_empty($errors)) {
+            try {
+                list($ret['data'], $errors) = await $this->resolveImpl($request, $variables, $operation_name);
+            } catch (UserFacingError $e) {
+                $errors = vec[$e];
+            } catch (\Throwable $e) {
+                // TODO: This shoud not happen; if it does, it's a bug in the GraphQL framework. Every exception should
+                // either be UserFacingError, or caught somewhere. However, we probably still want to catch arbitrary
+                // exceptions here just in case and return *some* reasonable response.
+                throw $e; // for now, so as to not break existing tests
+            }
         }
 
         if (!C\is_empty($errors)) {
-            $ret['errors'] = Vec\map(
-                $errors,
-                $e ==> {
-                    $out = shape('message' => $e->getMessage());
-                    $path = $e->getPath();
-                    if ($path is nonnull) {
-                        $out['path'] = $path;
-                    }
-                    return $out;
-                },
-            );
+            $ret['errors'] = Vec\map($errors, $e ==> $e->toShape());
             return $ret;
         }
         return $ret;

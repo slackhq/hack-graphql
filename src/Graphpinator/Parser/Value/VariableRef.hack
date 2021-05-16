@@ -1,8 +1,10 @@
 namespace Graphpinator\Parser\Value;
 
-final class VariableRef implements \Graphpinator\Parser\Value\Value {
+final class VariableRef extends \Graphpinator\Parser\Value\Value {
 
-    public function __construct(private string $varName) {}
+    public function __construct(\Graphpinator\Common\Location $location, private string $varName) {
+        parent::__construct($location);
+    }
 
     public function getRawValue(): ?bool {
         throw new \RuntimeException('Operation not supported.');
@@ -10,9 +12,5 @@ final class VariableRef implements \Graphpinator\Parser\Value\Value {
 
     public function getVarName(): string {
         return $this->varName;
-    }
-
-    public function accept(ValueVisitor $valueVisitor): mixed {
-        return $valueVisitor->visitVariableRef($this);
     }
 }

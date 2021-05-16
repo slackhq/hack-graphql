@@ -16,13 +16,13 @@ use type \Slack\GraphQL\__Private\Utils\Stack;
  */
 final class TypeInfo extends ASTVisitor {
 
-    private \Slack\GraphQL\BaseSchema $schema;
+    private classname<\Slack\GraphQL\BaseSchema> $schema;
     private Stack<?Types\IOutputType> $type_stack;
     private Stack<?Types\NamedOutputType> $parent_type_stack;
     private Stack<?Types\IInputType> $input_type_stack;
     private Stack<?\Slack\GraphQL\IFieldDefinition> $field_def_stack;
 
-    public function __construct(\Slack\GraphQL\BaseSchema $schema) {
+    public function __construct(classname<\Slack\GraphQL\BaseSchema> $schema) {
         $this->schema = $schema;
         $this->type_stack = new Stack();
         $this->parent_type_stack = new Stack();
@@ -55,7 +55,7 @@ final class TypeInfo extends ASTVisitor {
     // TODO: Implement more enter / leave cases.
 
     <<__Override>>
-    public function enter(nonnull $node): void {
+    public function enter(Parser\Node $node): void {
         if ($node is Parser\Field\FieldSet) {
             $named_type = $this->type_stack->peek()?->unwrapType();
             $this->parent_type_stack->push($named_type is Types\CompositeType ? $named_type : null);
@@ -72,12 +72,13 @@ final class TypeInfo extends ASTVisitor {
             $this->field_def_stack->push($field_definition);
             $this->type_stack->push($field_type);
         } elseif ($node is Parser\Operation\Operation) {
+            $schema = $this->schema;
             switch ($node->getType()) {
                 case \Graphpinator\Tokenizer\OperationType::QUERY:
-                    $type = $this->schema->getQueryType();
+                    $type = $schema::getQueryType();
                     break;
                 case \Graphpinator\Tokenizer\OperationType::MUTATION:
-                    $type = $this->schema->getMutationType();
+                    $type = $schema::getMutationType();
                     break;
                 default:
                     // TODO: Subscriptions
@@ -88,7 +89,7 @@ final class TypeInfo extends ASTVisitor {
     }
 
     <<__Override>>
-    public function leave(nonnull $node): void {
+    public function leave(Parser\Node $node): void {
         if ($node is Parser\Field\FieldSet) {
             $this->parent_type_stack->pop();
         } elseif ($node is Parser\Field\Field) {

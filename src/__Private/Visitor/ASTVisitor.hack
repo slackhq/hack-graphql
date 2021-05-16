@@ -18,9 +18,9 @@ abstract class ASTVisitor {
         return new ParallelVisitor(vec[$visitor, $this]);
     }
 
-    public function enter(nonnull $node): void {}
+    public function enter(Parser\Node $node): void {}
 
-    public function leave(nonnull $node): void {}
+    public function leave(Parser\Node $node): void {}
 
     // Actual visitor implemention.
 
