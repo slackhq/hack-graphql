@@ -36,6 +36,9 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
 
     public static function getTestCases(): this::TTestCases {
         return dict[
+
+            // Fields On Correct Type Rule
+
             'FieldsOnCorrectTypeRule: invalid interface field' => tuple(
                 'query {
                     viewer {
@@ -58,6 +61,16 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                     'Cannot query field "primary_function" on type "Human".',
                 ],
             ),
+            'FieldsOnCorrectTypeRule: invalid nested object fields' => tuple(
+                'query {
+                    viewer {
+                        team {
+                            foo
+                        }
+                    }
+                }',
+                vec['Cannot query field "foo" on type "Team".'],
+            ),
             'FieldsOnCorrectTypeRule: valid field' => tuple(
                 'query {
                     viewer {
@@ -66,6 +79,9 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                 }',
                 vec[],
             ),
+
+            // Scalar Leafs Rule
+
             'ScalarLeafsRule: selection on scalar' => tuple(
                 'query {
                     viewer {
@@ -76,11 +92,31 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                 }',
                 vec['Field "id" must not have a selection since type "Int" has no subfields.'],
             ),
+            'ScalarLeafsRule: missing selection on nested scalar' => tuple(
+                'query {
+                    viewer {
+                        team {
+                            id {
+                                foo
+                            }
+                        }
+                    }
+                }',
+                vec['Field "id" must not have a selection since type "Int" has no subfields.'],
+            ),
             'ScalarLeafsRule: missing selection on composite' => tuple(
                 'query {
                     viewer
                 }',
                 vec['Field "viewer" of type "User" must have a selection of subfields.'],
+            ),
+            'ScalarLeafsRule: missing selection on nested composite' => tuple(
+                'query {
+                    viewer {
+                        team
+                    }
+                }',
+                vec['Field "team" of type "Team" must have a selection of subfields.'],
             ),
             'ScalarLeafsRule: valid selection' => tuple(
                 'query {
