@@ -1,8 +1,10 @@
 namespace Graphpinator\Parser\TypeRef;
 
-final class NotNullRef implements \Graphpinator\Parser\TypeRef\TypeRef {
+final class NotNullRef extends \Graphpinator\Parser\Node implements \Graphpinator\Parser\TypeRef\TypeRef {
 
-    public function __construct(private TypeRef $innerRef) {}
+    public function __construct(\Graphpinator\Common\Location $location, private TypeRef $innerRef) {
+        parent::__construct($location);
+    }
 
     public function getInnerRef(): TypeRef {
         return $this->innerRef;

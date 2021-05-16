@@ -1,6 +1,6 @@
 namespace Graphpinator\Parser\Operation;
 
-final class Operation implements \Graphpinator\Parser\Field\IHasFieldSet {
+final class Operation extends \Graphpinator\Parser\Node implements \Graphpinator\Parser\Field\IHasFieldSet {
 
     private string $type;
     private string $name;
@@ -9,6 +9,7 @@ final class Operation implements \Graphpinator\Parser\Field\IHasFieldSet {
     private \Graphpinator\Parser\Field\FieldSet $children;
 
     public function __construct(
+        \Graphpinator\Common\Location $location,
         shape(
             'type' => string,
             'name' => string,
@@ -17,6 +18,7 @@ final class Operation implements \Graphpinator\Parser\Field\IHasFieldSet {
             'children' => \Graphpinator\Parser\Field\FieldSet,
         ) $args,
     ) {
+        parent::__construct($location);
         $this->type = $args['type'];
         $this->name = $args['name'];
         $this->variables = $args['variables'] ?? dict[];

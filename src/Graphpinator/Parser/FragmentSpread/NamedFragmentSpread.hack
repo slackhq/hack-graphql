@@ -1,11 +1,18 @@
 namespace Graphpinator\Parser\FragmentSpread;
 
-final class NamedFragmentSpread implements \Graphpinator\Parser\FragmentSpread\FragmentSpread {
+final class NamedFragmentSpread
+    extends \Graphpinator\Parser\Node
+    implements \Graphpinator\Parser\FragmentSpread\FragmentSpread {
 
     private string $name;
     private vec<\Graphpinator\Parser\Directive\Directive> $directives;
 
-    public function __construct(string $name, ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null) {
+    public function __construct(
+        \Graphpinator\Common\Location $location,
+        string $name,
+        ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null
+    ) {
+        parent::__construct($location);
         $this->name = $name;
         $this->directives = $directives ?? vec[];
     }

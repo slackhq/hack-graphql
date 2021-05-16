@@ -16,7 +16,14 @@ function assert(
  * Any error that should be included in the GraphQL response's "errors" field.
  */
 class UserFacingError extends \Exception {
+    const type TError = shape(
+        'message' => string,
+        ?'location' => shape('line' => int, 'column' => int),
+        ?'path' => vec<arraykey>,
+    );
+
     private vec<arraykey> $reversePath = vec[];
+    private ?\Graphpinator\Common\Location $location = null;
 
     public function __construct(
       Str\SprintfFormatString $message,
@@ -49,6 +56,31 @@ class UserFacingError extends \Exception {
     final public function setPath(vec<arraykey> $path): this {
         $this->reversePath = Vec\reverse($path);
         return $this;
+    }
+
+    final public function getLocation(): ?\Graphpinator\Common\Location {
+        return $this->location;
+    }
+
+    final public function setLocation(\Graphpinator\Common\Location $location): this {
+        $this->location = $location;
+        return $this;
+    }
+
+    final public function toShape(): this::TError {
+        $out = shape('message' => $this->getMessage());
+        $location = $this->getLocation();
+        if ($location is nonnull) {
+            $out['location'] = shape(
+                'line' => $location->getLine(),
+                'column' => $location->getColumn(),
+            );
+        }
+        $path = $this->getPath();
+        if ($path is nonnull) {
+            $out['path'] = $path;
+        }
+        return $out;
     }
 }
 

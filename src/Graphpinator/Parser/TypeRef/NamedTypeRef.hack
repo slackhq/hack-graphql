@@ -1,8 +1,10 @@
 namespace Graphpinator\Parser\TypeRef;
 
-final class NamedTypeRef implements \Graphpinator\Parser\TypeRef\TypeRef {
+final class NamedTypeRef extends \Graphpinator\Parser\Node implements \Graphpinator\Parser\TypeRef\TypeRef {
 
-    public function __construct(private string $name) {}
+    public function __construct(\Graphpinator\Common\Location $location, private string $name) {
+        parent::__construct($location);
+    }
 
     public function getName(): string {
         return $this->name;

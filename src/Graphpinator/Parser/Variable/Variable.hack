@@ -1,13 +1,16 @@
 namespace Graphpinator\Parser\Variable;
 
-final class Variable {
+final class Variable extends \Graphpinator\Parser\Node {
 
     public function __construct(
+        \Graphpinator\Common\Location $location,
         private string $name,
         private \Graphpinator\Parser\TypeRef\TypeRef $type,
         private ?\Graphpinator\Parser\Value\Value $default,
         private vec<\Graphpinator\Parser\Directive\Directive> $directives,
-    ) {}
+    ) {
+        parent::__construct($location);
+    }
 
     public function getName(): string {
         return $this->name;

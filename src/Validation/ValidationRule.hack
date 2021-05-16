@@ -28,8 +28,22 @@ use type \Slack\GraphQL\__Private\ASTVisitor;
 abstract class ValidationRule extends ASTVisitor {
     public function __construct(protected ValidationContext $context) {}
 
-    // TODO: Make use of `node` argument, for example by reporting location of error.
-    final protected function reportError(nonnull $node, Str\SprintfFormatString $message, mixed ...$args): void {
+    final protected function assert(
+        bool $condition,
+        \Graphpinator\Parser\Node $node,
+        Str\SprintfFormatString $message,
+        mixed ...$args
+    ): void {
+        if (!$condition) {
+            $this->reportError($node, '%s', \vsprintf($message, $args));
+        }
+    }
+
+    final protected function reportError(
+        \Graphpinator\Parser\Node $node,
+        Str\SprintfFormatString $message,
+        mixed ...$args
+    ): void {
         $this->context->reportError($node, '%s', \vsprintf($message, $args));
     }
 }
