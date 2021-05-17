@@ -63,15 +63,4 @@ final class BasicTest extends PlaygroundTest {
             ),
         ];
     }
-
-    public async function testSelectInvalidFieldOnInterface(): Awaitable<void> {
-        expect(async () ==> await $this->resolve('query { user(id: 2) { id, name, favorite_color } }'))
-            ->toThrow(\Exception::class, "Unknown field: favorite_color");
-    }
-
-    public async function testSelectInvalidFieldOnConcreteImplementation(): Awaitable<void> {
-        expect(async () ==> await $this->resolve('query { bot(id: 2) { id, name, favorite_color } }'))
-            ->toThrow(\Exception::class, "Unknown field: favorite_color");
-    }
-
 }
