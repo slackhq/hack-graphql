@@ -38,7 +38,7 @@ final class ArgumentTest extends PlaygroundTest {
                         shape(
                             'message' =>
                                 'Invalid value for "required": '.
-                                'Expected an Int literal, got Graphpinator\\Parser\\Value\\Literal',
+                                'Expected an Int literal, got Graphpinator\\Parser\\Value\\NullLiteral',
                             'path' => vec['arg_test'],
                         ),
                     ],

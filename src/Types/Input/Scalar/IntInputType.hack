@@ -31,10 +31,14 @@ final class IntInputType extends NamedInputType {
         Value\Value $node,
         dict<string, mixed> $variable_values,
     ): int {
-        $value = $node->getRawValue();
-        if (!$node is Value\Literal || !$value is int) {
+        if (!$node is Value\IntLiteral) {
             throw new GraphQL\UserFacingError('Expected an Int literal, got %s', \get_class($node));
         }
-        return $value;
+        GraphQL\assert(
+            $node->getRawValue() >= self::MIN_SAFE_VALUE && $node->getRawValue() <= self::MAX_SAFE_VALUE,
+            'Integers must be in 32-bit range, got %d',
+            $node->getRawValue(),
+        );
+        return $node->getRawValue();
     }
 }

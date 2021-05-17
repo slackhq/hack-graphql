@@ -432,17 +432,19 @@ final class Parser {
                 return new \Graphpinator\Parser\Value\EnumLiteral($this->tokenizer->getCurrent()->getValue()
                     as nonnull);
             case TokenType::STRING:
-                return new \Graphpinator\Parser\Value\Literal($this->tokenizer->getCurrent()->getValue());
+                return new \Graphpinator\Parser\Value\StringLiteral(
+                    $this->tokenizer->getCurrent()->getValue() as nonnull,
+                );
             case TokenType::INT:
-                return new \Graphpinator\Parser\Value\Literal((int)$this->tokenizer->getCurrent()->getValue());
+                return new \Graphpinator\Parser\Value\IntLiteral((int)$this->tokenizer->getCurrent()->getValue());
             case TokenType::FLOAT:
-                return new \Graphpinator\Parser\Value\Literal((float)$this->tokenizer->getCurrent()->getValue());
+                return new \Graphpinator\Parser\Value\FloatLiteral((float)$this->tokenizer->getCurrent()->getValue());
             case TokenType::TRUE:
-                return new \Graphpinator\Parser\Value\Literal(true);
+                return new \Graphpinator\Parser\Value\BooleanLiteral(true);
             case TokenType::FALSE:
-                return new \Graphpinator\Parser\Value\Literal(false);
+                return new \Graphpinator\Parser\Value\BooleanLiteral(false);
             case TokenType::NULL:
-                return new \Graphpinator\Parser\Value\Literal(null);
+                return new \Graphpinator\Parser\Value\NullLiteral(null);
             case TokenType::SQU_O:
                 $values = vec[];
 
