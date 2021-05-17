@@ -23,7 +23,7 @@ abstract class NamedOutputType
     }
 
     <<__Override>>
-    public function getNamedType(): NamedOutputType {
+    final public function unwrapType(): NamedOutputType {
         return $this;
     }
 

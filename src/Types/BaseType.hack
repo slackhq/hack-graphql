@@ -25,9 +25,4 @@ abstract class BaseType {
     public function getOfType(): ?GraphQL\Introspection\__Type {
         return null;
     }
-
-    abstract public function getNamedType(): BaseType;
-
-    // TODO: kind, description, etc.
-    // https://spec.graphql.org/draft/#sec-Schema-Introspection
 }

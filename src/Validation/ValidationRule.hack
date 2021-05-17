@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Validation;
 
+use namespace HH\Lib\Str;
 use type \Slack\GraphQL\__Private\ASTVisitor;
 
 /**
@@ -26,4 +27,9 @@ use type \Slack\GraphQL\__Private\ASTVisitor;
 <<__ConsistentConstruct>>
 abstract class ValidationRule extends ASTVisitor {
     public function __construct(protected ValidationContext $context) {}
+
+    // TODO: Make use of `node` argument, for example by reporting location of error.
+    final protected function reportError(nonnull $node, Str\SprintfFormatString $message, mixed ...$args): void {
+        $this->context->reportError($node, '%s', \vsprintf($message, $args));
+    }
 }

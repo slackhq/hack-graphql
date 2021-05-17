@@ -32,7 +32,7 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
             async $child_field ==> {
                 $field_definition = $this->getFieldDefinition($child_field->getName());
                 if ($field_definition is null) {
-                    throw new \Exception('Unknown field: '.$child_field->getName());
+                    throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $child_field->getName());
                 }
                 return await $field_definition->resolveAsync($value, $child_field, $vars);
             }

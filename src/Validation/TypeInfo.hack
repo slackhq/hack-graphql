@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Validation;
 
+use namespace HH\Lib\Vec;
 use namespace \Graphpinator\Parser;
 use namespace \Slack\GraphQL\Types;
 use type \Slack\GraphQL\__Private\ASTVisitor;
@@ -45,59 +46,56 @@ final class TypeInfo extends ASTVisitor {
         return $this->field_def_stack->peek();
     }
 
-    <<__Override>>
-    public function enterFieldSet(Parser\Field\FieldSet $node): void {
-        $named_type = $this->type_stack->peek()?->getNamedType();
-        $this->parent_type_stack->push($named_type is Types\CompositeType ? $named_type : null);
+    public function getPath(): vec<string> {
+        return $this->field_def_stack->asVec()
+            |> Vec\filter_nulls($$)
+            |> Vec\map($$, $field ==> $field->getName());
     }
 
-    <<__Override>>
-    public function leaveFieldSet(Parser\Field\FieldSet $node): void {
-        $this->parent_type_stack->pop();
-    }
+    // TODO: Implement more enter / leave cases.
 
     <<__Override>>
-    public function enterField(Parser\Field\Field $node): void {
-        $parent_type = $this->getParentType();
-        $field_definition = null;
-        $field_type = null;
-        if ($parent_type is Types\ObjectType) {
-            $field_definition = $parent_type->getFieldDefinition($node->getName());
-            if ($field_definition) {
-                $field_type = $field_definition->getType();
+    public function enter(nonnull $node): void {
+        if ($node is Parser\Field\FieldSet) {
+            $named_type = $this->type_stack->peek()?->unwrapType();
+            $this->parent_type_stack->push($named_type is Types\CompositeType ? $named_type : null);
+        } elseif ($node is Parser\Field\Field) {
+            $parent_type = $this->getParentType();
+            $field_definition = null;
+            $field_type = null;
+            if ($parent_type is Types\ObjectType) {
+                $field_definition = $parent_type->getFieldDefinition($node->getName());
+                if ($field_definition) {
+                    $field_type = $field_definition->getType();
+                }
             }
+            $this->field_def_stack->push($field_definition);
+            $this->type_stack->push($field_type);
+        } elseif ($node is Parser\Operation\Operation) {
+            switch ($node->getType()) {
+                case \Graphpinator\Tokenizer\OperationType::QUERY:
+                    $type = $this->schema->getQueryType();
+                    break;
+                case \Graphpinator\Tokenizer\OperationType::MUTATION:
+                    $type = $this->schema->getMutationType();
+                    break;
+                default:
+                    // TODO: Subscriptions
+                    throw new \Slack\GraphQL\UserFacingError("Unrecognized type: %s", $node->getType());
+            }
+            $this->type_stack->push($type);
         }
-        $this->field_def_stack->push($field_definition);
-        $this->type_stack->push($field_type);
     }
 
     <<__Override>>
-    public function leaveField(Parser\Field\Field $node): void {
-        $this->field_def_stack->pop();
-        $this->type_stack->pop();
-    }
-
-    <<__Override>>
-    public function enterOperation(Parser\Operation\Operation $node): void {
-        $schema = $this->schema;
-        switch ($node->getType()) {
-            case \Graphpinator\Tokenizer\OperationType::QUERY:
-                $type = $this->schema->getQueryType();
-                break;
-            case \Graphpinator\Tokenizer\OperationType::MUTATION:
-                $type = $this->schema->getMutationType();
-                break;
-            default:
-                // TODO: Subscriptions
-                throw new \Slack\GraphQL\UserFacingError("Unrecognized type: %s", $node->getType());
+    public function leave(nonnull $node): void {
+        if ($node is Parser\Field\FieldSet) {
+            $this->parent_type_stack->pop();
+        } elseif ($node is Parser\Field\Field) {
+            $this->field_def_stack->pop();
+            $this->type_stack->pop();
+        } elseif ($node is Parser\Operation\Operation) {
+            $this->type_stack->pop();
         }
-        $this->type_stack->push($type);
     }
-
-    <<__Override>>
-    public function leaveOperation(Parser\Operation\Operation $node): void {
-        $this->type_stack->pop();
-    }
-
-    // TODO: Implement more enter / leave methods.
 }

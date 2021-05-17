@@ -1,6 +1,7 @@
 namespace Slack\GraphQL;
 
 interface IFieldDefinition extends Introspection\__Field {
+    public function getName(): string;
     public function getType(): Types\IOutputType;
 }
 

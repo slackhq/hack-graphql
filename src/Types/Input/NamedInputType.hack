@@ -23,7 +23,7 @@ abstract class NamedInputType extends InputType<this::THackType> implements \Sla
     }
 
     <<__Override>>
-    public function getNamedType(): NamedInputType {
+    final public function unwrapType(): NamedInputType {
         return $this;
     }
 

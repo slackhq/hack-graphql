@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 interface IOutputType {
     require extends BaseType;
 
-    public function getNamedType(): NamedOutputType;
+    public function unwrapType(): NamedOutputType;
 }
 
 /**

@@ -18,8 +18,8 @@ final class NullableInputType<TInner as nonnull>
     }
 
     <<__Override>>
-    public function getNamedType(): NamedInputType {
-        return $this->inner_type->getNamedType();
+    final public function unwrapType(): NamedInputType {
+        return $this->inner_type->unwrapType();
     }
 
     <<__Override>>

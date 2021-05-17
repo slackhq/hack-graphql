@@ -45,6 +45,11 @@ class UserFacingError extends \Exception {
         }
         return Vec\reverse($this->reversePath);
     }
+
+    final public function setPath(vec<arraykey> $path): this {
+        $this->reversePath = Vec\reverse($path);
+        return $this;
+    }
 }
 
 final class FieldResolverError extends UserFacingError {
