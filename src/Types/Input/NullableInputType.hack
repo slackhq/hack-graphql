@@ -3,13 +3,18 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class NullableInputType<TInner as nonnull> extends InputType<?TInner> {
-    use GraphQL\Introspection\IntrospectNullableType;
+final class NullableInputType<TInner as nonnull>
+    extends InputType<?TInner>
+    implements GraphQL\Introspection\INullableType {
 
     public function __construct(private InputType<TInner> $inner_type) {}
 
+    public function getName(): ?string {
+        return null;
+    }
+
     public function getInnerType(): GraphQL\Introspection\__Type {
-        return $this->inner_type;
+        return $this->inner_type as GraphQL\Introspection\__Type;
     }
 
     <<__Override>>
