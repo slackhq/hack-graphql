@@ -323,6 +323,26 @@ final class ErrorTest extends PlaygroundTest {
                     ],
                 ),
             ),
+
+            'invalid selection on interface' => tuple(
+                'query { user(id: 2) { id, name, favorite_color } }',
+                dict[],
+                shape(
+                    'errors' => vec[
+                        shape('message' => 'Unknown field: favorite_color'),
+                    ],
+                ),
+            ),
+
+            'invalid selection on concrete type' => tuple(
+                'query { bot(id: 2) { id, name, favorite_color } }',
+                dict[],
+                shape(
+                    'errors' => vec[
+                        shape('message' => 'Unknown field: favorite_color'),
+                    ],
+                ),
+            ),
         ];
     }
 }
