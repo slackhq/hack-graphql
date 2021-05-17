@@ -23,10 +23,6 @@ abstract class ASTVisitor {
     public function leave(nonnull $node): void {}
 
     // Actual visitor implemention.
-    //
-    // TODO: Is there a better way to enforce that each node be visitable?
-    // Maybe we should force all Graphphinator Parsed AST nodes to implement
-    // an `accept` method and move this logic there?
 
     private function visitParsedRequest(Parser\ParsedRequest $node): void {
         foreach ($node->getOperations() as $operation) {
