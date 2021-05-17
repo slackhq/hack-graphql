@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 
 final class ValidationTest extends \Facebook\HackTest\HackTest {
 
-    const type TTestCases = dict<string, (string, vec<string>)>;
+    const type TTestCases = dict<string, (string, vec<shape('message' => string, 'path' => vec<arraykey>)>)>;
 
     <<__Override>>
     public static async function beforeFirstTestAsync(): Awaitable<void> {
@@ -31,7 +31,10 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
 
         $validator = new GraphQL\Validation\Validator(new \Slack\GraphQL\Test\Generated\Schema());
         $errors = $validator->validate($request);
-        expect(Vec\map($errors, $error ==> $error->getMessage()))->toEqual($expected_errors);
+        expect(Vec\map(
+            $errors, 
+            $error ==> shape('message' => $error->getMessage(), 'path' => $error->getPath())
+        ))->toEqual($expected_errors);
     }
 
     public static function getTestCases(): this::TTestCases {
@@ -45,7 +48,10 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                         favorite_color
                     }
                 }',
-                vec['Cannot query field "favorite_color" on type "User".'],
+                vec[shape(
+                    'message' => 'Cannot query field "favorite_color" on type "User".',
+                    'path' => vec['viewer']
+                )],
             ),
             'FieldsOnCorrectTypeRule: invalid object fields' => tuple(
                 'query {
@@ -57,8 +63,14 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                     }
                 }',
                 vec[
-                    'Cannot query field "favorite_color" on type "Bot".',
-                    'Cannot query field "primary_function" on type "Human".',
+                    shape(
+                        'message' => 'Cannot query field "favorite_color" on type "Bot".',
+                        'path' => vec['bot']
+                    ),
+                    shape(
+                        'message' => 'Cannot query field "primary_function" on type "Human".',
+                        'path' => vec['human']
+                    )
                 ],
             ),
             'FieldsOnCorrectTypeRule: invalid nested object fields' => tuple(
@@ -69,7 +81,10 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                         }
                     }
                 }',
-                vec['Cannot query field "foo" on type "Team".'],
+                vec[shape(
+                    'message' => 'Cannot query field "foo" on type "Team".',
+                    'path' => vec['viewer', 'team']
+                )],
             ),
             'FieldsOnCorrectTypeRule: valid field' => tuple(
                 'query {
@@ -90,7 +105,10 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                         }
                     }
                 }',
-                vec['Field "id" must not have a selection since type "Int" has no subfields.'],
+                vec[shape(
+                    'message' => 'Field "id" must not have a selection since type "Int" has no subfields.',
+                    'path' => vec['viewer', 'id']
+                )],
             ),
             'ScalarLeafsRule: missing selection on nested scalar' => tuple(
                 'query {
@@ -102,13 +120,19 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                         }
                     }
                 }',
-                vec['Field "id" must not have a selection since type "Int" has no subfields.'],
+                vec[shape(
+                    'message' => 'Field "id" must not have a selection since type "Int" has no subfields.',
+                    'path' => vec['viewer', 'team', 'id']
+                )],
             ),
             'ScalarLeafsRule: missing selection on composite' => tuple(
                 'query {
                     viewer
                 }',
-                vec['Field "viewer" of type "User" must have a selection of subfields.'],
+                vec[shape(
+                    'message' => 'Field "viewer" of type "User" must have a selection of subfields.',
+                    'path' => vec['viewer']
+                )],
             ),
             'ScalarLeafsRule: missing selection on nested composite' => tuple(
                 'query {
@@ -116,7 +140,10 @@ final class ValidationTest extends \Facebook\HackTest\HackTest {
                         team
                     }
                 }',
-                vec['Field "team" of type "Team" must have a selection of subfields.'],
+                vec[shape(
+                    'message' => 'Field "team" of type "Team" must have a selection of subfields.',
+                    'path' => vec['viewer', 'team']
+                )],
             ),
             'ScalarLeafsRule: valid selection' => tuple(
                 'query {

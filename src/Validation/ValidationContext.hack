@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Validation;
 
+use namespace HH\Lib\Str;
 use namespace \Slack\GraphQL\Types;
 
 
@@ -14,7 +15,9 @@ final class ValidationContext {
 
     // TODO: We need to also record the location at which the error occured, but 
     // Graphpinator does not store this info on the AST. We should change that.
-    public function addError(\Slack\GraphQL\UserFacingError $error): void {
+    public function reportError(nonnull $_node, Str\SprintfFormatString $message, mixed ...$args): void {
+        $error = new \Slack\GraphQL\UserFacingError('%s', \vsprintf($message, $args));
+        $error->setPath($this->type_info->getPath());
         $this->errors[] = $error;
     }
 

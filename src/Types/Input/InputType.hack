@@ -11,7 +11,7 @@ interface IInputType {
     public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
     public function nullableListOf(): IInputType;
     public function nonNullableListOf(): IInputType;
-    public function getNamedType(): NamedInputType;
+    public function unwrapType(): NamedInputType;
 }
 
 /**
