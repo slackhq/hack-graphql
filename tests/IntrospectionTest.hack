@@ -76,27 +76,35 @@ final class IntrospectionTest extends PlaygroundTest {
                         'name' => 'IntrospectionTestObject',
                         'fields' => vec[
                             dict[
-                                'name' => 'non_null_string',
+                                'name' => 'default_list_of_non_nullable_int',
                                 'type' => dict[
-                                    'kind' => 'NON_NULL',
+                                    'kind' => 'LIST',
+                                    'name' => null,
+                                    'ofType' => dict[
+                                        'kind' => 'NON_NULL',
+                                        'name' => null,
+                                        'ofType' => dict[
+                                            'kind' => 'SCALAR',
+                                            'name' => 'Int',
+                                            'ofType' => null,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            dict[
+                                'name' => 'default_list_of_nullable_int',
+                                'type' => dict[
+                                    'kind' => 'LIST',
                                     'name' => null,
                                     'ofType' => dict[
                                         'kind' => 'SCALAR',
-                                        'name' => 'String',
+                                        'name' => 'Int',
                                         'ofType' => null,
                                     ],
                                 ],
                             ],
                             dict[
                                 'name' => 'default_nullable_string',
-                                'type' => dict[
-                                    'kind' => 'SCALAR',
-                                    'name' => 'String',
-                                    'ofType' => null,
-                                ],
-                            ],
-                            dict[
-                                'name' => 'nullable_string',
                                 'type' => dict[
                                     'kind' => 'SCALAR',
                                     'name' => 'String',
@@ -135,31 +143,23 @@ final class IntrospectionTest extends PlaygroundTest {
                                 ],
                             ],
                             dict[
-                                'name' => 'default_list_of_non_nullable_int',
+                                'name' => 'non_null_string',
                                 'type' => dict[
-                                    'kind' => 'LIST',
+                                    'kind' => 'NON_NULL',
                                     'name' => null,
                                     'ofType' => dict[
-                                        'kind' => 'NON_NULL',
-                                        'name' => null,
-                                        'ofType' => dict[
-                                            'kind' => 'SCALAR',
-                                            'name' => 'Int',
-                                            'ofType' => null,
-                                        ],
+                                        'kind' => 'SCALAR',
+                                        'name' => 'String',
+                                        'ofType' => null,
                                     ],
                                 ],
                             ],
                             dict[
-                                'name' => 'default_list_of_nullable_int',
+                                'name' => 'nullable_string',
                                 'type' => dict[
-                                    'kind' => 'LIST',
-                                    'name' => null,
-                                    'ofType' => dict[
-                                        'kind' => 'SCALAR',
-                                        'name' => 'Int',
-                                        'ofType' => null,
-                                    ],
+                                    'kind' => 'SCALAR',
+                                    'name' => 'String',
+                                    'ofType' => null,
                                 ],
                             ],
                         ],

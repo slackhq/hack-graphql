@@ -49,4 +49,9 @@ abstract class InputObjectType extends NamedInputType {
         dict<string, Value\Value> $value_nodes,
         dict<string, mixed> $variable_values,
     ): this::THackType;
+
+    <<__Override>>
+    public function getKind(): GraphQL\Introspection\__TypeKind {
+        return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
+    }
 }
