@@ -32,18 +32,12 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
     }
 
     public function build(HackCodegenFactory $cg): CodegenClass {
-        $class = $cg
+        return $cg
             ->codegenClass($this->getGeneratedClassName())
             ->setIsFinal()
             ->setExtendsf('\%s', static::SUPERCLASS)
             ->addConstant($this->generateNameConstant($cg))
             ->addTypeConstant($this->generateTypeConstant($cg));
-
-        if ($this is ITypeWithFieldsBuilder) {
-            $class->addConstant($this->generateFieldNamesConstant($cg, $this->getFieldNames()));
-        }
-
-        return $class;
     }
 
     private function generateNameConstant(HackCodegenFactory $cg): CodegenClassConstant {
@@ -58,12 +52,4 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
             ->setValue('\\'.$this->hack_type, HackBuilderValues::literal());
     }
 
-    private function generateFieldNamesConstant(
-        HackCodegenFactory $cg,
-        keyset<string> $field_names,
-    ): CodegenClassConstant {
-        return $cg->codegenClassConstant('FIELD_NAMES')
-            ->setType('keyset<string>')
-            ->setValue($field_names, HackBuilderValues::keyset(HackBuilderValues::export()));
-    }
 }
