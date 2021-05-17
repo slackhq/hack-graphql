@@ -40,7 +40,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IFieldDefinitio
         return $this->name;
     }
 
-    public function getType(): Introspection\__Type {
+    public function getIntrospectionType(): Introspection\__Type {
         if ($this->type is Types\NullableInputType<_> || $this->type is Types\NullableOutputType<_, _>) {
             return $this->type;
         }
