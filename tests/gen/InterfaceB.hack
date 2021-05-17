@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<abe02c92a0514db7508f940558441b9e>>
+ * @generated SignedSource<<a5ec35d92c3e079b11541b84ac8230c2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,15 +20,15 @@ final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'foo':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->foo(),
-        );
       case 'bar':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->bar(),
+        );
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

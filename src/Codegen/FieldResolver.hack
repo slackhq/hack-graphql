@@ -20,7 +20,7 @@ final class FieldResolver {
             if (!$this->shouldResolve($class)) continue;
             $this->resolveClass($class);
         }
-        return Dict\map($this->resolved_fields, $fields ==> vec($fields));
+        return Dict\map($this->resolved_fields, $fields ==> vec(Dict\sort_by_key($fields)));
     }
 
     private function shouldResolve(DefinitionFinder\ScannedClassish $class): bool {

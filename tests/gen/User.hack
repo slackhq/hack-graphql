@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b9d688e0d8a4306e725745d28868dd64>>
+ * @generated SignedSource<<b2d578f4375b11ce7ffd2dca395f824f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -25,6 +25,11 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
+      case 'is_active':
+        return new GraphQL\FieldDefinition(
+          Types\BooleanOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->isActive(),
+        );
       case 'name':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
@@ -34,11 +39,6 @@ final class User extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Team::nullable(),
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
-        );
-      case 'is_active':
-        return new GraphQL\FieldDefinition(
-          Types\BooleanOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
