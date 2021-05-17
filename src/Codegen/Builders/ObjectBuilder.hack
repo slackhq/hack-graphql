@@ -1,7 +1,13 @@
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\{Vec, Keyset};
-use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
+use type Facebook\HackCodegen\{
+    CodegenClass,
+    CodegenMethod,
+    HackBuilderValues,
+    HackCodegenFactory,
+    CodegenClassConstant,
+};
 
 
 /**
@@ -10,9 +16,7 @@ use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, H
  * The annotated Hack type should be either a class, interface, or shape.
  */
 // TODO: It probably makes sense to have a separate builder for interfaces.
-final class ObjectBuilder<TField as IFieldBuilder>
-    extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType>
-    implements ITypeWithFieldsBuilder {
+final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
     const classname<\Slack\GraphQL\Types\ObjectType> SUPERCLASS = \Slack\GraphQL\Types\ObjectType::class;
 
     public function __construct(
@@ -42,7 +46,8 @@ final class ObjectBuilder<TField as IFieldBuilder>
 
     public function build(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
-            ->addMethod($this->generateGetFieldDefinition($cg));
+            ->addMethod($this->generateGetFieldDefinition($cg))
+            ->addConstant($this->generateFieldNamesConstant($cg, $this->getFieldNames()));
     }
 
     private function generateGetFieldDefinition(HackCodegenFactory $cg): CodegenMethod {
@@ -71,5 +76,14 @@ final class ObjectBuilder<TField as IFieldBuilder>
 
     final public function getFieldNames(): keyset<string> {
         return Keyset\map($this->fields, $field ==> $field->getName());
+    }
+
+    private function generateFieldNamesConstant(
+        HackCodegenFactory $cg,
+        keyset<string> $field_names,
+    ): CodegenClassConstant {
+        return $cg->codegenClassConstant('FIELD_NAMES')
+            ->setType('keyset<string>')
+            ->setValue($field_names, HackBuilderValues::keyset(HackBuilderValues::export()));
     }
 }
