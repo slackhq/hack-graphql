@@ -200,8 +200,8 @@ final class Generator {
         $interfaces = dict[];
         $objects = vec[];
         $inputs = vec[];
-        $query_fields = vec[];
-        $mutation_fields = vec[];
+        $query_fields = dict[];
+        $mutation_fields = dict[];
 
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
@@ -241,7 +241,7 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[] = new StaticFieldBuilder($query_root_field, $rm);
+                    $query_fields[$query_root_field->getName()] = new StaticFieldBuilder($query_root_field, $rm);
                     continue;
                 }
 
@@ -250,7 +250,10 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[] = new StaticFieldBuilder($mutation_root_field, $rm);
+                    $mutation_fields[$mutation_root_field->getName()] = new StaticFieldBuilder(
+                        $mutation_root_field,
+                        $rm,
+                    );
                 }
             }
         }
@@ -270,7 +273,7 @@ final class Generator {
                 new ObjectBuilder(
                     new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
                     'Slack\\GraphQL\\Root',
-                    $query_fields
+                    vec(Dict\sort_by_key($query_fields)),
                 )
             ];
 
@@ -278,7 +281,7 @@ final class Generator {
                 $top_level_objects[] = new ObjectBuilder(
                     new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
                     'Slack\\GraphQL\\Root',
-                    $mutation_fields
+                    vec(Dict\sort_by_key($mutation_fields)),
                 );
             }
 

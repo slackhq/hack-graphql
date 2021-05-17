@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e18436fff7ac77dce63a6c95711588b9>>
+ * @generated SignedSource<<f12e35f792172c548c0569963a236274>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,11 +20,6 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'foo':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->foo(),
-        );
       case 'bar':
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
@@ -34,6 +29,11 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\StringOutputType::nullable(),
           async ($parent, $args, $vars) ==> $parent->baz(),
+        );
+      case 'foo':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->foo(),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<cc6eff24cc8965b8da1d4ce1584decfd>>
+ * @generated SignedSource<<8f34aea15a0d8a6a08a4b4fa108186c0>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,6 +20,13 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): GraphQL\IFieldDefinition<this::THackType> {
     switch ($field_name) {
+      case 'description':
+        return new GraphQL\FieldDefinition(
+          Types\StringOutputType::nullable(),
+          async ($parent, $args, $vars) ==> $parent->getDescription(
+            Types\BooleanInputType::nonNullable()->coerceNamedNode('short', $args, $vars),
+          ),
+        );
       case 'id':
         return new GraphQL\FieldDefinition(
           Types\IntOutputType::nullable(),
@@ -34,13 +41,6 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           Types\IntOutputType::nullable(),
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
-        );
-      case 'description':
-        return new GraphQL\FieldDefinition(
-          Types\StringOutputType::nullable(),
-          async ($parent, $args, $vars) ==> $parent->getDescription(
-            Types\BooleanInputType::nonNullable()->coerceNamedNode('short', $args, $vars),
-          ),
         );
       default:
         throw new \Exception('Unknown field: '.$field_name);
