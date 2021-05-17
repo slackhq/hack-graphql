@@ -8,16 +8,6 @@ final class ObjectVal implements Value {
         return $this->value;
     }
 
-    public function getRawValue(): dict<string, mixed> {
-        $return = dict[];
-
-        foreach ($this->value as $key => $value) {
-            $return[$key] = $value->getRawValue();
-        }
-
-        return $return;
-    }
-
     public function accept(ValueVisitor $valueVisitor): mixed {
         return $valueVisitor->visitObjectVal($this);
     }

@@ -21,9 +21,7 @@ final class NullableInputType<TInner as nonnull> extends InputType<?TInner> {
         Value\Value $node,
         dict<string, mixed> $variable_values,
     ): ?TInner {
-        return $node is Value\Literal && $node->getRawValue() is null
-            ? null
-            : $this->innerType->coerceNode($node, $variable_values);
+        return $node is Value\NullLiteral ? null : $this->innerType->coerceNode($node, $variable_values);
     }
 
     <<__Override>>

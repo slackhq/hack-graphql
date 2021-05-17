@@ -256,7 +256,7 @@ final class ErrorTest extends PlaygroundTest {
                         shape(
                             'message' =>
                                 'Invalid value for "favorite_color": '.
-                                'Expected a valid value for FavoriteColor, got Graphpinator\Parser\Value\EnumLiteral',
+                                'Expected a valid value for FavoriteColor, got "foo"',
                             'path' => vec['takes_favorite_color']
                         )
                     ]
@@ -308,7 +308,7 @@ final class ErrorTest extends PlaygroundTest {
                         shape(
                             'message' =>
                                 'Invalid default value for variable "id": '.
-                                'Expected an Int literal, got Graphpinator\\Parser\\Value\\Literal',
+                                'Expected an Int literal, got Graphpinator\\Parser\\Value\\NullLiteral',
                         ),
                     ],
                 ),

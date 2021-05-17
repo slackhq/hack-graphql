@@ -29,16 +29,17 @@ abstract class EnumInputType extends NamedInputType {
         Value\Value $node,
         dict<string, mixed> $variable_values,
     ): this::THackType {
-        $value = $node->getRawValue();
-        $enum = static::HACK_ENUM;
-        if (!$node is Value\EnumLiteral || !$value is string || !C\contains_key($enum::getValues(), $value)) {
-            throw new GraphQL\UserFacingError(
-                'Expected a valid value for %s, got %s',
-                static::NAME,
-                \get_class($node)
-            );
+        if (!$node is Value\EnumLiteral) {
+            throw new GraphQL\UserFacingError('Expected an enum literal, got %s', \get_class($node));
         }
-        return $enum::getValues()[$value];
+        $enum = static::HACK_ENUM;
+        GraphQL\assert(
+            C\contains_key($enum::getValues(), $node->getRawValue()),
+            'Expected a valid value for %s, got "%s"',
+            static::NAME,
+            $node->getRawValue(),
+        );
+        return $enum::getValues()[$node->getRawValue()];
     }
 
 }

@@ -1,14 +1,15 @@
 namespace Graphpinator\Parser\Value;
 
-final class Literal implements \Graphpinator\Parser\Value\Value {
+abstract class Literal implements \Graphpinator\Parser\Value\Value {
+    abstract const type THackType;
 
-    public function __construct(private mixed $value) {}
+    final public function __construct(private this::THackType $value) {}
 
-    public function getRawValue(): mixed {
+    final public function getRawValue(): this::THackType {
         return $this->value;
     }
 
-    public function accept(ValueVisitor $valueVisitor): mixed {
+    final public function accept(ValueVisitor $valueVisitor): mixed {
         return $valueVisitor->visitLiteral($this);
     }
 }

@@ -21,10 +21,9 @@ final class StringInputType extends NamedInputType {
         Value\Value $node,
         dict<string, mixed> $variable_values,
     ): string {
-        $value = $node->getRawValue();
-        if (!$node is Value\Literal || !$value is string) {
+        if (!$node is Value\StringLiteral) {
             throw new UserFacingError('Expected a String literal, got %s', \get_class($node));
         }
-        return $value;
+        return $node->getRawValue();
     }
 }
