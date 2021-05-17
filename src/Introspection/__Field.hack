@@ -15,7 +15,7 @@ interface __Field {
     // public function getArgs(): vec<__InputValue>;
 
     <<GraphQL\Field('type', 'Type of the field')>>
-    public function getType(): __Type;
+    public function getIntrospectionType(): __Type;
 
     // <<GraphQL\Field('isDeprecated', 'Boolean for whether or not the field is deprecated')>>
     // public function isDeprecated(): bool;

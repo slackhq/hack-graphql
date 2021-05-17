@@ -11,6 +11,6 @@ final abstract class QueryRootFields {
 
     <<GraphQL\QueryRootField('__type', 'Type introspection')>>
     final public static function getType(string $name): ?__Type {
-        return (new \Slack\GraphQL\Test\Generated\Schema())->getType($name);
+        return (new \Slack\GraphQL\Test\Generated\Schema())->getIntrospectionType($name);
     }
 }

@@ -38,9 +38,8 @@ abstract class BaseSchema implements Introspection\__Schema {
         return $mutation_type is nonnull ? $mutation_type::nonNullable() : null;
     }
 
-    final public function getType(string $name): ?Introspection\__Type {
-        $types = Dict\merge(static::INPUT_TYPES, static::OUTPUT_TYPES);
-        $type = $types[$name] ?? null;
+    final public function getIntrospectionType(string $name): ?Introspection\__Type {
+        $type = static::INPUT_TYPES[$name] ?? static::OUTPUT_TYPES[$name] ?? null;
         return $type is nonnull ? $type::nonNullable() : null;
     }
 

@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{Vec, Keyset};
 use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
 
 
@@ -70,7 +70,6 @@ final class ObjectBuilder<TField as IFieldBuilder>
     }
 
     final public function getFieldNames(): keyset<string> {
-        return Vec\map($this->fields, $field ==> $field->getName())
-            |> keyset($$);
+        return Keyset\map($this->fields, $field ==> $field->getName());
     }
 }
