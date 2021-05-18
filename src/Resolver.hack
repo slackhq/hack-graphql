@@ -26,35 +26,31 @@ final class Resolver {
         dict<string, mixed> $variables = dict[],
         ?string $operation_name = null,
     ): Awaitable<this::TResponse> {
-        $request = null;
-        $errors = vec[];
-
         try {
             $request = $this->parseRequest($input);
         } catch (GraphQL\UserFacingError $e) {
-            $errors[] = $e;
+            return shape('errors' => $this->formatErrors(vec[$e]));
+        }
+
+        $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
+        $errors = $validator->validate($request);
+        if ($errors) {
+            return shape('errors' => $this->formatErrors($errors));
         }
 
         $ret = shape();
-        if ($request is nonnull) {
-            $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
-            $errors = $validator->validate($request);
-
-            if (C\is_empty($errors)) {
-                try {
-                    list($ret['data'], $errors) = await $this->resolveRequest($request, $variables, $operation_name);
-                } catch (UserFacingError $e) {
-                    $errors[] = $e;
-                } catch (\Throwable $e) {
-                    $errors[] = new FieldResolverError($e);
-                }
-            }
+        try {
+            list($ret['data'], $errors) = await $this->resolveRequest($request, $variables, $operation_name);
+        } catch (UserFacingError $e) {
+            $errors = vec[$e];
+        } catch (\Throwable $e) {
+            $errors = vec[new FieldResolverError($e)];
         }
 
         if (!C\is_empty($errors)) {
-            $ret['errors'] = Vec\map($errors, $e ==> $e->toShape());
-            return $ret;
+            $ret['errors'] = $this->formatErrors($errors);
         }
+
         return $ret;
     }
 
@@ -144,5 +140,9 @@ final class Resolver {
             GraphQL\assert($type is Types\NullableInputType<_>, 'Missing value for required variable "%s"', $name);
         }
         return $coerced_values;
+    }
+
+    private function formatErrors(vec<UserFacingError> $errors): vec<UserFacingError::TData> {
+        return Vec\map($errors, $error ==> $error->toShape());
     }
 }
