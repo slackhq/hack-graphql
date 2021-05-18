@@ -10,7 +10,7 @@ final class Resolver {
      */
     const type TResponse = shape(
         ?'data' => ?dict<string, mixed>, // missing data and null data are both valid states with different meanings
-        ?'errors' => vec<UserFacingError::TError>, // errors are optional but cannot be null (or empty) if present
+        ?'errors' => vec<UserFacingError::TData>, // errors are optional but cannot be null (or empty) if present
         ?'extensions' => dict<string, mixed>,
     );
 

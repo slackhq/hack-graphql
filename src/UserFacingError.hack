@@ -16,7 +16,7 @@ function assert(
  * Any error that should be included in the GraphQL response's "errors" field.
  */
 class UserFacingError extends \Exception {
-    const type TError = shape(
+    const type TData = shape(
         'message' => string,
         ?'location' => shape('line' => int, 'column' => int),
         ?'path' => vec<arraykey>,
@@ -67,7 +67,7 @@ class UserFacingError extends \Exception {
         return $this;
     }
 
-    final public function toShape(): this::TError {
+    final public function toShape(): this::TData {
         $out = shape('message' => $this->getMessage());
         $location = $this->getLocation();
         if ($location is nonnull) {

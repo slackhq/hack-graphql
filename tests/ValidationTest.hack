@@ -5,7 +5,7 @@ use namespace Slack\GraphQL;
 
 final class ValidationTest extends \Facebook\HackTest\HackTest {
 
-    const type TTestCases = dict<string, (string, vec<GraphQL\UserFacingError::TError>)>;
+    const type TTestCases = dict<string, (string, vec<GraphQL\UserFacingError::TData>)>;
 
     <<__Override>>
     public static async function beforeFirstTestAsync(): Awaitable<void> {
