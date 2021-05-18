@@ -12,10 +12,18 @@ abstract class GraphpinatorBase extends \Exception implements \JsonSerializable 
         return $this;
     }
 
+    public function getLocation(): ?\Graphpinator\Common\Location {
+        return $this->location;
+    }
+
     public function setPath(\Graphpinator\Common\Path $path): this {
         $this->path = $path;
 
         return $this;
+    }
+
+    public function getPath(): ?\Graphpinator\Common\Path {
+        return $this->path;
     }
 
     public function setExtensions(vec<string> $extensions): this {

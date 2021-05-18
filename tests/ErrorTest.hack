@@ -361,6 +361,20 @@ final class ErrorTest extends PlaygroundTest {
                     ],
                 ),
             ),
+
+            'invalid query syntax' => tuple(
+                'query ajjsdkadj',
+                dict[],
+                shape(
+                    'errors' => vec[
+                        shape(
+                            'message' => 'Unexpected end of input. Probably missing closing brace?',
+                            'location' => shape('line' => 1, 'column' => 7),
+                            'path' => vec['bot'],
+                        ),
+                    ],
+                ),
+            ),
         ];
     }
 }

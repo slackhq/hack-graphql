@@ -26,25 +26,28 @@ final class Resolver {
         dict<string, mixed> $variables = dict[],
         ?string $operation_name = null,
     ): Awaitable<this::TResponse> {
-        // TODO: catch these errors
-        $source = new \Graphpinator\Source\StringSource($input);
-        $parser = new \Graphpinator\Parser\Parser($source);
-        $request = $parser->parse();
+        $request = null;
+        $errors = vec[];
+
+        try {
+            $request = $this->parseRequest($input);
+        } catch (GraphQL\UserFacingError $e) {
+            $errors[] = $e;
+        }
 
         $ret = shape();
-        $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
-        $errors = $validator->validate($request);
+        if ($request is nonnull) {
+            $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
+            $errors = $validator->validate($request);
 
-        if (C\is_empty($errors)) {
-            try {
-                list($ret['data'], $errors) = await $this->resolveImpl($request, $variables, $operation_name);
-            } catch (UserFacingError $e) {
-                $errors = vec[$e];
-            } catch (\Throwable $e) {
-                // TODO: This shoud not happen; if it does, it's a bug in the GraphQL framework. Every exception should
-                // either be UserFacingError, or caught somewhere. However, we probably still want to catch arbitrary
-                // exceptions here just in case and return *some* reasonable response.
-                throw $e; // for now, so as to not break existing tests
+            if (C\is_empty($errors)) {
+                try {
+                    list($ret['data'], $errors) = await $this->resolveRequest($request, $variables, $operation_name);
+                } catch (UserFacingError $e) {
+                    $errors[] = $e;
+                } catch (\Throwable $e) {
+                    $errors[] = new FieldResolverError($e);
+                }
             }
         }
 
@@ -55,7 +58,26 @@ final class Resolver {
         return $ret;
     }
 
-    public async function resolveImpl(
+    private function parseRequest(string $input): \Graphpinator\Parser\ParsedRequest {
+        $source = new \Graphpinator\Source\StringSource($input);
+        $parser = new \Graphpinator\Parser\Parser($source);
+        try {
+            return $parser->parse();
+        } catch (\Graphpinator\Exception\GraphpinatorBase $e) {
+            $user_facing_error = new GraphQL\UserFacingError('%s', $e->getMessage());
+            $location = $e->getLocation();
+            if ($location) {
+                $user_facing_error->setLocation($location);
+            }
+            $path = $e->getPath()?->jsonSerialize();
+            if ($path) {
+                $user_facing_error->setPath($path);
+            }
+            throw $user_facing_error;
+        }
+    }
+
+    public async function resolveRequest(
         \Graphpinator\Parser\ParsedRequest $request,
         dict<string, mixed> $raw_variables,
         ?string $operation_name,
