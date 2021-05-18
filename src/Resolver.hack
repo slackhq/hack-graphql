@@ -64,7 +64,7 @@ final class Resolver {
         try {
             return $parser->parse();
         } catch (\Graphpinator\Exception\GraphpinatorBase $e) {
-            $user_facing_error = new GraphQL\UserFacingError('%s', $e->getMessage());
+            $user_facing_error = new UserFacingError('%s', $e->getMessage());
             $location = $e->getLocation();
             if ($location) {
                 $user_facing_error->setLocation($location);
