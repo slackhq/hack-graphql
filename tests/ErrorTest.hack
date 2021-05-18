@@ -370,7 +370,6 @@ final class ErrorTest extends PlaygroundTest {
                         shape(
                             'message' => 'Unexpected end of input. Probably missing closing brace?',
                             'location' => shape('line' => 1, 'column' => 7),
-                            'path' => vec['bot'],
                         ),
                     ],
                 ),
