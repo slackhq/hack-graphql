@@ -395,7 +395,7 @@ final class Parser {
      * Expects iterator on previous token - opening parenthesis
      * Leaves iterator to last used token - closing parenthesis
      */
-    private function parseArguments(): dict<string, \Graphpinator\Parser\Value\Value> {
+    private function parseArguments(): dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
         $arguments = dict[];
 
         while ($this->tokenizer->peekNext()->getType() !== TokenType::PAR_C) {
@@ -407,7 +407,8 @@ final class Parser {
             }
 
             $name = $this->tokenizer->getCurrent()->getValue() as nonnull;
-            if (\array_key_exists($name, $arguments)) {
+            $location = $this->tokenizer->getCurrent()->getLocation();
+            if (C\contains_key($arguments, $name)) {
                 throw new \Graphpinator\Parser\Exception\DuplicateArgument(
                     $name,
                     $this->tokenizer->getCurrent()->getLocation(),
@@ -415,7 +416,8 @@ final class Parser {
             }
 
             $this->tokenizer->assertNext<\Graphpinator\Parser\Exception\ExpectedColon>(TokenType::COLON);
-            $arguments[$name] = $this->parseValue(false);
+            $value = $this->parseValue(false);
+            $arguments[$name] = new \Graphpinator\Parser\Value\ArgumentValue($location, $name, $value);
         }
 
         $this->tokenizer->getNext();

@@ -11,6 +11,7 @@ type ArgumentDefinition = shape(
 interface IFieldDefinition extends Introspection\__Field {
     public function getName(): string;
     public function getType(): Types\IOutputType;
+    public function getArguments(): dict<string, ArgumentDefinition>;
 }
 
 interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
@@ -40,7 +41,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
-            $value = await $resolver($parent, $field->getArguments() ?? dict[], $vars);
+            $value = await $resolver($parent, $field->getArgumentValues(), $vars);
         } catch (UserFacingError $e) {
             return $this->type->resolveError($e);
         } catch (\Throwable $e) {
@@ -64,5 +65,9 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public function getType(): Types\OutputType<TRet, TResolved> {
         return $this->type;
+    }
+
+    public function getArguments(): dict<string, ArgumentDefinition> {
+        return $this->arguments;
     }
 }

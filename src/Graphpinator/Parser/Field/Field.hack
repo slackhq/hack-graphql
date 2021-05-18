@@ -1,5 +1,7 @@
 namespace Graphpinator\Parser\Field;
 
+use namespace HH\Lib\Dict;
+
 final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
 
     public function __construct(
@@ -7,7 +9,7 @@ final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
         private string $name,
         private ?string $alias = null,
         private ?\Graphpinator\Parser\Field\FieldSet $children = null,
-        private ?dict<string, \Graphpinator\Parser\Value\Value> $arguments = null,
+        private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments = null,
         private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {
         parent::__construct($location);
@@ -25,8 +27,12 @@ final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
         return $this->children;
     }
 
-    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\Value> {
+    public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> {
         return $this->arguments;
+    }
+
+    public function getArgumentValues(): dict<string, \Graphpinator\Parser\Value\Value> {
+        return Dict\map($this->arguments ?? dict[], $arg ==> $arg->getValue());
     }
 
     public function getDirectives(): ?vec<\Graphpinator\Parser\Directive\Directive> {

@@ -44,7 +44,11 @@ final class ValidationContext {
         return $this->type_info->getInputType();
     }
 
-    public function getFieldDef(): ?\Slack\GraphQL\Introspection\__Field {
+    public function getFieldDef(): ?\Slack\GraphQL\IFieldDefinition {
         return $this->type_info->getFieldDef();
+    }
+
+    public function getArgument(): ?\Slack\GraphQL\ArgumentDefinition {
+        return $this->type_info->getArgument();
     }
 }

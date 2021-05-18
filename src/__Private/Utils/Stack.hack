@@ -1,7 +1,6 @@
 namespace Slack\GraphQL\__Private\Utils;
 
-use namespace HH\Lib\Dict;
-
+use namespace HH\Lib\Vec;
 
 final class Stack<T> {
     private dict<int, T> $items = dict[];
@@ -26,6 +25,6 @@ final class Stack<T> {
     }
 
     public function asVec(): vec<T> {
-        return Dict\sort_by_key($this->items) |> vec($$);
+        return Vec\take($this->items, $this->length);
     }
 }
