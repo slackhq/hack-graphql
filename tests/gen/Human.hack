@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1f2132423c60b0da38f568b5fed1706b>>
+ * @generated SignedSource<<eeefd36b61047d6b16af46d2298a9543>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -31,30 +31,35 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'favorite_color',
           FavoriteColorOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
         );
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
           Types\IntOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
           'is_active',
           Types\BooleanOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
           Types\StringOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
           Team::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
         );
       default:
