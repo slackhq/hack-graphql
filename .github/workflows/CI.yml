@@ -16,7 +16,10 @@ jobs:
                 docker build -t mwildehahn/hack-graphql .
             - name: Install
               run: |
-                docker run -v `pwd`:/app mwildehahn/hack-graphql composer install
+                docker run -v `pwd`:/app mwildehahn/hack-graphql composer install 
+            - name: Typecheck
+              run: | 
+                docker run -v `pwd`:/app mwildehahn/hack-graphql hh_client
             - name: Test
               run: |
                 docker run -v `pwd`:/app mwildehahn/hack-graphql ./vendor/bin/hacktest tests
