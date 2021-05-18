@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<a6e140f1f6d3d3f28a9e4bf591f9cb1c>>
+ * @generated SignedSource<<3e965c545c8823734f324bf821aa4f9c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,42 +33,49 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'awaitable',
           Types\IntOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable(),
         );
       case 'awaitable_nullable':
         return new GraphQL\FieldDefinition(
           'awaitable_nullable',
           Types\StringOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable(),
         );
       case 'awaitable_nullable_list':
         return new GraphQL\FieldDefinition(
           'awaitable_nullable_list',
           Types\IntOutputType::nonNullable()->nullableListOf(),
+          dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
         );
       case 'list':
         return new GraphQL\FieldDefinition(
           'list',
           Types\StringOutputType::nonNullable()->nullableListOf(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->list(),
         );
       case 'nested_lists':
         return new GraphQL\FieldDefinition(
           'nested_lists',
           Types\IntOutputType::nullable()->nonNullableListOf()->nullableListOf()->nullableListOf(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->nested_lists(),
         );
       case 'nullable':
         return new GraphQL\FieldDefinition(
           'nullable',
           Types\StringOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->nullable(),
         );
       case 'scalar':
         return new GraphQL\FieldDefinition(
           'scalar',
           Types\IntOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->scalar(),
         );
       default:

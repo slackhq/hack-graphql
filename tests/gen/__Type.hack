@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<c85a6ed1f6f1c49f4a7e475e7ef77883>>
+ * @generated SignedSource<<f6a3c3d9aea3d8a7180f03a7d77ed3d0>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -31,30 +31,35 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'description',
           Types\StringOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'fields':
         return new GraphQL\FieldDefinition(
           'fields',
           __Field::nonNullable()->nullableListOf(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getFields(),
         );
       case 'kind':
         return new GraphQL\FieldDefinition(
           'kind',
           __TypeKindOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getKind(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
           Types\StringOutputType::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
           'ofType',
           __Type::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getOfType(),
         );
       default:

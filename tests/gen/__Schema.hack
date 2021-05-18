@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fc47d9ebed5b24c810478c8aae10067f>>
+ * @generated SignedSource<<8f1f64985a504476bc95a8a86744da68>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -28,12 +28,14 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'mutationType',
           __Type::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionMutationType(),
         );
       case 'queryType':
         return new GraphQL\FieldDefinition(
           'queryType',
           __Type::nullable(),
+          dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionQueryType(),
         );
       default:

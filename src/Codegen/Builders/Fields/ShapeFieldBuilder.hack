@@ -18,6 +18,9 @@ class ShapeFieldBuilder<T> implements IFieldBuilder {
         $type_info = output_type(type_structure_to_type_alias($this->type_structure), false);
         $hb->addLinef('%s,', $type_info['type']);
 
+        // Arguments
+        $hb->addLine('dict[],');
+
         $hb->addf(
             'async ($parent, $args, $vars) ==> $parent[%s]%s',
             $name_literal,

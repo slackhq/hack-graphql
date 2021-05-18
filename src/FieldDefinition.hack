@@ -1,5 +1,13 @@
 namespace Slack\GraphQL;
 
+type ArgumentDefinition = shape(
+    'name' => string,
+    'type' => Types\IInputType,
+    ?'description' => string,
+    ?'default_value' => mixed,
+    ?'deprecation_reason' => string,
+);
+
 interface IFieldDefinition extends Introspection\__Field {
     public function getName(): string;
     public function getType(): Types\IOutputType;
@@ -17,6 +25,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     public function __construct(
         private string $name,
         private Types\OutputType<TRet, TResolved> $type,
+        private dict<string, ArgumentDefinition> $arguments,
         private (function(
             TParent,
             dict<string, \Graphpinator\Parser\Value\Value>,

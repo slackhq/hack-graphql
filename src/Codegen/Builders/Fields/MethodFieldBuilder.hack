@@ -25,7 +25,30 @@ class MethodFieldBuilder implements IFieldBuilder {
         );
         $hb->addLinef('%s,', $type_info['type']);
 
-        // Arguments
+        // Argument Definitions
+        if ($this->hasArguments()) {
+            $hb->addLine('dict[')->indent();
+            foreach ($this->reflection_method->getParameters() as $param) {
+                $argument_name = \var_export($param->getName(), true);
+                $hb->addLinef('%s => shape(', $argument_name)->indent();
+
+                $hb->addLinef("'name' => %s,", $argument_name);
+
+                $type = input_type($param->getTypeText());
+                $hb->addLinef("'type' => %s,", $type);
+
+                if ($param->isOptional()) {
+                    $hb->addLinef("'default_value' => %s,", $param->getDefaultValueText());
+                }
+
+                $hb->unindent()->addLine('),');
+            }
+            $hb->unindent()->addLine('],');
+        } else {
+            $hb->addLine('dict[],');
+        }
+
+        // Resolver
         $hb->addf(
             'async ($parent, $args, $vars) ==> %s%s%s(',
             $type_info['needs_await'] ? 'await ' : '',
