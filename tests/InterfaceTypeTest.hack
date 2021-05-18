@@ -11,12 +11,16 @@ final class InterfaceTypeTest extends PlaygroundTest {
             'select InterfaceA' => tuple(
                 'query {
                     getInterfaceA {
+                        __typename
+                        also_typename: __typename  # test querying __typename with an alias
                         foo
                     }
                 }',
                 dict[],
                 dict[
                     'getInterfaceA' => dict[
+                        '__typename' => 'Concrete',  // Note: __typename is always the resolved object type.
+                        'also_typename' => 'Concrete',
                         'foo' => 'foo',
                     ],
                 ],
@@ -25,6 +29,7 @@ final class InterfaceTypeTest extends PlaygroundTest {
             'select InterfaceB' => tuple(
                 'query {
                     getInterfaceB {
+                        __typename
                         foo
                         bar
                     }
@@ -32,6 +37,7 @@ final class InterfaceTypeTest extends PlaygroundTest {
                 dict[],
                 dict[
                     'getInterfaceB' => dict[
+                        '__typename' => 'Concrete',
                         'foo' => 'foo',
                         'bar' => 'bar',
                     ],
@@ -41,6 +47,7 @@ final class InterfaceTypeTest extends PlaygroundTest {
             'select Concrete' => tuple(
                 'query {
                     getConcrete {
+                        __typename
                         foo
                         bar
                         baz
@@ -49,6 +56,7 @@ final class InterfaceTypeTest extends PlaygroundTest {
                 dict[],
                 dict[
                     'getConcrete' => dict[
+                        '__typename' => 'Concrete',
                         'foo' => 'foo',
                         'bar' => 'bar',
                         'baz' => 'baz',

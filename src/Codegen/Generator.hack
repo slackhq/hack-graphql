@@ -225,12 +225,32 @@ final class Generator {
         $field_resolver = new FieldResolver($classish_objects);
         $class_fields = $field_resolver->resolveFields();
 
+        $hack_class_to_graphql_object = dict[];
+        foreach ($classish_objects as $class) {
+            if (!C\is_empty($class->getAttributes())) {
+                $rc = new \ReflectionClass($class->getName());
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                if ($graphql_attribute is nonnull) {
+                    $hack_class_to_graphql_object[$rc->getName()] = $graphql_attribute->getType();
+                }
+            }
+        }
+        $hack_class_to_graphql_object = Dict\sort_by_key($hack_class_to_graphql_object);
+
         foreach ($classish_objects as $class) {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
-                    $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+                if ($graphql_attribute is nonnull) {
+                    $objects[] = new InterfaceBuilder(
+                        $graphql_attribute,
+                        $rc->getName(),
+                        $fields,
+                        $hack_class_to_graphql_object,
+                    );
+                }
+                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_attribute is nonnull) {
                     $objects[] = new ObjectBuilder($graphql_attribute, $rc->getName(), $fields);
                 }

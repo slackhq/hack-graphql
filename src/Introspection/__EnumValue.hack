@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Introspection;
 
 use namespace Slack\GraphQL;
 
-<<GraphQL\InterfaceType('__EnumValue', 'Enum value introspection')>>
+<<GraphQL\ObjectType('__EnumValue', 'Enum value introspection')>>
 interface __EnumValue {
 
     <<GraphQL\Field('name', 'Name of the enum value')>>

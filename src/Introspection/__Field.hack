@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Introspection;
 
 use namespace Slack\GraphQL;
 
-<<GraphQL\InterfaceType('__Field', 'Field introspection')>>
+<<GraphQL\ObjectType('__Field', 'Field introspection')>>
 interface __Field {
 
     <<GraphQL\Field('name', 'Name of the field')>>

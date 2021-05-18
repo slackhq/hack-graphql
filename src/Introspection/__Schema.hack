@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Introspection;
 
 use namespace Slack\GraphQL;
 
-<<GraphQL\InterfaceType('__Schema', 'Schema introspection')>>
+<<GraphQL\ObjectType('__Schema', 'Schema introspection')>>
 interface __Schema {
 
     // <<GraphQL\Field('types', 'Types contained within the schema')>>

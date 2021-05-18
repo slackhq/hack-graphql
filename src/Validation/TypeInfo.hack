@@ -63,7 +63,7 @@ final class TypeInfo extends ASTVisitor {
             $parent_type = $this->getParentType();
             $field_definition = null;
             $field_type = null;
-            if ($parent_type is Types\ObjectType) {
+            if ($parent_type is Types\CompositeType) {
                 $field_definition = $parent_type->getFieldDefinition($node->getName());
                 if ($field_definition) {
                     $field_type = $field_definition->getType();
