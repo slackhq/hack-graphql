@@ -17,7 +17,7 @@ final class NullableOutputType<TInner, TResolved>
 
     <<__Override>>
     final public function unwrapType(): NamedOutputType {
-        return $this->getInnerType()->unwrapType();
+        return $this->inner_type->unwrapType();
     }
 
     /**
