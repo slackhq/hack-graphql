@@ -3,7 +3,6 @@ namespace Slack\GraphQL;
 use namespace HH\Lib\Dict;
 
 // TODO: this should be private
-<<__ConsistentConstruct>>
 abstract class BaseSchema implements Introspection\__Schema {
     const ?classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = null;
     abstract const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE;
