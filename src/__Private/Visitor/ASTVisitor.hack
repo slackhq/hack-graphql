@@ -40,7 +40,7 @@ abstract class ASTVisitor {
             $this->visitFieldSet($fieldset);
         }
         foreach ($node->getArguments() ?? dict[] as $argument) {
-            $this->visitValue($argument);
+            $this->visitArgument($argument);
         }
         foreach ($node->getDirectives() ?? vec[] as $directive) {
             // TODO: Directives
@@ -71,6 +71,12 @@ abstract class ASTVisitor {
         foreach ($node->getVariables() ?? vec[] as $variable) {
             $this->visitVariable($variable);
         }
+        $this->leave($node);
+    }
+
+    private function visitArgument(Parser\Value\ArgumentValue $node): void {
+        $this->enter($node);
+        $this->visitValue($node->getValue());
         $this->leave($node);
     }
 

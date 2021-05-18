@@ -21,6 +21,8 @@ final class TypeInfo extends ASTVisitor {
     private Stack<?Types\NamedOutputType> $parent_type_stack;
     private Stack<?Types\IInputType> $input_type_stack;
     private Stack<?\Slack\GraphQL\IFieldDefinition> $field_def_stack;
+    private Stack<mixed> $default_value_stack;
+    private ?\Slack\GraphQL\ArgumentDefinition $argument = null;
 
     public function __construct(classname<\Slack\GraphQL\BaseSchema> $schema) {
         $this->schema = $schema;
@@ -28,6 +30,7 @@ final class TypeInfo extends ASTVisitor {
         $this->parent_type_stack = new Stack();
         $this->input_type_stack = new Stack();
         $this->field_def_stack = new Stack();
+        $this->default_value_stack = new Stack();
     }
 
     public function getParentType(): ?Types\NamedOutputType {
@@ -42,7 +45,7 @@ final class TypeInfo extends ASTVisitor {
         return $this->input_type_stack->peek();
     }
 
-    public function getFieldDef(): ?\Slack\GraphQL\Introspection\__Field {
+    public function getFieldDef(): ?\Slack\GraphQL\IFieldDefinition {
         return $this->field_def_stack->peek();
     }
 
@@ -50,6 +53,10 @@ final class TypeInfo extends ASTVisitor {
         return $this->field_def_stack->asVec()
             |> Vec\filter_nulls($$)
             |> Vec\map($$, $field ==> $field->getName());
+    }
+
+    public function getArgument(): ?\Slack\GraphQL\ArgumentDefinition {
+        return $this->argument;
     }
 
     // TODO: Implement more enter / leave cases.
@@ -85,6 +92,19 @@ final class TypeInfo extends ASTVisitor {
                     throw new \Slack\GraphQL\UserFacingError("Unrecognized type: %s", $node->getType());
             }
             $this->type_stack->push($type);
+        } elseif ($node is Parser\Value\ArgumentValue) {
+            // TODO: Handle directives
+            $arg_def = null;
+            $arg_type = null;
+            $field_definition = $this->getFieldDef();
+            if ($field_definition) {
+                $arg_def = $field_definition->getArguments()[$node->getName()] ?? null;
+                // TODO: Should we be unwrapping this?
+                $arg_type = ($arg_type['type'] ?? null)?->unwrapType();
+            }
+            $this->argument = $arg_def;
+            $this->default_value_stack->push($arg_def['default_value'] ?? null);
+            $this->input_type_stack->push($arg_type);
         }
     }
 
@@ -97,6 +117,10 @@ final class TypeInfo extends ASTVisitor {
             $this->type_stack->pop();
         } elseif ($node is Parser\Operation\Operation) {
             $this->type_stack->pop();
+        } elseif ($node is Parser\Value\ArgumentValue) {
+            $this->argument = null;
+            $this->default_value_stack->pop();
+            $this->input_type_stack->pop();
         }
     }
 }
