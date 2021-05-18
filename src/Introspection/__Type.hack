@@ -6,7 +6,7 @@ use Slack\GraphQL;
 // base classes. We should just need to incldue the introspection fields the
 // same way we did last time.
 
-<<GraphQL\InterfaceType('__Type', 'Type introspection')>>
+<<GraphQL\ObjectType('__Type', 'Type introspection')>>
 interface __Type {
 
     <<GraphQL\Field('kind', 'Kind of the type')>>

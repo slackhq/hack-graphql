@@ -30,6 +30,10 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
         $results = await Dict\map_async(
             $child_fields,
             async $child_field ==> {
+                if ($child_field->getName() === '__typename') {
+                    // https://spec.graphql.org/draft/#sec-Type-Name-Introspection
+                    return new GraphQL\ValidFieldResult(static::NAME);
+                }
                 $field_definition = $this->getFieldDefinition($child_field->getName());
                 if ($field_definition is null) {
                     throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $child_field->getName());

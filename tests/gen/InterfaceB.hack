@@ -4,14 +4,14 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3dc50166a5f92591e4caaebe012a41de>>
+ * @generated SignedSource<<71f8ec8f26062b9dd7b8ce6ce1302c0f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
+final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
 
   const NAME = 'InterfaceB';
   const type THackType = \InterfaceB;
@@ -41,5 +41,20 @@ final class InterfaceB extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public async function resolveAsync(
+    this::THackType $value,
+    \Graphpinator\Parser\Field\IHasFieldSet $field,
+    GraphQL\Variables $vars,
+  ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
+    if ($value is \Concrete) {
+      return await Concrete::nonNullable()->resolveAsync($value, $field, $vars);
+    }
+    invariant_violation(
+      'Class %s has no associated GraphQL type or it is not a subtype of %s.',
+      \get_class($value),
+      static::NAME,
+    );
   }
 }
