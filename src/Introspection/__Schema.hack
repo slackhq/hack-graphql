@@ -13,4 +13,6 @@ interface __Schema {
 
     <<GraphQL\Field('mutationType', 'Mutation root type')>>
     public function getIntrospectionMutationType(): ?__Type;
+
+    public function getIntrospectionType(string $name): NamedTypeDeclaration;
 }
