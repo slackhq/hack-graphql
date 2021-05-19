@@ -9,4 +9,6 @@ use type Facebook\HackCodegen\{CodegenClass, HackCodegenFactory};
 interface ITypeBuilder {
     public function getGraphQLType(): string;
     public function build(HackCodegenFactory $cg): CodegenClass;
+    // TODO: make this non nullable
+    public function buildIntrospectionClass(HackCodegenFactory $cg): ?CodegenClass;
 }

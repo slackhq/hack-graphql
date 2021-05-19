@@ -2,6 +2,7 @@ namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\Str;
 use namespace Slack\GraphQL\Types;
+use namespace Slack\GraphQL;
 
 const dict<string, classname<Types\NamedInputType>> BUILTIN_INPUT_TYPES = dict[
     Types\IntInputType::NAME => Types\IntInputType::class,
@@ -14,6 +15,26 @@ const dict<string, classname<Types\NamedOutputType>> BUILTIN_OUTPUT_TYPES = dict
     Types\StringOutputType::NAME => Types\StringOutputType::class,
     Types\BooleanOutputType::NAME => Types\BooleanOutputType::class,
 ];
+
+function introspection_type(string $hack_type): string {
+    list($unwrapped, $suffix) = unwrap_type($hack_type);
+    switch ($unwrapped) {
+        case 'HH\int':
+            $class = GraphQL\Introspection\V2\IntType::class;
+            break;
+        case 'HH\string':
+            $class = GraphQL\Introspection\V2\StringType::class;
+            break;
+        case 'HH\bool':
+            $class = GraphQL\Introspection\V2\BooleanType::class;
+            break;
+        default:
+            // TODO: is this right?
+            return output_type($hack_type, false)['type'];
+    }
+
+    return Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix;
+}
 
 /**
  * Examples:
@@ -38,7 +59,8 @@ function input_type(string $hack_type): string {
             if ($class is null) {
                 throw new \Error(
                     'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
-                    'attribute, got '.$unwrapped,
+                    'attribute, got '.
+                    $unwrapped,
                 );
             }
     }
@@ -184,7 +206,7 @@ function type_structure_to_type_alias<T>(TypeStructure<T> $ts): string {
         case TypeStructureKind::OF_VEC:
             return Str\format('HH\vec<%s>', type_structure_to_type_alias($ts['generic_types'] as nonnull[0]));
         case TypeStructureKind::OF_ENUM:
-        //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
+            //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
             return $ts['classname'] as nonnull;
         default:
             invariant_violation(

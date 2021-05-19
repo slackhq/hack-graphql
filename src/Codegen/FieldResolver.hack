@@ -26,8 +26,8 @@ final class FieldResolver {
     private function shouldResolve(DefinitionFinder\ScannedClassish $class): bool {
         $rc = new \ReflectionClass($class->getName());
         return (
-            $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class)
-                ?? $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class)
+            $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
+            $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class)
         ) is nonnull;
     }
 

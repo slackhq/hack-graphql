@@ -50,7 +50,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case '__type':
         return new GraphQL\FieldDefinition(
           '__type',
-          __Type::nullable(),
+          Introspection\__Type::nullable(),
           async ($parent, $args, $vars) ==> \Slack\GraphQL\Introspection\QueryRootFields::getType(
             Types\StringInputType::nonNullable()->coerceNamedNode('name', $args, $vars),
           ),

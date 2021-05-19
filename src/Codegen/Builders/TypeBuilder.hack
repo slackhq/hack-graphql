@@ -40,16 +40,29 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
             ->addTypeConstant($this->generateTypeConstant($cg));
     }
 
-    private function generateNameConstant(HackCodegenFactory $cg): CodegenClassConstant {
+    protected function generateNameConstant(HackCodegenFactory $cg): CodegenClassConstant {
         return $cg
             ->codegenClassConstant('NAME')
             ->setValue($this->getGraphQLType(), HackBuilderValues::export());
+    }
+
+    protected function generateDescriptionConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        // TODO
+        return $cg
+            ->codegenClassConstant('DESCRIPTION')
+            ->setType('?string')
+            ->setValue(null, HackBuilderValues::export());
     }
 
     private function generateTypeConstant(HackCodegenFactory $cg): CodegenTypeConstant {
         return $cg
             ->codegenTypeConstant('THackType')
             ->setValue('\\'.$this->hack_type, HackBuilderValues::literal());
+    }
+
+    // TODO: remove this
+    public function buildIntrospectionClass(HackCodegenFactory $cg): ?CodegenClass {
+        return null;
     }
 
 }

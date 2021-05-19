@@ -54,14 +54,22 @@ final class Generator {
 
         $input_types = BUILTIN_INPUT_TYPES;
         $output_types = BUILTIN_OUTPUT_TYPES;
+        $introspection_types = dict[];
 
         foreach ($objects as $object) {
             $class = $object->build($this->cg);
             $this->generateFile($class);
+
             if ($object is InputTypeBuilder<_>) {
                 $input_types = self::add($input_types, $object->getGraphQLType(), $class->getName());
             } elseif ($object is OutputTypeBuilder<_>) {
                 $output_types = self::add($output_types, $object->getGraphQLType(), $class->getName());
+            }
+
+            $introspection_type = $object->buildIntrospectionClass($this->cg);
+            if ($introspection_type is nonnull) {
+                $introspection_types[$object->getGraphQLType()] = $introspection_type->getName();
+                $this->generateFile($introspection_type, true);
             }
         }
 
@@ -85,22 +93,37 @@ final class Generator {
         \rmdir($directory);
     }
 
-    private function generateFile(CodegenClass $class): void {
-        $this->cg
-            ->codegenFile($this->config['output_directory'].'/'.$class->getName().'.hack')
+    private function generateFile(CodegenClass $class, bool $is_introspection_type = false): void {
+        $path = $this->config['output_directory'];
+        $namespace = $this->config['namespace'];
+        if ($is_introspection_type) {
+            $path = Str\format('%s/Introspection', $path);
+            $namespace = Str\format('%s\Introspection', $namespace);
+        }
+
+        $file = $this->cg
+            ->codegenFile(Str\format('%s/%s.hack', $path, $class->getName()))
             ->setDoClobber(true)
             ->setGeneratedFrom($this->cg->codegenGeneratedFromScript('vendor/bin/hacktest'))
             ->setFileType(CodegenFileType::DOT_HACK)
-            ->setNamespace($this->config['namespace'])
+            ->setNamespace($namespace)
             ->useNamespace('Slack\\GraphQL')
-            ->useNamespace('Slack\\GraphQL\\Types')
-            ->useNamespace('HH\\Lib\\{C, Dict}')
-            ->addClass($class)
-            ->save();
+            ->addClass($class);
+
+        if (!$is_introspection_type) {
+            $file
+                ->useNamespace('Slack\\GraphQL\\Types')
+                ->useNamespace('HH\\Lib\\{C, Dict}');
+        } else {
+            $file->useNamespace('Slack\\GraphQL\\Introspection');
+        }
+
+        $file->save();
     }
 
     private static function add(dict<string, string> $dict, string $key, string $value): dict<string, string> {
-        invariant(!C\contains_key($dict, $key), 'Conflicting entry for "%s": "%s" vs "%s"', $key, $dict[$key], $value);
+        // TODO undo this when we remove the old introspection code
+        // invariant(!C\contains_key($dict, $key), 'Conflicting entry for "%s": "%s" vs "%s"', $key, $dict[$key], $value);
         $dict[$key] = $value;
         return $dict;
     }
@@ -228,10 +251,10 @@ final class Generator {
         foreach ($classish_objects as $class) {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
-                $fields = $class_fields[$class->getName()];
                 $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
                     $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 if ($graphql_attribute is nonnull) {
+                    $fields = $class_fields[$class->getName()];
                     $objects[] = new ObjectBuilder($graphql_attribute, $rc->getName(), $fields);
                 }
             }

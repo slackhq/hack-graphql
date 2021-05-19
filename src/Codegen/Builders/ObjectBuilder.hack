@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
+use namespace Slack\GraphQL;
 use namespace HH\Lib\{Vec, Keyset};
 use type Facebook\HackCodegen\{
     CodegenClass,
@@ -85,5 +86,34 @@ final class ObjectBuilder<TField as IFieldBuilder> extends OutputTypeBuilder<\Sl
         return $cg->codegenClassConstant('FIELD_NAMES')
             ->setType('keyset<string>')
             ->setValue($field_names, HackBuilderValues::keyset(HackBuilderValues::export()));
+    }
+
+    <<__Override>>
+    public function buildIntrospectionClass(HackCodegenFactory $cg): CodegenClass {
+        $class = $cg
+            ->codegenClass($this->getGeneratedClassName())
+            ->setIsFinal()
+            ->setExtendsf('\%s', GraphQL\Introspection\V2\ObjectType::class)
+            ->addConstant($this->generateNameConstant($cg))
+            ->addConstant($this->generateDescriptionConstant($cg));
+
+        $fields = vec[];
+        foreach ($this->fields as $field) {
+            $fields[] = $field->getIntrospectionField(hb($cg));
+        }
+
+        // TODO: fix the formatting of this
+        $get_fields_method_body =
+            hb($cg)->addReturn($fields, HackBuilderValues::vec(HackBuilderValues::literal()))->getCode();
+
+        $get_fields_method = $cg->codegenMethod('getFields')
+            ->setPublic()
+            ->setIsOverride(true)
+            ->setReturnTypef('vec<\%s>', \Slack\GraphQL\Introspection\V2\__Field::class)
+            ->setBody($get_fields_method_body);
+
+        $class->addMethod($get_fields_method);
+
+        return $class;
     }
 }

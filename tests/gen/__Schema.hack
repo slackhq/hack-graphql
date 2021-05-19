@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fc47d9ebed5b24c810478c8aae10067f>>
+ * @generated SignedSource<<2dee89697f82bf3b1fc9277f0ab02884>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -14,7 +14,7 @@ use namespace HH\Lib\{C, Dict};
 final class __Schema extends \Slack\GraphQL\Types\ObjectType {
 
   const NAME = '__Schema';
-  const type THackType = \Slack\GraphQL\Introspection\__Schema;
+  const type THackType = \Slack\GraphQL\Introspection\V2\__Schema;
   const keyset<string> FIELD_NAMES = keyset[
     'mutationType',
     'queryType',

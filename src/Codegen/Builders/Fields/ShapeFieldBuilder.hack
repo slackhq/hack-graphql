@@ -33,4 +33,18 @@ class ShapeFieldBuilder<T> implements IFieldBuilder {
     public function getName(): string {
         return $this->field_name;
     }
+
+    public function getIntrospectionField(HackBuilder $hb): string {
+        $type = introspection_type(type_structure_to_type_alias($this->type_structure));
+
+        $hb->addLine('\\Slack\\GraphQL\\Introspection\\V2\\__Field::for(')
+            ->indent()
+            ->addLinef('%s,', \var_export($this->field_name, true))
+            ->addLinef('%s,', $type)
+            ->unindent()
+            ->addLine(')');
+
+        return $hb->getCode();
+    }
+
 }

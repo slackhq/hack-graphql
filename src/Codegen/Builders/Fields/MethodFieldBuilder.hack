@@ -9,6 +9,19 @@ class MethodFieldBuilder implements IFieldBuilder {
         protected \ReflectionMethod $reflection_method,
     ) {}
 
+    public function getIntrospectionField(HackBuilder $hb): string {
+        $type = introspection_type($this->reflection_method->getReturnTypeText());
+
+        $hb->addLine('\\Slack\\GraphQL\\Introspection\\V2\\__Field::for(')
+            ->indent()
+            ->addLinef('%s,', \var_export($this->graphql_field->getName(), true))
+            ->addLinef('%s,', $type)
+            ->unindent()
+            ->addLine(')');
+
+        return $hb->getCode();
+    }
+
     public function addGetFieldDefinitionCase(HackBuilder $hb): void {
         $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
 
