@@ -96,8 +96,17 @@ abstract class ASTVisitor {
 
     private function visitVariable(Parser\Variable\Variable $node): void {
         $this->enter($node);
+        $this->visitTypeRef($node->getType());
         foreach ($node->getDirectives() as $directive) {
             // TODO: Directives
+        }
+        $this->leave($node);
+    }
+
+    private function visitTypeRef(Parser\TypeRef\TypeRef $node): void {
+        $this->enter($node);
+        if ($node is Parser\TypeRef\NotNullRef || $node is Parser\TypeRef\ListTypeRef) {
+            $this->visitTypeRef($node->getInnerRef());
         }
         $this->leave($node);
     }

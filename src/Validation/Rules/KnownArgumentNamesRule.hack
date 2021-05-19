@@ -1,6 +1,5 @@
 namespace Slack\GraphQL\Validation;
 
-
 final class KnownArgumentNamesRule extends ValidationRule {
     <<__Override>>
     public function enter(\Graphpinator\Parser\Node $node): void {

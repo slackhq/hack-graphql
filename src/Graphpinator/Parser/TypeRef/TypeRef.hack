@@ -1,5 +1,5 @@
 namespace Graphpinator\Parser\TypeRef;
 
-interface TypeRef {
-    public function print() : string;
+abstract class TypeRef extends \Graphpinator\Parser\Node {
+    abstract public function print(): string;
 }

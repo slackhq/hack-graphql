@@ -5,8 +5,9 @@ use type \Slack\GraphQL\__Private\ParallelVisitor;
 
 final class Validator {
     private static keyset<classname<ValidationRule>> $rules = keyset[
-        KnownArgumentNamesRule::class,
         FieldsOnCorrectTypeRule::class,
+        KnownArgumentNamesRule::class,
+        KnownTypeNamesRule::class,
         ScalarLeafsRule::class,
     ];
 
