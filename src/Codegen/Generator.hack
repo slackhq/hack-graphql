@@ -241,18 +241,22 @@ final class Generator {
             if (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
-                if ($graphql_attribute is nonnull) {
+                $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                invariant(
+                    $graphql_interface is null || $graphql_object is null,
+                    'The same class (%s) cannot be both a GraphQL interface and a GraphQL object type.',
+                    $rc->getName(),
+                );
+                if ($graphql_interface is nonnull) {
                     $objects[] = new InterfaceBuilder(
-                        $graphql_attribute,
+                        $graphql_interface,
                         $rc->getName(),
                         $fields,
                         $hack_class_to_graphql_object,
                     );
-                }
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
-                if ($graphql_attribute is nonnull) {
-                    $objects[] = new ObjectBuilder($graphql_attribute, $rc->getName(), $fields);
+                } else if ($graphql_object is nonnull) {
+                    $objects[] = new ObjectBuilder($graphql_object, $rc->getName(), $fields);
                 }
             }
 
