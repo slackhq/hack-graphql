@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8f1f64985a504476bc95a8a86744da68>>
+ * @generated SignedSource<<2ce205035c9dc56f05e67fa95673d56d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,6 +19,11 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
     'mutationType',
     'queryType',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Schema introspection';
+  }
 
   public function getFieldDefinition(
     string $field_name,

@@ -16,4 +16,9 @@ final class IntOutputType extends ScalarOutputType {
         );
         return $value;
     }
+
+    <<__Override>>
+    public function getDescription(): string {
+        return 'TODO';
+    }
 }

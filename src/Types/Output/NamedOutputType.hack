@@ -9,9 +9,8 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedOutputType
-    extends OutputType<this::THackType, this::TCoerced>
-    implements \Slack\GraphQL\Introspection\__Type {
+abstract class NamedOutputType extends OutputType<this::THackType, this::TCoerced> {
+    use IntrospectableNonNullableType;
 
     abstract const type THackType;
     abstract const type TCoerced;

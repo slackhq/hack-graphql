@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3e965c545c8823734f324bf821aa4f9c>>
+ * @generated SignedSource<<1542bc262b87eda0fd12afb769c24e0a>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -24,6 +24,11 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
     'nullable',
     'scalar',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Test object for fields with various return types';
+  }
 
   public function getFieldDefinition(
     string $field_name,

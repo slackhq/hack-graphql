@@ -8,4 +8,9 @@ final class StringOutputType extends ScalarOutputType {
     protected function coerce(string $value): string {
         return $value;
     }
+
+    <<__Override>>
+    public function getDescription(): string {
+        return 'TODO';
+    }
 }

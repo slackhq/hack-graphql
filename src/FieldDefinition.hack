@@ -56,11 +56,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     }
 
     public function getIntrospectionType(): Introspection\__Type {
-        if ($this->type is Introspection\INullableType) {
-            return $this->type->getInnerType();
-        }
-
-        return new Introspection\NonNullable($this->type as Introspection\__Type);
+        return $this->type->introspect();
     }
 
     public function getType(): Types\OutputType<TRet, TResolved> {

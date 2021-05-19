@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<33fe9e850d1aaaa78fdf0bf5033970f6>>
+ * @generated SignedSource<<8f0ca56fd6496b10d4f3c4d50e1ca62a>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,6 +21,11 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
     'isDeprecated',
     'name',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Enum value introspection';
+  }
 
   public function getFieldDefinition(
     string $field_name,

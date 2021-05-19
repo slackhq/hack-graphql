@@ -8,4 +8,9 @@ final class BooleanOutputType extends ScalarOutputType {
     protected function coerce(bool $value): bool {
         return $value;
     }
+
+    <<__Override>>
+    public function getDescription(): string {
+        return 'TODO';
+    }
 }

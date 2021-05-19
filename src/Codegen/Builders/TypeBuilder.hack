@@ -4,6 +4,7 @@ use namespace HH\Lib\{C, Str};
 use type Facebook\HackCodegen\{
     CodegenClass,
     CodegenClassConstant,
+    CodegenMethod,
     CodegenTypeConstant,
     HackBuilderValues,
     HackCodegenFactory,
@@ -52,4 +53,11 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
             ->setValue('\\'.$this->hack_type, HackBuilderValues::literal());
     }
 
+    final protected function generateGetDescription(HackCodegenFactory $cg): CodegenMethod {
+        return $cg->codegenMethod('getDescription')
+            ->setIsOverride()
+            ->setPublic()
+            ->setReturnType('?string')
+            ->setBodyf('return %s;', \var_export($this->type_info->getDescription(), true));
+    }
 }

@@ -6,6 +6,7 @@ use namespace Graphpinator\Parser\Value;
 
 <<__ConsistentConstruct>>
 abstract class InputObjectType extends NamedInputType {
+    use IntrospectableNonNullableType;
 
     <<__Enforceable>>
     abstract const type THackType as shape(...);
@@ -53,5 +54,10 @@ abstract class InputObjectType extends NamedInputType {
     <<__Override>>
     public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
+    }
+
+    <<__Override>>
+    public function getFields(): null {
+        return null;
     }
 }

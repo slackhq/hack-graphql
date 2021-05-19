@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<f68087911dd7d76538007107ef85e6bd>>
+ * @generated SignedSource<<cb631e3ff94f84268bae5e3dd20a2a4d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,6 +21,11 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
     'name',
     'num_users',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Team';
+  }
 
   public function getFieldDefinition(
     string $field_name,

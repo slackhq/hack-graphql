@@ -7,6 +7,7 @@ final class BooleanInputType extends ScalarInputType {
 
     const type THackType = bool;
     const string NAME = 'Boolean';
+    const classname<BooleanOutputType> OUTPUT_TYPE_CLASS = BooleanOutputType::class;
 
     <<__Override>>
     public function coerceValue(mixed $value): bool {

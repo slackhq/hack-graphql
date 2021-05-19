@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<71f8ec8f26062b9dd7b8ce6ce1302c0f>>
+ * @generated SignedSource<<7956e85b1e1b93d31f1671cde5911de5>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,6 +19,11 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
     'bar',
     'foo',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'InterfaceB';
+  }
 
   public function getFieldDefinition(
     string $field_name,

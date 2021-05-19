@@ -22,4 +22,9 @@ abstract class LeafOutputType extends NamedOutputType {
             return new GraphQL\InvalidFieldResult(vec[$e]);
         }
     }
+
+    <<__Override>>
+    final public function getFields(): null {
+        return null;
+    }
 }

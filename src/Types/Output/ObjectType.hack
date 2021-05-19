@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
-abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\__Type, CompositeType {
+abstract class ObjectType extends NamedOutputType implements CompositeType {
     const type TCoerced = dict<string, mixed>;
 
     abstract const keyset<string> FIELD_NAMES;

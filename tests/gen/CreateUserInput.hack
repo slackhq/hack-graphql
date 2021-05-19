@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<06706f577f3546a2a75cbc30c13de564>>
+ * @generated SignedSource<<6aeb569082bd4dddfb54528630c0c724>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,6 +21,11 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     'team',
     'favorite_color',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Arguments for creating a user';
+  }
 
   <<__Override>>
   public function coerceFieldValues(

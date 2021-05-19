@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ae55d24e287be8dd02a0e7dc55090857>>
+ * @generated SignedSource<<3496cdc69d66ab7f1cf91113ed3d4928>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -17,4 +17,9 @@ final class FavoriteColorOutputType
   const NAME = 'FavoriteColor';
   const type THackType = \FavoriteColor;
   const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Favorite Color';
+  }
 }

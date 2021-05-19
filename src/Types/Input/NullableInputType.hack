@@ -3,9 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class NullableInputType<TInner as nonnull>
-    extends InputType<?TInner>
-    implements GraphQL\Introspection\INullableType {
+final class NullableInputType<TInner as nonnull> extends InputType<?TInner> {
 
     public function __construct(private InputType<TInner> $inner_type) {}
 
@@ -35,5 +33,14 @@ final class NullableInputType<TInner as nonnull>
     <<__Override>>
     public function assertValidVariableValue(mixed $value): ?TInner {
         return $value is null ? null : $this->inner_type->assertValidVariableValue($value);
+    }
+
+    <<__Override>>
+    final public function introspect(): GraphQL\Introspection\__Type {
+        $inner = $this->inner_type->introspect();
+        while ($inner is GraphQL\Introspection\NonNullableType) {
+            $inner = $inner->getOfType();
+        }
+        return $inner;
     }
 }

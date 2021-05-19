@@ -14,6 +14,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
 
     public function build(HackCodegenFactory $cg): CodegenClass {
         $class = parent::build($cg);
+        $class->addMethod($this->generateGetDescription($cg));
 
         $ts = $this->type_alias->getResolvedTypeStructure();
         invariant(

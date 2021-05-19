@@ -5,7 +5,7 @@ use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
 
-abstract class EnumInputType extends NamedInputType {
+abstract class EnumInputType extends LeafInputType {
 
     <<__Enforceable>>
     abstract const type THackType as arraykey;
@@ -37,10 +37,4 @@ abstract class EnumInputType extends NamedInputType {
         );
         return $enum::getValues()[$node->getRawValue()];
     }
-
-    <<__Override>>
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::ENUM;
-    }
-
 }

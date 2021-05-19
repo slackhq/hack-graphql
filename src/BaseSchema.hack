@@ -50,7 +50,7 @@ abstract class BaseSchema implements Introspection\__Schema {
 
     final public function getIntrospectionType(string $name): ?Introspection\__Type {
         $type = static::INPUT_TYPES[$name] ?? static::OUTPUT_TYPES[$name] ?? null;
-        return $type is nonnull ? $type::nonNullable() : null;
+        return $type is nonnull ? $type::nullable()->introspect() : null;
     }
 
     // TODO add method to create singleton

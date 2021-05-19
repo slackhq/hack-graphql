@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fed27872fcb2d3f0635ab4470749cb05>>
+ * @generated SignedSource<<9f90e3b47ac6d7ac644d1e34d3df2cb2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -29,6 +29,11 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
     'non_nullable',
     'user_facing_error',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Test object for error handling';
+  }
 
   public function getFieldDefinition(
     string $field_name,

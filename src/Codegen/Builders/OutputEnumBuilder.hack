@@ -1,5 +1,7 @@
 namespace Slack\GraphQL\Codegen;
 
+use type Facebook\HackCodegen\{CodegenClass, HackCodegenFactory};
+
 final class OutputEnumBuilder extends OutputTypeBuilder<\Slack\GraphQL\EnumType> {
     use EnumBuilder;
 
@@ -7,5 +9,10 @@ final class OutputEnumBuilder extends OutputTypeBuilder<\Slack\GraphQL\EnumType>
 
     protected function getGeneratedClassName(): string {
         return $this->type_info->getOutputType();
+    }
+
+    <<__Override>>
+    public function build(HackCodegenFactory $cg): CodegenClass {
+        return $this->buildShared($cg);
     }
 }

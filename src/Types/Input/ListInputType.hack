@@ -5,7 +5,7 @@ use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 use type Slack\GraphQL\UserFacingError;
 
-final class ListInputType<TInner> extends InputType<vec<TInner>> implements GraphQL\Introspection\__Type {
+final class ListInputType<TInner> extends InputType<vec<TInner>> {
 
     public function __construct(private InputType<TInner> $inner_type) {}
 
@@ -45,16 +45,10 @@ final class ListInputType<TInner> extends InputType<vec<TInner>> implements Grap
         return Vec\map($value as vec<_>, $item ==> $this->inner_type->coerceValue($item));
     }
 
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::LIST;
-    }
-
     <<__Override>>
-    final public function getOfType(): GraphQL\Introspection\__Type {
-        if ($this->inner_type is NullableInputType<_>) {
-            return $this->inner_type->getInnerType();
-        }
-
-        return new GraphQL\Introspection\NonNullable($this->inner_type as GraphQL\Introspection\__Type);
+    final public function introspect(): GraphQL\Introspection\NonNullableType {
+        return new GraphQL\Introspection\NonNullableType(
+            new GraphQL\Introspection\ListType($this->inner_type->introspect()),
+        );
     }
 }

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b4322dc52ad290dde837ad2f3c812a6d>>
+ * @generated SignedSource<<f0e91f7e4f3c1c9b1ee4f9871f087ee2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,6 +19,11 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
     'createUser',
     'pokeUser',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Mutation';
+  }
 
   public function getFieldDefinition(
     string $field_name,

@@ -8,6 +8,7 @@ final class StringInputType extends ScalarInputType {
 
     const type THackType = string;
     const string NAME = 'String';
+    const classname<StringOutputType> OUTPUT_TYPE_CLASS = StringOutputType::class;
 
     <<__Override>>
     public function coerceValue(mixed $value): string {

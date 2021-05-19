@@ -7,6 +7,7 @@ final class IntInputType extends ScalarInputType {
 
     const type THackType = int;
     const string NAME = 'Int';
+    const classname<IntOutputType> OUTPUT_TYPE_CLASS = IntOutputType::class;
 
     const int MIN_SAFE_VALUE = -2147483648;
     const int MAX_SAFE_VALUE = 2147483647;

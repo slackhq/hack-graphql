@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<135c709f956a27912c76f53d7216ef50>>
+ * @generated SignedSource<<efda0cb7dc98dd0a963c925108442577>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -18,6 +18,11 @@ final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
   const keyset<string> FIELD_NAMES = keyset [
     'name',
   ];
+
+  <<__Override>>
+  public function getDescription(): ?string {
+    return 'Arguments for creating a team';
+  }
 
   <<__Override>>
   public function coerceFieldValues(

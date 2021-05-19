@@ -1,9 +1,7 @@
 namespace Slack\GraphQL\Types;
 use namespace Slack\GraphQL;
 
-final class NullableOutputType<TInner, TResolved>
-    extends OutputType<?TInner, ?TResolved>
-    implements GraphQL\Introspection\INullableType {
+final class NullableOutputType<TInner, TResolved> extends OutputType<?TInner, ?TResolved> {
 
     public function __construct(private OutputType<TInner, TResolved> $inner_type) {}
 
@@ -41,5 +39,14 @@ final class NullableOutputType<TInner, TResolved>
 
     public function resolveError(GraphQL\UserFacingError $error): GraphQL\ValidFieldResult<null> {
         return new GraphQL\ValidFieldResult(null, vec[$error]);
+    }
+
+    <<__Override>>
+    final public function introspect(): GraphQL\Introspection\__Type {
+        $inner = $this->inner_type->introspect();
+        while ($inner is GraphQL\Introspection\NonNullableType) {
+            $inner = $inner->getOfType();
+        }
+        return $inner;
     }
 }

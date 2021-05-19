@@ -5,7 +5,7 @@ use type Facebook\HackCodegen\{CodegenClass, HackBuilderValues, HackCodegenFacto
 trait EnumBuilder {
     require extends TypeBuilder<\Slack\GraphQL\EnumType>;
 
-    final public function build(HackCodegenFactory $cg): CodegenClass {
+    private function buildShared(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
             ->addConstant(
                 $cg->codegenClassConstant('HACK_ENUM')
