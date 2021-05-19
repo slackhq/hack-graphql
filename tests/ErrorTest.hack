@@ -317,7 +317,10 @@ final class ErrorTest extends PlaygroundTest {
                 dict[],
                 shape(
                     'errors' => vec[
-                        shape('message' => 'Undefined input type "InvalidType"'),
+                        shape(
+                            'message' => 'Unknown type "InvalidType".',
+                            'location' => shape('line' => 1, 'column' => 13),
+                        ),
                     ],
                 ),
             ),
