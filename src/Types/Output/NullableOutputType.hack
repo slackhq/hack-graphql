@@ -1,9 +1,7 @@
 namespace Slack\GraphQL\Types;
 use namespace Slack\GraphQL;
 
-final class NullableOutputType<TInner, TResolved>
-    extends OutputType<?TInner, ?TResolved>
-    implements GraphQL\Introspection\INullableType {
+final class NullableOutputType<TInner, TResolved> extends OutputType<?TInner, ?TResolved> {
 
     public function __construct(private OutputType<TInner, TResolved> $inner_type) {}
 

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<33fe9e850d1aaaa78fdf0bf5033970f6>>
+ * @generated SignedSource<<3b3c4778e755e10ca88aaae61ea8ec2d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,46 +16,82 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
   const NAME = '__EnumValue';
   const type THackType = \Slack\GraphQL\Introspection\__EnumValue;
   const keyset<string> FIELD_NAMES = keyset[
-    'deprecationReason',
+    'name',
     'description',
     'isDeprecated',
-    'name',
+    'deprecationReason',
   ];
 
   public function getFieldDefinition(
     string $field_name,
   ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'deprecationReason':
+      case 'name':
         return new GraphQL\FieldDefinition(
-          'deprecationReason',
+          'name',
           Types\StringOutputType::nullable(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
+          async ($parent, $args, $vars) ==> $parent['name'],
         );
       case 'description':
         return new GraphQL\FieldDefinition(
           'description',
           Types\StringOutputType::nullable(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getDescription(),
+          async ($parent, $args, $vars) ==> $parent['description'] ?? null,
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
           'isDeprecated',
           Types\BooleanOutputType::nullable(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->isDeprecated(),
+          async ($parent, $args, $vars) ==> $parent['isDeprecated'],
         );
-      case 'name':
+      case 'deprecationReason':
         return new GraphQL\FieldDefinition(
-          'name',
+          'deprecationReason',
           Types\StringOutputType::nullable(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getName(),
+          async ($parent, $args, $vars) ==> $parent['deprecationReason'] ?? null,
         );
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => '',
+      'fields' => vec[
+        shape(
+          'name' => 'name',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String'))->nonNullable(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'description',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String'))->nonNullable(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'isDeprecated',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Boolean'))->nonNullable(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'deprecationReason',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String'))->nonNullable(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

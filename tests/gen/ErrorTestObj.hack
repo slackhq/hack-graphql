@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fed27872fcb2d3f0635ab4470749cb05>>
+ * @generated SignedSource<<32a074378d5b7449d2db26687ca38467>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -121,5 +121,113 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Test object for error handling',
+      'fields' => vec[
+        shape(
+          'name' => 'bad_int_list_n_of_n',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'bad_int_list_n_of_nn',
+          'description' => 'Nullability of nested types is respected, which may result in killing the whole list (but no parents)',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'bad_int_list_nn_of_nn',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nonNullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'hidden_exception',
+          'description' => 'Arbitrary exceptions are hidden from clients, since they might contain sensitive data',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested_list_n_of_n',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj'))->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested_list_n_of_nn',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj'))->nonNullable()->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested_list_nn_of_nn',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj'))->nonNullable()->nonNullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested_nn',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj'))->nonNullable(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'no_error',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'non_nullable',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'user_facing_error',
+          'description' => '',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

@@ -3,9 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
 
-final class ListOutputType<TInner, TResolved>
-    extends OutputType<vec<TInner>, vec<mixed>>
-    implements GraphQL\Introspection\__Type {
+final class ListOutputType<TInner, TResolved> extends OutputType<vec<TInner>, vec<mixed>> {
 
     public function __construct(private OutputType<TInner, TResolved> $inner_type) {}
 
@@ -50,14 +48,5 @@ final class ListOutputType<TInner, TResolved>
 
     final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::LIST;
-    }
-
-    <<__Override>>
-    final public function getOfType(): GraphQL\Introspection\__Type {
-        if ($this->inner_type is NullableOutputType<_, _>) {
-            return $this->inner_type->getInnerType();
-        }
-
-        return new GraphQL\Introspection\NonNullable($this->inner_type as GraphQL\Introspection\__Type);
     }
 }

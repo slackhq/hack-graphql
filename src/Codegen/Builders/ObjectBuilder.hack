@@ -4,6 +4,7 @@ use namespace HH\Lib\Vec;
 
 final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
     const classname<\Slack\GraphQL\Types\ObjectType> SUPERCLASS = \Slack\GraphQL\Types\ObjectType::class;
+    const string KIND_CONST = 'GraphQL\\Introspection\\__TypeKind::OBJECT';
 
     public static function fromTypeAlias<T>(
         \Slack\GraphQL\ObjectType $type_info,

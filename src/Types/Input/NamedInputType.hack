@@ -9,7 +9,7 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedInputType extends InputType<this::THackType> implements \Slack\GraphQL\Introspection\__Type {
+abstract class NamedInputType extends InputType<this::THackType> {
 
     <<__Enforceable>>
     abstract const type THackType as nonnull;

@@ -8,6 +8,7 @@ use type Facebook\HackCodegen\{
 
 final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
     const classname<\Slack\GraphQL\Types\InterfaceType> SUPERCLASS = \Slack\GraphQL\Types\InterfaceType::class;
+    const string KIND_CONST = 'GraphQL\\Introspection\\__TypeKind::INTERFACE';
 
     <<__Override>>
     public function __construct(

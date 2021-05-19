@@ -53,7 +53,7 @@ function input_type(string $hack_type): string {
 function output_type(
     string $hack_type,
     bool $kills_parent_on_exception,
-): shape('type' => string, 'needs_await' => bool) {
+): shape('type' => string, 'needs_await' => bool, 'introspection_type' => string) {
     $needs_await = false;
     if (Str\starts_with($hack_type, 'HH\\Awaitable<')) {
         $needs_await = true;
@@ -90,7 +90,11 @@ function output_type(
                 );
             }
     }
-    return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
+    return shape(
+        'type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix,
+        'needs_await' => $needs_await,
+        'introspection_type' => introspection_type($hack_type),
+    );
 }
 
 /**
@@ -164,6 +168,42 @@ function unwrap_type(string $hack_type, bool $nullable = false): (string, string
     return tuple($hack_type, $nullable ? '::nullable()' : '::nonNullable()');
 }
 
+/**
+ * Example: ?vec<int> -> (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nullableListOf()
+ */
+function introspection_type(string $hack_type, bool $nullable = false): string {
+    if (Str\starts_with($hack_type, '?')) {
+        return introspection_type(Str\strip_prefix($hack_type, '?'), true);
+    }
+    if (Str\starts_with($hack_type, 'HH\vec<')) {
+        return
+            introspection_type(Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>')).
+            ($nullable ? '->nullableListOf()' : '->nonNullableListOf()');
+    }
+    switch ($hack_type) {
+        case 'HH\int':
+            $graphql_type_name = 'Int';
+            break;
+        case 'HH\string':
+            $graphql_type_name = 'String';
+            break;
+        case 'HH\bool':
+            $graphql_type_name = 'Boolean';
+            break;
+        default:
+            $graphql_type_name = get_output_class($hack_type) ?? get_input_class($hack_type);
+            invariant(
+                $graphql_type_name is nonnull,
+                'Hack type %s does not match any GraphQL type.',
+                $hack_type,
+            );
+    }
+    return Str\format(
+        '(new GraphQL\\Introspection\\NamedTypeReference($schema, %s))%s',
+        \var_export($graphql_type_name, true),
+        $nullable ? '' : '->nonNullable()',
+    );
+}
 
 /**
  * Get the type aias for the given type structure.
@@ -183,7 +223,9 @@ function type_structure_to_type_alias<T>(TypeStructure<T> $ts): string {
             return 'HH\bool';
         case TypeStructureKind::OF_VEC:
             return Str\format('HH\vec<%s>', type_structure_to_type_alias($ts['generic_types'] as nonnull[0]));
+        case TypeStructureKind::OF_CLASS:
         case TypeStructureKind::OF_ENUM:
+        case TypeStructureKind::OF_INTERFACE:
         //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
             return $ts['classname'] as nonnull;
         default:

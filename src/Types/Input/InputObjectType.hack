@@ -2,6 +2,7 @@ namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
+use namespace Slack\GraphQL\Introspection;
 use namespace Graphpinator\Parser\Value;
 
 <<__ConsistentConstruct>>
@@ -50,8 +51,7 @@ abstract class InputObjectType extends NamedInputType {
         dict<string, mixed> $variable_values,
     ): this::THackType;
 
-    <<__Override>>
-    public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
+    final public static function introspect(Introspection\__Schema $_): Introspection\NamedTypeDeclaration {
+        invariant_violation('TODO');
     }
 }

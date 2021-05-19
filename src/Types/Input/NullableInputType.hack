@@ -3,9 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class NullableInputType<TInner as nonnull>
-    extends InputType<?TInner>
-    implements GraphQL\Introspection\INullableType {
+final class NullableInputType<TInner as nonnull> extends InputType<?TInner> {
 
     public function __construct(private InputType<TInner> $inner_type) {}
 

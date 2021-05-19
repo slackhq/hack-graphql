@@ -1,6 +1,6 @@
 namespace Slack\GraphQL;
 
-use namespace HH\Lib\Dict;
+use namespace HH\Lib\{C, Dict};
 
 // TODO: this should be private
 abstract class BaseSchema implements Introspection\__Schema {
@@ -39,18 +39,41 @@ abstract class BaseSchema implements Introspection\__Schema {
     <<__Override>>
     final public function getIntrospectionQueryType(): Introspection\__Type {
         $query_type = static::QUERY_TYPE;
-        return $query_type::nonNullable();
+        return $query_type::introspect($this);
     }
 
     <<__Override>>
     final public function getIntrospectionMutationType(): ?Introspection\__Type {
         $mutation_type = static::MUTATION_TYPE;
-        return $mutation_type is nonnull ? $mutation_type::nonNullable() : null;
+        return $mutation_type is nonnull ? $mutation_type::introspect($this) : null;
     }
 
-    final public function getIntrospectionType(string $name): ?Introspection\__Type {
-        $type = static::INPUT_TYPES[$name] ?? static::OUTPUT_TYPES[$name] ?? null;
-        return $type is nonnull ? $type::nonNullable() : null;
+    <<__Override>>
+    final public function getIntrospectionType(string $name): ?Introspection\NamedTypeDeclaration {
+        $class = static::OUTPUT_TYPES[$name] ?? null;
+        if ($class is nonnull) {
+            return $class::introspect($this);
+        }
+        $class = static::INPUT_TYPES[$name] ?? null;
+        if ($class is null) {
+            return null;
+        }
+        $type = $class::nonNullable() as Types\InputObjectType;
+        return $type::introspect($this);
+    }
+
+    <<__Override>>
+    public function getIntrospectionTypes(): vec<Introspection\__Type> {
+        $types = dict[];
+        foreach (static::OUTPUT_TYPES as $name => $class) {
+            $types[$name] = $this->getIntrospectionType($name) as nonnull;
+        }
+        foreach (static::INPUT_TYPES as $name => $class) {
+            if (!C\contains_key($types, $name)) {
+                $types[$name] = $this->getIntrospectionType($name) as nonnull;
+            }
+        }
+        return vec($types);
     }
 
     // TODO add method to create singleton

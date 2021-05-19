@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<212a93b747dc4cfe2c98572af76f6f51>>
+ * @generated SignedSource<<ff7f7618f537dcac539499dba3405c54>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -251,5 +251,169 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Query',
+      'fields' => vec[
+        shape(
+          'name' => '__schema',
+          'description' => 'Schema introspection',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Schema')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => '__type',
+          'description' => 'Type introspection',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Type')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'arg_test',
+          'description' => 'Root field for testing arguments',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'bot',
+          'description' => 'Fetch a bot by ID',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Bot')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'error_test',
+          'description' => 'Root field to get an instance',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'error_test_nn',
+          'description' => 'A non-nullable root field to get an instance',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ErrorTestObj'))->nonNullable(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'getConcrete',
+          'description' => 'Root field to get an instance of Concrete',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Concrete')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'getInterfaceA',
+          'description' => 'Root field to get an instance of InterfaceA',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'InterfaceA')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'getInterfaceB',
+          'description' => 'Root field to get an instance of InterfaceB',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'InterfaceB')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'getObjectShape',
+          'description' => 'fetch an object shape',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'ObjectShape')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'human',
+          'description' => 'Fetch a user by ID',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Human')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'introspection_test',
+          'description' => 'Root field to get an instance',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'IntrospectionTestObject')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'list_arg_test',
+          'description' => 'Root field for testing list arguments',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nullableListOf()->nullableListOf()->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nested_list_sum',
+          'description' => 'Test for nested list arguments',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'optional_field_test',
+          'description' => 'Test for an optional input object field',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'output_type_test',
+          'description' => 'Root field to get an instance',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'OutputTypeTestObj')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'takes_favorite_color',
+          'description' => 'Test for enum arguments',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Boolean')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'user',
+          'description' => 'Fetch a user by ID',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'User')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'viewer',
+          'description' => 'Authenticated viewer',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'User')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

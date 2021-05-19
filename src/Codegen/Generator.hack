@@ -203,7 +203,7 @@ final class Generator {
 
         $introspection_parser = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
 
-        $input_types = $this->parser->getTypes();
+        $input_types = Vec\concat($this->parser->getTypes(), $introspection_parser->getTypes());
         foreach ($input_types as $type) {
             $rt = new \ReflectionTypeAlias($type->getName());
             $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);

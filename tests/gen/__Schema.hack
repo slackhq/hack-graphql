@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8f1f64985a504476bc95a8a86744da68>>
+ * @generated SignedSource<<222a0cc3760dc8aad97d37086c2c8ba3>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -18,6 +18,7 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
   const keyset<string> FIELD_NAMES = keyset[
     'mutationType',
     'queryType',
+    'types',
   ];
 
   public function getFieldDefinition(
@@ -38,8 +39,51 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionQueryType(),
         );
+      case 'types':
+        return new GraphQL\FieldDefinition(
+          'types',
+          __Type::nonNullable()->nullableListOf(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getIntrospectionTypes(),
+        );
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Schema introspection',
+      'fields' => vec[
+        shape(
+          'name' => 'mutationType',
+          'description' => 'Mutation root type',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Type')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'queryType',
+          'description' => 'Query root type',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Type')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'types',
+          'description' => 'Types contained within the schema',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Type'))->nonNullable()->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

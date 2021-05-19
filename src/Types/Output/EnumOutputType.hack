@@ -1,6 +1,7 @@
 namespace Slack\GraphQL\Types;
 
-use namespace Slack\GraphQL;
+use namespace HH\Lib\Vec;
+use namespace Slack\GraphQL\Introspection;
 
 abstract class EnumOutputType extends LeafOutputType {
     abstract const type THackType as arraykey;
@@ -17,7 +18,15 @@ abstract class EnumOutputType extends LeafOutputType {
     }
 
     <<__Override>>
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::ENUM;
+    final public static function introspect(Introspection\__Schema $_): Introspection\NamedTypeDeclaration {
+        $hack_enum = static::HACK_ENUM;
+        return new Introspection\NamedTypeDeclaration(shape(
+            'name' => static::NAME,
+            'kind' => Introspection\__TypeKind::ENUM,
+            'enumValues' => Vec\map(
+                $hack_enum::getNames(),
+                $name ==> shape('name' => $name, 'isDeprecated' => false),
+            ),
+        ));
     }
 }

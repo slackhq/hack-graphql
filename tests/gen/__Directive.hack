@@ -4,24 +4,23 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e8138540d63396d06f784426b6821054>>
+ * @generated SignedSource<<46d4dec65d0766132a20c78462269f27>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class __Field extends \Slack\GraphQL\Types\ObjectType {
+final class __Directive extends \Slack\GraphQL\Types\ObjectType {
 
-  const NAME = '__Field';
-  const type THackType = \Slack\GraphQL\Introspection\__Field;
+  const NAME = '__Directive';
+  const type THackType = \Slack\GraphQL\Introspection\__Directive;
   const keyset<string> FIELD_NAMES = keyset[
     'name',
     'description',
+    'locations',
     'args',
-    'type',
-    'isDeprecated',
-    'deprecationReason',
+    'isRepeatable',
   ];
 
   public function getFieldDefinition(
@@ -42,6 +41,13 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['description'] ?? null,
         );
+      case 'locations':
+        return new GraphQL\FieldDefinition(
+          'locations',
+          __DirectiveLocationOutputType::nonNullable()->nullableListOf(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent['locations'],
+        );
       case 'args':
         return new GraphQL\FieldDefinition(
           'args',
@@ -49,26 +55,12 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['args'],
         );
-      case 'type':
+      case 'isRepeatable':
         return new GraphQL\FieldDefinition(
-          'type',
-          __Type::nullable(),
-          dict[],
-          async ($parent, $args, $vars) ==> $parent['type'],
-        );
-      case 'isDeprecated':
-        return new GraphQL\FieldDefinition(
-          'isDeprecated',
+          'isRepeatable',
           Types\BooleanOutputType::nullable(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent['isDeprecated'],
-        );
-      case 'deprecationReason':
-        return new GraphQL\FieldDefinition(
-          'deprecationReason',
-          Types\StringOutputType::nullable(),
-          dict[],
-          async ($parent, $args, $vars) ==> $parent['deprecationReason'] ?? null,
+          async ($parent, $args, $vars) ==> $parent['isRepeatable'],
         );
       default:
         return null;
@@ -96,26 +88,20 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           'isDeprecated' => false,
         ),
         shape(
+          'name' => 'locations',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__DirectiveLocationOutputType'))->nonNullable()->nonNullableListOf(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+        shape(
           'name' => 'args',
           'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__InputValue'))->nonNullable()->nonNullableListOf(),
           'args' => vec[],
           'isDeprecated' => false,
         ),
         shape(
-          'name' => 'type',
-          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, '__Type'))->nonNullable(),
-          'args' => vec[],
-          'isDeprecated' => false,
-        ),
-        shape(
-          'name' => 'isDeprecated',
+          'name' => 'isRepeatable',
           'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Boolean'))->nonNullable(),
-          'args' => vec[],
-          'isDeprecated' => false,
-        ),
-        shape(
-          'name' => 'deprecationReason',
-          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String'))->nonNullable(),
           'args' => vec[],
           'isDeprecated' => false,
         ),

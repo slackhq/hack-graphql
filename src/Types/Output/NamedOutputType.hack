@@ -1,5 +1,7 @@
 namespace Slack\GraphQL\Types;
 
+use namespace Slack\GraphQL\Introspection;
+
 /**
  * Named type is any non-wrapping type.
  *
@@ -9,9 +11,7 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedOutputType
-    extends OutputType<this::THackType, this::TCoerced>
-    implements \Slack\GraphQL\Introspection\__Type {
+abstract class NamedOutputType extends OutputType<this::THackType, this::TCoerced> {
 
     abstract const type THackType;
     abstract const type TCoerced;
@@ -39,4 +39,6 @@ abstract class NamedOutputType
     final public static function nullable(): NullableOutputType<this::THackType, this::TCoerced> {
         return new NullableOutputType(static::nonNullable());
     }
+
+    abstract public static function introspect(Introspection\__Schema $_): Introspection\NamedTypeDeclaration;
 }

@@ -33,6 +33,17 @@ class ShapeFieldBuilder<T> implements IFieldBuilder {
         $hb->unindent();
     }
 
+    public function addIntrospectionShape(HackBuilder $hb): void {
+        $hb->addLine('shape(')
+            ->indent()
+            ->addLinef("'name' => %s,", \var_export($this->getName(), true))
+            ->addLinef("'type' => %s,", introspection_type(type_structure_to_type_alias($this->type_structure), false))
+            ->addLine("'args' => vec[],")
+            ->addLine("'isDeprecated' => false,")
+            ->unindent()
+            ->addLine('),');
+    }
+
     public function getName(): string {
         return $this->field_name;
     }

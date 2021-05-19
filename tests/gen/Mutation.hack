@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b4322dc52ad290dde837ad2f3c812a6d>>
+ * @generated SignedSource<<598abb67a4fb26928a3e667038a80dc9>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -55,5 +55,33 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Mutation',
+      'fields' => vec[
+        shape(
+          'name' => 'createUser',
+          'description' => 'Create a new user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'User')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'pokeUser',
+          'description' => 'Poke a user by ID',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'User')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

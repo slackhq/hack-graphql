@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<91da90b0e5c0c3b0e9fb0edcecd3186a>>
+ * @generated SignedSource<<bc00fd9d638b0f91e3bcea4ea370b17a>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -57,6 +57,50 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::INTERFACE,
+      'name' => static::NAME,
+      'description' => 'User',
+      'fields' => vec[
+        shape(
+          'name' => 'id',
+          'description' => 'ID of the user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'is_active',
+          'description' => 'Whether the user is active',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Boolean')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'name',
+          'description' => 'Name of the user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'team',
+          'description' => 'Team the user belongs to',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Team')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 
   public async function resolveAsync(

@@ -11,7 +11,7 @@ final class NamedTypeReference extends __Type {
 
     <<__Memoize>>
     private function getDeclaration(): NamedTypeDeclaration {
-        return $this->schema->getIntrospectionType($this->name);
+        return $this->schema->getIntrospectionType($this->name) as nonnull;
     }
 
     <<__Override>>
@@ -57,5 +57,17 @@ final class NamedTypeReference extends __Type {
     <<__Override>>
     public function getOfType(): ?__Type {
         return null;
+    }
+
+    public function nonNullable(): NonNullableType {
+        return new NonNullableType($this);
+    }
+
+    public function nullableListOf(): ListType {
+        return new ListType($this);
+    }
+
+    public function nonNullableListOf(): NonNullableType {
+        return new NonNullableType(new ListType($this));
     }
 }

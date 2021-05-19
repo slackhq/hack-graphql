@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b479ef5b60266684e414b7cd44c3fa9f>>
+ * @generated SignedSource<<d568e6ce0f742747bbcf1e6bbdf47554>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,5 +33,23 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'AnotherObjectShape',
+      'fields' => vec[
+        shape(
+          'name' => 'abc',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nonNullableListOf(),
+          'args' => vec[],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

@@ -45,6 +45,14 @@ abstract class WrapperType extends __Type {
     final public function getOfType(): ?__Type {
         return $this->ofType;
     }
+
+    public function nullableListOf(): ListType {
+        return new ListType($this);
+    }
+
+    public function nonNullableListOf(): NonNullableType {
+        return new NonNullableType(new ListType($this));
+    }
 }
 
 

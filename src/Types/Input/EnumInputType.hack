@@ -37,10 +37,4 @@ abstract class EnumInputType extends NamedInputType {
         );
         return $enum::getValues()[$node->getRawValue()];
     }
-
-    <<__Override>>
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::ENUM;
-    }
-
 }

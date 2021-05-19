@@ -92,6 +92,25 @@ class MethodFieldBuilder implements IFieldBuilder {
         return $invocations;
     }
 
+    public function addIntrospectionShape(HackBuilder $hb): void {
+        $hb->addLine('shape(')
+            ->indent()
+            ->addLinef("'name' => %s,", \var_export($this->getName(), true))
+            ->addLinef("'description' => %s,", \var_export($this->graphql_field->getDescription(), true))
+            ->addLinef("'type' => %s,", output_type(
+                $this->reflection_method->getReturnTypeText(),
+                $this->reflection_method->getAttributeClass(\Slack\GraphQL\KillsParentOnException::class) is nonnull,
+            )['introspection_type'])
+            ->addLine("'args' => vec[")
+            ->indent();
+        // TODO: args
+        $hb->unindent()
+            ->addLine('],')
+            ->addLine("'isDeprecated' => false,")
+            ->unindent()
+            ->addLine('),');
+    }
+
     public function getName(): string {
         return $this->graphql_field->getName();
     }

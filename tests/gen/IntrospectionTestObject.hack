@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<6ffb9d87a46456be1434e2cac0a9a4a3>>
+ * @generated SignedSource<<0f9b2792478a460c14a99f0ef4f4976d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -81,5 +81,73 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Test object for introspection',
+      'fields' => vec[
+        shape(
+          'name' => 'default_list_of_non_nullable_int',
+          'description' => 'Default list of non nullable int',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'default_list_of_nullable_int',
+          'description' => 'Default list of nullable int',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'default_nullable_string',
+          'description' => 'Default nullable string',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'non_null_int',
+          'description' => 'Nullable string',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'non_null_list_of_non_null',
+          'description' => 'Non nullable list of non nullables',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int'))->nonNullable()->nonNullableListOf(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'non_null_string',
+          'description' => 'Non nullable string',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String'))->nonNullable(),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'nullable_string',
+          'description' => 'Nullable string',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

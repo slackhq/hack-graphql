@@ -18,6 +18,8 @@ use type Facebook\HackCodegen\{
 abstract class CompositeBuilder<TField as IFieldBuilder>
     extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
 
+    abstract const string KIND_CONST;
+
     public function __construct(
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
@@ -29,6 +31,7 @@ abstract class CompositeBuilder<TField as IFieldBuilder>
     public function build(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
             ->addMethod($this->generateGetFieldDefinition($cg))
+            ->addMethod($this->generateIntrospect($cg))
             ->addConstant($this->generateFieldNamesConstant($cg, $this->getFieldNames()));
     }
 
@@ -67,5 +70,34 @@ abstract class CompositeBuilder<TField as IFieldBuilder>
         return $cg->codegenClassConstant('FIELD_NAMES')
             ->setType('keyset<string>')
             ->setValue($field_names, HackBuilderValues::keyset(HackBuilderValues::export()));
+    }
+
+    private function generateIntrospect(HackCodegenFactory $cg): CodegenMethod {
+        $method = $cg->codegenMethod('introspect')
+            ->setPublic()
+            ->setIsStatic()
+            ->addParameter('GraphQL\\Introspection\\__Schema $schema')
+            ->setReturnType('GraphQL\\Introspection\\NamedTypeDeclaration');
+
+        $hb = hb($cg)
+            ->addLine('return new GraphQL\\Introspection\\NamedTypeDeclaration(shape(')
+            ->indent()
+            ->addLinef("'kind' => %s,", static::KIND_CONST)
+            ->addLine("'name' => static::NAME,")
+            ->addLinef("'description' => %s,", \var_export($this->type_info->getDescription(), true))
+            ->addLine("'fields' => vec[")
+            ->indent();
+
+        foreach ($this->fields as $field) {
+            $field->addIntrospectionShape($hb);
+        }
+
+        $hb->unindent()->addLine('],'); // end of 'fields' => vec[
+
+        // TODO: interfaces, possibleTypes
+
+        $hb->unindent()->addLine('));'); // end of new NamedTypeDeclaration(shape(
+
+        return $method->setBody($hb->getCode());
     }
 }

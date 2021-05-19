@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
-abstract class ObjectType extends NamedOutputType implements GraphQL\Introspection\__Type, CompositeType {
+abstract class ObjectType extends NamedOutputType implements CompositeType {
     const type TCoerced = dict<string, mixed>;
 
     abstract const keyset<string> FIELD_NAMES;
@@ -54,15 +54,5 @@ abstract class ObjectType extends NamedOutputType implements GraphQL\Introspecti
         }
 
         return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
-    }
-
-    <<__Override>>
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
-        return GraphQL\Introspection\__TypeKind::OBJECT;
-    }
-
-    <<__Override>>
-    final public function getFields(): vec<GraphQL\Introspection\__Field> {
-        return Vec\map($this::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name) as nonnull);
     }
 }

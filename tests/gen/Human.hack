@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<eeefd36b61047d6b16af46d2298a9543>>
+ * @generated SignedSource<<a2d8fa756e3bfb33149300ce7fe64963>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -65,5 +65,57 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public static function introspect(
+    GraphQL\Introspection\__Schema $schema,
+  ): GraphQL\Introspection\NamedTypeDeclaration {
+    return new GraphQL\Introspection\NamedTypeDeclaration(shape(
+      'kind' => GraphQL\Introspection\__TypeKind::OBJECT,
+      'name' => static::NAME,
+      'description' => 'Human',
+      'fields' => vec[
+        shape(
+          'name' => 'favorite_color',
+          'description' => 'Favorite color of the user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'FavoriteColorOutputType')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'id',
+          'description' => 'ID of the user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Int')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'is_active',
+          'description' => 'Whether the user is active',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Boolean')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'name',
+          'description' => 'Name of the user',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'String')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+        shape(
+          'name' => 'team',
+          'description' => 'Team the user belongs to',
+          'type' => (new GraphQL\Introspection\NamedTypeReference($schema, 'Team')),
+          'args' => vec[
+          ],
+          'isDeprecated' => false,
+        ),
+      ],
+    ));
   }
 }

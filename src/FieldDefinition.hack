@@ -8,7 +8,7 @@ type ArgumentDefinition = shape(
     ?'deprecation_reason' => string,
 );
 
-interface IFieldDefinition extends Introspection\__Field {
+interface IFieldDefinition {
     public function getName(): string;
     public function getType(): Types\IOutputType;
     public function getArguments(): dict<string, ArgumentDefinition>;
@@ -53,14 +53,6 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public function getName(): string {
         return $this->name;
-    }
-
-    public function getIntrospectionType(): Introspection\__Type {
-        if ($this->type is Introspection\INullableType) {
-            return $this->type->getInnerType();
-        }
-
-        return new Introspection\NonNullable($this->type as Introspection\__Type);
     }
 
     public function getType(): Types\OutputType<TRet, TResolved> {

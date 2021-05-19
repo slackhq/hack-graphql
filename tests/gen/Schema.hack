@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<aa47b1e612aaeb53f673a56a4f8e01bb>>
+ * @generated SignedSource<<1e4281f1a60ebaac15c9e332051652de>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,6 +20,7 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     'FavoriteColor' => FavoriteColorInputType::class,
     'Int' => Types\IntInputType::class,
     'String' => Types\StringInputType::class,
+    '__DirectiveLocation' => __DirectiveLocationInputType::class,
     '__TypeKind' => __TypeKindInputType::class,
   ];
   const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES = dict[
@@ -41,6 +42,8 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     'String' => Types\StringOutputType::class,
     'Team' => Team::class,
     'User' => User::class,
+    '__Directive' => __Directive::class,
+    '__DirectiveLocation' => __DirectiveLocationOutputType::class,
     '__EnumValue' => __EnumValue::class,
     '__Field' => __Field::class,
     '__InputValue' => __InputValue::class,
