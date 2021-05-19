@@ -24,15 +24,12 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
 
     <<\Facebook\HackTest\DataProvider('getTestCases')>>
     final public async function test(string $query, vec<string> $expected_errors): Awaitable<void> {
-        $resolver = new \Slack\GraphQL\Resolver(GraphQL\Test\Generated\Schema::class);
-        $errors = (await $resolver->resolve($query, dict[]))['errors'] ?? vec[];
-        expect($errors)->toEqual($expected_errors);
-        // $source = new \Graphpinator\Source\StringSource($query);
-        // $parser = new \Graphpinator\Parser\Parser($source);
-        // $request = $parser->parse();
+        $source = new \Graphpinator\Source\StringSource($query);
+        $parser = new \Graphpinator\Parser\Parser($source);
+        $request = $parser->parse();
 
-        // $validator = new GraphQL\Validation\Validator(GraphQL\Test\Generated\Schema::class);
-        // $errors = $validator->validate($request);
-        // expect(Vec\map($errors, $error ==> $error->toShape()))->toEqual($expected_errors);
+        $validator = new GraphQL\Validation\Validator(GraphQL\Test\Generated\Schema::class);
+        $errors = $validator->validate($request);
+        expect(Vec\map($errors, $error ==> $error->toShape()))->toEqual($expected_errors);
     }
 }
