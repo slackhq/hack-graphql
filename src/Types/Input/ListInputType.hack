@@ -5,23 +5,15 @@ use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 use type Slack\GraphQL\UserFacingError;
 
-final class ListInputType<TInner> extends BaseType implements GraphQL\Introspection\__Type {
+final class ListInputType<TInner> extends BaseType implements INonNullableInputTypeFor<vec<TInner>> {
+    use TNonNullableType;
     use TInputType<vec<TInner>>;
 
     public function __construct(private IInputTypeFor<TInner> $inner_type) {}
 
-    public function getInnerType(): IInputTypeFor<TInner> {
-        return $this->inner_type;
-    }
-
-    <<__Override>>
-    public function getName(): ?string {
-        return null;
-    }
-
     <<__Override>>
     final public function unwrapType(): INamedInputType {
-        return $this->getInnerType()->unwrapType();
+        return $this->inner_type->unwrapType();
     }
 
     <<__Override>>
@@ -46,16 +38,26 @@ final class ListInputType<TInner> extends BaseType implements GraphQL\Introspect
         return Vec\map($value as vec<_>, $item ==> $this->inner_type->coerceValue($item));
     }
 
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
+    /**
+     * Introspection
+     */
+    <<__Override>>
+    public function getName(): ?string {
+        return null;
+    }
+
+    <<__Override>>
+    public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::LIST;
     }
 
     <<__Override>>
-    final public function getOfType(): GraphQL\Introspection\__Type {
-        if ($this->inner_type is NullableInputType<_>) {
-            return $this->inner_type->getInnerType();
-        }
+    public function getOfType(): GraphQL\Introspection\__Type {
+        return $this->inner_type;
+    }
 
-        return new GraphQL\Introspection\NonNullable($this->inner_type as GraphQL\Introspection\__Type);
+    <<__Override>>
+    public function nullableForIntrospection(): INullableType {
+        return new NullableInputType($this);
     }
 }

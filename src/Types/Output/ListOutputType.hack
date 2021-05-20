@@ -3,15 +3,13 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
 
-final class ListOutputType<TInner, TResolved> extends BaseType implements GraphQL\Introspection\__Type {
+final class ListOutputType<TInner, TResolved>
+    extends BaseType
+    implements INonNullableOutputTypeFor<vec<TInner>, vec<mixed>> {
+    use TNonNullableType;
     use TOutputType<vec<TInner>, vec<mixed>>;
 
     public function __construct(private IOutputTypeFor<TInner, TResolved> $inner_type) {}
-
-    <<__Override>>
-    public function getName(): ?string {
-        return null;
-    }
 
     <<__Override>>
     final public function unwrapType(): INamedOutputType {
@@ -47,16 +45,26 @@ final class ListOutputType<TInner, TResolved> extends BaseType implements GraphQ
         return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);
     }
 
-    final public function getKind(): GraphQL\Introspection\__TypeKind {
+    /**
+     * Introspection
+     */
+    <<__Override>>
+    public function getName(): null {
+        return null;
+    }
+
+    <<__Override>>
+    public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::LIST;
     }
 
     <<__Override>>
-    final public function getOfType(): GraphQL\Introspection\__Type {
-        if ($this->inner_type is NullableOutputType<_, _>) {
-            return $this->inner_type->getInnerType();
-        }
+    public function getOfType(): GraphQL\Introspection\__Type {
+        return $this->inner_type;
+    }
 
-        return new GraphQL\Introspection\NonNullable($this->inner_type as GraphQL\Introspection\__Type);
+    <<__Override>>
+    public function nullableForIntrospection(): INullableType {
+        return new NullableOutputType($this);
     }
 }

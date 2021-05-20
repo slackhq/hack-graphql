@@ -34,6 +34,9 @@ interface IInputTypeFor<THackType> extends IInputType {
     public function nullableListOfI(): NullableInputType<vec<THackType>>;
 }
 
+interface INonNullableInputTypeFor<THackType as nonnull>
+    extends INonNullableType, IInputTypeFor<THackType> {}
+
 /**
  * GraphQL type that may be used for field/directive arguments and for variable values.
  * Includes scalar types, enums and input objects (GraphQL's version of dict).

@@ -3,9 +3,8 @@ namespace Slack\GraphQL\Types;
 use namespace Slack\GraphQL;
 
 <<__ConsistentConstruct>>
-abstract class NamedType extends BaseType implements GraphQL\Introspection\__Type {
+abstract class NamedType extends BaseType implements INonNullableType {
 
-    <<__Enforceable>>
     abstract const type THackType as nonnull;
     abstract const string NAME;
 

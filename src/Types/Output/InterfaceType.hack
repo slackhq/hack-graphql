@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
-abstract class InterfaceType extends CompositeType implements GraphQL\Introspection\__Type {
+abstract class InterfaceType extends CompositeType {
 
     <<__Override>>
     abstract public function resolveAsync(
@@ -15,10 +15,5 @@ abstract class InterfaceType extends CompositeType implements GraphQL\Introspect
     <<__Override>>
     final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::INTERFACE;
-    }
-
-    <<__Override>>
-    final public function getFields(): vec<GraphQL\Introspection\__Field> {
-        return Vec\map($this::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name) as nonnull);
     }
 }

@@ -19,6 +19,9 @@ interface IOutputTypeFor<TExpected, TResolved> extends IOutputType {
     public function resolveError(GraphQL\UserFacingError $error): GraphQL\FieldResult<TResolved>;
 }
 
+interface INonNullableOutputTypeFor<TExpected as nonnull, TResolved>
+    extends INonNullableType, IOutputTypeFor<TExpected, TResolved> {}
+
 /**
  * GraphQL type that may be used for fields.
  * Includes scalar types, enums, object types, interfaces, and union types.

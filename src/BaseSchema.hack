@@ -39,18 +39,18 @@ abstract class BaseSchema implements Introspection\__Schema {
     <<__Override>>
     final public function getIntrospectionQueryType(): Introspection\__Type {
         $query_type = static::QUERY_TYPE;
-        return $query_type::nonNullable();
+        return $query_type::nullableO();
     }
 
     <<__Override>>
     final public function getIntrospectionMutationType(): ?Introspection\__Type {
         $mutation_type = static::MUTATION_TYPE;
-        return $mutation_type is nonnull ? $mutation_type::nonNullable() : null;
+        return $mutation_type is nonnull ? $mutation_type::nullableO() : null;
     }
 
     final public function getIntrospectionType(string $name): ?Introspection\__Type {
         $type = static::TYPES[$name] ?? null;
-        return $type is nonnull ? $type::nonNullable() : null;
+        return $type is nonnull ? $type::nonNullable()->nullableForIntrospection() : null;
     }
 
     // TODO add method to create singleton
