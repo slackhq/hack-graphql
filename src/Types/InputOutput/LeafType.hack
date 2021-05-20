@@ -3,6 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Slack\GraphQL;
 
 abstract class LeafType extends NamedType {
+    use TNonNullableType;
     use TNamedInputType;
     use TNamedOutputType;
 
@@ -22,5 +23,10 @@ abstract class LeafType extends NamedType {
         } catch (GraphQL\UserFacingError $e) {
             return new GraphQL\InvalidFieldResult(vec[$e]);
         }
+    }
+
+    <<__Override>>
+    final public function nullableForIntrospection(): INullableType {
+        return static::nullableI();
     }
 }

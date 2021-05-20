@@ -6,6 +6,7 @@ use namespace Graphpinator\Parser\Value;
 
 <<__ConsistentConstruct>>
 abstract class InputObjectType extends NamedType {
+    use TNonNullableType;
     use TNamedInputType;
 
     <<__Enforceable>>

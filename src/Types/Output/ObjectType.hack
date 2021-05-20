@@ -57,9 +57,4 @@ abstract class ObjectType extends CompositeType {
     final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::OBJECT;
     }
-
-    <<__Override>>
-    final public function getFields(): vec<GraphQL\Introspection\__Field> {
-        return Vec\map($this::FIELD_NAMES, $field_name ==> $this->getFieldDefinition($field_name) as nonnull);
-    }
 }
