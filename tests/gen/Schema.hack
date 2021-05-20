@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<aa47b1e612aaeb53f673a56a4f8e01bb>>
+ * @generated SignedSource<<976961fd95d3888c86c5c067638006b8>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -13,24 +13,17 @@ use namespace HH\Lib\{C, Dict};
 
 final class Schema extends \Slack\GraphQL\BaseSchema {
 
-  const dict<string, classname<Types\NamedInputType>> INPUT_TYPES = dict[
-    'Boolean' => Types\BooleanInputType::class,
-    'CreateTeamInput' => CreateTeamInput::class,
-    'CreateUserInput' => CreateUserInput::class,
-    'FavoriteColor' => FavoriteColorInputType::class,
-    'Int' => Types\IntInputType::class,
-    'String' => Types\StringInputType::class,
-    '__TypeKind' => __TypeKindInputType::class,
-  ];
-  const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES = dict[
+  const dict<string, classname<Types\NamedType>> TYPES = dict[
     'AnotherObjectShape' => AnotherObjectShape::class,
-    'Boolean' => Types\BooleanOutputType::class,
+    'Boolean' => Types\BooleanType::class,
     'Bot' => Bot::class,
     'Concrete' => Concrete::class,
+    'CreateTeamInput' => CreateTeamInput::class,
+    'CreateUserInput' => CreateUserInput::class,
     'ErrorTestObj' => ErrorTestObj::class,
-    'FavoriteColor' => FavoriteColorOutputType::class,
+    'FavoriteColor' => FavoriteColor::class,
     'Human' => Human::class,
-    'Int' => Types\IntOutputType::class,
+    'Int' => Types\IntType::class,
     'InterfaceA' => InterfaceA::class,
     'InterfaceB' => InterfaceB::class,
     'IntrospectionTestObject' => IntrospectionTestObject::class,
@@ -38,7 +31,7 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     'ObjectShape' => ObjectShape::class,
     'OutputTypeTestObj' => OutputTypeTestObj::class,
     'Query' => Query::class,
-    'String' => Types\StringOutputType::class,
+    'String' => Types\StringType::class,
     'Team' => Team::class,
     'User' => User::class,
     '__EnumValue' => __EnumValue::class,
@@ -46,7 +39,7 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     '__InputValue' => __InputValue::class,
     '__Schema' => __Schema::class,
     '__Type' => __Type::class,
-    '__TypeKind' => __TypeKindOutputType::class,
+    '__TypeKind' => __TypeKind::class,
   ];
   const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE = Query::class;
   const classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = Mutation::class;
@@ -55,13 +48,13 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     \Graphpinator\Parser\Operation\Operation $operation,
     \Slack\GraphQL\Variables $variables,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Query::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Query::nullableO()->resolveAsync(new GraphQL\Root(), $operation, $variables);
   }
 
   public static async function resolveMutation(
     \Graphpinator\Parser\Operation\Operation $operation,
     \Slack\GraphQL\Variables $variables,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Mutation::nullable()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Mutation::nullableO()->resolveAsync(new GraphQL\Root(), $operation, $variables);
   }
 }

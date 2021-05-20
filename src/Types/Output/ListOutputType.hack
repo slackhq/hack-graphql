@@ -3,11 +3,10 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
 
-final class ListOutputType<TInner, TResolved>
-    extends OutputType<vec<TInner>, vec<mixed>>
-    implements GraphQL\Introspection\__Type {
+final class ListOutputType<TInner, TResolved> extends BaseType implements GraphQL\Introspection\__Type {
+    use TOutputType<vec<TInner>, vec<mixed>>;
 
-    public function __construct(private OutputType<TInner, TResolved> $inner_type) {}
+    public function __construct(private IOutputTypeFor<TInner, TResolved> $inner_type) {}
 
     <<__Override>>
     public function getName(): ?string {
@@ -15,7 +14,7 @@ final class ListOutputType<TInner, TResolved>
     }
 
     <<__Override>>
-    final public function unwrapType(): NamedOutputType {
+    final public function unwrapType(): INamedOutputType {
         return $this->inner_type->unwrapType();
     }
 

@@ -5,11 +5,12 @@ use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 use type Slack\GraphQL\UserFacingError;
 
-final class ListInputType<TInner> extends InputType<vec<TInner>> implements GraphQL\Introspection\__Type {
+final class ListInputType<TInner> extends BaseType implements GraphQL\Introspection\__Type {
+    use TInputType<vec<TInner>>;
 
-    public function __construct(private InputType<TInner> $inner_type) {}
+    public function __construct(private IInputTypeFor<TInner> $inner_type) {}
 
-    public function getInnerType(): InputType<TInner> {
+    public function getInnerType(): IInputTypeFor<TInner> {
         return $this->inner_type;
     }
 
@@ -19,7 +20,7 @@ final class ListInputType<TInner> extends InputType<vec<TInner>> implements Grap
     }
 
     <<__Override>>
-    final public function unwrapType(): NamedInputType {
+    final public function unwrapType(): INamedInputType {
         return $this->getInnerType()->unwrapType();
     }
 

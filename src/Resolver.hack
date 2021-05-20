@@ -119,7 +119,7 @@ final class Resolver {
     ): dict<string, mixed> {
         $coerced_values = dict[];
         foreach ($nodes as $name => $node) {
-            $type = Types\InputType::fromNode($this->schema, $node->getType());
+            $type = Types\TInputType::fromNode($this->schema, $node->getType());
             if (C\contains_key($raw_values, $name)) {
                 try {
                     $coerced_values[$name] = $type->coerceValue($raw_values[$name]);

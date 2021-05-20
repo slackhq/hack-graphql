@@ -8,7 +8,7 @@ final class ScalarLeafsRule extends ValidationRule {
             $type = $this->context->getType()?->unwrapType();
             $fieldset = $node->getFields();
             if ($type) {
-                if ($type is \Slack\GraphQL\Types\LeafOutputType) {
+                if ($type is \Slack\GraphQL\Types\LeafType) {
                     $this->assert(
                         $fieldset is null,
                         $node,

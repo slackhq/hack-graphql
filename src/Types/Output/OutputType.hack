@@ -5,7 +5,18 @@ use namespace Slack\GraphQL;
 interface IOutputType {
     require extends BaseType;
 
-    public function unwrapType(): NamedOutputType;
+    public function unwrapType(): INamedOutputType;
+}
+
+interface IOutputTypeFor<TExpected, TResolved> extends IOutputType {
+    public function nonNullableListOfO(): ListOutputType<TExpected, TResolved>;
+    public function nullableListOfO(): NullableOutputType<vec<TExpected>, vec<mixed>>;
+    public function resolveAsync(
+        TExpected $value,
+        \Graphpinator\Parser\Field\IHasFieldSet $field,
+        GraphQL\Variables $vars,
+    ): Awaitable<GraphQL\FieldResult<TResolved>>;
+    public function resolveError(GraphQL\UserFacingError $error): GraphQL\FieldResult<TResolved>;
 }
 
 /**
@@ -19,19 +30,19 @@ interface IOutputType {
  *
  * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
  */
-abstract class OutputType<TExpected, TResolved> extends BaseType implements IOutputType {
+trait TOutputType<TExpected, TResolved> implements IOutputTypeFor<TExpected, TResolved> {
 
     /**
      * Use these to get a singleton list type instance wrapping this type.
      */
     <<__Memoize>>
-    public function nonNullableListOf(): ListOutputType<TExpected, TResolved> {
+    public function nonNullableListOfO(): ListOutputType<TExpected, TResolved> {
         return new ListOutputType($this);
     }
 
     <<__Memoize>>
-    public function nullableListOf(): NullableOutputType<vec<TExpected>, vec<mixed>> {
-        return new NullableOutputType($this->nonNullableListOf());
+    public function nullableListOfO(): NullableOutputType<vec<TExpected>, vec<mixed>> {
+        return new NullableOutputType($this->nonNullableListOfO());
     }
 
     /**

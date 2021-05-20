@@ -36,7 +36,7 @@ final class ValidationContext {
         return $this->type_info->getType();
     }
 
-    public function getParentType(): ?Types\NamedOutputType {
+    public function getParentType(): ?Types\INamedOutputType {
         return $this->type_info->getParentType();
     }
 

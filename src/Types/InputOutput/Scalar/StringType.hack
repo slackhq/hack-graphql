@@ -4,7 +4,7 @@ use namespace Graphpinator\Parser\Value;
 use type Slack\GraphQL\UserFacingError;
 use namespace Slack\GraphQL;
 
-final class StringInputType extends ScalarInputType {
+final class StringType extends ScalarType {
 
     const type THackType = string;
     const string NAME = 'String';
@@ -23,5 +23,10 @@ final class StringInputType extends ScalarInputType {
             throw new UserFacingError('Expected a String literal, got %s', \get_class($node));
         }
         return $node->getRawValue();
+    }
+
+    <<__Override>>
+    protected function coerce(string $value): string {
+        return $value;
     }
 }

@@ -9,9 +9,29 @@ interface IInputType {
 
     public function coerceValue(mixed $value): mixed;
     public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
-    public function nullableListOf(): IInputType;
-    public function nonNullableListOf(): IInputType;
-    public function unwrapType(): NamedInputType;
+    public function nullableListOfI(): IInputType;
+    public function nonNullableListOfI(): IInputType;
+    public function unwrapType(): INamedInputType;
+}
+
+interface IInputTypeFor<THackType> extends IInputType {
+    public function coerceValue(mixed $value): THackType;
+    public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): THackType;
+    public function assertValidVariableValue(mixed $value): THackType;
+    public function coerceNamedValue(string $name, KeyedContainer<arraykey, mixed> $values): THackType;
+    public function coerceNamedNode(
+        string $name,
+        dict<string, Value\Value> $nodes,
+        dict<string, mixed> $variable_values,
+    ): THackType;
+    public function coerceOptionalNamedNode(
+        string $name,
+        dict<string, Value\Value> $nodes,
+        dict<string, mixed> $variable_values,
+        THackType $default_value,
+    ): THackType;
+    public function nonNullableListOfI(): ListInputType<THackType>;
+    public function nullableListOfI(): NullableInputType<vec<THackType>>;
 }
 
 /**
@@ -20,7 +40,7 @@ interface IInputType {
  *
  * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
  */
-abstract class InputType<THackType> extends BaseType implements IInputType {
+trait TInputType<THackType> implements IInputTypeFor<THackType> {
 
     /**
      * Validate/coerce a raw value to this type (i.e. a value that is not a parser node because it doesn't come from
@@ -51,7 +71,7 @@ abstract class InputType<THackType> extends BaseType implements IInputType {
      * 1. The GraphQL query was validated.
      * 2. Variable values were validated/coerced.
      */
-    abstract protected function assertValidVariableValue(mixed $value): THackType;
+    abstract public function assertValidVariableValue(mixed $value): THackType;
 
     /**
      * Convenient wrappers around coerceValue() and coerceNode() that throw a more helpful exception if the coercion
@@ -133,13 +153,13 @@ abstract class InputType<THackType> extends BaseType implements IInputType {
      * Use these to get a singleton list type instance wrapping this type.
      */
     <<__Memoize>>
-    public function nonNullableListOf(): ListInputType<THackType> {
+    public function nonNullableListOfI(): ListInputType<THackType> {
         return new ListInputType($this);
     }
 
     <<__Memoize>>
-    public function nullableListOf(): NullableInputType<vec<THackType>> {
-        return new NullableInputType($this->nonNullableListOf());
+    public function nullableListOfI(): NullableInputType<vec<THackType>> {
+        return new NullableInputType($this->nonNullableListOfI());
     }
 
     /**
@@ -155,13 +175,17 @@ abstract class InputType<THackType> extends BaseType implements IInputType {
         }
         if ($node is TypeRef\ListTypeRef) {
             $inner = self::fromNode($schema, $node->getInnerRef());
-            return $nullable ? $inner->nullableListOf() : $inner->nonNullableListOf();
+            return $nullable ? $inner->nullableListOfI() : $inner->nonNullableListOfI();
         }
         $name = $node as TypeRef\NamedTypeRef->getName();
-        $class = idx($schema::INPUT_TYPES, $name);
+        $class = idx($schema::TYPES, $name);
         if ($class is null) {
-            throw new GraphQL\UserFacingError('Undefined input type "%s"', $name);
+            throw new GraphQL\UserFacingError('Undefined type "%s"', $name);
         }
-        return $nullable ? $class::nullable() : $class::nonNullable();
+        $non_nullable = $class::nonNullable();
+        if (!$non_nullable is INamedInputType) {
+            throw new GraphQL\UserFacingError('Type "%s" is not an input type', $name);
+        }
+        return $nullable ? $non_nullable::nullableI() : $non_nullable;
     }
 }

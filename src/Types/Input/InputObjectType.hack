@@ -5,7 +5,8 @@ use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\Value;
 
 <<__ConsistentConstruct>>
-abstract class InputObjectType extends NamedInputType {
+abstract class InputObjectType extends NamedType {
+    use TNamedInputType;
 
     <<__Enforceable>>
     abstract const type THackType as shape(...);

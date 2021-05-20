@@ -25,7 +25,7 @@ interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
 final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFieldDefinition<TParent> {
     public function __construct(
         private string $name,
-        private Types\OutputType<TRet, TResolved> $type,
+        private Types\IOutputTypeFor<TRet, TResolved> $type,
         private dict<string, ArgumentDefinition> $arguments,
         private (function(
             TParent,
@@ -63,7 +63,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
         return new Introspection\NonNullable($this->type as Introspection\__Type);
     }
 
-    public function getType(): Types\OutputType<TRet, TResolved> {
+    public function getType(): Types\IOutputTypeFor<TRet, TResolved> {
         return $this->type;
     }
 

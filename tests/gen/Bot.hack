@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<9d0f0049ff070989f985b504f799a637>>
+ * @generated SignedSource<<738141a056e53ca134e32db6110618d0>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -30,35 +30,35 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
-          Types\IntOutputType::nullable(),
+          Types\IntType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
           'is_active',
-          Types\BooleanOutputType::nullable(),
+          Types\BooleanType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringOutputType::nullable(),
+          Types\StringType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
           'primary_function',
-          Types\StringOutputType::nullable(),
+          Types\StringType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullable(),
+          Team::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
         );

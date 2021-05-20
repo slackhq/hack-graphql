@@ -3,14 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
-abstract class InterfaceType extends NamedOutputType implements GraphQL\Introspection\__Type, CompositeType {
-    const type TCoerced = dict<string, mixed>;
-
-    abstract const keyset<string> FIELD_NAMES;
-
-    abstract public function getFieldDefinition(
-        string $field_name
-    ): ?GraphQL\IResolvableFieldDefinition<this::THackType>;
+abstract class InterfaceType extends CompositeType implements GraphQL\Introspection\__Type {
 
     <<__Override>>
     abstract public function resolveAsync(
