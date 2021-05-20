@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<93805d647b2da8a6efdee2799c140370>>
+ * @generated SignedSource<<4e1bfb13121b83b22d98d3bc73b26c8e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,14 +34,14 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
       case 'description':
         return new GraphQL\FieldDefinition(
           'description',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionDescription(),
         );
       case 'enumValues':
         return new GraphQL\FieldDefinition(
           'enumValues',
-          __EnumValue::nonNullable()->nullableListOfO(),
+          __EnumValue::nonNullable()->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
@@ -56,7 +56,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
       case 'fields':
         return new GraphQL\FieldDefinition(
           'fields',
-          __Field::nonNullable()->nullableListOfO(),
+          __Field::nonNullable()->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
@@ -71,7 +71,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
       case 'inputFields':
         return new GraphQL\FieldDefinition(
           'inputFields',
-          __InputValue::nonNullable()->nullableListOfO(),
+          __InputValue::nonNullable()->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
@@ -86,35 +86,35 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
       case 'interfaces':
         return new GraphQL\FieldDefinition(
           'interfaces',
-          __Type::nonNullable()->nullableListOfO(),
+          __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInterfaces(),
         );
       case 'kind':
         return new GraphQL\FieldDefinition(
           'kind',
-          __TypeKind::nullableO(),
+          __TypeKind::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionKind(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionName(),
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
           'ofType',
-          __Type::nullableO(),
+          __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionOfType(),
         );
       case 'possibleTypes':
         return new GraphQL\FieldDefinition(
           'possibleTypes',
-          __Type::nonNullable()->nullableListOfO(),
+          __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionPossibleTypes(),
         );

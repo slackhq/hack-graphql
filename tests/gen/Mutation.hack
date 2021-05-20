@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8cbd3664d247da7a5e16a7619ae1a972>>
+ * @generated SignedSource<<e6cc33b0f4eb7dbb597cd43d1a0e6fa3>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -27,7 +27,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       case 'createUser':
         return new GraphQL\FieldDefinition(
           'createUser',
-          User::nullableO(),
+          User::nullableOutput(),
           dict[
             'input' => shape(
               'name' => 'input',
@@ -41,7 +41,7 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
           'pokeUser',
-          User::nullableO(),
+          User::nullableOutput(),
           dict[
             'id' => shape(
               'name' => 'id',

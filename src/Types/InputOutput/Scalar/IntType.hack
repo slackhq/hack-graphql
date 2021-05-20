@@ -40,7 +40,7 @@ final class IntType extends ScalarType {
     }
 
     <<__Override>>
-    protected function coerce(int $value): int {
+    protected function serialize(int $value): int {
         \Slack\GraphQL\assert(
             $value >= self::MIN_SAFE_VALUE && $value <= self::MAX_SAFE_VALUE,
             'Integers must be in 32-bit range, got %d',

@@ -16,7 +16,7 @@ const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
  *   ?vec<int> -> IntInputType::nonNullable()->nullableListOf()
  */
 function input_type(string $hack_type): string {
-    list($unwrapped, $suffix) = unwrap_type('I', $hack_type);
+    list($unwrapped, $suffix) = unwrap_type(IO::INPUT, $hack_type);
     switch ($unwrapped) {
         case 'HH\int':
             $class = Types\IntType::class;
@@ -64,7 +64,7 @@ function output_type(
         $hack_type = '?'.$hack_type;
     }
 
-    list($unwrapped, $suffix) = unwrap_type('O', $hack_type);
+    list($unwrapped, $suffix) = unwrap_type(IO::OUTPUT, $hack_type);
 
     switch ($unwrapped) {
         case 'HH\int':
@@ -147,17 +147,24 @@ function get_output_class(string $hack_type): ?string {
 /**
  * Shared logic for the above.
  */
-function unwrap_type(string $io, string $hack_type, bool $nullable = false): (string, string) {
+function unwrap_type(IO $io, string $hack_type, bool $nullable = false): (string, string) {
     if (Str\starts_with($hack_type, '?')) {
         return unwrap_type($io, Str\strip_prefix($hack_type, '?'), true);
     }
     if (Str\starts_with($hack_type, 'HH\vec<')) {
-        list($unwrapped, $suffix) = unwrap_type($io, Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'));
-        return tuple($unwrapped, $suffix.($nullable ? '->nullableListOf'.$io.'()' : '->nonNullableListOf'.$io.'()'));
+        list($unwrapped, $suffix) = unwrap_type(
+            $io,
+            Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
+        );
+        return tuple($unwrapped, $suffix.($nullable ? '->nullable'.$io.'ListOf()' : '->nonNullable'.$io.'ListOf()'));
     }
     return tuple($hack_type, $nullable ? '::nullable'.$io.'()' : '::nonNullable()');
 }
 
+enum IO: string as string {
+    INPUT = 'Input';
+    OUTPUT = 'Output';
+}
 
 /**
  * Get the type aias for the given type structure.

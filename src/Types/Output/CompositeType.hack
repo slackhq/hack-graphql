@@ -7,7 +7,7 @@ abstract class CompositeType extends NamedType {
     use TNonNullableType;
     use TNamedOutputType;
 
-    const type TCoerced = dict<string, mixed>;
+    const type TResolved = dict<string, mixed>;
 
     abstract const keyset<string> FIELD_NAMES;
 

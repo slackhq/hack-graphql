@@ -39,13 +39,13 @@ abstract class BaseSchema implements Introspection\__Schema {
     <<__Override>>
     final public function getIntrospectionQueryType(): Introspection\__Type {
         $query_type = static::QUERY_TYPE;
-        return $query_type::nullableO();
+        return $query_type::nullableOutput();
     }
 
     <<__Override>>
     final public function getIntrospectionMutationType(): ?Introspection\__Type {
         $mutation_type = static::MUTATION_TYPE;
-        return $mutation_type is nonnull ? $mutation_type::nullableO() : null;
+        return $mutation_type is nonnull ? $mutation_type::nullableOutput() : null;
     }
 
     final public function getIntrospectionType(string $name): ?Introspection\__Type {

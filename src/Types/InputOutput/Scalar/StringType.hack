@@ -26,7 +26,7 @@ final class StringType extends ScalarType {
     }
 
     <<__Override>>
-    protected function coerce(string $value): string {
+    protected function serialize(string $value): string {
         return $value;
     }
 }

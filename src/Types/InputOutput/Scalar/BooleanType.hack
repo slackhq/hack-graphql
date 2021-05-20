@@ -25,7 +25,7 @@ final class BooleanType extends ScalarType {
     }
 
     <<__Override>>
-    protected function coerce(bool $value): bool {
+    protected function serialize(bool $value): bool {
         return $value;
     }
 }

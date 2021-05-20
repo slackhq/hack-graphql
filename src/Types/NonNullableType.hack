@@ -20,9 +20,9 @@ trait TNonNullableType implements INonNullableType {
 
     /**
      * GraphQL introspection requires non-nullable types to be represented by the nullable version of the type wrapped
-     * in a NON_NULL wrapper. So we return the data for the NON_NULL wrapper here (null everywhere except Kind), with
-     * OfType returning the nullable version of the type (which will be presented as an unwrapped type -- see the
-     * TNullableType trait).
+     * in a NON_NULL wrapper. So we return the data for the NON_NULL wrapper here (everything except Kind and OfType is
+     * null), with OfType returning the nullable version of the type (which, when introspected, will be presented as an
+     * unwrapped type -- see the TNullableType trait).
      */
     <<__Override>>
     final public function getIntrospectionKind(): Introspection\__TypeKind {
@@ -75,7 +75,7 @@ trait TNonNullableType implements INonNullableType {
 
     /**
      * These are the *actual* introspection values for this type (subclasses should override any relevant ones).
-
+     *
      * These are not returned when this type is introspected directly (see explanation above), but they will be returned
      * if this type is introspected through a Nullable wrapper.
      */

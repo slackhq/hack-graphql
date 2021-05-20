@@ -12,7 +12,7 @@ final class ListInputType<TInner> extends BaseType implements INonNullableInputT
     public function __construct(private IInputTypeFor<TInner> $inner_type) {}
 
     <<__Override>>
-    final public function unwrapType(): INamedInputType {
+    public function unwrapType(): INamedInputType {
         return $this->inner_type->unwrapType();
     }
 
@@ -26,7 +26,7 @@ final class ListInputType<TInner> extends BaseType implements INonNullableInputT
     }
 
     <<__Override>>
-    final public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): vec<TInner> {
+    public function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): vec<TInner> {
         if (!$node is Value\ListVal) {
             return vec[$this->inner_type->coerceNode($node, $variable_values)];
         }
