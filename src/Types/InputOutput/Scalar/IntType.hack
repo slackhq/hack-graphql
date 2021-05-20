@@ -18,12 +18,7 @@ final class IntType extends ScalarType {
         if (!$value is int) {
             throw new GraphQL\UserFacingError('Expected an integer, got %s', (string)$value);
         }
-        GraphQL\assert(
-            $value >= self::MIN_SAFE_VALUE && $value <= self::MAX_SAFE_VALUE,
-            'Integers must be in 32-bit range, got %d',
-            $value,
-        );
-        return $value;
+        return self::assertInRange($value);
     }
 
     <<__Override>>
@@ -31,17 +26,16 @@ final class IntType extends ScalarType {
         if (!$node is Value\IntLiteral) {
             throw new GraphQL\UserFacingError('Expected an Int literal, got %s', \get_class($node));
         }
-        GraphQL\assert(
-            $node->getRawValue() >= self::MIN_SAFE_VALUE && $node->getRawValue() <= self::MAX_SAFE_VALUE,
-            'Integers must be in 32-bit range, got %d',
-            $node->getRawValue(),
-        );
-        return $node->getRawValue();
+        return self::assertInRange($node->getRawValue());
     }
 
     <<__Override>>
     protected function serialize(int $value): int {
-        \Slack\GraphQL\assert(
+        return self::assertInRange($value);
+    }
+
+    private static function assertInRange(int $value): int {
+        GraphQL\assert(
             $value >= self::MIN_SAFE_VALUE && $value <= self::MAX_SAFE_VALUE,
             'Integers must be in 32-bit range, got %d',
             $value,
