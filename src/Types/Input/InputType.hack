@@ -4,20 +4,54 @@ use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\{TypeRef, Value};
 
+/**
+ * GraphQL type that may be used for field/directive arguments and for variable values.
+ * Includes scalar types, enums and input objects (GraphQL's version of dict).
+ *
+ * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
+ */
 interface IInputType {
     require extends BaseType;
 
-    public function coerceValue(mixed $value): mixed;
-    public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
-    public function nullableListOfI(): IInputType;
-    public function nonNullableListOfI(): IInputType;
     public function unwrapType(): INamedInputType;
+
+    /**
+     * Validate/coerce a raw value to this type (i.e. a value that is not a parser node because it doesn't come from
+     * inside the GraphQL query, e.g. it comes from the list of variable values that was supplied alongside the query).
+     */
+    public function coerceValue(mixed $value): mixed;
+
+    /**
+     * Validate/coerce a parser node (a parsed literal value, variable reference, or list/input object that needs to be
+     * coerced recursively) to this type.
+     *
+     * Variable values are assumed to have already been validated/coerced (this is important because coercion is not
+     * always idempotent).
+     */
+    public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): mixed;
+
+    /**
+     * Use these to get a singleton list type instance wrapping this type.
+     */
+    public function nullableInputListOf(): IInputType;
+    public function nonNullableInputListOf(): IInputType;
 }
 
 interface IInputTypeFor<THackType> extends IInputType {
     public function coerceValue(mixed $value): THackType;
     public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): THackType;
+
+    /**
+     * This might be redundant assuming:
+     * 1. The GraphQL query was validated.
+     * 2. Variable values were validated/coerced.
+     */
     public function assertValidVariableValue(mixed $value): THackType;
+
+    /**
+     * Convenient wrappers around coerceValue() and coerceNode() that throw a more helpful exception if the coercion
+     * being performed is for a specific argument or input object field.
+     */
     public function coerceNamedValue(string $name, KeyedContainer<arraykey, mixed> $values): THackType;
     public function coerceNamedNode(
         string $name,
@@ -30,34 +64,15 @@ interface IInputTypeFor<THackType> extends IInputType {
         dict<string, mixed> $variable_values,
         THackType $default_value,
     ): THackType;
-    public function nonNullableListOfI(): ListInputType<THackType>;
-    public function nullableListOfI(): NullableInputType<vec<THackType>>;
+    public function nonNullableInputListOf(): ListInputType<THackType>;
+    public function nullableInputListOf(): NullableInputType<vec<THackType>>;
 }
 
 interface INonNullableInputTypeFor<THackType as nonnull>
     extends INonNullableType, IInputTypeFor<THackType> {}
 
-/**
- * GraphQL type that may be used for field/directive arguments and for variable values.
- * Includes scalar types, enums and input objects (GraphQL's version of dict).
- *
- * @see https://spec.graphql.org/draft/#sec-Input-and-Output-Types
- */
 trait TInputType<THackType> implements IInputTypeFor<THackType> {
 
-    /**
-     * Validate/coerce a raw value to this type (i.e. a value that is not a parser node because it doesn't come from
-     * inside the GraphQL query, e.g. it comes from the list of variable values that was supplied alongside the query).
-     */
-    abstract public function coerceValue(mixed $value): THackType;
-
-    /**
-     * Validate/coerce a parser node (a parsed literal value, variable reference, or list/input object that needs to be
-     * coerced recursively) to this type.
-     *
-     * Variable values are assumed to have already been validated/coerced (this is important because coercion is not
-     * always idempotent).
-     */
     final public function coerceNode(Value\Value $node, dict<string, mixed> $variable_values): THackType {
         return $node is Value\VariableRef
             ? $this->assertValidVariableValue(idx($variable_values, $node->getVarName()))
@@ -69,17 +84,6 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         dict<string, mixed> $variable_values,
     ): THackType;
 
-    /**
-     * This might be redundant assuming:
-     * 1. The GraphQL query was validated.
-     * 2. Variable values were validated/coerced.
-     */
-    abstract public function assertValidVariableValue(mixed $value): THackType;
-
-    /**
-     * Convenient wrappers around coerceValue() and coerceNode() that throw a more helpful exception if the coercion
-     * being performed is for a specific argument or input object field.
-     */
     final public function coerceNamedValue(
         string $name,
         KeyedContainer<arraykey, mixed> $values,
@@ -152,17 +156,14 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         return true;
     }
 
-    /**
-     * Use these to get a singleton list type instance wrapping this type.
-     */
     <<__Memoize>>
-    public function nonNullableListOfI(): ListInputType<THackType> {
+    public function nonNullableInputListOf(): ListInputType<THackType> {
         return new ListInputType($this);
     }
 
     <<__Memoize>>
-    public function nullableListOfI(): NullableInputType<vec<THackType>> {
-        return new NullableInputType($this->nonNullableListOfI());
+    public function nullableInputListOf(): NullableInputType<vec<THackType>> {
+        return new NullableInputType($this->nonNullableInputListOf());
     }
 
     /**
@@ -178,7 +179,7 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         }
         if ($node is TypeRef\ListTypeRef) {
             $inner = self::fromNode($schema, $node->getInnerRef());
-            return $nullable ? $inner->nullableListOfI() : $inner->nonNullableListOfI();
+            return $nullable ? $inner->nullableInputListOf() : $inner->nonNullableInputListOf();
         }
         $name = $node as TypeRef\NamedTypeRef->getName();
         $class = idx($schema::TYPES, $name);
@@ -189,6 +190,6 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         if (!$non_nullable is INamedInputType) {
             throw new GraphQL\UserFacingError('Type "%s" is not an input type', $name);
         }
-        return $nullable ? $non_nullable::nullableI() : $non_nullable;
+        return $nullable ? $non_nullable::nullableInput() : $non_nullable;
     }
 }

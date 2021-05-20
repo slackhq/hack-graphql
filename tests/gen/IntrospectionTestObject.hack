@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<85eba65d5f8072acbda608a2b041c848>>
+ * @generated SignedSource<<3265e2eae29f57617617f679a8411852>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -32,21 +32,21 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
       case 'default_list_of_non_nullable_int':
         return new GraphQL\FieldDefinition(
           'default_list_of_non_nullable_int',
-          Types\IntType::nonNullable()->nullableListOfO(),
+          Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNonNullableInt(),
         );
       case 'default_list_of_nullable_int':
         return new GraphQL\FieldDefinition(
           'default_list_of_nullable_int',
-          Types\IntType::nullableO()->nullableListOfO(),
+          Types\IntType::nullableOutput()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNullableInt(),
         );
       case 'default_nullable_string':
         return new GraphQL\FieldDefinition(
           'default_nullable_string',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultNullableString(),
         );
@@ -60,7 +60,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
       case 'non_null_list_of_non_null':
         return new GraphQL\FieldDefinition(
           'non_null_list_of_non_null',
-          Types\IntType::nonNullable()->nonNullableListOfO(),
+          Types\IntType::nonNullable()->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullListOfNonNull(),
         );
@@ -74,7 +74,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
       case 'nullable_string':
         return new GraphQL\FieldDefinition(
           'nullable_string',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNullableString(),
         );

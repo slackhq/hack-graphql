@@ -6,18 +6,19 @@ use namespace Slack\GraphQL;
 final class ListOutputType<TInner, TResolved>
     extends BaseType
     implements INonNullableOutputTypeFor<vec<TInner>, vec<mixed>> {
+
     use TNonNullableType;
     use TOutputType<vec<TInner>, vec<mixed>>;
 
     public function __construct(private IOutputTypeFor<TInner, TResolved> $inner_type) {}
 
     <<__Override>>
-    final public function unwrapType(): INamedOutputType {
+    public function unwrapType(): INamedOutputType {
         return $this->inner_type->unwrapType();
     }
 
     <<__Override>>
-    final public async function resolveAsync(
+    public async function resolveAsync(
         vec<TInner> $value,
         \Graphpinator\Parser\Field\IHasFieldSet $field,
         GraphQL\Variables $vars,

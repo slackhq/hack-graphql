@@ -161,11 +161,11 @@ final class Generator {
         switch ($operation_type) {
             case \Graphpinator\Tokenizer\OperationType::QUERY:
                 $method_name = 'resolveQuery';
-                $root_type = 'Query::nullableO()';
+                $root_type = 'Query::nullableOutput()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::MUTATION:
                 $method_name = 'resolveMutation';
-                $root_type = 'Mutation::nullableO()';
+                $root_type = 'Mutation::nullableOutput()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::SUBSCRIPTION:
                 invariant(false, 'TODO: support subscription');

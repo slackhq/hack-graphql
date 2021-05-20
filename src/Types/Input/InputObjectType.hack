@@ -14,7 +14,7 @@ abstract class InputObjectType extends NamedType {
     abstract const keyset<string> FIELD_NAMES;
 
     <<__Override>>
-    public function coerceValue(mixed $value): this::THackType {
+    final public function coerceValue(mixed $value): this::THackType {
         if (!$value is KeyedContainer<_, _>) {
             throw new GraphQL\UserFacingError('Expected an input object (a dict/map), got %s', \gettype($value));
         }
@@ -32,7 +32,10 @@ abstract class InputObjectType extends NamedType {
     abstract protected function coerceFieldValues(KeyedContainer<arraykey, mixed> $values): this::THackType;
 
     <<__Override>>
-    protected function coerceNonVariableNode(Value\Value $node, dict<string, mixed> $variable_values): this::THackType {
+    final protected function coerceNonVariableNode(
+        Value\Value $node,
+        dict<string, mixed> $variable_values,
+    ): this::THackType {
         if (!$node is Value\ObjectVal) {
             throw new GraphQL\UserFacingError('Expected an input object literal, got %s', \get_class($node));
         }
@@ -53,7 +56,7 @@ abstract class InputObjectType extends NamedType {
     ): this::THackType;
 
     <<__Override>>
-    public function getKind(): GraphQL\Introspection\__TypeKind {
+    final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
     }
 }

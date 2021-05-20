@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<cc252c48c3eeb41c24ab3b44775c50f5>>
+ * @generated SignedSource<<d76e4b7915817cb97e5f6e04d2bfd45f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -32,49 +32,49 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
       case 'awaitable':
         return new GraphQL\FieldDefinition(
           'awaitable',
-          Types\IntType::nullableO(),
+          Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable(),
         );
       case 'awaitable_nullable':
         return new GraphQL\FieldDefinition(
           'awaitable_nullable',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable(),
         );
       case 'awaitable_nullable_list':
         return new GraphQL\FieldDefinition(
           'awaitable_nullable_list',
-          Types\IntType::nonNullable()->nullableListOfO(),
+          Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
         );
       case 'list':
         return new GraphQL\FieldDefinition(
           'list',
-          Types\StringType::nonNullable()->nullableListOfO(),
+          Types\StringType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->list(),
         );
       case 'nested_lists':
         return new GraphQL\FieldDefinition(
           'nested_lists',
-          Types\IntType::nullableO()->nonNullableListOfO()->nullableListOfO()->nullableListOfO(),
+          Types\IntType::nullableOutput()->nonNullableOutputListOf()->nullableOutputListOf()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_lists(),
         );
       case 'nullable':
         return new GraphQL\FieldDefinition(
           'nullable',
-          Types\StringType::nullableO(),
+          Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nullable(),
         );
       case 'scalar':
         return new GraphQL\FieldDefinition(
           'scalar',
-          Types\IntType::nullableO(),
+          Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->scalar(),
         );
