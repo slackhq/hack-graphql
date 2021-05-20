@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<6ffb9d87a46456be1434e2cac0a9a4a3>>
+ * @generated SignedSource<<85eba65d5f8072acbda608a2b041c848>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -32,49 +32,49 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
       case 'default_list_of_non_nullable_int':
         return new GraphQL\FieldDefinition(
           'default_list_of_non_nullable_int',
-          Types\IntOutputType::nonNullable()->nullableListOf(),
+          Types\IntType::nonNullable()->nullableListOfO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNonNullableInt(),
         );
       case 'default_list_of_nullable_int':
         return new GraphQL\FieldDefinition(
           'default_list_of_nullable_int',
-          Types\IntOutputType::nullable()->nullableListOf(),
+          Types\IntType::nullableO()->nullableListOfO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNullableInt(),
         );
       case 'default_nullable_string':
         return new GraphQL\FieldDefinition(
           'default_nullable_string',
-          Types\StringOutputType::nullable(),
+          Types\StringType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultNullableString(),
         );
       case 'non_null_int':
         return new GraphQL\FieldDefinition(
           'non_null_int',
-          Types\IntOutputType::nonNullable(),
+          Types\IntType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullInt(),
         );
       case 'non_null_list_of_non_null':
         return new GraphQL\FieldDefinition(
           'non_null_list_of_non_null',
-          Types\IntOutputType::nonNullable()->nonNullableListOf(),
+          Types\IntType::nonNullable()->nonNullableListOfO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullListOfNonNull(),
         );
       case 'non_null_string':
         return new GraphQL\FieldDefinition(
           'non_null_string',
-          Types\StringOutputType::nonNullable(),
+          Types\StringType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullString(),
         );
       case 'nullable_string':
         return new GraphQL\FieldDefinition(
           'nullable_string',
-          Types\StringOutputType::nullable(),
+          Types\StringType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNullableString(),
         );

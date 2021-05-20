@@ -52,20 +52,17 @@ final class Generator {
         self::removeDirectory($this->config['output_directory']);
         \mkdir($this->config['output_directory']);
 
-        $input_types = BUILTIN_INPUT_TYPES;
-        $output_types = BUILTIN_OUTPUT_TYPES;
+        $types = BUILTIN_TYPES;
 
         foreach ($objects as $object) {
             $class = $object->build($this->cg);
             $this->generateFile($class);
-            if ($object is InputTypeBuilder<_>) {
-                $input_types = self::add($input_types, $object->getGraphQLType(), $class->getName());
-            } elseif ($object is OutputTypeBuilder<_>) {
-                $output_types = self::add($output_types, $object->getGraphQLType(), $class->getName());
+            if ($object is TypeBuilder<_>) {
+                $types = self::add($types, $object->getGraphQLType(), $class->getName());
             }
         }
 
-        $this->generateFile($this->generateSchemaType($this->cg, $input_types, $output_types));
+        $this->generateFile($this->generateSchemaType($this->cg, $types));
     }
 
     private static function removeDirectory(string $directory): void {
@@ -107,35 +104,29 @@ final class Generator {
 
     private function generateSchemaType(
         HackCodegenFactory $cg,
-        dict<string, string> $input_types,
-        dict<string, string> $output_types,
+        dict<string, string> $types,
     ): CodegenClass {
         $class = $cg->codegenClass('Schema')
             ->setIsFinal(true)
             ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class)
             ->addConstant(
-                $cg->codegenClassConstant('INPUT_TYPES')
-                    ->setType('dict<string, classname<Types\NamedInputType>>')
-                    ->setValue(self::classnameDict($input_types), HackBuilderValues::literal()),
-            )
-            ->addConstant(
-                $cg->codegenClassConstant('OUTPUT_TYPES')
-                    ->setType('dict<string, classname<Types\NamedOutputType>>')
-                    ->setValue(self::classnameDict($output_types), HackBuilderValues::literal()),
+                $cg->codegenClassConstant('TYPES')
+                    ->setType('dict<string, classname<Types\NamedType>>')
+                    ->setValue(self::classnameDict($types), HackBuilderValues::literal()),
             );
 
         $class->addMethod(
             $this->generateSchemaResolveOperationMethod($cg, \Graphpinator\Tokenizer\OperationType::QUERY),
         );
 
-        $query_type = $output_types['Query'];
+        $query_type = $types['Query'];
         $query_type_const = $cg->codegenClassConstant('QUERY_TYPE')
             ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
             ->setValue('Query::class', HackBuilderValues::literal());
 
         $class->addConstant($query_type_const);
 
-        $mutation_type = $output_types['Mutation'] ?? null;
+        $mutation_type = $types['Mutation'] ?? null;
         if ($mutation_type is nonnull) {
             $mutation_type_const = $cg->codegenClassConstant('MUTATION_TYPE')
                 ->setTypef('classname<\%s>', \Slack\GraphQL\Types\ObjectType::class)
@@ -170,11 +161,11 @@ final class Generator {
         switch ($operation_type) {
             case \Graphpinator\Tokenizer\OperationType::QUERY:
                 $method_name = 'resolveQuery';
-                $root_type = 'Query::nullable()';
+                $root_type = 'Query::nullableO()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::MUTATION:
                 $method_name = 'resolveMutation';
-                $root_type = 'Mutation::nullable()';
+                $root_type = 'Mutation::nullableO()';
                 break;
             case \Graphpinator\Tokenizer\OperationType::SUBSCRIPTION:
                 invariant(false, 'TODO: support subscription');
@@ -292,8 +283,7 @@ final class Generator {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;
-            $objects[] = new InputEnumBuilder($enum_type, $enum->getName());
-            $objects[] = new OutputEnumBuilder($enum_type, $enum->getName());
+            $objects[] = new EnumBuilder($enum_type, $enum->getName());
         }
 
         // TODO: throw an error if no query fields?

@@ -2,8 +2,9 @@ namespace Slack\GraphQL\Types;
 
 use namespace Slack\GraphQL;
 
-abstract class LeafOutputType extends NamedOutputType {
-    abstract const type TCoerced as mixed = this::THackType;
+abstract class LeafType extends NamedType {
+    use TNamedInputType;
+    use TNamedOutputType;
 
     /**
      * Throw UserFacingError if the value can't be coerced (e.g. Int out of 32-bit range).

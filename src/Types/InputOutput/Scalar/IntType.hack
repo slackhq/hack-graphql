@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class IntInputType extends ScalarInputType {
+final class IntType extends ScalarType {
 
     const type THackType = int;
     const string NAME = 'Int';
@@ -37,5 +37,15 @@ final class IntInputType extends ScalarInputType {
             $node->getRawValue(),
         );
         return $node->getRawValue();
+    }
+
+    <<__Override>>
+    protected function coerce(int $value): int {
+        \Slack\GraphQL\assert(
+            $value >= self::MIN_SAFE_VALUE && $value <= self::MAX_SAFE_VALUE,
+            'Integers must be in 32-bit range, got %d',
+            $value,
+        );
+        return $value;
     }
 }

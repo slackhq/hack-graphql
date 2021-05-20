@@ -3,7 +3,7 @@ namespace Slack\GraphQL\Types;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-final class BooleanInputType extends ScalarInputType {
+final class BooleanType extends ScalarType {
 
     const type THackType = bool;
     const string NAME = 'Boolean';
@@ -22,5 +22,10 @@ final class BooleanInputType extends ScalarInputType {
             throw new GraphQL\UserFacingError('Expected an Boolean literal, got %s', \get_class($node));
         }
         return $node->getRawValue();
+    }
+
+    <<__Override>>
+    protected function coerce(bool $value): bool {
+        return $value;
     }
 }

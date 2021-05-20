@@ -68,7 +68,7 @@ final class ErrorTestObj {
 
     <<GraphQL\Field('bad_int_list_nn_of_nn', ''), GraphQL\KillsParentOnException>>
     public function bad_int_list_nn_of_nn(): vec<int> {
-        return vec[1, 2, GraphQL\Types\IntOutputType::MAX_SAFE_VALUE + 42, 3, 4];
+        return vec[1, 2, GraphQL\Types\IntType::MAX_SAFE_VALUE + 42, 3, 4];
     }
 
     /**

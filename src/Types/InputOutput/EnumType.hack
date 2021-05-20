@@ -4,12 +4,12 @@ use namespace HH\Lib\C;
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
-
-abstract class EnumInputType extends NamedInputType {
+abstract class EnumType extends LeafType {
 
     <<__Enforceable>>
     abstract const type THackType as arraykey;
     abstract const \HH\enumname<this::THackType> HACK_ENUM;
+    const type TCoerced = string;
 
     <<__Override>>
     public function coerceValue(mixed $value): this::THackType {
@@ -43,4 +43,12 @@ abstract class EnumInputType extends NamedInputType {
         return GraphQL\Introspection\__TypeKind::ENUM;
     }
 
+    /**
+     * Enum values are surfaced to GraphQL clients as their name, not their internal value.
+     */
+    <<__Override>>
+    final protected function coerce(this::THackType $value): string {
+        $hack_enum = static::HACK_ENUM;
+        return $hack_enum::getNames()[$value];
+    }
 }

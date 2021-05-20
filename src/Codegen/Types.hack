@@ -3,16 +3,10 @@ namespace Slack\GraphQL\Codegen;
 use namespace HH\Lib\Str;
 use namespace Slack\GraphQL\Types;
 
-const dict<string, classname<Types\NamedInputType>> BUILTIN_INPUT_TYPES = dict[
-    Types\IntInputType::NAME => Types\IntInputType::class,
-    Types\StringInputType::NAME => Types\StringInputType::class,
-    Types\BooleanInputType::NAME => Types\BooleanInputType::class,
-];
-
-const dict<string, classname<Types\NamedOutputType>> BUILTIN_OUTPUT_TYPES = dict[
-    Types\IntOutputType::NAME => Types\IntOutputType::class,
-    Types\StringOutputType::NAME => Types\StringOutputType::class,
-    Types\BooleanOutputType::NAME => Types\BooleanOutputType::class,
+const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
+    Types\IntType::NAME => Types\IntType::class,
+    Types\StringType::NAME => Types\StringType::class,
+    Types\BooleanType::NAME => Types\BooleanType::class,
 ];
 
 /**
@@ -22,16 +16,16 @@ const dict<string, classname<Types\NamedOutputType>> BUILTIN_OUTPUT_TYPES = dict
  *   ?vec<int> -> IntInputType::nonNullable()->nullableListOf()
  */
 function input_type(string $hack_type): string {
-    list($unwrapped, $suffix) = unwrap_type($hack_type);
+    list($unwrapped, $suffix) = unwrap_type('I', $hack_type);
     switch ($unwrapped) {
         case 'HH\int':
-            $class = Types\IntInputType::class;
+            $class = Types\IntType::class;
             break;
         case 'HH\string':
-            $class = Types\StringInputType::class;
+            $class = Types\StringType::class;
             break;
         case 'HH\bool':
-            $class = Types\BooleanInputType::class;
+            $class = Types\BooleanType::class;
             break;
         default:
             $class = get_input_class($unwrapped);
@@ -70,17 +64,17 @@ function output_type(
         $hack_type = '?'.$hack_type;
     }
 
-    list($unwrapped, $suffix) = unwrap_type($hack_type);
+    list($unwrapped, $suffix) = unwrap_type('O', $hack_type);
 
     switch ($unwrapped) {
         case 'HH\int':
-            $class = Types\IntOutputType::class;
+            $class = Types\IntType::class;
             break;
         case 'HH\string':
-            $class = Types\StringOutputType::class;
+            $class = Types\StringType::class;
             break;
         case 'HH\bool':
-            $class = Types\BooleanOutputType::class;
+            $class = Types\BooleanType::class;
             break;
         default:
             $class = get_output_class($unwrapped);
@@ -101,7 +95,7 @@ function get_input_class(string $hack_type): ?string {
         $rc = new \ReflectionClass($hack_type);
         $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
         if ($graphql_enum is nonnull) {
-            return $graphql_enum->getInputType();
+            return $graphql_enum->getType();
         }
     } catch (\ReflectionException $_e) {
     }
@@ -133,7 +127,7 @@ function get_output_class(string $hack_type): ?string {
 
         $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
         if ($graphql_enum) {
-            return $graphql_enum->getOutputType();
+            return $graphql_enum->getType();
         }
     } catch (\ReflectionException $_e) {
     }
@@ -153,15 +147,15 @@ function get_output_class(string $hack_type): ?string {
 /**
  * Shared logic for the above.
  */
-function unwrap_type(string $hack_type, bool $nullable = false): (string, string) {
+function unwrap_type(string $io, string $hack_type, bool $nullable = false): (string, string) {
     if (Str\starts_with($hack_type, '?')) {
-        return unwrap_type(Str\strip_prefix($hack_type, '?'), true);
+        return unwrap_type($io, Str\strip_prefix($hack_type, '?'), true);
     }
     if (Str\starts_with($hack_type, 'HH\vec<')) {
-        list($unwrapped, $suffix) = unwrap_type(Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'));
-        return tuple($unwrapped, $suffix.($nullable ? '->nullableListOf()' : '->nonNullableListOf()'));
+        list($unwrapped, $suffix) = unwrap_type($io, Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'));
+        return tuple($unwrapped, $suffix.($nullable ? '->nullableListOf'.$io.'()' : '->nonNullableListOf'.$io.'()'));
     }
-    return tuple($hack_type, $nullable ? '::nullable()' : '::nonNullable()');
+    return tuple($hack_type, $nullable ? '::nullable'.$io.'()' : '::nonNullable()');
 }
 
 

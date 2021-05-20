@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<eeefd36b61047d6b16af46d2298a9543>>
+ * @generated SignedSource<<b210438b3e511c28ffb7737695e57c69>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -30,35 +30,35 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
       case 'favorite_color':
         return new GraphQL\FieldDefinition(
           'favorite_color',
-          FavoriteColorOutputType::nullable(),
+          FavoriteColor::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
         );
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
-          Types\IntOutputType::nullable(),
+          Types\IntType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
           'is_active',
-          Types\BooleanOutputType::nullable(),
+          Types\BooleanType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringOutputType::nullable(),
+          Types\StringType::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullable(),
+          Team::nullableO(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
         );

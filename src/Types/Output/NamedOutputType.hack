@@ -1,5 +1,11 @@
 namespace Slack\GraphQL\Types;
 
+interface INamedOutputType extends IOutputTypeFor<this::THackType, this::TCoerced>, \Slack\GraphQL\Introspection\__Type {
+    require extends NamedType;
+    abstract const type TCoerced;
+    public static function nullableO(): NullableOutputType<this::THackType, this::TCoerced>;
+}
+
 /**
  * Named type is any non-wrapping type.
  *
@@ -9,34 +15,12 @@ namespace Slack\GraphQL\Types;
  * @see https://spec.graphql.org/draft/#sec-Wrapping-Types
  */
 <<__ConsistentConstruct>>
-abstract class NamedOutputType
-    extends OutputType<this::THackType, this::TCoerced>
-    implements \Slack\GraphQL\Introspection\__Type {
-
-    abstract const type THackType;
-    abstract const type TCoerced;
-    abstract const string NAME;
-
-    <<__Override>>
-    final public function getName(): string {
-        return static::NAME;
-    }
-
-    <<__Override>>
-    final public function unwrapType(): NamedOutputType {
-        return $this;
-    }
-
-    /**
-     * Use these to get the singleton instance of this type.
-     */
-    <<__MemoizeLSB>>
-    final public static function nonNullable(): this {
-        return new static();
-    }
+trait TNamedOutputType
+    implements INamedOutputType {
+    use TOutputType<this::THackType, this::TCoerced>;
 
     <<__MemoizeLSB>>
-    final public static function nullable(): NullableOutputType<this::THackType, this::TCoerced> {
+    final public static function nullableO(): NullableOutputType<this::THackType, this::TCoerced> {
         return new NullableOutputType(static::nonNullable());
     }
 }

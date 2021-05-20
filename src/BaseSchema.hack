@@ -8,8 +8,7 @@ abstract class BaseSchema implements Introspection\__Schema {
     const ?classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = null;
     abstract const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE;
 
-    abstract const dict<string, classname<Types\NamedInputType>> INPUT_TYPES;
-    abstract const dict<string, classname<Types\NamedOutputType>> OUTPUT_TYPES;
+    abstract const dict<string, classname<Types\NamedType>> TYPES;
 
     abstract public static function resolveQuery(
         \Graphpinator\Parser\Operation\Operation $operation,
@@ -29,12 +28,12 @@ abstract class BaseSchema implements Introspection\__Schema {
 
     final public static function getQueryType(): Types\ObjectType {
         $query_type = static::QUERY_TYPE;
-        return new $query_type();
+        return $query_type::nonNullable();
     }
 
     final public static function getMutationType(): ?Types\ObjectType {
         $mutation_type = static::MUTATION_TYPE;
-        return $mutation_type is nonnull ? new $mutation_type() : null;
+        return $mutation_type is nonnull ? $mutation_type::nonNullable() : null;
     }
 
     <<__Override>>
@@ -50,7 +49,7 @@ abstract class BaseSchema implements Introspection\__Schema {
     }
 
     final public function getIntrospectionType(string $name): ?Introspection\__Type {
-        $type = static::INPUT_TYPES[$name] ?? static::OUTPUT_TYPES[$name] ?? null;
+        $type = static::TYPES[$name] ?? null;
         return $type is nonnull ? $type::nonNullable() : null;
     }
 

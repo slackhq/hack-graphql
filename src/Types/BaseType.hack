@@ -5,6 +5,8 @@ use namespace Slack\GraphQL;
 abstract class BaseType {
     abstract public function getName(): ?string;
 
+    abstract public function unwrapType(): NamedType;
+
     public function getDescription(): ?string {
         // TODO
         return null;

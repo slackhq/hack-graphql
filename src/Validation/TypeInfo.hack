@@ -18,7 +18,7 @@ final class TypeInfo extends ASTVisitor {
 
     private classname<\Slack\GraphQL\BaseSchema> $schema;
     private Stack<?Types\IOutputType> $type_stack;
-    private Stack<?Types\NamedOutputType> $parent_type_stack;
+    private Stack<?Types\INamedOutputType> $parent_type_stack;
     private Stack<?Types\IInputType> $input_type_stack;
     private Stack<?\Slack\GraphQL\IFieldDefinition> $field_def_stack;
     private Stack<mixed> $default_value_stack;
@@ -33,7 +33,7 @@ final class TypeInfo extends ASTVisitor {
         $this->default_value_stack = new Stack();
     }
 
-    public function getParentType(): ?Types\NamedOutputType {
+    public function getParentType(): ?Types\INamedOutputType {
         return $this->parent_type_stack->peek();
     }
 

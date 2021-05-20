@@ -4,15 +4,14 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ae55d24e287be8dd02a0e7dc55090857>>
+ * @generated SignedSource<<3de3ac40079f4baa2089ebcf60d8a2dc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class FavoriteColorOutputType
-  extends \Slack\GraphQL\Types\EnumOutputType {
+final class FavoriteColor extends \Slack\GraphQL\Types\EnumType {
 
   const NAME = 'FavoriteColor';
   const type THackType = \FavoriteColor;
