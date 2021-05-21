@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<508f1820cc9082f74c04c44d56f1bcd0>>
+ * @generated SignedSource<<e37a09e281723b18b775b5757b7f6675>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -48,11 +48,11 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
 
   public async function resolveAsync(
     this::THackType $value,
-    \Graphpinator\Parser\Field\IHasSelectionSet $field,
-    GraphQL\Variables $vars,
+    vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
+    \Slack\GraphQL\ExecutionContext $context,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Concrete) {
-      return await Concrete::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Concrete::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     invariant_violation(
       'Class %s has no associated GraphQL type or it is not a subtype of %s.',

@@ -35,14 +35,17 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
             ->setIsAsync()
             ->setReturnType('Awaitable<GraphQL\\FieldResult<dict<string, mixed>>>')
             ->addParameter('this::THackType $value')
-            ->addParameter('\\Graphpinator\\Parser\\Field\\IHasSelectionSet $field')
-            ->addParameter('GraphQL\\Variables $vars');
+            ->addParameterf('vec<\\%s> $parent_nodes', \Graphpinator\Parser\Field\IHasSelectionSet::class)
+            ->addParameterf('\\%s $context', \Slack\GraphQL\ExecutionContext::class);
 
         $hb = hb($cg);
         foreach ($this->hack_class_to_graphql_object as $hack_class => $graphql_type) {
             if (\is_subclass_of($hack_class, $this->hack_type)) {
                 $hb->startIfBlockf('$value is \\%s', $hack_class)
-                    ->addReturnf('await %s::nonNullable()->resolveAsync($value, $field, $vars)', $graphql_type)
+                    ->addReturnf(
+                        'await %s::nonNullable()->resolveAsync($value, $parent_nodes, $context)',
+                        $graphql_type,
+                    )
                     ->endIfBlock();
             }
         }

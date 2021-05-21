@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5605d5af6b4e966ef171be1dca8bbc94>>
+ * @generated SignedSource<<481a5396998f1863b06a6992d837fe3b>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -65,14 +65,14 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
 
   public async function resolveAsync(
     this::THackType $value,
-    \Graphpinator\Parser\Field\IHasSelectionSet $field,
-    GraphQL\Variables $vars,
+    vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
+    \Slack\GraphQL\ExecutionContext $context,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Bot) {
-      return await Bot::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Bot::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     if ($value is \Human) {
-      return await Human::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Human::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     invariant_violation(
       'Class %s has no associated GraphQL type or it is not a subtype of %s.',

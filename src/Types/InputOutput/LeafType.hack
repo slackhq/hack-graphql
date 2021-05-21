@@ -16,8 +16,8 @@ abstract class LeafType extends NamedType {
     <<__Override>>
     final public async function resolveAsync(
         this::THackType $value,
-        \Graphpinator\Parser\Field\IHasSelectionSet $field,
-        GraphQL\Variables $vars,
+        vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
+        GraphQL\ExecutionContext $context,
     ): Awaitable<GraphQL\FieldResult<this::TResolved>> {
         try {
             return new GraphQL\ValidFieldResult($this->serialize($value));
