@@ -33,7 +33,7 @@ interface IOutputTypeFor<THackType, TResolved> extends IOutputType {
      */
     public function resolveAsync(
         THackType $value,
-        \Graphpinator\Parser\Field\IHasFieldSet $field,
+        \Graphpinator\Parser\Field\IHasSelectionSet $field,
         GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<TResolved>>;
 

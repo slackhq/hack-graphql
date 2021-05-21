@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5c2c0756935563e010b733fb422f98fa>>
+ * @generated SignedSource<<31d6932587d3a22c08262a4c5f479cbd>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -61,7 +61,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
 
   public async function resolveAsync(
     this::THackType $value,
-    \Graphpinator\Parser\Field\IHasFieldSet $field,
+    \Graphpinator\Parser\Field\IHasSelectionSet $field,
     GraphQL\Variables $vars,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Bot) {

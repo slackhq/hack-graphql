@@ -115,7 +115,7 @@ final class Parser {
                     shape(
                         'type' => \Graphpinator\Tokenizer\OperationType::QUERY,
                         'name' => '',
-                        'children' => $this->parseSelectionSet(),
+                        'selection_set' => $this->parseSelectionSet(),
                     ),
                 );
             case TokenType::NAME:
@@ -132,14 +132,14 @@ final class Parser {
                 $name = $this->parseAfterOperationType();
                 $variables = $this->parseAfterOperationName();
                 $directives = $this->parseAfterOperationVariables();
-                $children = $this->parseSelectionSet();
+                $selection_set = $this->parseSelectionSet();
 
                 $args = shape(
                     'type' => $operationType,
                     'name' => $name ?? '',
                     'variables' => $variables,
                     'directives' => $directives,
-                    'children' => $children,
+                    'selection_set' => $selection_set,
                 );
 
                 return new \Graphpinator\Parser\Operation\Operation($location, $args);
@@ -198,21 +198,20 @@ final class Parser {
      * Expects iterator on previous token - opening brace
      * Leaves iterator to last used token - closing brace
      */
-    private function parseSelectionSet(): \Graphpinator\Parser\Field\FieldSet {
+    private function parseSelectionSet(): Field\SelectionSet {
         $location = $this->tokenizer->getCurrent()->getLocation();
-        $fields = vec[];
-        $fragments = vec[];
+        $items = vec[];
 
         while ($this->tokenizer->peekNext()->getType() !== TokenType::CUR_C) {
             switch ($this->tokenizer->peekNext()->getType()) {
                 case TokenType::ELLIP:
                     $this->tokenizer->getNext();
-                    $fragments[] = $this->parseFragmentSpread();
+                    $items[] = $this->parseFragmentSpread();
 
                     break;
                 case TokenType::NAME:
                     $this->tokenizer->getNext();
-                    $fields[] = $this->parseField();
+                    $items[] = $this->parseField();
 
                     break;
                 default:
@@ -225,7 +224,7 @@ final class Parser {
 
         $this->tokenizer->getNext();
 
-        return new \Graphpinator\Parser\Field\FieldSet($location, $fields, $fragments);
+        return new Field\SelectionSet($location, $items);
     }
 
     /**

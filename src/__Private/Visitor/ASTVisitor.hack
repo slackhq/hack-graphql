@@ -35,9 +35,9 @@ abstract class ASTVisitor {
 
     private function visitField(Parser\Field\Field $node): void {
         $this->enter($node);
-        $fieldset = $node->getFields();
-        if ($fieldset) {
-            $this->visitFieldSet($fieldset);
+        $selection_set = $node->getSelectionSet();
+        if ($selection_set) {
+            $this->visitSelectionSet($selection_set);
         }
         foreach ($node->getArguments() ?? dict[] as $argument) {
             $this->visitArgument($argument);
@@ -48,22 +48,23 @@ abstract class ASTVisitor {
         $this->leave($node);
     }
 
-    private function visitFieldSet(Parser\Field\FieldSet $node): void {
+    private function visitSelectionSet(Parser\Field\SelectionSet $node): void {
         $this->enter($node);
-        foreach ($node->getFields() as $field) {
-            $this->visitField($field);
-        }
-        foreach ($node->getFragmentSpreads() as $fragment_spread) {
-            // TODO: Fragments
+        foreach ($node->getItems() as $item) {
+            if ($item is Parser\Field\Field) {
+                $this->visitField($item);
+            } else if ($item is Parser\FragmentSpread\FragmentSpread) {
+                // TODO: Fragments
+            }
         }
         $this->leave($node);
     }
 
     private function visitOperation(Parser\Operation\Operation $node): void {
         $this->enter($node);
-        $fieldset = $node->getFields();
-        if ($fieldset) {
-            $this->visitFieldSet($fieldset);
+        $selection_set = $node->getSelectionSet();
+        if ($selection_set) {
+            $this->visitSelectionSet($selection_set);
         }
         foreach ($node->getDirectives() ?? vec[] as $directive) {
             // TODO: Directives

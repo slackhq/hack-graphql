@@ -23,7 +23,7 @@ final class NullableOutputType<TInner as nonnull, TResolved> extends BaseType {
     <<__Override>>
     public async function resolveAsync(
         ?TInner $value,
-        \Graphpinator\Parser\Field\IHasFieldSet $field,
+        \Graphpinator\Parser\Field\IHasSelectionSet $field,
         GraphQL\Variables $vars,
     ): Awaitable<GraphQL\ValidFieldResult<?TResolved>> {
         if ($value is null) {

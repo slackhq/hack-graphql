@@ -20,7 +20,7 @@ final class ListOutputType<TInner, TResolved>
     <<__Override>>
     public async function resolveAsync(
         vec<TInner> $value,
-        \Graphpinator\Parser\Field\IHasFieldSet $field,
+        \Graphpinator\Parser\Field\IHasSelectionSet $field,
         GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<vec<mixed>>> {
         $ret = vec[];
