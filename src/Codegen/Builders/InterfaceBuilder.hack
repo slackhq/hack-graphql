@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{Vec, Str};
+use namespace HH\Lib\Str;
 use type Facebook\HackCodegen\{
     CodegenClass,
     CodegenMethod,
