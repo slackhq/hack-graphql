@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<9e2664d1abcbb202090d5856437227d8>>
+ * @generated SignedSource<<20e304aa15825f3aa5ad6d39596ecf8e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -38,10 +38,13 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     'ObjectShape' => ObjectShape::class,
     'OutputShape' => OutputShape::class,
     'OutputTypeTestObj' => OutputTypeTestObj::class,
+    'PageInfo' => PageInfo::class,
     'Query' => Query::class,
     'String' => Types\StringType::class,
     'Team' => Team::class,
     'User' => User::class,
+    'UserConnection' => UserConnection::class,
+    'UserEdge' => UserEdge::class,
     '__EnumValue' => __EnumValue::class,
     '__Field' => __Field::class,
     '__InputValue' => __InputValue::class,

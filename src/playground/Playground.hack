@@ -1,5 +1,5 @@
 use namespace Slack\GraphQL;
-use namespace HH\Lib\{Math, Vec};
+use namespace HH\Lib\{Math, Str, Vec};
 
 <<GraphQL\InputObjectType('CreateTeamInput', 'Arguments for creating a team')>>
 type TCreateTeamInput = shape(
@@ -96,6 +96,11 @@ final class Human extends BaseUser {
     <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
     public function getFavoriteColor(): FavoriteColor {
         return FavoriteColor::BLUE;
+    }
+
+    <<GraphQL\Field('friends', 'Friends')>>
+    public async function getFriends(): Awaitable<UserConnection> {
+        return new UserConnection();
     }
 }
 

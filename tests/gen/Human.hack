@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<44300e4bf463295c174cb50f838e36e6>>
+ * @generated SignedSource<<2302677adeae3af144120b3aca368f5c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -17,6 +17,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
   const type THackType = \Human;
   const keyset<string> FIELD_NAMES = keyset[
     'favorite_color',
+    'friends',
     'id',
     'is_active',
     'name',
@@ -36,6 +37,39 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           FavoriteColor::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
+        );
+      case 'friends':
+        return new GraphQL\FieldDefinition(
+          'friends',
+          UserConnection::nullableOutput(),
+          dict[
+            'after' => shape(
+              'name' => 'after',
+              'type' => Types\StringType::nullableInput(),
+              'default_value' => null,
+            ),
+            'before' => shape(
+              'name' => 'before',
+              'type' => Types\StringType::nullableInput(),
+              'default_value' => null,
+            ),
+            'first' => shape(
+              'name' => 'first',
+              'type' => Types\IntType::nullableInput(),
+              'default_value' => null,
+            ),
+            'last' => shape(
+              'name' => 'last',
+              'type' => Types\IntType::nullableInput(),
+              'default_value' => null,
+            ),
+          ],
+          async ($parent, $args, $vars) ==> (await $parent->getFriends())->setPaginationArgs(
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('after', $args, $vars, null),
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('before', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
+          ),
         );
       case 'id':
         return new GraphQL\FieldDefinition(
