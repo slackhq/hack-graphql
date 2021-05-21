@@ -1,5 +1,6 @@
 namespace Slack\GraphQL\Types;
 
+use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL\Introspection;
 
 interface INullableType {
@@ -40,7 +41,8 @@ trait TNullableType implements INullableType {
 
     <<__Override>>
     final public function getIntrospectionPossibleTypes(): ?vec<Introspection\__Type> {
-        return $this->getInnerType()->getPossibleTypes();
+        $types = $this->getInnerType()->getPossibleTypes();
+        return $types is nonnull ? Vec\map($types, $type ==> $type->nullableForIntrospection()) : null;
     }
 
     <<__Override>>

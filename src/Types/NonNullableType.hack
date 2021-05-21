@@ -9,7 +9,7 @@ interface INonNullableType {
     public function getDescription(): ?string;
     public function getFields(bool $include_deprecated = false): ?vec<Introspection\__Field>;
     public function getInterfaces(): ?vec<Introspection\__Type>;
-    public function getPossibleTypes(): ?vec<Introspection\__Type>;
+    public function getPossibleTypes(): ?vec<ObjectType>;
     public function getEnumValues(bool $include_deprecated = false): ?vec<Introspection\__EnumValue>;
     public function getInputFields(bool $include_deprecated = false): ?vec<Introspection\__InputValue>;
     public function getOfType(): ?Introspection\__Type;
@@ -91,7 +91,7 @@ trait TNonNullableType implements INonNullableType {
         return null;
     }
 
-    public function getPossibleTypes(): ?vec<Introspection\__Type> {
+    public function getPossibleTypes(): ?vec<ObjectType> {
         return null;
     }
 
