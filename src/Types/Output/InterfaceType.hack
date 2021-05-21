@@ -13,7 +13,6 @@ abstract class InterfaceType extends CompositeType {
 
     <<__Override>>
     final public function getPossibleTypes(): vec<GraphQL\Introspection\__Type> {
-        return Vec\map(static::POSSIBLE_TYPES, $type ==> $this->schema->getIntrospectionType($type))
-            |> Vec\filter_nulls($$);
+        return Vec\map(static::POSSIBLE_TYPES, $type ==> $this->schema->getIntrospectionType($type) as nonnull);
     }
 }

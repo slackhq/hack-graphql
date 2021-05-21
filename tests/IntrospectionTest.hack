@@ -8,7 +8,7 @@ final class IntrospectionTest extends PlaygroundTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
-            'validate interface introspection' => tuple(
+            'validate interface introspection with extended interface' => tuple(
                 '{
                     __type(name: "IIntrospectionInterfaceA") {
                         possibleTypes {
