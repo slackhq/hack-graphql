@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e0d3aee05dfb52a0843a819120e89c7d>>
+ * @generated SignedSource<<83c4ac9e30bde4ce823ffcb02f4260a4>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -35,17 +35,17 @@ final class IIntrospectionInterfaceA
 
   public async function resolveAsync(
     this::THackType $value,
-    \Graphpinator\Parser\Field\IHasSelectionSet $field,
-    GraphQL\Variables $vars,
+    vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
+    \Slack\GraphQL\ExecutionContext $context,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \ImplementInterfaceA) {
-      return await ImplementInterfaceA::nonNullable()->resolveAsync($value, $field, $vars);
+      return await ImplementInterfaceA::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     if ($value is \ImplementInterfaceB) {
-      return await ImplementInterfaceB::nonNullable()->resolveAsync($value, $field, $vars);
+      return await ImplementInterfaceB::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     if ($value is \ImplementInterfaceC) {
-      return await ImplementInterfaceC::nonNullable()->resolveAsync($value, $field, $vars);
+      return await ImplementInterfaceC::nonNullable()->resolveAsync($value, $parent_nodes, $context);
     }
     invariant_violation(
       'Class %s has no associated GraphQL type or it is not a subtype of %s.',

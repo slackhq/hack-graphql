@@ -18,8 +18,12 @@ final class SelectionSet extends \Graphpinator\Parser\Node {
 }
 
 interface IHasSelectionSet {
+    require extends \Graphpinator\Parser\Node;
     public function getSelectionSet(): ?SelectionSet;
 }
 
 <<__Sealed(Field::class, \Graphpinator\Parser\FragmentSpread\FragmentSpread::class)>>
-interface ISelectionSetItem {}
+interface ISelectionSetItem {
+    require extends \Graphpinator\Parser\Node;
+    public function getDirectives(): ?vec<\Graphpinator\Parser\Directive\Directive>;
+}

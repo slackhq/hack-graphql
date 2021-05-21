@@ -95,16 +95,19 @@ final class Resolver {
             $operation = C\onlyx($request->getOperations());
         }
 
-        $coerced_variables = $this->coerceVariables($operation->getVariables(), $raw_variables);
+        $context = new ExecutionContext(
+            $this->coerceVariables($operation->getVariables(), $raw_variables),
+            $request->getFragments(),
+        );
 
         $operation_type = $operation->getType();
         switch ($operation_type) {
             case 'query':
-                $result = await $schema::resolveQuery($operation, $coerced_variables);
+                $result = await $schema::resolveQuery($operation, $context);
                 break;
             case 'mutation':
                 invariant($schema::MUTATION_TYPE, 'mutation operation not supported for schema');
-                $result = await $schema::resolveMutation($operation, $coerced_variables);
+                $result = await $schema::resolveMutation($operation, $context);
                 break;
             default:
                 throw new \Error('Unsupported operation: '.$operation_type);

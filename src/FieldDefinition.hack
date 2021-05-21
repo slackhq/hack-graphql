@@ -1,5 +1,7 @@
 namespace Slack\GraphQL;
 
+use namespace HH\Lib\C;
+
 type ArgumentDefinition = shape(
     'name' => string,
     'type' => Types\IInputType,
@@ -17,8 +19,8 @@ interface IFieldDefinition extends Introspection\__Field {
 interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
     public function resolveAsync(
         TParent $parent,
-        \Graphpinator\Parser\Field\Field $field,
-        Variables $vars,
+        vec<\Graphpinator\Parser\Field\Field> $grouped_field,
+        ExecutionContext $context,
     ): Awaitable<FieldResult<mixed>>;
 }
 
@@ -36,19 +38,23 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public async function resolveAsync(
         TParent $parent,
-        \Graphpinator\Parser\Field\Field $field,
-        Variables $vars,
+        vec<\Graphpinator\Parser\Field\Field> $grouped_field,
+        ExecutionContext $context,
     ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
-            $value = await $resolver($parent, $field->getArgumentValues(), $vars);
+            $value = await $resolver(
+                $parent,
+                C\firstx($grouped_field)->getArgumentValues(),
+                $context->getVariableValues(),
+            );
         } catch (UserFacingError $e) {
             return $this->type->resolveError($e);
         } catch (\Throwable $e) {
             return $this->type->resolveError(new FieldResolverError($e));
         }
 
-        return await $this->type->resolveAsync($value, $field, $vars);
+        return await $this->type->resolveAsync($value, $grouped_field, $context);
     }
 
     public function getName(): string {

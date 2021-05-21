@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<05fae459830946726df81669ba23886d>>
+ * @generated SignedSource<<9e2664d1abcbb202090d5856437227d8>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -54,15 +54,15 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
 
   public static async function resolveQuery(
     \Graphpinator\Parser\Operation\Operation $operation,
-    \Slack\GraphQL\Variables $variables,
+    \Slack\GraphQL\ExecutionContext $context,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Query::nullableOutput()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Query::nullableOutput()->resolveAsync(new GraphQL\Root(), vec[$operation], $context);
   }
 
   public static async function resolveMutation(
     \Graphpinator\Parser\Operation\Operation $operation,
-    \Slack\GraphQL\Variables $variables,
+    \Slack\GraphQL\ExecutionContext $context,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Mutation::nullableOutput()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Mutation::nullableOutput()->resolveAsync(new GraphQL\Root(), vec[$operation], $context);
   }
 }

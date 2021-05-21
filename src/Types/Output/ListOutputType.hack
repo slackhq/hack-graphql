@@ -20,8 +20,8 @@ final class ListOutputType<TInner, TResolved>
     <<__Override>>
     public async function resolveAsync(
         vec<TInner> $value,
-        \Graphpinator\Parser\Field\IHasSelectionSet $field,
-        GraphQL\Variables $vars,
+        vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
+        GraphQL\ExecutionContext $context,
     ): Awaitable<GraphQL\FieldResult<vec<mixed>>> {
         $ret = vec[];
         $errors = vec[];
@@ -29,7 +29,7 @@ final class ListOutputType<TInner, TResolved>
 
         $results = await Vec\map_async(
             $value,
-            async $item ==> await $this->inner_type->resolveAsync($item, $field, $vars),
+            async $item ==> await $this->inner_type->resolveAsync($item, $parent_nodes, $context),
         );
 
         foreach ($results as $idx => $result) {
