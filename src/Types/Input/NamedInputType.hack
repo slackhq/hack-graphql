@@ -1,5 +1,7 @@
 namespace Slack\GraphQL\Types;
 
+use namespace Slack\GraphQL;
+
 /**
  * Named type is any non-wrapping type.
  *
@@ -14,7 +16,7 @@ interface INamedInputType extends INonNullableInputTypeFor<this::THackType> {
     <<__Enforceable>>
     abstract const type THackType as nonnull;
 
-    public static function nullableInput(): NullableInputType<this::THackType>;
+    public static function nullableInput(GraphQL\BaseSchema $_): NullableInputType<this::THackType>;
 }
 
 <<__ConsistentConstruct>>
@@ -27,12 +29,12 @@ trait TNamedInputType implements INamedInputType {
     }
 
     <<__Override, __MemoizeLSB>>
-    final public static function nullableInput(): NullableInputType<this::THackType> {
-        return new NullableInputType(static::nonNullable());
+    final public static function nullableInput(GraphQL\BaseSchema $schema): NullableInputType<this::THackType> {
+        return new NullableInputType(static::nonNullable($schema));
     }
 
     <<__Override>>
     public function nullableForIntrospection(): INullableType {
-        return static::nullableInput();
+        return static::nullableInput($this->schema);
     }
 }

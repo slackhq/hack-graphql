@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b65ebf52131aac2d95f68806d781cbf9>>
+ * @generated SignedSource<<163e680e26e614327ed50d4b0fc0536f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -28,21 +28,21 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
       case 'foo':
         return new GraphQL\FieldDefinition(
           'foo',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent['foo'],
         );
       case 'bar':
         return new GraphQL\FieldDefinition(
           'bar',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent['bar'] ?? null,
         );
       case 'baz':
         return new GraphQL\FieldDefinition(
           'baz',
-          AnotherObjectShape::nullableOutput(),
+          AnotherObjectShape::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent['baz'],
         );

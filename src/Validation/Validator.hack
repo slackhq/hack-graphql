@@ -11,7 +11,7 @@ final class Validator {
         ScalarLeafsRule::class,
     ];
 
-    public function __construct(private classname<\Slack\GraphQL\BaseSchema> $schema) {}
+    public function __construct(private \Slack\GraphQL\BaseSchema $schema) {}
 
     public function validate(\Graphpinator\Parser\ParsedRequest $request): vec<\Slack\GraphQL\UserFacingError> {
         $type_info = new TypeInfo($this->schema);

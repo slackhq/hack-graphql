@@ -102,10 +102,7 @@ final class Generator {
         return $dict;
     }
 
-    private function generateSchemaType(
-        HackCodegenFactory $cg,
-        dict<string, string> $types,
-    ): CodegenClass {
+    private function generateSchemaType(HackCodegenFactory $cg, dict<string, string> $types): CodegenClass {
         $class = $cg->codegenClass('Schema')
             ->setIsFinal(true)
             ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class)
@@ -161,11 +158,11 @@ final class Generator {
         switch ($operation_type) {
             case \Graphpinator\Tokenizer\OperationType::QUERY:
                 $method_name = 'resolveQuery';
-                $root_type = 'Query::nullableOutput()';
+                $root_type = 'Query::nullableOutput($this)';
                 break;
             case \Graphpinator\Tokenizer\OperationType::MUTATION:
                 $method_name = 'resolveMutation';
-                $root_type = 'Mutation::nullableOutput()';
+                $root_type = 'Mutation::nullableOutput($this)';
                 break;
             case \Graphpinator\Tokenizer\OperationType::SUBSCRIPTION:
                 invariant(false, 'TODO: support subscription');
@@ -173,7 +170,6 @@ final class Generator {
 
         $resolve_method = $cg->codegenMethod($method_name)
             ->setPublic()
-            ->setIsStatic(true)
             ->setIsAsync(true)
             ->setReturnType('Awaitable<GraphQL\\ValidFieldResult<?dict<string, mixed>>>')
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)

@@ -10,7 +10,9 @@ final class ListOutputType<TInner, TResolved>
     use TNonNullableType;
     use TOutputType<vec<TInner>, vec<mixed>>;
 
-    public function __construct(private IOutputTypeFor<TInner, TResolved> $inner_type) {}
+    public function __construct(private IOutputTypeFor<TInner, TResolved> $inner_type) {
+        parent::__construct($inner_type->schema);
+    }
 
     <<__Override>>
     public function unwrapType(): INamedOutputType {

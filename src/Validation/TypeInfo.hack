@@ -16,7 +16,7 @@ use type \Slack\GraphQL\__Private\Utils\Stack;
  */
 final class TypeInfo extends ASTVisitor {
 
-    private classname<\Slack\GraphQL\BaseSchema> $schema;
+    private \Slack\GraphQL\BaseSchema $schema;
     private Stack<?Types\IOutputType> $type_stack;
     private Stack<?Types\INamedOutputType> $parent_type_stack;
     private Stack<?Types\IInputType> $input_type_stack;
@@ -24,7 +24,7 @@ final class TypeInfo extends ASTVisitor {
     private Stack<mixed> $default_value_stack;
     private ?\Slack\GraphQL\ArgumentDefinition $argument = null;
 
-    public function __construct(classname<\Slack\GraphQL\BaseSchema> $schema) {
+    public function __construct(\Slack\GraphQL\BaseSchema $schema) {
         $this->schema = $schema;
         $this->type_stack = new Stack();
         $this->parent_type_stack = new Stack();
@@ -82,10 +82,10 @@ final class TypeInfo extends ASTVisitor {
             $schema = $this->schema;
             switch ($node->getType()) {
                 case \Graphpinator\Tokenizer\OperationType::QUERY:
-                    $type = $schema::getQueryType();
+                    $type = $schema->getQueryType();
                     break;
                 case \Graphpinator\Tokenizer\OperationType::MUTATION:
-                    $type = $schema::getMutationType();
+                    $type = $schema->getMutationType();
                     break;
                 default:
                     // TODO: Subscriptions

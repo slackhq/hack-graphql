@@ -14,7 +14,7 @@ final class Resolver {
         ?'extensions' => dict<string, mixed>,
     );
 
-    public function __construct(private classname<BaseSchema> $schema) {}
+    public function __construct(private BaseSchema $schema) {}
 
     /**
      * Operation name must be specified if the GraphQL request contains multiple operations.
@@ -100,11 +100,11 @@ final class Resolver {
         $operation_type = $operation->getType();
         switch ($operation_type) {
             case 'query':
-                $result = await $schema::resolveQuery($operation, $coerced_variables);
+                $result = await $schema->resolveQuery($operation, $coerced_variables);
                 break;
             case 'mutation':
                 invariant($schema::MUTATION_TYPE, 'mutation operation not supported for schema');
-                $result = await $schema::resolveMutation($operation, $coerced_variables);
+                $result = await $schema->resolveMutation($operation, $coerced_variables);
                 break;
             default:
                 throw new \Error('Unsupported operation: '.$operation_type);

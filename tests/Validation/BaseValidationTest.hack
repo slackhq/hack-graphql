@@ -28,7 +28,7 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
         $parser = new \Graphpinator\Parser\Parser($source);
         $request = $parser->parse();
 
-        $validator = new GraphQL\Validation\Validator(GraphQL\Test\Generated\Schema::class);
+        $validator = new GraphQL\Validation\Validator(new GraphQL\Test\Generated\Schema());
         $errors = $validator->validate($request);
         expect(Vec\map($errors, $error ==> $error->toShape()))->toEqual($expected_errors);
     }

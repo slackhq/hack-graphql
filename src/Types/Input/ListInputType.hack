@@ -9,7 +9,9 @@ final class ListInputType<TInner> extends BaseType implements INonNullableInputT
     use TNonNullableType;
     use TInputType<vec<TInner>>;
 
-    public function __construct(private IInputTypeFor<TInner> $inner_type) {}
+    public function __construct(private IInputTypeFor<TInner> $inner_type) {
+        parent::__construct($inner_type->schema);
+    }
 
     <<__Override>>
     public function unwrapType(): INamedInputType {

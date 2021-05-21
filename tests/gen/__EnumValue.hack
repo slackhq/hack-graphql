@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<802276c16f369dd0037ca390373119c4>>
+ * @generated SignedSource<<b298217d385e7e0793958ba30839bae0>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -29,28 +29,28 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
       case 'deprecationReason':
         return new GraphQL\FieldDefinition(
           'deprecationReason',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
         );
       case 'description':
         return new GraphQL\FieldDefinition(
           'description',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDescription(),
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
           'isDeprecated',
-          Types\BooleanType::nullableOutput(),
+          Types\BooleanType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isDeprecated(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );

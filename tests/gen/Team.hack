@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2fcbc3a984824eb80a25483803a45585>>
+ * @generated SignedSource<<128bf27b615580223595a54af02c21ed>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -29,35 +29,35 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
       case 'description':
         return new GraphQL\FieldDefinition(
           'description',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[
             'short' => shape(
               'name' => 'short',
-              'type' => Types\BooleanType::nonNullable(),
+              'type' => Types\BooleanType::nonNullable($this->schema),
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getDescription(
-            Types\BooleanType::nonNullable()->coerceNamedNode('short', $args, $vars),
+            Types\BooleanType::nonNullable($this->schema)->coerceNamedNode('short', $args, $vars),
           ),
         );
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'num_users':
         return new GraphQL\FieldDefinition(
           'num_users',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
         );

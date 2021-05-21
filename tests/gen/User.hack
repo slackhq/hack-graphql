@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5c2c0756935563e010b733fb422f98fa>>
+ * @generated SignedSource<<fdced7776f71b1cb13cabf3cc160b118>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,6 +21,10 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
     'name',
     'team',
   ];
+  const keyset<string> POSSIBLE_TYPES = keyset[
+    'Bot',
+    'Human',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -29,28 +33,28 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
           'is_active',
-          Types\BooleanType::nullableOutput(),
+          Types\BooleanType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullableOutput(),
+          Team::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
         );
@@ -65,10 +69,10 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
     GraphQL\Variables $vars,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Bot) {
-      return await Bot::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Bot::nonNullable($this->schema)->resolveAsync($value, $field, $vars);
     }
     if ($value is \Human) {
-      return await Human::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Human::nonNullable($this->schema)->resolveAsync($value, $field, $vars);
     }
     invariant_violation(
       'Class %s has no associated GraphQL type or it is not a subtype of %s.',

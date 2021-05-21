@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<469d5bd682a221e51c109c1ae88bcbd4>>
+ * @generated SignedSource<<2bd9f28bf6c125e22dbf00bcb4b5ff6c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,84 +37,84 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
       case 'bad_int_list_n_of_n':
         return new GraphQL\FieldDefinition(
           'bad_int_list_n_of_n',
-          Types\IntType::nullableOutput()->nullableOutputListOf(),
+          Types\IntType::nullableOutput($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_n(),
         );
       case 'bad_int_list_n_of_nn':
         return new GraphQL\FieldDefinition(
           'bad_int_list_n_of_nn',
-          Types\IntType::nonNullable()->nullableOutputListOf(),
+          Types\IntType::nonNullable($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_nn(),
         );
       case 'bad_int_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
           'bad_int_list_nn_of_nn',
-          Types\IntType::nonNullable()->nonNullableOutputListOf(),
+          Types\IntType::nonNullable($this->schema)->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_nn_of_nn(),
         );
       case 'hidden_exception':
         return new GraphQL\FieldDefinition(
           'hidden_exception',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->hidden_exception(),
         );
       case 'nested':
         return new GraphQL\FieldDefinition(
           'nested',
-          ErrorTestObj::nullableOutput(),
+          ErrorTestObj::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested(),
         );
       case 'nested_list_n_of_n':
         return new GraphQL\FieldDefinition(
           'nested_list_n_of_n',
-          ErrorTestObj::nullableOutput()->nullableOutputListOf(),
+          ErrorTestObj::nullableOutput($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_n(),
         );
       case 'nested_list_n_of_nn':
         return new GraphQL\FieldDefinition(
           'nested_list_n_of_nn',
-          ErrorTestObj::nonNullable()->nullableOutputListOf(),
+          ErrorTestObj::nonNullable($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_nn(),
         );
       case 'nested_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
           'nested_list_nn_of_nn',
-          ErrorTestObj::nonNullable()->nonNullableOutputListOf(),
+          ErrorTestObj::nonNullable($this->schema)->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
         );
       case 'nested_nn':
         return new GraphQL\FieldDefinition(
           'nested_nn',
-          ErrorTestObj::nonNullable(),
+          ErrorTestObj::nonNullable($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_nn(),
         );
       case 'no_error':
         return new GraphQL\FieldDefinition(
           'no_error',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->no_error(),
         );
       case 'non_nullable':
         return new GraphQL\FieldDefinition(
           'non_nullable',
-          Types\IntType::nonNullable(),
+          Types\IntType::nonNullable($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->non_nullable(),
         );
       case 'user_facing_error':
         return new GraphQL\FieldDefinition(
           'user_facing_error',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->user_facing_error(),
         );

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<75a0b6a31b2d57480f9f9847bac621c5>>
+ * @generated SignedSource<<3bbf6e163c472729fb1c336941e86abc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -24,7 +24,7 @@ final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
     KeyedContainer<arraykey, mixed> $fields,
   ): this::THackType {
     $ret = shape();
-    $ret['name'] = Types\StringType::nonNullable()->coerceNamedValue('name', $fields);
+    $ret['name'] = Types\StringType::nonNullable($this->schema)->coerceNamedValue('name', $fields);
     return $ret;
   }
 
@@ -34,7 +34,7 @@ final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
     dict<string, mixed> $vars,
   ): this::THackType {
     $ret = shape();
-    $ret['name'] = Types\StringType::nonNullable()->coerceNamedNode('name', $fields, $vars);
+    $ret['name'] = Types\StringType::nonNullable($this->schema)->coerceNamedNode('name', $fields, $vars);
     return $ret;
   }
 }

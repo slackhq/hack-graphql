@@ -7,7 +7,9 @@ final class NullableInputType<TInner as nonnull> extends BaseType {
     use TNullableType;
     use TInputType<?TInner>;
 
-    public function __construct(private INonNullableInputTypeFor<TInner> $inner_type) {}
+    public function __construct(private INonNullableInputTypeFor<TInner> $inner_type) {
+        parent::__construct($inner_type->schema);
+    }
 
     public function getInnerType(): INonNullableInputTypeFor<TInner> {
         return $this->inner_type;

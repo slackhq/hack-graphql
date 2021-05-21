@@ -5,7 +5,9 @@ final class NullableOutputType<TInner as nonnull, TResolved> extends BaseType {
     use TNullableType;
     use TOutputType<?TInner, ?TResolved>;
 
-    public function __construct(private INonNullableOutputTypeFor<TInner, TResolved> $inner_type) {}
+    public function __construct(private INonNullableOutputTypeFor<TInner, TResolved> $inner_type) {
+        parent::__construct($inner_type->schema);
+    }
 
     public function getInnerType(): INonNullableOutputTypeFor<TInner, TResolved> {
         return $this->inner_type;

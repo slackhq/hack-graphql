@@ -32,6 +32,6 @@ abstract class LeafType extends NamedType {
      */
     <<__Override>>
     final public function nullableForIntrospection(): INullableType {
-        return static::nullableInput();
+        return static::nullableInput($this->schema);
     }
 }

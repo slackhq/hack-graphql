@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<01a084d48bc4b40d2a58229e523d72e9>>
+ * @generated SignedSource<<5e4fa0013e967e75f98a8d0f4bd11b6e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -23,6 +23,11 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
     'ErrorTestObj' => ErrorTestObj::class,
     'FavoriteColor' => FavoriteColor::class,
     'Human' => Human::class,
+    'IIntrospectionInterfaceA' => IIntrospectionInterfaceA::class,
+    'IIntrospectionInterfaceB' => IIntrospectionInterfaceB::class,
+    'IIntrospectionInterfaceC' => IIntrospectionInterfaceC::class,
+    'ImplementInterfaceB' => ImplementInterfaceB::class,
+    'ImplementInterfaceC' => ImplementInterfaceC::class,
     'Int' => Types\IntType::class,
     'InterfaceA' => InterfaceA::class,
     'InterfaceB' => InterfaceB::class,
@@ -44,17 +49,17 @@ final class Schema extends \Slack\GraphQL\BaseSchema {
   const classname<\Slack\GraphQL\Types\ObjectType> QUERY_TYPE = Query::class;
   const classname<\Slack\GraphQL\Types\ObjectType> MUTATION_TYPE = Mutation::class;
 
-  public static async function resolveQuery(
+  public async function resolveQuery(
     \Graphpinator\Parser\Operation\Operation $operation,
     \Slack\GraphQL\Variables $variables,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Query::nullableOutput()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Query::nullableOutput($this)->resolveAsync(new GraphQL\Root(), $operation, $variables);
   }
 
-  public static async function resolveMutation(
+  public async function resolveMutation(
     \Graphpinator\Parser\Operation\Operation $operation,
     \Slack\GraphQL\Variables $variables,
   ): Awaitable<GraphQL\ValidFieldResult<?dict<string, mixed>>> {
-    return await Mutation::nullableOutput()->resolveAsync(new GraphQL\Root(), $operation, $variables);
+    return await Mutation::nullableOutput($this)->resolveAsync(new GraphQL\Root(), $operation, $variables);
   }
 }

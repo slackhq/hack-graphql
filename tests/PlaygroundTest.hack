@@ -42,7 +42,7 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
     }
 
     private function getResolver(): GraphQL\Resolver {
-        return new GraphQL\Resolver(\Slack\GraphQL\Test\Generated\Schema::class);
+        return new GraphQL\Resolver(new \Slack\GraphQL\Test\Generated\Schema());
     }
 
     public async function resolve(

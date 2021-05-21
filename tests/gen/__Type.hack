@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4e1bfb13121b83b22d98d3bc73b26c8e>>
+ * @generated SignedSource<<77e01be885fdc912d3a02a656f650d66>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,87 +34,87 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
       case 'description':
         return new GraphQL\FieldDefinition(
           'description',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionDescription(),
         );
       case 'enumValues':
         return new GraphQL\FieldDefinition(
           'enumValues',
-          __EnumValue::nonNullable()->nullableOutputListOf(),
+          __EnumValue::nonNullable($this->schema)->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
-              'type' => Types\BooleanType::nonNullable(),
+              'type' => Types\BooleanType::nonNullable($this->schema),
               'default_value' => false,
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionEnumValues(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
+            Types\BooleanType::nonNullable($this->schema)->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
           ),
         );
       case 'fields':
         return new GraphQL\FieldDefinition(
           'fields',
-          __Field::nonNullable()->nullableOutputListOf(),
+          __Field::nonNullable($this->schema)->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
-              'type' => Types\BooleanType::nonNullable(),
+              'type' => Types\BooleanType::nonNullable($this->schema),
               'default_value' => false,
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionFields(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
+            Types\BooleanType::nonNullable($this->schema)->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
           ),
         );
       case 'inputFields':
         return new GraphQL\FieldDefinition(
           'inputFields',
-          __InputValue::nonNullable()->nullableOutputListOf(),
+          __InputValue::nonNullable($this->schema)->nullableOutputListOf(),
           dict[
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
-              'type' => Types\BooleanType::nonNullable(),
+              'type' => Types\BooleanType::nonNullable($this->schema),
               'default_value' => false,
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
+            Types\BooleanType::nonNullable($this->schema)->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
           ),
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(
           'interfaces',
-          __Type::nonNullable()->nullableOutputListOf(),
+          __Type::nonNullable($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInterfaces(),
         );
       case 'kind':
         return new GraphQL\FieldDefinition(
           'kind',
-          __TypeKind::nullableOutput(),
+          __TypeKind::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionKind(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionName(),
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
           'ofType',
-          __Type::nullableOutput(),
+          __Type::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionOfType(),
         );
       case 'possibleTypes':
         return new GraphQL\FieldDefinition(
           'possibleTypes',
-          __Type::nonNullable()->nullableOutputListOf(),
+          __Type::nonNullable($this->schema)->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionPossibleTypes(),
         );

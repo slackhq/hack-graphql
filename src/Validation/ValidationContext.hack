@@ -8,7 +8,7 @@ final class ValidationContext {
     private vec<\Slack\GraphQL\UserFacingError> $errors = vec[];
 
     public function __construct(
-        private classname<\Slack\GraphQL\BaseSchema> $schema,
+        private \Slack\GraphQL\BaseSchema $schema,
         // TODO: Pass in parsed AST as well as rules may need it.
         private TypeInfo $type_info,
     ) {}
@@ -28,7 +28,7 @@ final class ValidationContext {
         return $this->errors;
     }
 
-    public function getSchema(): classname<\Slack\GraphQL\BaseSchema> {
+    public function getSchema(): \Slack\GraphQL\BaseSchema {
         return $this->schema;
     }
 

@@ -68,8 +68,7 @@ interface IInputTypeFor<THackType> extends IInputType {
     public function nullableInputListOf(): NullableInputType<vec<THackType>>;
 }
 
-interface INonNullableInputTypeFor<THackType as nonnull>
-    extends INonNullableType, IInputTypeFor<THackType> {}
+interface INonNullableInputTypeFor<THackType as nonnull> extends INonNullableType, IInputTypeFor<THackType> {}
 
 trait TInputType<THackType> implements IInputTypeFor<THackType> {
 
@@ -84,10 +83,7 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         dict<string, mixed> $variable_values,
     ): THackType;
 
-    final public function coerceNamedValue(
-        string $name,
-        KeyedContainer<arraykey, mixed> $values,
-    ): THackType {
+    final public function coerceNamedValue(string $name, KeyedContainer<arraykey, mixed> $values): THackType {
         try {
             return $this->coerceValue(idx($values, $name));
         } catch (GraphQL\UserFacingError $e) {
@@ -170,7 +166,7 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
      * Convert a parser node (e.g. from a variable declaration) to an instance of the input type it represents.
      */
     public static function fromNode(
-        classname<GraphQL\BaseSchema> $schema,
+        GraphQL\BaseSchema $schema,
         TypeRef\TypeRef $node,
         bool $nullable = true,
     ): IInputType {
@@ -186,10 +182,10 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         if ($class is null) {
             throw new GraphQL\UserFacingError('Undefined type "%s"', $name);
         }
-        $non_nullable = $class::nonNullable();
+        $non_nullable = $class::nonNullable($schema);
         if (!$non_nullable is INamedInputType) {
             throw new GraphQL\UserFacingError('Type "%s" is not an input type', $name);
         }
-        return $nullable ? $non_nullable::nullableInput() : $non_nullable;
+        return $nullable ? $non_nullable::nullableInput($schema) : $non_nullable;
     }
 }

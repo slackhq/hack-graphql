@@ -8,8 +8,6 @@ abstract class NamedType extends BaseType implements INonNullableType {
     abstract const type THackType as nonnull;
     abstract const string NAME;
 
-    final private function __construct() {}
-
     <<__Override>>
     final public function getName(): string {
         return static::NAME;
@@ -21,7 +19,7 @@ abstract class NamedType extends BaseType implements INonNullableType {
     }
 
     <<__MemoizeLSB>>
-    final public static function nonNullable(): this {
-        return new static();
+    final public static function nonNullable(GraphQL\BaseSchema $schema): this {
+        return new static($schema);
     }
 }

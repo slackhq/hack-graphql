@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<cca41607ccc70b964939cc1f90473059>>
+ * @generated SignedSource<<89716772ce6e846803b400abec704477>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -18,6 +18,9 @@ final class InterfaceA extends \Slack\GraphQL\Types\InterfaceType {
   const keyset<string> FIELD_NAMES = keyset[
     'foo',
   ];
+  const keyset<string> POSSIBLE_TYPES = keyset[
+    'Concrete',
+  ];
 
   public function getFieldDefinition(
     string $field_name,
@@ -26,7 +29,7 @@ final class InterfaceA extends \Slack\GraphQL\Types\InterfaceType {
       case 'foo':
         return new GraphQL\FieldDefinition(
           'foo',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->foo(),
         );
@@ -41,7 +44,7 @@ final class InterfaceA extends \Slack\GraphQL\Types\InterfaceType {
     GraphQL\Variables $vars,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Concrete) {
-      return await Concrete::nonNullable()->resolveAsync($value, $field, $vars);
+      return await Concrete::nonNullable($this->schema)->resolveAsync($value, $field, $vars);
     }
     invariant_violation(
       'Class %s has no associated GraphQL type or it is not a subtype of %s.',

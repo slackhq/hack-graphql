@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ff2e2bcd02e234d2774911cb3059c0c1>>
+ * @generated SignedSource<<c869d010cabe358e6e0bdd6a37b68868>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -30,35 +30,35 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
       case 'id':
         return new GraphQL\FieldDefinition(
           'id',
-          Types\IntType::nullableOutput(),
+          Types\IntType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
           'is_active',
-          Types\BooleanType::nullableOutput(),
+          Types\BooleanType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
         );
       case 'name':
         return new GraphQL\FieldDefinition(
           'name',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
           'primary_function',
-          Types\StringType::nullableOutput(),
+          Types\StringType::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullableOutput(),
+          Team::nullableOutput($this->schema),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
         );
