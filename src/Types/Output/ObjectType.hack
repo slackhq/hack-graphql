@@ -12,7 +12,7 @@ abstract class ObjectType extends CompositeType {
     <<__Override>>
     final public async function resolveAsync(
         this::THackType $value,
-        \Graphpinator\Parser\Field\IHasFieldSet $field,
+        \Graphpinator\Parser\Field\IHasSelectionSet $field,
         GraphQL\Variables $vars,
     ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
         $ret = dict[];
@@ -20,13 +20,17 @@ abstract class ObjectType extends CompositeType {
         $is_valid = true;
 
         $child_fields = Dict\from_values(
-            $field->getFields() as nonnull->getFields(),
-            $f ==> $f->getAlias() ?? $f->getName(),
+            $field->getSelectionSet() as nonnull->getItems(),
+            $f ==> {
+                $f as \Graphpinator\Parser\Field\Field; // TODO: fragments
+                return $f->getAlias() ?? $f->getName();
+            },
         );
 
         $results = await Dict\map_async(
             $child_fields,
             async $child_field ==> {
+                $child_field as \Graphpinator\Parser\Field\Field; // TODO: fragments
                 if ($child_field->getName() === '__typename') {
                     // https://spec.graphql.org/draft/#sec-Type-Name-Introspection
                     return new GraphQL\ValidFieldResult(static::NAME);

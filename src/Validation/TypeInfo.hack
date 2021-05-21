@@ -63,7 +63,7 @@ final class TypeInfo extends ASTVisitor {
 
     <<__Override>>
     public function enter(Parser\Node $node): void {
-        if ($node is Parser\Field\FieldSet) {
+        if ($node is Parser\Field\SelectionSet) {
             $named_type = $this->type_stack->peek()?->unwrapType();
             $this->parent_type_stack->push($named_type is Types\CompositeType ? $named_type : null);
         } elseif ($node is Parser\Field\Field) {
@@ -110,7 +110,7 @@ final class TypeInfo extends ASTVisitor {
 
     <<__Override>>
     public function leave(Parser\Node $node): void {
-        if ($node is Parser\Field\FieldSet) {
+        if ($node is Parser\Field\SelectionSet) {
             $this->parent_type_stack->pop();
         } elseif ($node is Parser\Field\Field) {
             $this->field_def_stack->pop();

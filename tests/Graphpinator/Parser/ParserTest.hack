@@ -14,7 +14,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
 
         $operation = vec($result->getOperations())[0];
         expect(0)->toBeSame(C\count($operation->getVariables()));
-        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($operation->getSelectionSet()->getItems()));
         expect('query')->toBeSame($operation->getType());
         expect('queryName')->toBeSame($operation->getName());
     }
@@ -27,7 +27,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
 
         $operation = vec($result->getOperations())[0];
         expect(0)->toBeSame(C\count($operation->getVariables()));
-        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($operation->getSelectionSet()->getItems()));
         expect('query')->toBeSame($operation->getType());
         expect('queryName')->toBeSame($operation->getName());
     }
@@ -40,7 +40,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
 
         $operation = vec($result->getOperations())[0];
         expect(0)->toBeSame(C\count($operation->getVariables()));
-        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($operation->getSelectionSet()->getItems()));
         expect('mutation')->toBeSame($operation->getType());
         expect('mutName')->toBeSame($operation->getName());
     }
@@ -52,7 +52,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
         expect(1)->toBeSame(C\count($result->getOperations()));
 
         expect(0)->toBeSame(C\count($result->getOperations() |> C\onlyx($$)->getVariables()));
-        expect(0)->toBeSame(C\count($result->getOperations() |> C\onlyx($$)->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($result->getOperations() |> C\onlyx($$)->getSelectionSet()->getItems()));
         expect('subscription')->toBeSame($result->getOperations() |> C\onlyx($$)->getType());
         expect('subName')->toBeSame($result->getOperations() |> C\onlyx($$)->getName());
     }
@@ -65,7 +65,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
 
         $operation = vec($result->getOperations())[0];
         expect(0)->toBeSame(C\count($operation->getVariables()));
-        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($operation->getSelectionSet()->getItems()));
         expect('query')->toBeSame($operation->getType());
         expect($operation->getName())->toBeSame('');
     }
@@ -78,7 +78,7 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
 
         $operation = vec($result->getOperations())[0];
         expect(0)->toBeSame(C\count($operation->getVariables()));
-        expect(0)->toBeSame(C\count($operation->getFields()->getFields()));
+        expect(0)->toBeSame(C\count($operation->getSelectionSet()->getItems()));
         expect('query')->toBeSame($operation->getType());
         expect($operation->getName())->toBeSame('');
     }
@@ -96,9 +96,11 @@ final class ParserTest extends \Facebook\HackTest\HackTest {
         expect(1)->toBeSame(C\count($result->getOperations()));
 
         $operation = vec($result->getOperations())[0];
-        expect(C\count($operation->getFields()->getFields()))->toBeSame(1);
+        expect(C\count($operation->getSelectionSet()->getItems()))->toBeSame(1);
 
-        $field = $operation->getFields()->getFields() |> C\onlyx($$);
+        $field = $operation->getSelectionSet()->getItems()
+            |> C\onlyx($$)
+            |> expect($$)->toBeInstanceOf(\Graphpinator\Parser\Field\Field::class);
         $directives = $field->getDirectives() as nonnull;
         expect(C\count($directives))->toBeSame(1);
         expect($directives |> C\onlyx($$)->getName())->toBeSame('directiveName');

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<69078a12298d3db36a8d0a26e0f8ae6b>>
+ * @generated SignedSource<<42a07268e30fe1ffabe9e96af7032303>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -45,7 +45,7 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
 
   public async function resolveAsync(
     this::THackType $value,
-    \Graphpinator\Parser\Field\IHasFieldSet $field,
+    \Graphpinator\Parser\Field\IHasSelectionSet $field,
     GraphQL\Variables $vars,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
     if ($value is \Concrete) {

@@ -31,7 +31,7 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
             ->setIsAsync()
             ->setReturnType('Awaitable<GraphQL\\FieldResult<dict<string, mixed>>>')
             ->addParameter('this::THackType $value')
-            ->addParameter('\\Graphpinator\\Parser\\Field\\IHasFieldSet $field')
+            ->addParameter('\\Graphpinator\\Parser\\Field\\IHasSelectionSet $field')
             ->addParameter('GraphQL\\Variables $vars');
 
         $hb = hb($cg);

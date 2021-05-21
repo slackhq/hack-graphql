@@ -2,13 +2,13 @@ namespace Graphpinator\Parser\Field;
 
 use namespace HH\Lib\Dict;
 
-final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
+final class Field extends \Graphpinator\Parser\Node implements IHasSelectionSet, ISelectionSetItem {
 
     public function __construct(
         \Graphpinator\Common\Location $location,
         private string $name,
         private ?string $alias = null,
-        private ?\Graphpinator\Parser\Field\FieldSet $children = null,
+        private ?SelectionSet $selectionSet = null,
         private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments = null,
         private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {
@@ -23,8 +23,8 @@ final class Field extends \Graphpinator\Parser\Node implements IHasFieldSet {
         return $this->alias;
     }
 
-    public function getFields(): ?\Graphpinator\Parser\Field\FieldSet {
-        return $this->children;
+    public function getSelectionSet(): ?SelectionSet {
+        return $this->selectionSet;
     }
 
     public function getArguments(): ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> {

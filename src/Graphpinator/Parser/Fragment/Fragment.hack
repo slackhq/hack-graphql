@@ -1,13 +1,15 @@
 namespace Graphpinator\Parser\Fragment;
 
-final class Fragment extends \Graphpinator\Parser\Node {
+use namespace Graphpinator\Parser\Field;
+
+final class Fragment extends \Graphpinator\Parser\Node implements Field\IHasSelectionSet {
 
     public function __construct(
         \Graphpinator\Common\Location $location,
         private string $name,
         private \Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond,
         private vec<\Graphpinator\Parser\Directive\Directive> $directives,
-        private \Graphpinator\Parser\Field\FieldSet $fields,
+        private Field\SelectionSet $selectionSet,
     ) {
         parent::__construct($location);
     }
@@ -16,8 +18,8 @@ final class Fragment extends \Graphpinator\Parser\Node {
         return $this->name;
     }
 
-    public function getFields(): \Graphpinator\Parser\Field\FieldSet {
-        return $this->fields;
+    public function getSelectionSet(): Field\SelectionSet {
+        return $this->selectionSet;
     }
 
     public function getTypeCond(): \Graphpinator\Parser\TypeRef\NamedTypeRef {

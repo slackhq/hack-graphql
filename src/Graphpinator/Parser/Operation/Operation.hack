@@ -1,12 +1,14 @@
 namespace Graphpinator\Parser\Operation;
 
-final class Operation extends \Graphpinator\Parser\Node implements \Graphpinator\Parser\Field\IHasFieldSet {
+use namespace Graphpinator\Parser\Field;
+
+final class Operation extends \Graphpinator\Parser\Node implements Field\IHasSelectionSet {
 
     private string $type;
     private string $name;
     private dict<string, \Graphpinator\Parser\Variable\Variable> $variables;
     private vec<\Graphpinator\Parser\Directive\Directive> $directives;
-    private \Graphpinator\Parser\Field\FieldSet $children;
+    private Field\SelectionSet $selectionSet;
 
     public function __construct(
         \Graphpinator\Common\Location $location,
@@ -15,7 +17,7 @@ final class Operation extends \Graphpinator\Parser\Node implements \Graphpinator
             'name' => string,
             ?'variables' => ?dict<string, \Graphpinator\Parser\Variable\Variable>,
             ?'directives' => ?vec<\Graphpinator\Parser\Directive\Directive>,
-            'children' => \Graphpinator\Parser\Field\FieldSet,
+            'selection_set' => Field\SelectionSet,
         ) $args,
     ) {
         parent::__construct($location);
@@ -23,7 +25,7 @@ final class Operation extends \Graphpinator\Parser\Node implements \Graphpinator
         $this->name = $args['name'];
         $this->variables = $args['variables'] ?? dict[];
         $this->directives = $args['directives'] ?? vec[];
-        $this->children = $args['children'];
+        $this->selectionSet = $args['selection_set'];
     }
 
     public function getType(): string {
@@ -34,8 +36,8 @@ final class Operation extends \Graphpinator\Parser\Node implements \Graphpinator
         return $this->name;
     }
 
-    public function getFields(): \Graphpinator\Parser\Field\FieldSet {
-        return $this->children;
+    public function getSelectionSet(): Field\SelectionSet {
+        return $this->selectionSet;
     }
 
     public function getVariables(): dict<string, \Graphpinator\Parser\Variable\Variable> {
