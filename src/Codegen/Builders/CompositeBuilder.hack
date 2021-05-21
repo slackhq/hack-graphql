@@ -15,13 +15,12 @@ use type Facebook\HackCodegen\{
  *
  * The annotated Hack type should be either a class, interface, or shape.
  */
-abstract class CompositeBuilder<TField as IFieldBuilder>
-    extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
+abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
 
     public function __construct(
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
-        protected vec<TField> $fields,
+        protected vec<FieldBuilder> $fields,
     ) {
         parent::__construct($type_info, $hack_type);
     }

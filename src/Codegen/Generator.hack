@@ -30,19 +30,29 @@ final class Generator {
         ?'codegen_config' => IHackCodegenConfig,
     );
 
-    private function __construct(private DefinitionFinder\BaseParser $parser, private self::TGeneratorConfig $config) {
+    private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
         $this->cg = new HackCodegenFactory($config['codegen_config'] ?? new HackCodegenConfig());
+    }
+
+    private static async function init(
+        DefinitionFinder\BaseParser $parser,
+        self::TGeneratorConfig $config
+    ): Awaitable<Generator> {
+        $parsers = vec[$parser];
+        $parsers[] = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
+        $parsers[] = await DefinitionFinder\FileParser::fromFileAsync(__DIR__.'/../Pagination/PageInfo.hack');
+        return new Generator(new MultiParser($parsers), $config);
     }
 
     public static async function forPath(string $path, self::TGeneratorConfig $config): Awaitable<void> {
         $defs = await DefinitionFinder\TreeParser::fromPathAsync($path);
-        $gen = new self($defs, $config);
+        $gen = await Generator::init($defs, $config);
         await $gen->generate();
     }
 
     public static async function forFile(string $filename, self::TGeneratorConfig $config): Awaitable<void> {
         $defs = await DefinitionFinder\FileParser::fromFileAsync($filename);
-        $gen = new self($defs, $config);
+        $gen = await Generator::init($defs, $config);
         await $gen->generate();
     }
 
@@ -189,12 +199,7 @@ final class Generator {
         $query_fields = dict[];
         $mutation_fields = dict[];
 
-        $introspection_parser = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
-
-        $classish_objects = $this->parser->getInterfaces()
-            |> Vec\concat($$, $this->parser->getClasses())
-            |> Vec\concat($$, $introspection_parser->getInterfaces())
-            |> Vec\concat($$, $introspection_parser->getClasses());
+        $classish_objects = $this->parser->getClassishObjects();
 
         $field_resolver = new FieldResolver($classish_objects);
         $class_fields = $field_resolver->resolveFields();
@@ -228,12 +233,26 @@ final class Generator {
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
             if ($graphql_output is nonnull) {
-                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt, $hack_class_to_graphql_interface);
+                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt);
             }
         }
 
         foreach ($classish_objects as $class) {
-            if (!C\is_empty($class->getAttributes())) {
+            if (Str\ends_with($class->getName(), 'Connection')) {
+                // TODO: Assert that any class which subclasses Connection<T> has a name ending in `Connection`.
+                invariant(
+                    is_connection_type(new \ReflectionClass($class->getName())),
+                    '%s must subclass "Connection"',
+                    $class->getName(),
+                );
+                $objects[] = ObjectBuilder::forConnection($class->getName());
+                $type_param = $class->getASTx()
+                    ->getFirstDescendantOfType(\Facebook\HHAST\TypeArguments::class) as nonnull
+                    ->getTypesx()
+                    ->getFirstTokenx()
+                    ->getText();
+                $objects[] = ObjectBuilder::forEdge($type_param);
+            } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
                 $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
@@ -269,7 +288,7 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[$query_root_field->getName()] = new StaticFieldBuilder($query_root_field, $rm);
+                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField($query_root_field, $rm);
                     continue;
                 }
 
@@ -278,7 +297,7 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[$mutation_root_field->getName()] = new StaticFieldBuilder(
+                    $mutation_fields[$mutation_root_field->getName()] = FieldBuilder::forRootField(
                         $mutation_root_field,
                         $rm,
                     );
@@ -286,8 +305,7 @@ final class Generator {
             }
         }
 
-        $enums = $this->parser->getEnums() |> Vec\concat($$, $introspection_parser->getEnums());
-
+        $enums = $this->parser->getEnums();
         foreach ($enums as $enum) {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);

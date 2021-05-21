@@ -1,98 +1,80 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
 
-class MethodFieldBuilder implements IFieldBuilder {
-    public function __construct(
-        protected \Slack\GraphQL\Field $graphql_field,
-        protected \ReflectionMethod $reflection_method,
-    ) {}
+/**
+ * Represents a parameter on a GQL field.
+ */
+type Parameter = shape(
+    'name' => string,
+    'type' => string,
+    'is_optional' => bool,
+    ?'default_value' => string,
+);
 
-    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
-        $hb->addCase($this->graphql_field->getName(), HackBuilderValues::export());
+/**
+ * Build a GQL field which resolves to a Hack method.
+ *
+ * In general, you will use `FieldBuilder::fromReflectionMethod` to obtain a `MethodFieldBuilder`. However, in rare
+ * cases you will not have a `ReflectionMethod` available; when this occurs, you can instantiate `MethodFieldBuilder`
+ * directly.
+ *
+ * When do we need to build methods which don't have corresponding reflection methods? The example I've found so far
+ * is when the method we'd want to reflect on is generic. PHP doesn't support generics, so this would fail. Instead,
+ * we can tell `MethodFieldBuilder` exactly what we want, and the runtime will successfully resolve the generic method.
+ */
+class MethodFieldBuilder extends FieldBuilder {
+    const type TField = shape(
+        'name' => string,
+        'method_name' => string,
+        'output_type' => shape('type' => string, ?'needs_await' => bool),
+        'declaring_type' => string,
+        'parameters' => vec<Parameter>,
+        ?'is_static' => bool,
+        ?'is_root_field' => bool,
+    );
 
-        $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
-
-        // Field name
-        $name_literal = \var_export($this->graphql_field->getName(), true);
-        $hb->addLinef('%s,', $name_literal);
-
-        // Field return type
-        $type_info = output_type(
-            $this->reflection_method->getReturnTypeText(),
-            $this->reflection_method->getAttributeClass(\Slack\GraphQL\KillsParentOnException::class) is nonnull,
-        );
-        $hb->addLinef('%s,', $type_info['type']);
-
-        // Argument Definitions
-        if ($this->hasArguments()) {
-            $hb->addLine('dict[')->indent();
-            foreach ($this->reflection_method->getParameters() as $param) {
-                $argument_name = \var_export($param->getName(), true);
-                $hb->addLinef('%s => shape(', $argument_name)->indent();
-
-                $hb->addLinef("'name' => %s,", $argument_name);
-
-                $type = input_type($param->getTypeText());
-                $hb->addLinef("'type' => %s,", $type);
-
-                if ($param->isOptional()) {
-                    $hb->addLinef("'default_value' => %s,", $param->getDefaultValueText());
-                }
-
-                $hb->unindent()->addLine('),');
-            }
-            $hb->unindent()->addLine('],');
-        } else {
-            $hb->addLine('dict[],');
-        }
-
-        // Resolver
+    <<__Override>>
+    protected function generateResolverBody(HackBuilder $hb): void {
+        $type_info = $this->data['output_type'];
+        $method_name = Shapes::at($this->data, 'method_name');
         $hb->addf(
-            'async ($parent, $args, $vars) ==> %s%s%s(',
-            $type_info['needs_await'] ? 'await ' : '',
+            '%s%s%s(',
+            ($type_info['needs_await'] ?? false) ? 'await ' : '',
             $this->getMethodCallPrefix(),
-            $this->reflection_method->getName(),
+            $method_name,
         );
-        $args = $this->getArgumentInvocationStrings();
-        if (!C\is_empty($args)) {
+        if (!C\is_empty($this->data['parameters'])) {
             $hb->newLine()->indent();
-            foreach ($args as $arg) {
+            foreach ($this->data['parameters'] as $param) {
+                $arg = $this->getArgumentInvocationString($param);
                 $hb->addLinef('%s,', $arg);
             }
             $hb->unindent();
         }
-        $hb->addLine('),');
-
-        // End of new GraphQL\FieldDefinition(
-        $hb->unindent()->addLine(');');
-        $hb->unindent();
+        $hb->add(')');
     }
 
-    protected function getMethodCallPrefix(): string {
-        return Str\format('$parent%s', $this->reflection_method->isStatic() ? '::' : '->');
+    <<__Override>>
+    protected function getArgumentDefinitions(): vec<Parameter> {
+        return $this->data['parameters'];
     }
 
-    public function hasArguments(): bool {
-        return $this->reflection_method->getNumberOfParameters() > 0;
-    }
-
-    protected function getArgumentInvocationStrings(): vec<string> {
-        $invocations = vec[];
-        foreach ($this->reflection_method->getParameters() as $index => $param) {
-            $invocations[] = Str\format(
-                '%s->coerce%sNamedNode(%s, $args, $vars%s)',
-                input_type($param->getTypeText()),
-                $param->isOptional() ? 'Optional' : '',
-                \var_export($param->getName(), true),
-                $param->isOptional() ? ', '.$param->getDefaultValueText() : '',
-            );
+    private function getMethodCallPrefix(): string {
+        if ($this->data['is_root_field'] ?? false) {
+            return '\\'.$this->data['declaring_type'].'::';
         }
-        return $invocations;
+        return Str\format('$parent%s', ($this->data['is_static'] ?? false) ? '::' : '->');
     }
 
-    public function getName(): string {
-        return $this->graphql_field->getName();
+    final protected function getArgumentInvocationString(Parameter $param): string {
+        return Str\format(
+            '%s->coerce%sNamedNode(%s, $args, $vars%s)',
+            input_type($param['type']),
+            $param['is_optional'] ? 'Optional' : '',
+            \var_export($param['name'], true),
+            Shapes::keyExists($param, 'default_value') ? ', '.$param['default_value'] : '',
+        );
     }
 }

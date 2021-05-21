@@ -9,14 +9,14 @@ use type Facebook\HackCodegen\{
     HackBuilderValues,
 };
 
-final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
+final class InterfaceBuilder extends CompositeBuilder {
     const classname<\Slack\GraphQL\Types\InterfaceType> SUPERCLASS = \Slack\GraphQL\Types\InterfaceType::class;
 
     <<__Override>>
     public function __construct(
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
-        vec<TField> $fields,
+        vec<FieldBuilder> $fields,
         private dict<string, string> $hack_class_to_graphql_object,
     ) {
         parent::__construct($type_info, $hack_type, $fields);

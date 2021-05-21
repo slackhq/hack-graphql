@@ -1,39 +1,29 @@
 namespace Slack\GraphQL\Codegen;
 
+use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
 
-class ShapeFieldBuilder<T> implements IFieldBuilder {
-    public function __construct(private string $field_name, private TypeStructure<T> $type_structure) {}
+/**
+ * Build a GraphQL field from a shape field.
+ *
+ * In general, call `FieldBuilder::fromShapeField` instead of instantiating this directly.
+ */
+final class ShapeFieldBuilder extends FieldBuilder {
+    const type TField = shape(
+        'name' => string,
+        'output_type' => shape('type' => string, ?'needs_await' => bool),
+        'declaring_type' => string,
+        'is_optional' => bool,
+    );
 
-    public function addGetFieldDefinitionCase(HackBuilder $hb): void {
-        $name_literal = \var_export($this->field_name, true);
-
-        $hb->addCase($name_literal, HackBuilderValues::literal());
-        $hb->addLine('return new GraphQL\\FieldDefinition(')->indent();
-
-        // Field name
-        $hb->addLinef('%s,', $name_literal);
-
-        // Field return type
-        $type_info = output_type(type_structure_to_type_alias($this->type_structure), false);
-        $hb->addLinef('%s,', $type_info['type']);
-
-        // Arguments
-        $hb->addLine('dict[],');
-
-        $hb->addf(
-            'async ($parent, $args, $vars) ==> $parent[%s]%s',
-            $name_literal,
-            Shapes::idx($this->type_structure, 'optional_shape_field', false) ? ' ?? null' : '',
-        );
-        $hb->addLine(',');
-
-        // End of new GraphQL\FieldDefinition(
-        $hb->unindent()->addLine(');');
-        $hb->unindent();
+    <<__Override>>
+    protected function getArgumentDefinitions(): vec<Parameter> {
+        return vec[];
     }
 
-    public function getName(): string {
-        return $this->field_name;
+    <<__Override>>
+    protected function generateResolverBody(HackBuilder $hb): void {
+        $name_literal = \var_export($this->data['name'], true);
+        $hb->addf('$parent[%s]%s', $name_literal, $this->data['is_optional'] ? ' ?? null' : '');
     }
 }

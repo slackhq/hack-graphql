@@ -51,7 +51,7 @@ function output_type(
     $needs_await = false;
     if (Str\starts_with($hack_type, 'HH\\Awaitable<')) {
         $needs_await = true;
-        $hack_type = Str\strip_prefix($hack_type, 'HH\\Awaitable<') |> Str\strip_suffix($$, '>');
+        $hack_type = unwrap_awaitable($hack_type);
     }
 
     if ($kills_parent_on_exception) {
@@ -119,10 +119,16 @@ function get_output_class(string $hack_type): ?string {
     try {
         $rc = new \ReflectionClass($hack_type);
 
-        $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) ??
-            $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+        $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
         if ($graphql_object) {
             return $graphql_object->getType();
+        } elseif (is_connection_type($rc)) {
+            return $rc->getName();
+        }
+
+        $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+        if ($graphql_interface) {
+            return $graphql_interface->getType();
         }
 
         $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
@@ -161,6 +167,16 @@ function unwrap_type(IO $io, string $hack_type, bool $nullable = false): (string
     return tuple($hack_type, $nullable ? '::nullable'.$io.'()' : '::nonNullable()');
 }
 
+/**
+ * Retrieve the inner type from an awaitable.
+ */
+function unwrap_awaitable(string $name): string {
+    if (!Str\starts_with($name, 'HH\Awaitable')) {
+        return $name;
+    }
+    return Str\strip_prefix($name, 'HH\\Awaitable<') |> Str\strip_suffix($$, '>');
+}
+
 enum IO: string as string {
     INPUT = 'Input';
     OUTPUT = 'Output';
@@ -192,5 +208,27 @@ function type_structure_to_type_alias<T>(TypeStructure<T> $ts): string {
                 'Shape fields %s cannot be used as object fields.',
                 TypeStructureKind::getNames()[$ts['kind']],
             );
+    }
+}
+
+/**
+ * Whether the class implements a GraphQL connection.
+ */
+function is_connection_type(\ReflectionClass $rc): bool {
+    if (!Str\ends_with($rc->getName(), 'Connection')) {
+        return false;
+    }
+    return \is_subclass_of($rc->getName(), \Slack\GraphQL\Pagination\Connection::class);
+}
+
+/**
+ * Whether this method returns a GraphQL connection.
+ */
+function returns_connection_type(\ReflectionMethod $rm): bool {
+    try {
+        $rc = new \ReflectionClass(unwrap_awaitable($rm->getReturnTypeText()));
+        return is_connection_type($rc);
+    } catch (\ReflectionException $_) {
+        return false;
     }
 }
