@@ -1,9 +1,12 @@
 namespace Slack\GraphQL\Codegen;
 
+use namespace HH\Lib\{Vec, Str};
 use type Facebook\HackCodegen\{
     CodegenClass,
     CodegenMethod,
     HackCodegenFactory,
+    CodegenClassConstant,
+    HackBuilderValues,
 };
 
 final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
@@ -22,7 +25,8 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
     <<__Override>>
     public function build(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
-            ->addMethod($this->generateGetObjectTypeForValue($cg));
+            ->addMethod($this->generateGetObjectTypeForValue($cg))
+            ->addConstant($this->generatePossibleTypesConstant($cg));
     }
 
     private function generateGetObjectTypeForValue(HackCodegenFactory $cg): CodegenMethod {
@@ -50,5 +54,18 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
         ]);
 
         return $method->setBody($hb->getCode());
+    }
+
+    private function generatePossibleTypesConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        $possible_types = keyset[];
+        foreach ($this->hack_class_to_graphql_object as $hack_class => $_) {
+            if (\is_subclass_of($hack_class, $this->hack_type)) {
+                $possible_types[] = Str\format('%s::class', $hack_class);
+            }
+        }
+
+        return $cg->codegenClassConstant('POSSIBLE_TYPES')
+            ->setType('keyset<classname<Types\ObjectType>>')
+            ->setValue($possible_types, HackBuilderValues::keyset(HackBuilderValues::literal()));
     }
 }

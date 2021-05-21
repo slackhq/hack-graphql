@@ -19,7 +19,7 @@ final class InterfaceTypeTest extends PlaygroundTest {
                 dict[],
                 dict[
                     'getInterfaceA' => dict[
-                        '__typename' => 'Concrete',  // Note: __typename is always the resolved object type.
+                        '__typename' => 'Concrete', // Note: __typename is always the resolved object type.
                         'also_typename' => 'Concrete',
                         'foo' => 'foo',
                     ],

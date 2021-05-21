@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<31d6932587d3a22c08262a4c5f479cbd>>
+ * @generated SignedSource<<5605d5af6b4e966ef171be1dca8bbc94>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,6 +20,10 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
     'is_active',
     'name',
     'team',
+  ];
+  const keyset<classname<Types\ObjectType>> POSSIBLE_TYPES = keyset[
+    Bot::class,
+    Human::class,
   ];
 
   public function getFieldDefinition(
