@@ -8,6 +8,47 @@ final class IntrospectionTest extends PlaygroundTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
+            'validate interface introspection' => tuple(
+                '{
+                    __type(name: "IIntrospectionInterfaceA") {
+                        possibleTypes {
+                            name
+                        }
+                    }
+                 }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'possibleTypes' => vec[
+                            dict[
+                                'name' => 'ImplementInterfaceB',
+                            ],
+                            dict[
+                                'name' => 'ImplementInterfaceC',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+            'validate interface introspection' => tuple(
+                '{
+                    __type(name: "IIntrospectionInterfaceC") {
+                        possibleTypes {
+                            name
+                        }
+                    }
+                 }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'possibleTypes' => vec[
+                            dict[
+                                'name' => 'ImplementInterfaceC',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
             'select the name of the query type' => tuple(
                 '{
                     __schema {

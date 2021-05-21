@@ -1,5 +1,20 @@
 use namespace Slack\GraphQL;
 
+<<GraphQL\InterfaceType('IIntrospectionInterfaceA', 'IIntrospectionInterfaceA')>>
+interface IIntrospectionInterfaceA {}
+
+<<GraphQL\InterfaceType('IIntrospectionInterfaceB', 'IIntrospectionInterfaceB')>>
+interface IIntrospectionInterfaceB extends IIntrospectionInterfaceA {}
+
+<<GraphQL\InterfaceType('IIntrospectionInterfaceC', 'IIntrospectionInterfaceC')>>
+interface IIntrospectionInterfaceC extends IIntrospectionInterfaceB {}
+
+<<GraphQL\ObjectType('ImplementInterfaceB', 'ImplementInterfaceB')>>
+final class ImplementInterfaceB implements IIntrospectionInterfaceB {}
+
+<<GraphQL\ObjectType('ImplementInterfaceC', 'ImplementInterfaceC')>>
+final class ImplementInterfaceC implements IIntrospectionInterfaceB, IIntrospectionInterfaceC {}
+
 <<GraphQL\ObjectType('IntrospectionTestObject', 'Test object for introspection')>>
 final class IntrospectionTestObject {
 

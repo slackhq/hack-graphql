@@ -1,9 +1,12 @@
 namespace Slack\GraphQL\Codegen;
 
+use namespace HH\Lib\Vec;
 use type Facebook\HackCodegen\{
     CodegenClass,
     CodegenMethod,
     HackCodegenFactory,
+    CodegenClassConstant,
+    HackBuilderValues,
 };
 
 final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
@@ -22,7 +25,8 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
     <<__Override>>
     public function build(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
-            ->addMethod($this->generateGetObjectTypeForValue($cg));
+            ->addMethod($this->generateGetObjectTypeForValue($cg))
+            ->addConstant($this->generatePossibleTypesConstant($cg));
     }
 
     private function generateGetObjectTypeForValue(HackCodegenFactory $cg): CodegenMethod {
@@ -38,7 +42,10 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
         foreach ($this->hack_class_to_graphql_object as $hack_class => $graphql_type) {
             if (\is_subclass_of($hack_class, $this->hack_type)) {
                 $hb->startIfBlockf('$value is \\%s', $hack_class)
-                    ->addReturnf('await %s::nonNullable()->resolveAsync($value, $field, $vars)', $graphql_type)
+                    ->addReturnf(
+                        'await %s::nonNullable($this->schema)->resolveAsync($value, $field, $vars)',
+                        $graphql_type,
+                    )
                     ->endIfBlock();
             }
         }
@@ -50,5 +57,18 @@ final class InterfaceBuilder<TField as IFieldBuilder> extends CompositeBuilder<T
         ]);
 
         return $method->setBody($hb->getCode());
+    }
+
+    private function generatePossibleTypesConstant(HackCodegenFactory $cg): CodegenClassConstant {
+        $possible_types = keyset[];
+        foreach ($this->hack_class_to_graphql_object as $hack_class => $_) {
+            if (\is_subclass_of($hack_class, $this->hack_type)) {
+                $possible_types[] = $hack_class;
+            }
+        }
+
+        return $cg->codegenClassConstant('POSSIBLE_TYPES')
+            ->setType('keyset<string>')
+            ->setValue($possible_types, HackBuilderValues::keyset(HackBuilderValues::export()));
     }
 }
