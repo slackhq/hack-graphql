@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3265e2eae29f57617617f679a8411852>>
+ * @generated SignedSource<<249f444ee6347147a84866e39ae64853>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -23,6 +23,8 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
     'non_null_list_of_non_null',
     'non_null_string',
     'nullable_string',
+  ];
+  const keyset<classname<Types\InterfaceType>> INTERFACES = keyset[
   ];
 
   public function getFieldDefinition(

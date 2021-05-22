@@ -2,7 +2,7 @@ namespace Slack\GraphQL\Codegen;
 
 use namespace Slack\GraphQL\Types;
 use namespace Facebook\DefinitionFinder;
-use namespace HH\Lib\{Str, Vec, C, Dict};
+use namespace HH\Lib\{Str, Vec, C, Dict, Keyset};
 use type Facebook\HackCodegen\{
     CodegenFile,
     CodegenFileType,
@@ -102,10 +102,7 @@ final class Generator {
         return $dict;
     }
 
-    private function generateSchemaType(
-        HackCodegenFactory $cg,
-        dict<string, string> $types,
-    ): CodegenClass {
+    private function generateSchemaType(HackCodegenFactory $cg, dict<string, string> $types): CodegenClass {
         $class = $cg->codegenClass('Schema')
             ->setIsFinal(true)
             ->setExtendsf('\%s', \Slack\GraphQL\BaseSchema::class)
@@ -194,6 +191,33 @@ final class Generator {
 
         $introspection_parser = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
 
+        $classish_objects = $this->parser->getInterfaces()
+            |> Vec\concat($$, $this->parser->getClasses())
+            |> Vec\concat($$, $introspection_parser->getInterfaces())
+            |> Vec\concat($$, $introspection_parser->getClasses());
+
+        $field_resolver = new FieldResolver($classish_objects);
+        $class_fields = $field_resolver->resolveFields();
+
+        $interfaces = keyset[];
+        $hack_class_to_graphql_object = dict[];
+        foreach ($classish_objects as $class) {
+            if (!C\is_empty($class->getAttributes())) {
+                $rc = new \ReflectionClass($class->getName());
+                $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
+                if ($graphql_object is nonnull) {
+                    $hack_class_to_graphql_object[$rc->getName()] = $graphql_object->getType();
+                }
+
+                $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
+                if ($graphql_interface is nonnull) {
+                    $interfaces[] = $rc->getName();
+                }
+            }
+        }
+        $hack_class_to_graphql_object = Dict\sort_by_key($hack_class_to_graphql_object);
+        $interfaces = Keyset\sort($interfaces);
+
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
             $rt = new \ReflectionTypeAlias($type->getName());
@@ -204,29 +228,9 @@ final class Generator {
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
             if ($graphql_output is nonnull) {
-                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt);
+                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt, $interfaces);
             }
         }
-
-        $classish_objects = $this->parser->getInterfaces()
-            |> Vec\concat($$, $this->parser->getClasses())
-            |> Vec\concat($$, $introspection_parser->getInterfaces())
-            |> Vec\concat($$, $introspection_parser->getClasses());
-
-        $field_resolver = new FieldResolver($classish_objects);
-        $class_fields = $field_resolver->resolveFields();
-
-        $hack_class_to_graphql_object = dict[];
-        foreach ($classish_objects as $class) {
-            if (!C\is_empty($class->getAttributes())) {
-                $rc = new \ReflectionClass($class->getName());
-                $graphql_attribute = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
-                if ($graphql_attribute is nonnull) {
-                    $hack_class_to_graphql_object[$rc->getName()] = $graphql_attribute->getType();
-                }
-            }
-        }
-        $hack_class_to_graphql_object = Dict\sort_by_key($hack_class_to_graphql_object);
 
         foreach ($classish_objects as $class) {
             if (!C\is_empty($class->getAttributes())) {
@@ -247,7 +251,7 @@ final class Generator {
                         $hack_class_to_graphql_object,
                     );
                 } else if ($graphql_object is nonnull) {
-                    $objects[] = new ObjectBuilder($graphql_object, $rc->getName(), $fields);
+                    $objects[] = new ObjectBuilder($graphql_object, $rc->getName(), $fields, $interfaces);
                 }
             }
 
@@ -294,6 +298,7 @@ final class Generator {
                     new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
                     'Slack\\GraphQL\\Root',
                     vec(Dict\sort_by_key($query_fields)),
+                    $interfaces,
                 ),
             ];
 
@@ -302,6 +307,7 @@ final class Generator {
                     new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
                     'Slack\\GraphQL\\Root',
                     vec(Dict\sort_by_key($mutation_fields)),
+                    $interfaces,
                 );
             }
 

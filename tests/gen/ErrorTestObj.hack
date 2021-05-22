@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<469d5bd682a221e51c109c1ae88bcbd4>>
+ * @generated SignedSource<<04b2a2e5aee333aca813056e45eb5253>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -28,6 +28,8 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
     'no_error',
     'non_nullable',
     'user_facing_error',
+  ];
+  const keyset<classname<Types\InterfaceType>> INTERFACES = keyset[
   ];
 
   public function getFieldDefinition(

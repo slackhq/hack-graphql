@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<6e3b6f20750a5f7fc2e320bcdac3b92c>>
+ * @generated SignedSource<<e0d3aee05dfb52a0843a819120e89c7d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,6 +19,7 @@ final class IIntrospectionInterfaceA
   const keyset<string> FIELD_NAMES = keyset[
   ];
   const keyset<classname<Types\ObjectType>> POSSIBLE_TYPES = keyset[
+    ImplementInterfaceA::class,
     ImplementInterfaceB::class,
     ImplementInterfaceC::class,
   ];
@@ -37,6 +38,9 @@ final class IIntrospectionInterfaceA
     \Graphpinator\Parser\Field\IHasSelectionSet $field,
     GraphQL\Variables $vars,
   ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
+    if ($value is \ImplementInterfaceA) {
+      return await ImplementInterfaceA::nonNullable()->resolveAsync($value, $field, $vars);
+    }
     if ($value is \ImplementInterfaceB) {
       return await ImplementInterfaceB::nonNullable()->resolveAsync($value, $field, $vars);
     }

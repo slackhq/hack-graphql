@@ -21,6 +21,9 @@ final class IntrospectionTest extends PlaygroundTest {
                     '__type' => dict[
                         'possibleTypes' => vec[
                             dict[
+                                'name' => 'ImplementInterfaceA',
+                            ],
+                            dict[
                                 'name' => 'ImplementInterfaceB',
                             ],
                             dict[
@@ -46,6 +49,65 @@ final class IntrospectionTest extends PlaygroundTest {
                                 'name' => 'ImplementInterfaceC',
                             ],
                         ],
+                    ],
+                ],
+            ),
+            'validate object introspection with multiple interfaces' => tuple(
+                '{
+                    __type(name: "ImplementInterfaceC") {
+                        interfaces {
+                            name
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'interfaces' => vec[
+                            dict[
+                                'name' => 'IIntrospectionInterfaceA',
+                            ],
+                            dict[
+                                'name' => 'IIntrospectionInterfaceB',
+                            ],
+                            dict[
+                                'name' => 'IIntrospectionInterfaceC',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+            'validate object introspection with a single interface' => tuple(
+                '{
+                    __type(name: "ImplementInterfaceA") {
+                        interfaces {
+                            name
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'interfaces' => vec[
+                            dict[
+                                'name' => 'IIntrospectionInterfaceA',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+            'validate object introspection with no interfaces' => tuple(
+                '{
+                    __type(name: "IntrospectionTestObject") {
+                        interfaces {
+                            name
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'interfaces' => vec[],
                     ],
                 ],
             ),

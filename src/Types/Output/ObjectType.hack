@@ -4,9 +4,10 @@ use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
 abstract class ObjectType extends CompositeType {
+    abstract const keyset<classname<InterfaceType>> INTERFACES;
 
     abstract public function getFieldDefinition(
-        string $field_name
+        string $field_name,
     ): ?GraphQL\IResolvableFieldDefinition<this::THackType>;
 
     <<__Override>>
@@ -40,7 +41,7 @@ abstract class ObjectType extends CompositeType {
                     throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $child_field->getName());
                 }
                 return await $field_definition->resolveAsync($value, $child_field, $vars);
-            }
+            },
         );
 
         foreach ($results as $key => $result) {
@@ -60,5 +61,10 @@ abstract class ObjectType extends CompositeType {
     <<__Override>>
     final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::OBJECT;
+    }
+
+    <<__Override>>
+    final public function getInterfaces(): vec<InterfaceType> {
+        return Vec\map(static::INTERFACES, $interface ==> $interface::nonNullable());
     }
 }

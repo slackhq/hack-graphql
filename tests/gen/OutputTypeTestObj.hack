@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d76e4b7915817cb97e5f6e04d2bfd45f>>
+ * @generated SignedSource<<404dc3ce8faed5c64256f627f6a50cce>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -23,6 +23,8 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
     'nested_lists',
     'nullable',
     'scalar',
+  ];
+  const keyset<classname<Types\InterfaceType>> INTERFACES = keyset[
   ];
 
   public function getFieldDefinition(

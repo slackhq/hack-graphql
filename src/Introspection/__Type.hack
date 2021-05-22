@@ -15,8 +15,7 @@ interface __Type {
     <<GraphQL\Field('name', 'Name of the type')>>
     public function getIntrospectionName(): ?string;
 
-    // TODO:
-
+    // TODO: description
     <<GraphQL\Field('description', 'Description of the type')>>
     public function getIntrospectionDescription(): ?string;
 
@@ -29,9 +28,11 @@ interface __Type {
     <<GraphQL\Field('possibleTypes', 'Possible types that implement this interface, only applies to INTERFACE')>>
     public function getIntrospectionPossibleTypes(): ?vec<__Type>;
 
+    // TODO: enumValues
     <<GraphQL\Field('enumValues', 'Enum values, only applies to ENUM')>>
     public function getIntrospectionEnumValues(bool $include_deprecated = false): ?vec<__EnumValue>;
 
+    // TODO: inputFields
     <<GraphQL\Field('inputFields', 'Input fields, only applies to INPUT_OBJECT')>>
     public function getIntrospectionInputFields(bool $include_deprecated = false): ?vec<__InputValue>;
 
