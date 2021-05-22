@@ -4,7 +4,7 @@ use namespace HH\Lib\{Dict, Vec};
 use namespace Slack\GraphQL;
 
 abstract class ObjectType extends CompositeType {
-    abstract const keyset<classname<InterfaceType>> INTERFACES;
+    abstract const dict<string, classname<InterfaceType>> INTERFACES;
 
     abstract public function getFieldDefinition(
         string $field_name,
@@ -64,7 +64,7 @@ abstract class ObjectType extends CompositeType {
     }
 
     <<__Override>>
-    final public function getInterfaces(): vec<InterfaceType> {
-        return Vec\map(static::INTERFACES, $interface ==> $interface::nonNullable());
+    final public function getInterfaces(): dict<string, classname<InterfaceType>> {
+        return static::INTERFACES;
     }
 }
