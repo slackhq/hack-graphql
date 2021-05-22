@@ -9,6 +9,9 @@ interface IIntrospectionInterfaceB extends IIntrospectionInterfaceA {}
 <<GraphQL\InterfaceType('IIntrospectionInterfaceC', 'IIntrospectionInterfaceC')>>
 interface IIntrospectionInterfaceC extends IIntrospectionInterfaceB {}
 
+<<GraphQL\ObjectType('ImplementInterfaceA', 'ImplementInterfaceA')>>
+final class ImplementInterfaceA implements IIntrospectionInterfaceA {}
+
 <<GraphQL\ObjectType('ImplementInterfaceB', 'ImplementInterfaceB')>>
 final class ImplementInterfaceB implements IIntrospectionInterfaceB {}
 
