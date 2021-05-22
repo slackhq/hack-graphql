@@ -75,20 +75,21 @@ class ObjectBuilder extends CompositeBuilder {
                         'needs_await' => true,
                     ),
                     'declaring_type' => $name,
-                    'parameters' => vec[]
+                    'parameters' => vec[],
                 )),
                 new MethodFieldBuilder(shape(
                     'name' => 'pageInfo',
                     'method_name' => 'getPageInfo',
                     'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
                     'declaring_type' => $name,
-                    'parameters' => vec[]
+                    'parameters' => vec[],
                 )),
             ],
             dict[], // Connections do not implement any interfaces
         );
     }
 
+    // TODO: It should be possible to create user-defined edges which contain additional fields.
     public static function forEdge(string $hack_type): ObjectBuilder {
         $name = $hack_type.'Edge';
         return new ObjectBuilder(

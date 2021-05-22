@@ -2,11 +2,13 @@ use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Str};
 
 final class UserConnection extends GraphQL\Pagination\Connection<User> {
-    protected async function paginate(GraphQL\Pagination\PaginationArgs $args): Awaitable<vec<User>> {
+    protected async function paginate(
+        GraphQL\Pagination\PaginationArgs $args,
+    ): Awaitable<vec<GraphQL\Pagination\Edge<User>>> {
         $after = $args['after'] ?? null;
         $start_id = 0;
         if ($after) {
-            $start_id = Str\to_int($after) as nonnull + 1;  // Add one to skip the `after` cursor.
+            $start_id = Str\to_int($after) as nonnull + 1; // Add one to skip the `after` cursor.
         }
 
         $before = $args['before'] ?? null;
@@ -25,20 +27,19 @@ final class UserConnection extends GraphQL\Pagination\Connection<User> {
             $start_id = Math\maxva($start_id, $end_id - $last);
         }
 
-        $users = vec[];
+        $edges = vec[];
         for ($i = $start_id; $i < $end_id; $i++) {
-            $users[] = new Human(shape(
-                'id' => $i,
-                'name' => 'User '.$i,
-                'team_id' => 1,
-                'is_active' => $i % 2 === 0 ? true : false
-            ));
+            $edges[] = new GraphQL\Pagination\Edge(
+                new Human(shape(
+                    'id' => $i,
+                    'name' => 'User '.$i,
+                    'team_id' => 1,
+                    'is_active' => $i % 2 === 0 ? true : false,
+                )),
+                $this->encodeCursor((string)$i),
+            );
         }
 
-        return $users;
-    }
-
-    public function getCursor(User $user): string {
-        return (string)$user->getId();
+        return $edges;
     }
 }
