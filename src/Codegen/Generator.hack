@@ -199,7 +199,7 @@ final class Generator {
         $field_resolver = new FieldResolver($classish_objects);
         $class_fields = $field_resolver->resolveFields();
 
-        $interfaces = keyset[];
+        $hack_class_to_graphql_interface = dict[];
         $hack_class_to_graphql_object = dict[];
         foreach ($classish_objects as $class) {
             if (!C\is_empty($class->getAttributes())) {
@@ -211,12 +211,12 @@ final class Generator {
 
                 $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 if ($graphql_interface is nonnull) {
-                    $interfaces[] = $rc->getName();
+                    $hack_class_to_graphql_interface[$rc->getName()] = $graphql_interface->getType();
                 }
             }
         }
         $hack_class_to_graphql_object = Dict\sort_by_key($hack_class_to_graphql_object);
-        $interfaces = Keyset\sort($interfaces);
+        $hack_class_to_graphql_interface = Dict\sort_by_key($hack_class_to_graphql_interface);
 
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
@@ -228,7 +228,7 @@ final class Generator {
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
             if ($graphql_output is nonnull) {
-                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt, $interfaces);
+                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt, $hack_class_to_graphql_interface);
             }
         }
 
@@ -251,7 +251,12 @@ final class Generator {
                         $hack_class_to_graphql_object,
                     );
                 } else if ($graphql_object is nonnull) {
-                    $objects[] = new ObjectBuilder($graphql_object, $rc->getName(), $fields, $interfaces);
+                    $objects[] = new ObjectBuilder(
+                        $graphql_object,
+                        $rc->getName(),
+                        $fields,
+                        $hack_class_to_graphql_interface,
+                    );
                 }
             }
 
@@ -298,7 +303,7 @@ final class Generator {
                     new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
                     'Slack\\GraphQL\\Root',
                     vec(Dict\sort_by_key($query_fields)),
-                    $interfaces,
+                    $hack_class_to_graphql_interface,
                 ),
             ];
 
@@ -307,7 +312,7 @@ final class Generator {
                     new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
                     'Slack\\GraphQL\\Root',
                     vec(Dict\sort_by_key($mutation_fields)),
-                    $interfaces,
+                    $hack_class_to_graphql_interface,
                 );
             }
 

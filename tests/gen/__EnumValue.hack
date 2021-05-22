@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<82e7ee29e823bc36b9a7ecbacc30cec4>>
+ * @generated SignedSource<<f121838086bb0d72ad9cbc92b7497eed>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -21,7 +21,7 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
     'isDeprecated',
     'name',
   ];
-  const keyset<classname<Types\InterfaceType>> INTERFACES = keyset[
+  const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
   ];
 
   public function getFieldDefinition(

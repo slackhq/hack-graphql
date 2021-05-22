@@ -12,7 +12,7 @@ abstract class InterfaceType extends CompositeType {
     }
 
     <<__Override>>
-    final public function getPossibleTypes(): vec<ObjectType> {
-        return Vec\map(static::POSSIBLE_TYPES, $type ==> $type::nonNullable());
+    final public function getPossibleTypes(): vec<classname<ObjectType>> {
+        return vec(static::POSSIBLE_TYPES);
     }
 }

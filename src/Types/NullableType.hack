@@ -37,15 +37,13 @@ trait TNullableType implements INullableType {
     <<__Override>>
     final public function getIntrospectionInterfaces(): ?vec<Introspection\__Type> {
         $interfaces = $this->getInnerType()->getInterfaces();
-        return $interfaces is nonnull
-            ? Vec\map($interfaces, $interface ==> $interface->nullableForIntrospection())
-            : null;
+        return $interfaces is nonnull ? Vec\map($interfaces, $interface ==> $interface::nullableOutput()) : null;
     }
 
     <<__Override>>
     final public function getIntrospectionPossibleTypes(): ?vec<Introspection\__Type> {
         $types = $this->getInnerType()->getPossibleTypes();
-        return $types is nonnull ? Vec\map($types, $type ==> $type->nullableForIntrospection()) : null;
+        return $types is nonnull ? Vec\map($types, $type ==> $type::nullableOutput()) : null;
     }
 
     <<__Override>>

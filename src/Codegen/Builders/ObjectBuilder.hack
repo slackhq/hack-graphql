@@ -1,7 +1,13 @@
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\{Vec, Str};
-use type Facebook\HackCodegen\{CodegenClass, HackCodegenFactory, CodegenClassConstant, HackBuilderValues};
+use type Facebook\HackCodegen\{
+    CodegenClass,
+    HackCodegenFactory,
+    CodegenClassConstant,
+    HackBuilderValues,
+    HackBuilderKeys,
+};
 
 final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TField> {
     const classname<\Slack\GraphQL\Types\ObjectType> SUPERCLASS = \Slack\GraphQL\Types\ObjectType::class;
@@ -11,7 +17,7 @@ final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TFie
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         vec<TField> $fields,
-        private keyset<string> $interfaces,
+        private dict<string, string> $hack_class_to_graphql_interface,
     ) {
         parent::__construct($type_info, $hack_type, $fields);
     }
@@ -25,7 +31,7 @@ final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TFie
     public static function fromTypeAlias<T>(
         \Slack\GraphQL\ObjectType $type_info,
         \ReflectionTypeAlias $type_alias,
-        keyset<string> $interfaces,
+        dict<string, string> $hack_class_to_graphql_interface,
     ): ObjectBuilder<ShapeFieldBuilder<T>> {
         $ts = $type_alias->getResolvedTypeStructure();
         invariant(
@@ -37,20 +43,20 @@ final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TFie
             $type_info,
             $type_alias->getName(),
             Vec\map_with_key($ts['fields'], ($name, $ts) ==> new ShapeFieldBuilder($name, $ts)),
-            $interfaces,
+            $hack_class_to_graphql_interface,
         );
     }
 
     private function generateInterfacesConstant(HackCodegenFactory $cg): CodegenClassConstant {
-        $interfaces = keyset[];
-        foreach ($this->interfaces as $interface) {
-            if (\is_subclass_of($this->hack_type, $interface)) {
-                $interfaces[] = Str\format('%s::class', $interface);
+        $interfaces = dict[];
+        foreach ($this->hack_class_to_graphql_interface as $hack_class => $graphql_type) {
+            if (\is_subclass_of($this->hack_type, $hack_class)) {
+                $interfaces[$graphql_type] = Str\format('%s::class', $hack_class);
             }
         }
 
         return $cg->codegenClassConstant('INTERFACES')
-            ->setType('keyset<classname<Types\InterfaceType>>')
-            ->setValue($interfaces, HackBuilderValues::keyset(HackBuilderValues::literal()));
+            ->setType('dict<string, classname<Types\InterfaceType>>')
+            ->setValue($interfaces, HackBuilderValues::dict(HackBuilderKeys::export(), HackBuilderValues::literal()));
     }
 }
