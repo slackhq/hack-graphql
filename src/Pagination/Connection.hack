@@ -38,9 +38,9 @@ type PaginationArgs = shape(
  * and informing the client when more results are available.
  *
  * Each connection paginates over a generic type `T`. `T` must be a Hack type which has a GraphQL representation that
- * is not a list type. To paginate over a type `T`, subclass `Connection` and implement the `paginate` and `getCursor` 
- * methods. While `Connection` is purposely simple so as to support a wide variety of data sources, you're encouraged 
- * to create reusable subclasses which connect to the data sources you use.
+ * is not a list type. To paginate over a type `T`, subclass `Connection` and implement  `paginate` method. While
+ * `Connection` is purposely simple so as to support a wide variety of data sources, you're encouraged to create
+ * reusable subclasses which connect to the data sources you use.
  *
  * @see https://relay.dev/graphql/connections.htm for more information about GraphQL pagination.
  * @see src/playground/UserConnection.hack for an example.
@@ -51,15 +51,9 @@ abstract class Connection<T> {
      * Paginate the data set per the pagination args, which contain cursors and limits.
      *
      * For example, if the pagination args contain a `before` cursor with value `foo` and a `last` limit with value 5, 
-     * `paginate` should return the 5 items immediately prior to the item with cursor `foo` in the dataset.
+     * `paginate` should return edges wrapping the 5 items immediately prior to the item with cursor `foo`.
      */
-    abstract protected function paginate(PaginationArgs $args): Awaitable<vec<T>>;
-
-    /**
-     * Given an instance of the Hack type over which this connection provides pagination, retrieve a cursor which 
-     * identifies that instance. The framework will encode the cursor before passing it to the client.
-     */
-    abstract public function getCursor(T $item): string;
+    abstract protected function paginate(PaginationArgs $args): Awaitable<vec<Edge<T>>>;
 
     /**
      * Encode a cursor before transmitting it to the client.
@@ -175,13 +169,11 @@ abstract class Connection<T> {
 
         // Set the start and end cursors if the query had results.
         if (!C\is_empty($page)) {
-            $page_info['startCursor'] = $this->encodeCursor($this->getCursor(C\firstx($page)));
-            $page_info['endCursor'] = $this->encodeCursor($this->getCursor(C\lastx($page)));
+            $page_info['startCursor'] = C\firstx($page)->getCursor();
+            $page_info['endCursor'] = C\lastx($page)->getCursor();
         }
 
-        $edges = Vec\map($page, $item ==> new Edge($item, $this));
-
-        return shape('edges' => $edges, 'pageInfo' => $page_info);
+        return shape('edges' => $page, 'pageInfo' => $page_info);
     }
 
     /**
