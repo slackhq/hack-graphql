@@ -6,8 +6,10 @@ use namespace HH\Lib\C;
 final class InlineFragmentSpreadTest extends \Facebook\HackTest\HackTest {
     public function testConstructor(): void {
         $val = new \Graphpinator\Parser\FragmentSpread\InlineFragmentSpread(
+            0,
             new \Graphpinator\Common\Location(0, 0),
             new \Graphpinator\Parser\Field\SelectionSet(
+                1,
                 new \Graphpinator\Common\Location(0, 0),
                 vec[],
             ),

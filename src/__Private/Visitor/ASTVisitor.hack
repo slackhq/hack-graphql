@@ -1,6 +1,7 @@
 namespace Slack\GraphQL\__Private;
 
 use namespace \Graphpinator\Parser;
+use namespace Slack\GraphQL;
 
 abstract class ASTVisitor {
 
@@ -24,16 +25,16 @@ abstract class ASTVisitor {
 
     // Actual visitor implemention.
 
-    private function visitParsedRequest(Parser\ParsedRequest $node): void {
+    final public function visitParsedRequest(Parser\ParsedRequest $node): void {
         foreach ($node->getOperations() as $operation) {
             $this->visitOperation($operation);
         }
         foreach ($node->getFragments() as $fragment) {
-            // TODO: Fragments
+            $this->visitFragment($fragment);
         }
     }
 
-    private function visitField(Parser\Field\Field $node): void {
+    final public function visitField(Parser\Field\Field $node): void {
         $this->enter($node);
         $selection_set = $node->getSelectionSet();
         if ($selection_set) {
@@ -48,19 +49,33 @@ abstract class ASTVisitor {
         $this->leave($node);
     }
 
-    private function visitSelectionSet(Parser\Field\SelectionSet $node): void {
+    final public function visitHasSelectionSet(Parser\Field\IHasSelectionSet $node): void {
+        $this->enter($node);
+        if ($node is Parser\Field\Field) {
+            $this->visitField($node);
+        } elseif ($node is Parser\FragmentSpread\InlineFragmentSpread) {
+            $this->visitFragmentSpread($node);
+        } elseif ($node is Parser\Fragment\Fragment) {
+            $this->visitFragment($node);
+        } elseif ($node is Parser\Operation\Operation) {
+            $this->visitOperation($node);
+        }
+        $this->leave($node);
+    }
+
+    final public function visitSelectionSet(Parser\Field\SelectionSet $node): void {
         $this->enter($node);
         foreach ($node->getItems() as $item) {
             if ($item is Parser\Field\Field) {
                 $this->visitField($item);
             } else if ($item is Parser\FragmentSpread\FragmentSpread) {
-                // TODO: Fragments
+                $this->visitFragmentSpread($item);
             }
         }
         $this->leave($node);
     }
 
-    private function visitOperation(Parser\Operation\Operation $node): void {
+    final public function visitOperation(Parser\Operation\Operation $node): void {
         $this->enter($node);
         $selection_set = $node->getSelectionSet();
         if ($selection_set) {
@@ -75,13 +90,13 @@ abstract class ASTVisitor {
         $this->leave($node);
     }
 
-    private function visitArgument(Parser\Value\ArgumentValue $node): void {
+    final public function visitArgument(Parser\Value\ArgumentValue $node): void {
         $this->enter($node);
         $this->visitValue($node->getValue());
         $this->leave($node);
     }
 
-    private function visitValue(Parser\Value\Value $node): void {
+    final public function visitValue(Parser\Value\Value $node): void {
         $this->enter($node);
         if ($node is Parser\Value\ListVal) {
             foreach ($node->getValue() as $value) {
@@ -95,7 +110,7 @@ abstract class ASTVisitor {
         $this->leave($node);
     }
 
-    private function visitVariable(Parser\Variable\Variable $node): void {
+    final public function visitVariable(Parser\Variable\Variable $node): void {
         $this->enter($node);
         $this->visitTypeRef($node->getType());
         foreach ($node->getDirectives() as $directive) {
@@ -104,10 +119,51 @@ abstract class ASTVisitor {
         $this->leave($node);
     }
 
-    private function visitTypeRef(Parser\TypeRef\TypeRef $node): void {
+    final public function visitTypeRef(Parser\TypeRef\TypeRef $node): void {
         $this->enter($node);
         if ($node is Parser\TypeRef\NotNullRef || $node is Parser\TypeRef\ListTypeRef) {
             $this->visitTypeRef($node->getInnerRef());
+        }
+        $this->leave($node);
+    }
+
+    final public function visitFragment(Parser\Fragment\Fragment $node): void {
+        $this->enter($node);
+        $this->visitSelectionSet($node->getSelectionSet());
+        $this->visitTypeRef($node->getTypeCond());
+        foreach ($node->getDirectives() as $directive) {
+            // TODO: Directives
+        }
+        $this->leave($node);
+    }
+
+    final public function visitFragmentSpread(Parser\FragmentSpread\FragmentSpread $node): void {
+        $this->enter($node);
+        if ($node is Parser\FragmentSpread\NamedFragmentSpread) {
+            $this->visitNamedFragmentSpread($node);
+        } elseif ($node is Parser\FragmentSpread\InlineFragmentSpread) {
+            $this->visitInlineFragmentSpread($node);
+        }
+        $this->leave($node);
+    }
+
+    final public function visitNamedFragmentSpread(Parser\FragmentSpread\NamedFragmentSpread $node): void {
+        $this->enter($node);
+        foreach ($node->getDirectives() as $directive) {
+            // TODO: Directives
+        }
+        $this->leave($node);
+    }
+
+    final public function visitInlineFragmentSpread(Parser\FragmentSpread\InlineFragmentSpread $node): void {
+        $this->enter($node);
+        $this->visitSelectionSet($node->getSelectionSet());
+        $type_condition = $node->getTypeCond();
+        if ($type_condition) {
+            $this->visitTypeRef($type_condition);
+        }
+        foreach ($node->getDirectives() as $directive) {
+            // TODO: Directives
         }
         $this->leave($node);
     }

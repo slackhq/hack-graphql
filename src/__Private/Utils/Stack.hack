@@ -6,6 +6,12 @@ final class Stack<T> {
     private dict<int, T> $items = dict[];
     private int $length = 0;
 
+    public function __construct(Traversable<T> $initial = vec[]) {
+        foreach ($initial as $item) {
+            $this->push($item);
+        }
+    }
+
     public function push(T $item): void {
         $this->items[$this->length] = $item;
         $this->length++;
@@ -22,6 +28,10 @@ final class Stack<T> {
             return $this->items[$this->length - 1];
         }
         return null;
+    }
+
+    public function length(): int {
+        return $this->length;
     }
 
     public function asVec(): vec<T> {

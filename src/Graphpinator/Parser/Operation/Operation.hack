@@ -11,6 +11,7 @@ final class Operation extends \Graphpinator\Parser\Node implements Field\IHasSel
     private Field\SelectionSet $selectionSet;
 
     public function __construct(
+        int $id,
         \Graphpinator\Common\Location $location,
         shape(
             'type' => string,
@@ -20,7 +21,7 @@ final class Operation extends \Graphpinator\Parser\Node implements Field\IHasSel
             'selection_set' => Field\SelectionSet,
         ) $args,
     ) {
-        parent::__construct($location);
+        parent::__construct($id, $location);
         $this->type = $args['type'];
         $this->name = $args['name'];
         $this->variables = $args['variables'] ?? dict[];
