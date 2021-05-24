@@ -107,6 +107,17 @@ final class NoUndefinedVariablesRuleTest extends BaseValidationTest {
                 ',
                 vec[],
             ),
+            'fragment loop' => tuple(
+                '
+                {
+                    ...Frag
+                }
+                fragment Frag on Type {
+                    ...Frag
+                }
+                ',
+                vec[],
+            ),
             'variables not defined' => tuple(
                 '
                 query Foo($a: String, $b: String, $c: String) {
