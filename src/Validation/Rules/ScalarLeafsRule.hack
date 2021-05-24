@@ -21,7 +21,7 @@ final class ScalarLeafsRule extends ValidationRule {
                         $node,
                         'Field "%s" of type "%s" must have a selection of subfields.',
                         $node->getName(),
-                        $type->getName()
+                        $type->getName(),
                     );
                 }
             }

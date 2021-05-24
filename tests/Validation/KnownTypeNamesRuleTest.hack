@@ -35,9 +35,9 @@ final class KnownTypeNamesRuleTest extends BaseValidationTest {
                     shape(
                         'message' => 'Unknown type "JumbledUpLetters".',
                         'location' => shape('line' => 4, 'column' => 38),
-                    )
-                ]
-            )
+                    ),
+                ],
+            ),
         ];
     }
 }

@@ -16,7 +16,7 @@ final class KnownArgumentNamesRule extends ValidationRule {
                     'Unknown argument "%s" on field "%s.%s".',
                     $node->getName(),
                     $parent_type->getName(),
-                    $field_def->getName()
+                    $field_def->getName(),
                 );
             }
         }
