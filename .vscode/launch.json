@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run test",
+        "type": "hhvm",
+        "request": "launch",
+        "cwd": "/Users/ianhoffman/src/hack-graphql",
+        "script": "vendor/bin/hacktest ${relativeFile}"
+      }
+    ]
+  }

@@ -26,12 +26,14 @@ abstract class ASTVisitor {
     // Actual visitor implemention.
 
     final public function visitParsedRequest(Parser\ParsedRequest $node): void {
+        $this->enter($node);
         foreach ($node->getOperations() as $operation) {
             $this->visitOperation($operation);
         }
         foreach ($node->getFragments() as $fragment) {
             $this->visitFragment($fragment);
         }
+        $this->leave($node);
     }
 
     final public function visitField(Parser\Field\Field $node): void {

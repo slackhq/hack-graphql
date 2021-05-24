@@ -27,6 +27,8 @@ final class Parser {
             throw new \Graphpinator\Parser\Exception\EmptyRequest(new \Graphpinator\Common\Location(1, 1));
         }
 
+        $start_location = $this->tokenizer->getCurrent()->getLocation();
+
         $fragments = dict[];
         $locations = dict[];
         $operations = dict[];
@@ -71,7 +73,7 @@ final class Parser {
                 }
         }
 
-        return new \Graphpinator\Parser\ParsedRequest($operations, $fragments);
+        return new \Graphpinator\Parser\ParsedRequest($start_location, $operations, $fragments);
     }
 
     /**
