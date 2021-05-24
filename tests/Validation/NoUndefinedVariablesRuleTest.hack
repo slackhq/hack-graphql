@@ -32,9 +32,9 @@ final class NoUndefinedVariablesRuleTest extends BaseValidationTest {
                     ... on Type {
                     field(a: $a) {
                         field(b: $b) {
-                        ... on Type {
-                            field(c: $c)
-                        }
+                            ... on Type {
+                                field(c: $c)
+                            }
                         }
                     }
                     }
@@ -49,12 +49,12 @@ final class NoUndefinedVariablesRuleTest extends BaseValidationTest {
                 }
                 fragment FragA on Type {
                     field(a: $a) {
-                    ...FragB
+                        ...FragB
                     }
                 }
                 fragment FragB on Type {
                     field(b: $b) {
-                    ...FragC
+                        ...FragC
                     }
                 }
                 fragment FragC on Type {
@@ -101,7 +101,7 @@ final class NoUndefinedVariablesRuleTest extends BaseValidationTest {
                 }
                 fragment FragA on Type {
                     field(a: $a) {
-                    ...FragA
+                        ...FragA
                     }
                 }
                 ',
