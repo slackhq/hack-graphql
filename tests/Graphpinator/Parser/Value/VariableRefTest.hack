@@ -6,7 +6,6 @@ final class VariableRefTest extends \Facebook\HackTest\HackTest {
     public function testGetRawValue(): void {
         expect(() ==> {
             $val = new \Graphpinator\Parser\Value\VariableRef(
-                0,
                 new \Graphpinator\Common\Location(0, 0),
                 'varName'
             );

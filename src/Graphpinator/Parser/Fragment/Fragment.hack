@@ -5,14 +5,13 @@ use namespace Graphpinator\Parser\Field;
 final class Fragment extends \Graphpinator\Parser\Node implements Field\IHasSelectionSet {
 
     public function __construct(
-        int $id,
         \Graphpinator\Common\Location $location,
         private string $name,
         private \Graphpinator\Parser\TypeRef\NamedTypeRef $typeCond,
         private vec<\Graphpinator\Parser\Directive\Directive> $directives,
         private Field\SelectionSet $selectionSet,
     ) {
-        parent::__construct($id, $location);
+        parent::__construct($location);
     }
 
     public function getName(): string {
