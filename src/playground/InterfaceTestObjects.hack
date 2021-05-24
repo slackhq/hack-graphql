@@ -9,7 +9,7 @@ interface InterfaceA {
 
 <<GraphQL\InterfaceType('InterfaceB', 'InterfaceB')>>
 interface InterfaceB extends InterfaceA {
-    
+
     <<GraphQL\Field('bar', 'bar')>>
     public function bar(): string;
 }

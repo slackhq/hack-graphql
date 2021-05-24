@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<00ff8b3375bad51751b7ed4351089b61>>
+ * @generated SignedSource<<051b3e6063c6d8bc356b8668c0eec5bc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -15,7 +15,7 @@ final class IIntrospectionInterfaceC
   extends \Slack\GraphQL\Types\InterfaceType {
 
   const NAME = 'IIntrospectionInterfaceC';
-  const type THackType = \IIntrospectionInterfaceC;
+  const type THackType = \IIntrospectionInterfaceCDifferentClassNameThanGraphQLType;
   const keyset<string> FIELD_NAMES = keyset[
   ];
   const keyset<classname<Types\ObjectType>> POSSIBLE_TYPES = keyset[

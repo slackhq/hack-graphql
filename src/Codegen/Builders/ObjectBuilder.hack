@@ -51,7 +51,7 @@ final class ObjectBuilder<TField as IFieldBuilder> extends CompositeBuilder<TFie
         $interfaces = dict[];
         foreach ($this->hack_class_to_graphql_interface as $hack_class => $graphql_type) {
             if (\is_subclass_of($this->hack_type, $hack_class)) {
-                $interfaces[$graphql_type] = Str\format('%s::class', $hack_class);
+                $interfaces[$graphql_type] = Str\format('%s::class', $graphql_type);
             }
         }
 

@@ -7,7 +7,7 @@ interface IIntrospectionInterfaceA {}
 interface IIntrospectionInterfaceB extends IIntrospectionInterfaceA {}
 
 <<GraphQL\InterfaceType('IIntrospectionInterfaceC', 'IIntrospectionInterfaceC')>>
-interface IIntrospectionInterfaceC extends IIntrospectionInterfaceB {}
+interface IIntrospectionInterfaceCDifferentClassNameThanGraphQLType extends IIntrospectionInterfaceB {}
 
 <<GraphQL\ObjectType('ImplementInterfaceA', 'ImplementInterfaceA')>>
 final class ImplementInterfaceA implements IIntrospectionInterfaceA {}
@@ -16,7 +16,8 @@ final class ImplementInterfaceA implements IIntrospectionInterfaceA {}
 final class ImplementInterfaceB implements IIntrospectionInterfaceB {}
 
 <<GraphQL\ObjectType('ImplementInterfaceC', 'ImplementInterfaceC')>>
-final class ImplementInterfaceC implements IIntrospectionInterfaceB, IIntrospectionInterfaceC {}
+final class ImplementInterfaceC
+    implements IIntrospectionInterfaceB, IIntrospectionInterfaceCDifferentClassNameThanGraphQLType {}
 
 <<GraphQL\ObjectType('IntrospectionTestObject', 'Test object for introspection')>>
 final class IntrospectionTestObject {
