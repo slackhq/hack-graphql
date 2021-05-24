@@ -263,16 +263,12 @@ final class ErrorTest extends PlaygroundTest {
             ),
 
             'invalid enum values with arguments' => tuple(
-                'query { takes_favorite_color(favorite_color: $favorite_color) }',
+                'query ($favorite_color: FavoriteColor) { takes_favorite_color(favorite_color: $favorite_color) }',
                 dict['favorite_color' => 'foo'],
                 shape(
-                    'data' => dict[
-                        'takes_favorite_color' => null,
-                    ],
                     'errors' => vec[
                         shape(
-                            'message' => 'Caught exception while resolving field.',
-                            'path' => vec['takes_favorite_color'],
+                            'message' => 'Invalid value for variable "favorite_color": Expected a valid value for FavoriteColor, got foo',
                         ),
                     ],
                 ),

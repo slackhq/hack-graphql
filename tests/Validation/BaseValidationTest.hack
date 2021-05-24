@@ -1,10 +1,13 @@
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
+use namespace Slack\GraphQL\Validation;
 
 abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
 
     const type TTestCases = dict<string, (string, vec<GraphQL\UserFacingError::TData>)>;
+
+    abstract const classname<Validation\ValidationRule> RULE;
 
     <<__Override>>
     public static async function beforeFirstTestAsync(): Awaitable<void> {
@@ -29,6 +32,8 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
         $request = $parser->parse();
 
         $validator = new GraphQL\Validation\Validator(GraphQL\Test\Generated\Schema::class);
+        $validator->setRules(keyset[$this::RULE]);
+
         $errors = $validator->validate($request);
         expect(Vec\map($errors, $error ==> $error->toShape()))->toEqual($expected_errors);
     }

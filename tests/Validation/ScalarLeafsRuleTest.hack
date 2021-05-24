@@ -1,7 +1,8 @@
-use namespace Slack\GraphQL;
-
+use namespace Slack\GraphQL\Validation;
 
 final class ScalarLeafsRuleTest extends BaseValidationTest {
+
+    const classname<Validation\ValidationRule> RULE = Validation\ScalarLeafsRule::class;
 
     public static function getTestCases(): this::TTestCases {
         return dict[
