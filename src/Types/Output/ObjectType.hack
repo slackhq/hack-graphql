@@ -24,8 +24,11 @@ abstract class ObjectType extends CompositeType {
 
         $results = await Dict\map_async(
             $grouped_child_fields,
-            async $grouped_child_field ==> {
-                $field_name = C\firstx($grouped_child_field)->getName();
+            async $grouped_field_nodes ==> {
+                // Validation guarantees all of the grouped field nodes have the same name (i.e. we don't have one alias
+                // pointing to 2 different fields in any selection set), so it doesn't matter which one we call
+                // getName() on.
+                $field_name = C\firstx($grouped_field_nodes)->getName();
                 if ($field_name === '__typename') {
                     // https://spec.graphql.org/draft/#sec-Type-Name-Introspection
                     return new GraphQL\ValidFieldResult(static::NAME);
@@ -34,7 +37,7 @@ abstract class ObjectType extends CompositeType {
                 if ($field_definition is null) {
                     throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $field_name);
                 }
-                return await $field_definition->resolveAsync($value, $grouped_child_field, $context);
+                return await $field_definition->resolveAsync($value, $grouped_field_nodes, $context);
             }
         );
 

@@ -16,12 +16,7 @@ final class ExecutionContext {
         return $this->coercedVariableValues;
     }
 
-    public function getFragment(string $name): Fragment {
-        GraphQL\assert(
-            C\contains_key($this->fragmentDeclarations, $name),
-            'Unknown fragment "%s"',
-            $name,
-        );
+    public function getFragment(string $name): ?Fragment {
         return $this->fragmentDeclarations[$name];
     }
 }
