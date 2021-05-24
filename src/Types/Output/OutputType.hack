@@ -30,6 +30,9 @@ interface IOutputTypeFor<THackType, TResolved> extends IOutputType {
     /**
      * Convert a value returned by the field resolver into what should be put in the GraphQL response, possibly
      * recursively.
+     *
+     * Note that due to how FieldCollector works, there might be multiple parent nodes representing the same GraphQL
+     * response field (e.g. if the same field was included via 2 different fragments).
      */
     public function resolveAsync(
         THackType $value,

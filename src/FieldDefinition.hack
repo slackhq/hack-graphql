@@ -19,7 +19,7 @@ interface IFieldDefinition extends Introspection\__Field {
 interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
     public function resolveAsync(
         TParent $parent,
-        vec<\Graphpinator\Parser\Field\Field> $grouped_field,
+        vec<\Graphpinator\Parser\Field\Field> $grouped_field_nodes,
         ExecutionContext $context,
     ): Awaitable<FieldResult<mixed>>;
 }
@@ -38,14 +38,16 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public async function resolveAsync(
         TParent $parent,
-        vec<\Graphpinator\Parser\Field\Field> $grouped_field,
+        vec<\Graphpinator\Parser\Field\Field> $grouped_field_nodes,
         ExecutionContext $context,
     ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
             $value = await $resolver(
                 $parent,
-                C\firstx($grouped_field)->getArgumentValues(),
+                // Validation guarantees all of the grouped field nodes have the same arguments, so it doesn't matter
+                // which one we call getArgumentValues() on.
+                C\firstx($grouped_field_nodes)->getArgumentValues(),
                 $context->getVariableValues(),
             );
         } catch (UserFacingError $e) {
@@ -54,7 +56,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
             return $this->type->resolveError(new FieldResolverError($e));
         }
 
-        return await $this->type->resolveAsync($value, $grouped_field, $context);
+        return await $this->type->resolveAsync($value, $grouped_field_nodes, $context);
     }
 
     public function getName(): string {

@@ -4,6 +4,17 @@ use namespace HH\Lib\C;
 use namespace Graphpinator\Parser;
 
 /**
+ * Combines the selection sets of all the given $parent_nodes, recursing into any fragment references whose type matches
+ * the provided $parent_type.
+ *
+ * The output is a dict where each item represents a single field that should be included in the GraphQL response,
+ * indexed by the key that should be used for this field in the response (an alias if specified, otherwise the field's
+ * name).
+ *
+ * Note that while each item represents a single field in the *response*, it may actually represent multiple field nodes
+ * from the GraphQL query (e.g. if the same field is included via 2 different fragments). The value for each response
+ * key is therefore a vec of field nodes. This is also why we accept a vec of $parent_nodes as an input.
+ *
  * @see https://spec.graphql.org/draft/#sec-Field-Collection
  */
 final class FieldCollector {
@@ -19,7 +30,7 @@ final class FieldCollector {
             $selection_set = $parent_node->getSelectionSet();
             if ($selection_set is null) {
                 // This can only happen if the query wasn't validated.
-                throw (new UserFacingError('Missing selection set'))->setLocation($parent_node->getLocation());
+                continue;
             }
             $field_collector->processSelectionSet($selection_set);
         }
@@ -49,6 +60,10 @@ final class FieldCollector {
                 $this->visitedFragments[] = $item->getName();
 
                 $fragment = $this->context->getFragment($item->getName());
+                if ($fragment is null) {
+                    // This can only happen if the query wasn't validated.
+                    continue;
+                }
                 if (!$this->doesFragmentTypeApply($fragment->getTypeCond())) {
                     continue;
                 }
