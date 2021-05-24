@@ -15,10 +15,6 @@ type VariableUsage = shape(
 
 final class ValidationContext {
     private vec<\Slack\GraphQL\UserFacingError> $errors = vec[];
-    private dict<int, vec<VariableUsage>> $variable_usages = dict[];
-    private dict<int, vec<VariableUsage>> $recursive_variable_usages = dict[];
-    private dict<int, vec<Parser\Fragment\Fragment>> $recursively_referenced_fragments = dict[];
-    private dict<int, vec<Parser\FragmentSpread\NamedFragmentSpread>> $named_fragment_spreads = dict[];
 
     public function __construct(
         private classname<\Slack\GraphQL\BaseSchema> $schema,
@@ -65,31 +61,25 @@ final class ValidationContext {
         return $this->type_info->getArgument();
     }
 
+    <<__Memoize>>
     public function getVariableUsages(Parser\Field\IHasSelectionSet $node): vec<VariableUsage> {
-        $usages = $this->variable_usages[$node->getId()] ?? null;
-        if ($usages is null) {
-            $ref = new Ref(vec[]);
-            $visitor = new CallbackVisitor($curr ==> {
-                if ($curr is Parser\Value\VariableRef) {
-                    $ref->value[] = shape(
-                        'node' => $curr,
-                    );
-                }
-            });
-            $visitor->visitHasSelectionSet($node);
-            $usages = $ref->value;
-            $this->variable_usages[$node->getId()] = $usages;
-        }
-        return $usages;
+        $ref = new Ref(vec[]);
+        $visitor = new CallbackVisitor($curr ==> {
+            if ($curr is Parser\Value\VariableRef) {
+                $ref->value[] = shape(
+                    'node' => $curr,
+                );
+            }
+        });
+        $visitor->visitHasSelectionSet($node);
+        return $ref->value;
     }
 
+    <<__Memoize>>
     public function getRecursiveVariableUsages(Parser\Operation\Operation $operation): vec<VariableUsage> {
-        $usages = $this->recursive_variable_usages[$operation->getId()] ?? null;
-        if ($usages is null) {
-            $usages = $this->getVariableUsages($operation);
-            foreach ($this->getRecursivelyReferencedFragments($operation) as $fragment) {
-                $usages = Vec\concat($usages, $this->getVariableUsages($fragment));
-            }
+        $usages = $this->getVariableUsages($operation);
+        foreach ($this->getRecursivelyReferencedFragments($operation) as $fragment) {
+            $usages = Vec\concat($usages, $this->getVariableUsages($fragment));
         }
         return $usages;
     }
@@ -99,53 +89,47 @@ final class ValidationContext {
         return $fragments[$name] ?? null;
     }
 
+    <<__Memoize>>
     public function getNamedFragmentSpreads(
         Parser\Field\SelectionSet $node,
     ): vec<Parser\FragmentSpread\NamedFragmentSpread> {
-        $spreads = $this->named_fragment_spreads[$node->getId()] ?? null;
-        if ($spreads is null) {
-            $spreads = vec[];
-            $sets_to_visit = new Stack(vec[$node]);
-            while ($sets_to_visit->length() > 0) {
-                $set = $sets_to_visit->pop();
-                foreach ($set->getItems() as $selection) {
-                    if ($selection is Parser\FragmentSpread\NamedFragmentSpread) {
-                        $spreads[] = $selection;
-                    } else {
-                        $next_selection = $selection ?as Parser\Field\IHasSelectionSet?->getSelectionSet();
-                        if ($next_selection) {
-                            $sets_to_visit->push($next_selection);
-                        }
+        $spreads = vec[];
+        $sets_to_visit = new Stack(vec[$node]);
+        while ($sets_to_visit->length() > 0) {
+            $set = $sets_to_visit->pop();
+            foreach ($set->getItems() as $selection) {
+                if ($selection is Parser\FragmentSpread\NamedFragmentSpread) {
+                    $spreads[] = $selection;
+                } else {
+                    $next_selection = $selection ?as Parser\Field\IHasSelectionSet?->getSelectionSet();
+                    if ($next_selection) {
+                        $sets_to_visit->push($next_selection);
                     }
                 }
             }
-            $this->named_fragment_spreads[$node->getId()] = $spreads;
         }
         return $spreads;
     }
 
+    <<__Memoize>>
     public function getRecursivelyReferencedFragments(
         Parser\Operation\Operation $operation,
     ): vec<Parser\Fragment\Fragment> {
-        $fragments = $this->recursively_referenced_fragments[$operation->getId()] ?? null;
-        if ($fragments is null) {
-            $fragments = vec[];
-            $collected_names = keyset[];
-            $nodes_to_visit = new Stack(vec[$operation->getSelectionSet()]);
-            while ($nodes_to_visit->length() > 0) {
-                $node = $nodes_to_visit->pop();
-                foreach ($this->getNamedFragmentSpreads($node) as $spread) {
-                    if (!C\contains_key($collected_names, $spread->getName())) {
-                        $collected_names[] = $spread->getName();
-                        $fragment = $this->getFragment($spread->getName());
-                        if ($fragment) {
-                            $fragments[] = $fragment;
-                            $nodes_to_visit->push($fragment->getSelectionSet());
-                        }
+        $fragments = vec[];
+        $collected_names = keyset[];
+        $nodes_to_visit = new Stack(vec[$operation->getSelectionSet()]);
+        while ($nodes_to_visit->length() > 0) {
+            $node = $nodes_to_visit->pop();
+            foreach ($this->getNamedFragmentSpreads($node) as $spread) {
+                if (!C\contains_key($collected_names, $spread->getName())) {
+                    $collected_names[] = $spread->getName();
+                    $fragment = $this->getFragment($spread->getName());
+                    if ($fragment) {
+                        $fragments[] = $fragment;
+                        $nodes_to_visit->push($fragment->getSelectionSet());
                     }
                 }
             }
-            $this->recursively_referenced_fragments[$operation->getId()] = $fragments;
         }
         return $fragments;
     }

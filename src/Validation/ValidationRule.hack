@@ -13,8 +13,10 @@ use type \Slack\GraphQL\__Private\ASTVisitor;
  * on which to run custom validation. To do this, override the
  * `enter/leave` methods for those nodes. For example:
  *
- *  enterField(\Graphpinator\Parser\Field\Field $field): void {
- *      // custom logic goes here
+ *  enter(\Graphpinator\Parser\Node $node): void {
+ *      if ($node is \Graphpinator\Parser\Field) {
+ *          // Run validation
+ *      }
  *  }
  *
  * These methods will be called during AST traversal. To access
