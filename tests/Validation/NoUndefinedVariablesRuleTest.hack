@@ -26,7 +26,6 @@ final class NoUndefinedVariablesRuleTest extends BaseValidationTest {
                 ',
                 vec[],
             ),
-            // TODO: Valid fragments
             'all variables deeply in inline fragments defined' => tuple(
                 '
                 query Foo($a: String, $b: String, $c: String) {
