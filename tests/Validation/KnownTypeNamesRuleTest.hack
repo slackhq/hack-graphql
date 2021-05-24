@@ -1,6 +1,9 @@
-use namespace Slack\GraphQL;
+use namespace Slack\GraphQL\Validation;
 
 final class KnownTypeNamesRuleTest extends BaseValidationTest {
+
+    const classname<Validation\ValidationRule> RULE = Validation\KnownTypeNamesRule::class;
+
     public static function getTestCases(): this::TTestCases {
         return dict[
             'known type names are valid' => tuple(

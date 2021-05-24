@@ -1,6 +1,9 @@
-use namespace Slack\GraphQL;
+use namespace Slack\GraphQL\Validation;
 
 final class KnownArgumentNamesRuleTest extends BaseValidationTest {
+
+    const classname<Validation\ValidationRule> RULE = Validation\KnownArgumentNamesRule::class;
+
     public static function getTestCases(): this::TTestCases {
         return dict[
             'valid args' => tuple(

@@ -1,4 +1,8 @@
+use namespace Slack\GraphQL\Validation;
+
 final class FieldsOnCorrectTypeRuleTest extends BaseValidationTest {
+
+    const classname<Validation\ValidationRule> RULE = Validation\FieldsOnCorrectTypeRule::class;
 
     public static function getTestCases(): this::TTestCases {
         return dict[
