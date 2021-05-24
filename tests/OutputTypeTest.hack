@@ -20,6 +20,13 @@ final class OutputTypeTest extends PlaygroundTest {
                         list
                         awaitable_nullable_list
                         nested_lists
+                        output_shape {
+                            string
+                            vec_of_int
+                            nested_shape {
+                                vec_of_string
+                            }
+                        }
                     }
                 }',
                 dict[],
@@ -35,6 +42,13 @@ final class OutputTypeTest extends PlaygroundTest {
                             vec[vec[null, 42]],
                             null,
                             vec[vec[42], vec[null]],
+                        ],
+                        'output_shape' => dict[
+                            'string' => 'test',
+                            'vec_of_int' => vec[1, 2, 3],
+                            'nested_shape' => dict[
+                                'vec_of_string' => vec['test', 'strings'],
+                            ],
                         ],
                     ],
                 ],

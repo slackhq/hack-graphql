@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<7072d90483f2cf38add1f2eacb8463d1>>
+ * @generated SignedSource<<eb8845d9ace2e6885f07f410aa729249>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -22,6 +22,7 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
     'list',
     'nested_lists',
     'nullable',
+    'output_shape',
     'scalar',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
@@ -72,6 +73,13 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nullable(),
+        );
+      case 'output_shape':
+        return new GraphQL\FieldDefinition(
+          'output_shape',
+          OutputShape::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->output_shape(),
         );
       case 'scalar':
         return new GraphQL\FieldDefinition(

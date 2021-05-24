@@ -1,5 +1,17 @@
 use namespace Slack\GraphQL;
 
+<<GraphQL\ObjectType('OutputShape', 'OutputShape')>>
+type TOutputShape = shape(
+    'string' => string,
+    'vec_of_int' => vec<int>,
+    'nested_shape' => TOutputNestedShape,
+);
+
+<<GraphQL\ObjectType('NestedOutputShape', 'NestedOutputShape')>>
+type TOutputNestedShape = shape(
+    'vec_of_string' => vec<string>,
+);
+
 <<GraphQL\ObjectType('OutputTypeTestObj', 'Test object for fields with various return types')>>
 final class OutputTypeTestObj {
 
@@ -48,5 +60,14 @@ final class OutputTypeTestObj {
             null,
             vec[vec[42], vec[null]],
         ];
+    }
+
+    <<GraphQL\Field('output_shape', '')>>
+    public function output_shape(): TOutputShape {
+        return shape(
+            'string' => 'test',
+            'vec_of_int' => vec[1, 2, 3],
+            'nested_shape' => shape('vec_of_string' => vec['test', 'strings']),
+        );
     }
 }
