@@ -9,6 +9,10 @@ abstract class Node implements \HH\IMemoizeParam {
         self::$nextId++;
     }
 
+    final public function getId(): int {
+        return $this->id;
+    }
+
     final public function getLocation(): \Graphpinator\Common\Location {
         return $this->location;
     }
