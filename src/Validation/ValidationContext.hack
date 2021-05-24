@@ -135,8 +135,8 @@ final class ValidationContext {
             while ($nodes_to_visit->length() > 0) {
                 $node = $nodes_to_visit->pop();
                 foreach ($this->getNamedFragmentSpreads($node) as $spread) {
-                    if (!C\contains_key($collected_names, $spread->getId())) {
-                        $collected_names[] = $spread->getId();
+                    if (!C\contains_key($collected_names, $spread->getName())) {
+                        $collected_names[] = $spread->getName();
                         $fragment = $this->getFragment($spread->getName());
                         if ($fragment) {
                             $fragments[] = $fragment;
