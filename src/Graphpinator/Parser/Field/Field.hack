@@ -5,6 +5,7 @@ use namespace HH\Lib\Dict;
 final class Field extends \Graphpinator\Parser\Node implements IHasSelectionSet, ISelectionSetItem {
 
     public function __construct(
+        int $id,
         \Graphpinator\Common\Location $location,
         private string $name,
         private ?string $alias = null,
@@ -12,7 +13,7 @@ final class Field extends \Graphpinator\Parser\Node implements IHasSelectionSet,
         private ?dict<string, \Graphpinator\Parser\Value\ArgumentValue> $arguments = null,
         private ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {
-        parent::__construct($location);
+        parent::__construct($id, $location);
     }
 
     public function getName(): string {

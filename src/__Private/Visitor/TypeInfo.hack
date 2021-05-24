@@ -1,9 +1,8 @@
-namespace Slack\GraphQL\Validation;
+namespace Slack\GraphQL\__Private;
 
 use namespace HH\Lib\Vec;
 use namespace \Graphpinator\Parser;
 use namespace \Slack\GraphQL\Types;
-use type \Slack\GraphQL\__Private\ASTVisitor;
 use type \Slack\GraphQL\__Private\Utils\Stack;
 
 
