@@ -1,7 +1,6 @@
 namespace Graphpinator\Parser;
 
-
-abstract class Node {
+abstract class Node implements \HH\IMemoizeParam {
     public function __construct(
         private int $id,
         private \Graphpinator\Common\Location $location
@@ -16,6 +15,10 @@ abstract class Node {
 
     public function getLocation(): \Graphpinator\Common\Location {
         return $this->location;
+    }
+
+    public function getInstanceKey(): string {
+        return (string)$this->id;
     }
 }
 
