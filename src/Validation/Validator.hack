@@ -1,7 +1,7 @@
 namespace Slack\GraphQL\Validation;
 
 use namespace HH\Lib\Vec;
-use type \Slack\GraphQL\__Private\TypeInfo;
+use type \Slack\GraphQL\__Private\{FragmentInfo, TypeInfo, VariableInfo};
 use type \Slack\GraphQL\__Private\ParallelVisitor;
 
 final class Validator {
@@ -16,11 +16,15 @@ final class Validator {
     public function __construct(private classname<\Slack\GraphQL\BaseSchema> $schema) {}
 
     public function validate(\Graphpinator\Parser\ParsedRequest $request): vec<\Slack\GraphQL\UserFacingError> {
+        $fragment_info = new FragmentInfo();
         $type_info = new TypeInfo($this->schema);
-        $ctx = new ValidationContext($this->schema, $request, $type_info);
+        $variable_info = new VariableInfo($fragment_info);
+        $ctx = new ValidationContext($this->schema, $fragment_info, $type_info, $variable_info);
 
-        $visitor = new ParallelVisitor(Vec\map($this->rules, $rule ==> new $rule($ctx)));
-        $visitor = $visitor->runAfter($type_info);
+        $visitor = new ParallelVisitor(Vec\concat(
+            vec[$fragment_info, $type_info, $variable_info],
+            Vec\map($this->rules, $rule ==> new $rule($ctx))
+        ));
         $visitor->walk($request);
 
         return $ctx->getErrors();
