@@ -27,11 +27,59 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
                 ->setValue(Keyset\keys($ts['fields']), HackBuilderValues::export()),
         );
 
-        // coerceFieldValues() and coerceFieldNodes()
-        $values = hb($cg)->addLine('$ret = shape();');
-        $nodes = hb($cg)->addLine('$ret = shape();');
+        return $class->addMethods(vec[
+            $cg->codegenMethod('coerceFieldValues')
+                ->setIsOverride()
+                ->addParameter('KeyedContainer<arraykey, mixed> $fields')
+                ->setReturnType('this::THackType')
+                ->setBody(
+                    self::getFieldCoercionMethodBody(
+                        $cg,
+                        $ts['fields'],
+                        $field_name ==> Str\format('C\\contains_key($fields, %s)', $field_name),
+                        $field_name ==> Str\format('coerceNamedValue(%s, $fields)', $field_name),
+                    ),
+                ),
+            $cg->codegenMethod('coerceFieldNodes')
+                ->setIsOverride()
+                ->addParameterf('dict<string, \\%s> $fields', \Graphpinator\Parser\Value\Value::class)
+                ->addParameter('dict<string, mixed> $vars')
+                ->setReturnType('this::THackType')
+                ->setBody(
+                    self::getFieldCoercionMethodBody(
+                        $cg,
+                        $ts['fields'],
+                        $field_name ==> Str\format('$this->hasValue(%s, $fields, $vars)', $field_name),
+                        $field_name ==> Str\format('coerceNamedNode(%s, $fields, $vars)', $field_name),
+                    ),
+                ),
+            $cg->codegenMethod('assertValidFieldValues')
+                ->setIsOverride()
+                ->addParameter('KeyedContainer<arraykey, mixed> $fields')
+                ->setReturnType('this::THackType')
+                ->setBody(
+                    self::getFieldCoercionMethodBody(
+                        $cg,
+                        $ts['fields'],
+                        $field_name ==> Str\format('C\\contains_key($fields, %s)', $field_name),
+                        $field_name ==> Str\format('assertValidVariableValue($fields[%s])', $field_name),
+                    ),
+                ),
+        ]);
+    }
 
-        foreach (($ts['fields'] as nonnull) as $field_name => $field_ts) {
+    /**
+     * Shared logic for coerceFieldValues(), coerceFieldNodes() and assertValidFieldValues()
+     */
+    private static function getFieldCoercionMethodBody<T>(
+        HackCodegenFactory $cg,
+        KeyedContainer<string, TypeStructure<T>> $fields,
+        (function (string): string) $get_if_condition,
+        (function (string): string) $get_method_call,
+    ): string {
+        $hb = hb($cg)->addLine('$ret = shape();');
+
+        foreach ($fields as $field_name => $field_ts) {
             $is_optional = $field_ts['optional_shape_field'] ?? false;
             $is_nullable = $field_ts['nullable'] ?? false;
             invariant(
@@ -45,35 +93,15 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             $type = input_type(($is_optional ? '?' : '').type_structure_to_type_alias($field_ts));
 
             if ($is_optional) {
-                $values->startIfBlockf('C\\contains_key($fields, %s)', $name_literal);
-                $nodes->startIfBlockf('$this->hasValue(%s, $fields, $vars)', $name_literal);
+                $hb->startIfBlock($get_if_condition($name_literal));
             }
-
-            $values->addLinef('$ret[%s] = %s->coerceNamedValue(%s, $fields);', $name_literal, $type, $name_literal);
-            $nodes
-                ->addLinef('$ret[%s] = %s->coerceNamedNode(%s, $fields, $vars);', $name_literal, $type, $name_literal);
-
+            $hb->addLinef('$ret[%s] = %s->%s;', $name_literal, $type, $get_method_call($name_literal));
             if ($is_optional) {
-                $values->endIfBlock();
-                $nodes->endIfBlock();
+                $hb->endIfBlock();
             }
         }
 
-        $values->addReturn('$ret', HackBuilderValues::literal());
-        $nodes->addReturn('$ret', HackBuilderValues::literal());
-
-        return $class->addMethods(vec[
-            $cg->codegenMethod('coerceFieldValues')
-                ->setIsOverride()
-                ->addParameter('KeyedContainer<arraykey, mixed> $fields')
-                ->setReturnType('this::THackType')
-                ->setBody($values->getCode()),
-            $cg->codegenMethod('coerceFieldNodes')
-                ->setIsOverride()
-                ->addParameterf('dict<string, \\%s> $fields', \Graphpinator\Parser\Value\Value::class)
-                ->addParameter('dict<string, mixed> $vars')
-                ->setReturnType('this::THackType')
-                ->setBody($nodes->getCode()),
-        ]);
+        $hb->addReturn('$ret', HackBuilderValues::literal());
+        return $hb->getCode();
     }
 }

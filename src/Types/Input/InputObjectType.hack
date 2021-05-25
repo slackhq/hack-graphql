@@ -9,7 +9,6 @@ abstract class InputObjectType extends NamedType {
     use TNonNullableType;
     use TNamedInputType;
 
-    <<__Enforceable>>
     abstract const type THackType as shape(...);
     abstract const keyset<string> FIELD_NAMES;
 
@@ -54,6 +53,13 @@ abstract class InputObjectType extends NamedType {
         dict<string, Value\Value> $value_nodes,
         dict<string, mixed> $variable_values,
     ): this::THackType;
+
+    <<__Override>>
+    final public function assertValidVariableValue(mixed $value): this::THackType {
+        return $this->assertValidFieldValues($value as KeyedContainer<_, _>);
+    }
+
+    abstract protected function assertValidFieldValues(KeyedContainer<arraykey, mixed> $values): this::THackType;
 
     <<__Override>>
     final public function getKind(): GraphQL\Introspection\__TypeKind {
