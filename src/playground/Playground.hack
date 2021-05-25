@@ -102,6 +102,11 @@ final class Human extends BaseUser {
     public async function getFriends(): Awaitable<UserConnection> {
         return new UserConnection();
     }
+
+    <<GraphQL\Field('named_friends', 'Test that we can pass args to a field which returns a connection')>>
+    public async function getFriendsWithArg(string $name_prefix): Awaitable<UserConnection> {
+        return new UserConnection($name_prefix);
+    }
 }
 
 <<GraphQL\ObjectType('Bot', 'Bot')>>

@@ -62,7 +62,7 @@ class ObjectBuilder extends CompositeBuilder {
         );
     }
 
-    public static function forConnection(string $name): ObjectBuilder {
+    public static function forConnection(string $name, string $edge_name): ObjectBuilder {
         return new ObjectBuilder(
             new \Slack\GraphQL\ObjectType($name, $name), // TODO: Description
             $name,  // hack type
@@ -71,7 +71,7 @@ class ObjectBuilder extends CompositeBuilder {
                     'name' => 'edges',
                     'method_name' => 'getEdges',
                     'output_type' => shape(
-                        'type' => 'UserEdge::nonNullable()->nullableOutputListOf()',
+                        'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
                         'needs_await' => true,
                     ),
                     'declaring_type' => $name,

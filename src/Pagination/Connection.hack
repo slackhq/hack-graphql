@@ -37,23 +37,31 @@ type PaginationArgs = shape(
  * `Connection` provides a standard mechanism for slicing and paginating querysets, as well as for providing cursors
  * and informing the client when more results are available.
  *
- * Each connection paginates over a generic type `T`. `T` must be a Hack type which has a GraphQL representation that
- * is not a list type. To paginate over a type `T`, subclass `Connection` and implement  `paginate` method. While
- * `Connection` is purposely simple so as to support a wide variety of data sources, you're encouraged to create
- * reusable subclasses which connect to the data sources you use.
+ * Each connection must define a node type `TNode` over which it paginates. `TNode` must be a Hack type which has a
+ * GraphQL representation that is not a list type. To paginate over a type `TNode`, subclass `Connection` and
+ * implement the `TNode` type constand and the `fetch` method. While `Connection` is purposely simple so as to support 
+ * a wide variety of data sources, you're encouraged to create reusable subclasses which connect to the data sources
+ * you use.
  *
  * @see https://relay.dev/graphql/connections.htm for more information about GraphQL pagination.
  * @see src/playground/UserConnection.hack for an example.
  */
-abstract class Connection<T> {
+abstract class Connection {
 
     /**
-     * Paginate the data set per the pagination args, which contain cursors and limits.
+     * Node type for this connection.
+     *
+     * This should be the Hack class over which you want to paginate.
+     */
+    abstract const type TNode;
+
+    /**
+     * Fetch the data set per the pagination args, which contain cursors and limits.
      *
      * For example, if the pagination args contain a `before` cursor with value `foo` and a `last` limit with value 5, 
-     * `paginate` should return edges wrapping the 5 items immediately prior to the item with cursor `foo`.
+     * `fetch` should return edges wrapping the 5 items immediately prior to the item with cursor `foo`.
      */
-    abstract protected function paginate(PaginationArgs $args): Awaitable<vec<Edge<T>>>;
+    abstract protected function fetch(PaginationArgs $args): Awaitable<vec<Edge<this::TNode>>>;
 
     /**
      * Encode a cursor before transmitting it to the client.
@@ -140,8 +148,11 @@ abstract class Connection<T> {
      * method with the pagination args.
      */
     <<__Memoize>>
-    final private async function doPaginate(): Awaitable<shape('edges' => vec<Edge<T>>, 'pageInfo' => PageInfo)> {
-        $page = await $this->paginate($this->args);
+    final private async function paginate(): Awaitable<shape(
+        'edges' => vec<Edge<this::TNode>>,
+        'pageInfo' => PageInfo
+    )> {
+        $page = await $this->fetch($this->args);
 
         $page_info = shape();
 
@@ -155,7 +166,9 @@ abstract class Connection<T> {
             if (Shapes::keyExists($this->args, 'after')) {
                 $page_info['hasPreviousPage'] = await $this->hasPageBeforeAfterCursor($this->args['after']);
             }
-            $page = Vec\take($page, $first - 1);
+            if ($page_info['hasNextPage']) {
+                $page = Vec\take($page, $first - 1);
+            }
         }
 
         $last = $this->args['last'] ?? null;
@@ -164,7 +177,9 @@ abstract class Connection<T> {
             if (Shapes::keyExists($this->args, 'before')) {
                 $page_info['hasNextPage'] = await $this->hasPageAfterBeforeCursor($this->args['before']);
             }
-            $page = Vec\drop($page, 1);
+            if ($page_info['hasPreviousPage']) {
+                $page = Vec\drop($page, 1);
+            }
         }
 
         // Set the start and end cursors if the query had results.
@@ -180,8 +195,8 @@ abstract class Connection<T> {
      * Get edges containing nodes of type `T`.
      * This is the method invoked when querying the `edges` field on a connection.
      */
-    final public async function getEdges(): Awaitable<vec<Edge<T>>> {
-        $ret = await $this->doPaginate();
+    final public async function getEdges(): Awaitable<vec<Edge<this::TNode>>> {
+        $ret = await $this->paginate();
         return $ret['edges'];
     }
 
@@ -190,7 +205,7 @@ abstract class Connection<T> {
      * This is the method invoked when querying the `pageInfo` field on a connection.
      */
     final public async function getPageInfo(): Awaitable<PageInfo> {
-        $ret = await $this->doPaginate();
+        $ret = await $this->paginate();
         return $ret['pageInfo'];
     }
 }
