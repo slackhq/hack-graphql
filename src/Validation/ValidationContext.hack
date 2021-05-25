@@ -3,17 +3,15 @@ namespace Slack\GraphQL\Validation;
 use namespace HH\Lib\Str;
 use namespace Graphpinator\Parser;
 use namespace Slack\GraphQL\Types;
-use type Slack\GraphQL\__Private\{FragmentInfo, TypeInfo, VariableInfo};
+use type Slack\GraphQL\__Private\TypeInfo;
 
 final class ValidationContext {
     private vec<\Slack\GraphQL\UserFacingError> $errors = vec[];
 
     public function __construct(
         private classname<\Slack\GraphQL\BaseSchema> $schema,
-        // TODO: Pass in parsed AST as well as rules may need it.
-        private FragmentInfo $fragment_info,
+        private Parser\ParsedRequest $ast,
         private TypeInfo $type_info,
-        private VariableInfo $variable_info,
     ) {}
 
     public function reportError(
@@ -55,7 +53,7 @@ final class ValidationContext {
         return $this->type_info->getArgument();
     }
 
-    public function getVariableUsages(Parser\Operation\Operation $operation): vec<Parser\Value\VariableRef> {
-        return $this->variable_info->getVariableUsages($operation);
+    public function getAST(): Parser\ParsedRequest {
+        return $this->ast;
     }
 }
