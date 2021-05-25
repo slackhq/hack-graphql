@@ -11,20 +11,12 @@ namespace Slack\GraphQL\Types;
 interface INamedInputType extends INonNullableInputTypeFor<this::THackType> {
     require extends NamedType;
 
-    <<__Enforceable>>
-    abstract const type THackType as nonnull;
-
     public static function nullableInput(): NullableInputType<this::THackType>;
 }
 
 <<__ConsistentConstruct>>
 trait TNamedInputType implements INamedInputType {
     use TInputType<this::THackType>;
-
-    <<__Override>>
-    final public function assertValidVariableValue(mixed $value): this::THackType {
-        return $value as this::THackType;
-    }
 
     <<__Override, __MemoizeLSB>>
     final public static function nullableInput(): NullableInputType<this::THackType> {

@@ -7,6 +7,14 @@ abstract class LeafType extends NamedType {
     use TNamedInputType;
     use TNamedOutputType;
 
+    <<__Enforceable>>
+    abstract const type THackType as nonnull;
+
+    <<__Override>>
+    final public function assertValidVariableValue(mixed $value): this::THackType {
+        return $value as this::THackType;
+    }
+
     /**
      * Convert a Hack value to what should be returned in the GraphQL response. Throw UserFacingError if that is not
      * possible (e.g. Int out of 32-bit range).

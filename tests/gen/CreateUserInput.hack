@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d1da705de7b13fa3ac9c4c978215d91a>>
+ * @generated SignedSource<<23f15b4f21de51255c993f0a0c93c3b1>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -55,6 +55,24 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     }
     if ($this->hasValue('favorite_color', $fields, $vars)) {
       $ret['favorite_color'] = FavoriteColor::nullableInput()->coerceNamedNode('favorite_color', $fields, $vars);
+    }
+    return $ret;
+  }
+
+  <<__Override>>
+  public function assertValidFieldValues(
+    KeyedContainer<arraykey, mixed> $fields,
+  ): this::THackType {
+    $ret = shape();
+    $ret['name'] = Types\StringType::nonNullable()->assertValidVariableValue($fields['name']);
+    if (C\contains_key($fields, 'is_active')) {
+      $ret['is_active'] = Types\BooleanType::nullableInput()->assertValidVariableValue($fields['is_active']);
+    }
+    if (C\contains_key($fields, 'team')) {
+      $ret['team'] = CreateTeamInput::nullableInput()->assertValidVariableValue($fields['team']);
+    }
+    if (C\contains_key($fields, 'favorite_color')) {
+      $ret['favorite_color'] = FavoriteColor::nullableInput()->assertValidVariableValue($fields['favorite_color']);
     }
     return $ret;
   }
