@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Types;
 
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Vec};
 use namespace Graphpinator\Parser\Value;
 use namespace Slack\GraphQL;
 
@@ -9,6 +9,7 @@ abstract class EnumType extends LeafType {
     <<__Enforceable>>
     abstract const type THackType as arraykey;
     abstract const \HH\enumname<this::THackType> HACK_ENUM;
+    abstract const vec<GraphQL\Introspection\__EnumValue> ENUM_VALUES;
     const type TResolved = string;
 
     <<__Override>>
@@ -50,5 +51,12 @@ abstract class EnumType extends LeafType {
     final protected function serialize(this::THackType $value): string {
         $hack_enum = static::HACK_ENUM;
         return $hack_enum::getNames()[$value];
+    }
+
+    <<__Override>>
+    final public function getEnumValues(bool $include_deprecated = false): vec<GraphQL\Introspection\__EnumValue> {
+        return $include_deprecated
+            ? static::ENUM_VALUES
+            : Vec\filter(static::ENUM_VALUES, $value ==> !$value['isDeprecated']);
     }
 }
