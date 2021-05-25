@@ -240,17 +240,12 @@ final class Generator {
         foreach ($classish_objects as $class) {
             if (Str\ends_with($class->getName(), 'Connection')) {
                 // TODO: Assert that any class which subclasses Connection<T> has a name ending in `Connection`.
-                invariant(
-                    is_connection_type(new \ReflectionClass($class->getName())),
-                    '%s must subclass "Connection"',
-                    $class->getName(),
-                );
-                $objects[] = ObjectBuilder::forConnection($class->getName());
-                $type_param = $class->getASTx()
-                    ->getFirstDescendantOfType(\Facebook\HHAST\TypeArguments::class) as nonnull
-                    ->getTypesx()
-                    ->getFirstTokenx()
-                    ->getText();
+                $rc = new \ReflectionClass($class->getName());
+                invariant(is_connection_type($rc), '%s must subclass "Connection"', $rc->getName());
+                $type_param = $rc->getTypeConstants()
+                    |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
+                invariant($type_param is nonnull, '%s must declare a type constant "TNode"', $rc->getName());
+                $objects[] = ObjectBuilder::forConnection($class->getName(), $type_param.'Edge');
                 $objects[] = ObjectBuilder::forEdge($type_param);
             } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());

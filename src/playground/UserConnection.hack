@@ -1,8 +1,12 @@
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Str};
 
-final class UserConnection extends GraphQL\Pagination\Connection<User> {
-    protected async function paginate(
+final class UserConnection extends GraphQL\Pagination\Connection {
+    const type TNode = User;
+
+    public function __construct(private string $name_prefix = 'User') {}
+
+    protected async function fetch(
         GraphQL\Pagination\PaginationArgs $args,
     ): Awaitable<vec<GraphQL\Pagination\Edge<User>>> {
         $after = $args['after'] ?? null;
@@ -32,7 +36,7 @@ final class UserConnection extends GraphQL\Pagination\Connection<User> {
             $edges[] = new GraphQL\Pagination\Edge(
                 new Human(shape(
                     'id' => $i,
-                    'name' => 'User '.$i,
+                    'name' => $this->name_prefix.' '.$i,
                     'team_id' => 1,
                     'is_active' => $i % 2 === 0 ? true : false,
                 )),

@@ -36,14 +36,14 @@ final class PaginationTest extends PlaygroundTest {
                             'edges' => vec[
                                 dict[
                                     'node' => dict[
-                                        'id' => '2',
+                                        'id' => 2,
                                         'name' => 'User 2',
                                     ],
                                     'cursor' => base64_encode('2'),
                                 ],
                                 dict[
                                     'node' => dict[
-                                        'id' => '3',
+                                        'id' => 3,
                                         'name' => 'User 3',
                                     ],
                                     'cursor' => base64_encode('3'),
@@ -52,11 +52,53 @@ final class PaginationTest extends PlaygroundTest {
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
                                 'startCursor' => base64_encode('2'),
-                                'endCursor' => base64_encode('3')
+                                'endCursor' => base64_encode('3'),
                             ]
                         ]
                     ]
                 ]
+            ),
+
+            'test retrieving the last edges in the dataset' => tuple(
+                'query ($after: String!) {
+                    human(id: 20) {
+                        friends(after: $after, first: 2) {
+                            edges {
+                                node {
+                                    id
+                                    name
+                                }
+                                cursor
+                            }
+                            pageInfo {
+                                hasNextPage
+                                startCursor
+                                endCursor
+                            }
+                        }
+                    }
+                }',
+                dict['after' => base64_encode("3")],
+                dict[
+                    'human' => dict[
+                        'friends' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => dict[
+                                        'id' => 4,
+                                        'name' => 'User 4',
+                                    ],
+                                    'cursor' => base64_encode('4'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasNextPage' => false,
+                                'startCursor' => base64_encode('4'),
+                                'endCursor' => base64_encode('4'),
+                            ],
+                        ],
+                    ],
+                ],
             ),
 
             'test retrieving edges before an index' => tuple(
@@ -85,14 +127,14 @@ final class PaginationTest extends PlaygroundTest {
                             'edges' => vec[
                                 dict[
                                     'node' => dict[
-                                        'id' => '2',
+                                        'id' => 2,
                                         'name' => 'User 2',
                                     ],
                                     'cursor' => base64_encode('2'),
                                 ],
                                 dict[
                                     'node' => dict[
-                                        'id' => '3',
+                                        'id' => 3,
                                         'name' => 'User 3',
                                     ],
                                     'cursor' => base64_encode('3'),
@@ -101,11 +143,11 @@ final class PaginationTest extends PlaygroundTest {
                             'pageInfo' => dict[
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('2'),
-                                'endCursor' => base64_encode('3')
-                            ]
-                        ]
-                    ]
-                ]
+                                'endCursor' => base64_encode('3'),
+                            ],
+                        ],
+                    ],
+                ],
             ),
 
             'test providing first without after' => tuple(
@@ -134,14 +176,14 @@ final class PaginationTest extends PlaygroundTest {
                             'edges' => vec[
                                 dict[
                                     'node' => dict[
-                                        'id' => '0',
+                                        'id' => 0,
                                         'name' => 'User 0',
                                     ],
                                     'cursor' => base64_encode('0'),
                                 ],
                                 dict[
                                     'node' => dict[
-                                        'id' => '1',
+                                        'id' => 1,
                                         'name' => 'User 1',
                                     ],
                                     'cursor' => base64_encode('1'),
@@ -150,11 +192,53 @@ final class PaginationTest extends PlaygroundTest {
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
                                 'startCursor' => base64_encode('0'),
-                                'endCursor' => base64_encode('1')
-                            ]
-                        ]
-                    ]
-                ]
+                                'endCursor' => base64_encode('1'),
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+
+            'test retrieving the first edges in the dataset' => tuple(
+                'query ($before: String!) {
+                    human(id: 20) {
+                        friends(before: $before, last: 2) {
+                            edges {
+                                node {
+                                    id
+                                    name
+                                }
+                                cursor
+                            }
+                            pageInfo {
+                                hasPreviousPage
+                                startCursor
+                                endCursor
+                            }
+                        }
+                    }
+                }',
+                dict['before' => base64_encode("1")],
+                dict[
+                    'human' => dict[
+                        'friends' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => dict[
+                                        'id' => 0,
+                                        'name' => 'User 0',
+                                    ],
+                                    'cursor' => base64_encode('0'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasPreviousPage' => false,
+                                'startCursor' => base64_encode('0'),
+                                'endCursor' => base64_encode('0'),
+                            ],
+                        ],
+                    ],
+                ],
             ),
 
             'test providing last without before' => tuple(
@@ -183,14 +267,14 @@ final class PaginationTest extends PlaygroundTest {
                             'edges' => vec[
                                 dict[
                                     'node' => dict[
-                                        'id' => '3',
+                                        'id' => 3,
                                         'name' => 'User 3',
                                     ],
                                     'cursor' => base64_encode('3'),
                                 ],
                                 dict[
                                     'node' => dict[
-                                        'id' => '4',
+                                        'id' => 4,
                                         'name' => 'User 4',
                                     ],
                                     'cursor' => base64_encode('4'),
@@ -199,11 +283,53 @@ final class PaginationTest extends PlaygroundTest {
                             'pageInfo' => dict[
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('3'),
-                                'endCursor' => base64_encode('4')
-                            ]
-                        ]
-                    ]
-                ]
+                                'endCursor' => base64_encode('4'),
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+
+            'test passing additional args to a connection field' => tuple(
+                'query {
+                    human(id: 20) {
+                        named_friends(first: 1, name_prefix: "Bob") {
+                            edges {
+                                node {
+                                    id
+                                    name
+                                }
+                                cursor
+                            }
+                            pageInfo {
+                                hasNextPage
+                                startCursor
+                                endCursor
+                            }
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    'human' => dict[
+                        'named_friends' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => dict[
+                                        'id' => 0,
+                                        'name' => 'Bob 0',
+                                    ],
+                                    'cursor' => base64_encode('0'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasNextPage' => true,
+                                'startCursor' => base64_encode('0'),
+                                'endCursor' => base64_encode('0'),
+                            ],
+                        ],
+                    ],
+                ],
             ),
 
             'test providing both last and first' => tuple(
@@ -238,8 +364,8 @@ final class PaginationTest extends PlaygroundTest {
                             'path' => vec['human', 'friends'],
                         ),
                     ],
-                )
-            )
+                ),
+            ),
         ];
     }
 }
