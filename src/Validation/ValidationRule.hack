@@ -2,6 +2,7 @@ namespace Slack\GraphQL\Validation;
 
 use namespace HH\Lib\Str;
 use type \Slack\GraphQL\__Private\ASTVisitor;
+use type \Slack\GraphQL\__Private\DependencyInfo;
 
 /**
  * A validation rule which runs on the document AST.
@@ -25,10 +26,17 @@ use type \Slack\GraphQL\__Private\ASTVisitor;
  * a field, `$this->context->getType()` gets the corresponding
  * GQL type of that field, *if* the AST field node has a corresponding
  * node in the GQL schema.
+ *
+ * Lastly, you can override the `finalize()` method to run validation
+ * which is only available after the entire AST has been visited.
+ * The `finalize()` is passed info about all the dependencies of each
+ * node, which is only available after traversal.
  */
 <<__ConsistentConstruct>>
 abstract class ValidationRule extends ASTVisitor {
     public function __construct(protected ValidationContext $context) {}
+
+    public function finalize(DependencyInfo $dependencies): void {}
 
     final protected function assert(
         bool $condition,
