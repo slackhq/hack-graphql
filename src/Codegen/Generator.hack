@@ -240,19 +240,7 @@ final class Generator {
         foreach ($classish_objects as $class) {
             if (Str\ends_with($class->getName(), 'Connection')) {
                 // TODO: Assert that any class which subclasses Connection<T> has a name ending in `Connection`.
-                $rc = new \ReflectionClass($class->getName());
-                invariant(is_connection_type($rc), '%s must subclass "Connection"', $rc->getName());
-                $type_param = $rc->getTypeConstants()
-                    |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
-                invariant($type_param is nonnull, '%s must declare a type constant "TNode"', $rc->getName());
-                invariant(
-                    get_output_class($type_param) is nonnull,
-                    'Node type "%s" for "%s" must be a valid GraphQL output type',
-                    $type_param,
-                    $rc->getName()
-                );
-                $objects[] = ObjectBuilder::forConnection($class->getName(), $type_param.'Edge');
-                $objects[] = ObjectBuilder::forEdge($type_param);
+                $objects = Vec\concat($objects, $this->getConnectionObjects($class));
             } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
@@ -339,5 +327,28 @@ final class Generator {
         }
 
         return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
+    }
+
+    private function getConnectionObjects(DefinitionFinder\ScannedClassish $class): vec<ObjectBuilder> {
+        $rc = new \ReflectionClass($class->getName());
+        invariant(is_connection_type($rc), '"%s" must subclass "Connection"', $rc->getName());
+        $hack_type = $rc->getTypeConstants()
+            |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
+        invariant($hack_type is nonnull, '"%s" must declare a type constant "TNode"', $rc->getName());
+        $type_info = get_node_type_info($hack_type);
+        invariant(
+            $type_info is nonnull,
+            'Node type "%s" for "%s" must be a valid GraphQL output type. It may not be a list.',
+            $hack_type,
+            $rc->getName()
+        );
+        return vec[
+            ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
+            ObjectBuilder::forEdge(
+                $type_info['gql_type'],
+                $type_info['hack_type'],
+                $type_info['output_type']
+            )
+        ];
     }
 }
