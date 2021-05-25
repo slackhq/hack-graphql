@@ -17,24 +17,12 @@ const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
  */
 function input_type(string $hack_type): string {
     list($unwrapped, $suffix) = unwrap_type(IO::INPUT, $hack_type);
-    switch ($unwrapped) {
-        case 'HH\int':
-            $class = Types\IntType::class;
-            break;
-        case 'HH\string':
-            $class = Types\StringType::class;
-            break;
-        case 'HH\bool':
-            $class = Types\BooleanType::class;
-            break;
-        default:
-            $class = get_input_class($unwrapped);
-            if ($class is null) {
-                throw new \Error(
-                    'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
-                    'attribute, got '.$unwrapped,
-                );
-            }
+    $class = get_graphql_leaf_type($unwrapped) ?? get_input_object_type($unwrapped);
+    if ($class is null) {
+        throw new \Error(
+            'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
+            'attribute, got '.$unwrapped,
+        );
     }
     return Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix;
 }
@@ -78,16 +66,7 @@ function output_type(
 /**
  * Get the input class for a hack type which is not a primitive.
  */
-function get_input_class(string $hack_type): ?string {
-    try {
-        $rc = new \ReflectionClass($hack_type);
-        $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
-        if ($graphql_enum is nonnull) {
-            return $graphql_enum->getType();
-        }
-    } catch (\ReflectionException $_e) {
-    }
-
+function get_input_object_type(string $hack_type): ?string {
     try {
         $rt = new \ReflectionTypeAlias($hack_type);
         $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
@@ -100,10 +79,7 @@ function get_input_class(string $hack_type): ?string {
     return null;
 }
 
-/**
- * Get the GraphQL type to output for a hack type.
- */
-function get_output_type(string $hack_type): ?string {
+function get_graphql_leaf_type(string $hack_type): ?string {
     switch ($hack_type) {
         case 'HH\int':
             return Types\IntType::class;
@@ -112,8 +88,23 @@ function get_output_type(string $hack_type): ?string {
         case 'HH\bool':
             return Types\BooleanType::class;
         default:
-            return get_output_class($hack_type);
+            try {
+                $rc = new \ReflectionClass($hack_type);
+                $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
+                if ($graphql_enum is nonnull) {
+                    return $graphql_enum->getType();
+                }
+            } catch (\ReflectionException $_e) {
+            }
+            return null;
     }
+}
+
+/**
+ * Get the GraphQL type to output for a hack type.
+ */
+function get_output_type(string $hack_type): ?string {
+    return get_graphql_leaf_type($hack_type) ?? get_output_class($hack_type);
 }
 
 /**
@@ -133,11 +124,6 @@ function get_output_class(string $hack_type): ?string {
         $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
         if ($graphql_interface) {
             return $graphql_interface->getType();
-        }
-
-        $graphql_enum = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
-        if ($graphql_enum) {
-            return $graphql_enum->getType();
         }
     } catch (\ReflectionException $_e) {
     }
