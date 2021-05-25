@@ -245,6 +245,12 @@ final class Generator {
                 $type_param = $rc->getTypeConstants()
                     |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
                 invariant($type_param is nonnull, '%s must declare a type constant "TNode"', $rc->getName());
+                invariant(
+                    get_output_class($type_param) is nonnull,
+                    'Node type "%s" for "%s" must be a valid GraphQL output type',
+                    $type_param,
+                    $rc->getName()
+                );
                 $objects[] = ObjectBuilder::forConnection($class->getName(), $type_param.'Edge');
                 $objects[] = ObjectBuilder::forEdge($type_param);
             } elseif (!C\is_empty($class->getAttributes())) {
