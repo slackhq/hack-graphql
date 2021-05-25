@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1e6b9390cb17561a6e151f20b6a150a8>>
+ * @generated SignedSource<<2e87035d3a1c154b45a8a4229f2f3c61>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -18,6 +18,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
   const keyset<string> FIELD_NAMES = keyset[
     '__schema',
     '__type',
+    'alphabetConnection',
     'arg_test',
     'bot',
     'error_test',
@@ -62,6 +63,39 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ],
           async ($parent, $args, $vars) ==> \Slack\GraphQL\Introspection\QueryRootFields::getType(
             Types\StringType::nonNullable()->coerceNamedNode('name', $args, $vars),
+          ),
+        );
+      case 'alphabetConnection':
+        return new GraphQL\FieldDefinition(
+          'alphabetConnection',
+          AlphabetConnection::nullableOutput(),
+          dict[
+            'after' => shape(
+              'name' => 'after',
+              'type' => Types\StringType::nullableInput(),
+              'default_value' => null,
+            ),
+            'before' => shape(
+              'name' => 'before',
+              'type' => Types\StringType::nullableInput(),
+              'default_value' => null,
+            ),
+            'first' => shape(
+              'name' => 'first',
+              'type' => Types\IntType::nullableInput(),
+              'default_value' => null,
+            ),
+            'last' => shape(
+              'name' => 'last',
+              'type' => Types\IntType::nullableInput(),
+              'default_value' => null,
+            ),
+          ],
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::alphabetConnection()->setPaginationArgs(
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('after', $args, $vars, null),
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('before', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
         );
       case 'arg_test':

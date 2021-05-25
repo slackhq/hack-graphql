@@ -66,23 +66,11 @@ function output_type(
 
     list($unwrapped, $suffix) = unwrap_type(IO::OUTPUT, $hack_type);
 
-    switch ($unwrapped) {
-        case 'HH\int':
-            $class = Types\IntType::class;
-            break;
-        case 'HH\string':
-            $class = Types\StringType::class;
-            break;
-        case 'HH\bool':
-            $class = Types\BooleanType::class;
-            break;
-        default:
-            $class = get_output_class($unwrapped);
-            if ($class is null) {
-                throw new \Error(
-                    'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute',
-                );
-            }
+    $class = get_output_type($unwrapped);
+    if ($class is null) {
+        throw new \Error(
+            'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute',
+        );
     }
     return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
 }
@@ -110,6 +98,22 @@ function get_input_class(string $hack_type): ?string {
     }
 
     return null;
+}
+
+/**
+ * Get the GraphQL type to output for a hack type.
+ */
+function get_output_type(string $hack_type): ?string {
+    switch ($hack_type) {
+        case 'HH\int':
+            return Types\IntType::class;
+        case 'HH\string':
+            return Types\StringType::class;
+        case 'HH\bool':
+            return Types\BooleanType::class;
+        default:
+            return get_output_class($hack_type);
+    }
 }
 
 /**
@@ -231,4 +235,34 @@ function returns_connection_type(\ReflectionMethod $rm): bool {
     } catch (\ReflectionException $_) {
         return false;
     }
+}
+
+/**
+ * Get the hack type, gql type, and output type for a connection node.
+ */
+function get_node_type_info(string $hack_type): ?shape(
+    'hack_type' => string,
+    'gql_type' => string,
+    'output_type' => string
+) {
+    $output_type = get_output_type($hack_type);
+    if ($output_type is null) {
+        return null;
+    }
+    if (Str\starts_with($hack_type, 'HH\\')) {
+        // Primitive type, no need to escape namespace
+        $hack_type = Str\strip_prefix($hack_type, 'HH\\');
+        // Strip off the root namespace as we'll be using `Types\` already.
+        $output_type = Str\strip_prefix($output_type, 'Slack\\GraphQL\\');
+        // Strip off the `Types` namespace as this will become the name of the class and file.
+        $gql_type = Str\strip_prefix($output_type, 'Types\\');
+    } else {
+        $hack_type = '\\'.$hack_type;
+        $gql_type = $output_type;
+    }
+    return shape(
+        'hack_type' => $hack_type,
+        'gql_type' => $gql_type,
+        'output_type' => $output_type,
+    );
 }

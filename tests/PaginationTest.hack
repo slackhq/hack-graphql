@@ -53,10 +53,10 @@ final class PaginationTest extends PlaygroundTest {
                                 'hasNextPage' => true,
                                 'startCursor' => base64_encode('2'),
                                 'endCursor' => base64_encode('3'),
-                            ]
-                        ]
-                    ]
-                ]
+                            ],
+                        ],
+                    ],
+                ],
             ),
 
             'test retrieving the last edges in the dataset' => tuple(
@@ -363,6 +363,158 @@ final class PaginationTest extends PlaygroundTest {
                             'message' => 'Only provide one of either "first" or "last".',
                             'path' => vec['human', 'friends'],
                         ),
+                    ],
+                ),
+            ),
+
+            'test list connection first items' => tuple(
+                'query {
+                    alphabetConnection(first: 2) {
+                        edges {
+                            node
+                            cursor
+                        }
+                        pageInfo {
+                            hasNextPage
+                            startCursor
+                            endCursor
+                        }
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'alphabetConnection' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => 'a',
+                                    'cursor' => base64_encode('0'),
+                                ],
+                                dict[
+                                    'node' => 'b',
+                                    'cursor' => base64_encode('1'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasNextPage' => true,
+                                'startCursor' => base64_encode('0'),
+                                'endCursor' => base64_encode('1'),
+                            ],
+                        ],
+                    ],
+                ),
+            ),
+
+            'test list connection first items with after' => tuple(
+                'query ($after: String!) {
+                    alphabetConnection(after: $after, first: 2) {
+                        edges {
+                            node
+                            cursor
+                        }
+                        pageInfo {
+                            hasNextPage
+                            startCursor
+                            endCursor
+                        }
+                    }
+                }',
+                dict['after' => base64_encode('1')],
+                shape(
+                    'data' => dict[
+                        'alphabetConnection' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => 'c',
+                                    'cursor' => base64_encode('2'),
+                                ],
+                                dict[
+                                    'node' => 'd',
+                                    'cursor' => base64_encode('3'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasNextPage' => true,
+                                'startCursor' => base64_encode('2'),
+                                'endCursor' => base64_encode('3'),
+                            ],
+                        ],
+                    ],
+                ),
+            ),
+
+            'test list connection last items' => tuple(
+                'query {
+                    alphabetConnection(last: 2) {
+                        edges {
+                            node
+                            cursor
+                        }
+                        pageInfo {
+                            hasPreviousPage 
+                            startCursor
+                            endCursor
+                        }
+                    }
+                }',
+                dict[],
+                shape(
+                    'data' => dict[
+                        'alphabetConnection' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => 'y',
+                                    'cursor' => base64_encode('24'),
+                                ],
+                                dict[
+                                    'node' => 'z',
+                                    'cursor' => base64_encode('25'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasPreviousPage' => true,
+                                'startCursor' => base64_encode('24'),
+                                'endCursor' => base64_encode('25'),
+                            ],
+                        ],
+                    ],
+                ),
+            ),
+
+            'test list connection last items with before' => tuple(
+                'query ($before: String!) {
+                    alphabetConnection(before: $before, last: 2) {
+                        edges {
+                            node
+                            cursor
+                        }
+                        pageInfo {
+                            hasPreviousPage 
+                            startCursor
+                            endCursor
+                        }
+                    }
+                }',
+                dict['before' => base64_encode('24')],
+                shape(
+                    'data' => dict[
+                        'alphabetConnection' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => 'w',
+                                    'cursor' => base64_encode('22'),
+                                ],
+                                dict[
+                                    'node' => 'x',
+                                    'cursor' => base64_encode('23'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasPreviousPage' => true,
+                                'startCursor' => base64_encode('22'),
+                                'endCursor' => base64_encode('23'),
+                            ],
+                        ],
                     ],
                 ),
             ),

@@ -180,6 +180,11 @@ abstract final class UserQueryAttributes {
         }
         return $input['favorite_color'] is null ? 'color is null' : 'color is non-null';
     }
+
+    <<GraphQL\QueryRootField('alphabetConnection', 'Test for list connection')>>
+    public static function alphabetConnection(): AlphabetConnection {
+        return new AlphabetConnection();
+    }
 }
 
 abstract final class UserMutationAttributes {
@@ -203,5 +208,14 @@ abstract final class UserMutationAttributes {
             'is_active' => $input['is_active'] ?? true,
             'team_id' => $team?->getId() ?? 1,
         ));
+    }
+}
+
+
+final class AlphabetConnection extends GraphQL\Pagination\ListConnection {
+    const type TNode = string;
+
+    public function __construct() {
+        parent::__construct(Str\split('abcdefghijklmnopqrstuvwxyz', ''));
     }
 }

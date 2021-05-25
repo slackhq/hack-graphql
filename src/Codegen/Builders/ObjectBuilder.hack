@@ -90,16 +90,16 @@ class ObjectBuilder extends CompositeBuilder {
     }
 
     // TODO: It should be possible to create user-defined edges which contain additional fields.
-    public static function forEdge(string $hack_type): ObjectBuilder {
-        $name = $hack_type.'Edge';
+    public static function forEdge(string $gql_type, string $hack_type, string $output_type): ObjectBuilder {
+        $name = $gql_type.'Edge';
         return new ObjectBuilder(
-            new \Slack\GraphQL\ObjectType($name, $hack_type.' Edge'), // TODO: Description
-            'Slack\GraphQL\Pagination\Edge<\\'.$hack_type.'>',  // hack type
+            new \Slack\GraphQL\ObjectType($name, $gql_type.' Edge'), // TODO: Description
+            'Slack\GraphQL\Pagination\Edge<'.$hack_type.'>',  // hack type
             vec[ // fields
                 new MethodFieldBuilder(shape(
                     'name' => 'node',
                     'method_name' => 'getNode',
-                    'output_type' => shape('type' => $hack_type.'::nullableOutput()'),
+                    'output_type' => shape('type' => $output_type.'::nullableOutput()'),
                     'declaring_type' => $name,
                     'parameters' => vec[],
                 )),
