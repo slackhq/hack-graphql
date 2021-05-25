@@ -8,6 +8,37 @@ final class IntrospectionTest extends PlaygroundTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
+            'validate enum values' => tuple(
+                '{
+                    __type(name: "IntrospectionEnum") {
+                        enumValues {
+                            name
+                            description
+                            isDeprecated
+                            deprecationReason
+                        }
+                    }
+                 }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'enumValues' => vec[
+                            dict[
+                                'name' => 'A',
+                                'description' => null,
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
+                            ],
+                            dict[
+                                'name' => 'B',
+                                'description' => null,
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
+                            ],
+                        ],
+                    ],
+                ],
+            ),
             'validate interface introspection with extended interface' => tuple(
                 '{
                     __type(name: "IIntrospectionInterfaceA") {

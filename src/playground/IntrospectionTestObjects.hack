@@ -1,5 +1,11 @@
 use namespace Slack\GraphQL;
 
+<<GraphQL\EnumType('IntrospectionEnum', 'IntrospectionEnum')>>
+enum IntrospectionEnum: int {
+    A = 0;
+    B = 1;
+}
+
 <<GraphQL\InterfaceType('IIntrospectionInterfaceA', 'IIntrospectionInterfaceA')>>
 interface IIntrospectionInterfaceA {}
 

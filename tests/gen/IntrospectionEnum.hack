@@ -4,25 +4,25 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d0d41c32f3eef2f3de0ccd4ce8efed53>>
+ * @generated SignedSource<<c433c1cc0fb72874364dc2473249cc5d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class FavoriteColor extends \Slack\GraphQL\Types\EnumType {
+final class IntrospectionEnum extends \Slack\GraphQL\Types\EnumType {
 
-  const NAME = 'FavoriteColor';
-  const type THackType = \FavoriteColor;
-  const \HH\enumname<this::THackType> HACK_ENUM = \FavoriteColor::class;
+  const NAME = 'IntrospectionEnum';
+  const type THackType = \IntrospectionEnum;
+  const \HH\enumname<this::THackType> HACK_ENUM = \IntrospectionEnum::class;
   const vec<GraphQL\Introspection\__EnumValue> ENUM_VALUES = vec[
     shape(
-      'name' => 'RED',
+      'name' => 'A',
       'isDeprecated' => false,
     ),
     shape(
-      'name' => 'BLUE',
+      'name' => 'B',
       'isDeprecated' => false,
     ),
   ];

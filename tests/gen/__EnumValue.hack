@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<f121838086bb0d72ad9cbc92b7497eed>>
+ * @generated SignedSource<<2a376d1323cd8b83e6af8c63aa02034c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,10 +16,10 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
   const NAME = '__EnumValue';
   const type THackType = \Slack\GraphQL\Introspection\__EnumValue;
   const keyset<string> FIELD_NAMES = keyset[
-    'deprecationReason',
-    'description',
-    'isDeprecated',
     'name',
+    'isDeprecated',
+    'description',
+    'deprecationReason',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
   ];
@@ -28,33 +28,33 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'deprecationReason':
+      case 'name':
         return new GraphQL\FieldDefinition(
-          'deprecationReason',
+          'name',
           Types\StringType::nullableOutput(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
-        );
-      case 'description':
-        return new GraphQL\FieldDefinition(
-          'description',
-          Types\StringType::nullableOutput(),
-          dict[],
-          async ($parent, $args, $vars) ==> $parent->getDescription(),
+          async ($parent, $args, $vars) ==> $parent['name'],
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
           'isDeprecated',
           Types\BooleanType::nullableOutput(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->isDeprecated(),
+          async ($parent, $args, $vars) ==> $parent['isDeprecated'],
         );
-      case 'name':
+      case 'description':
         return new GraphQL\FieldDefinition(
-          'name',
+          'description',
           Types\StringType::nullableOutput(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getName(),
+          async ($parent, $args, $vars) ==> $parent['description'] ?? null,
+        );
+      case 'deprecationReason':
+        return new GraphQL\FieldDefinition(
+          'deprecationReason',
+          Types\StringType::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent['deprecationReason'] ?? null,
         );
       default:
         return null;
