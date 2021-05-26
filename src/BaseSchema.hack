@@ -1,6 +1,6 @@
 namespace Slack\GraphQL;
 
-use namespace HH\Lib\Dict;
+use namespace HH\Lib\{Dict, Vec};
 
 // TODO: this should be private
 <<__ConsistentConstruct>>
@@ -53,5 +53,9 @@ abstract class BaseSchema implements Introspection\__Schema {
         return $type is nonnull ? $type::nonNullable()->nullableForIntrospection() : null;
     }
 
-    // TODO add method to create singleton
+    <<__Override>>
+    final public function getTypes(): vec<Introspection\__Type> {
+        // TODO: should we filter out private types? ie. anything with __
+        return Vec\map_with_key(static::TYPES, ($name, $_) ==> $this->getIntrospectionType($name) as nonnull);
+    }
 }
