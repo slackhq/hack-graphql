@@ -21,7 +21,7 @@ final class TypeInfo extends ASTVisitor {
     private Stack<?Types\IInputType> $input_type_stack;
     private Stack<?\Slack\GraphQL\IFieldDefinition> $field_def_stack;
     private Stack<mixed> $default_value_stack;
-    private ?\Slack\GraphQL\ArgumentDefinition $argument = null;
+    private ?\Slack\GraphQL\Introspection\__InputValue $argument = null;
 
     public function __construct(classname<\Slack\GraphQL\BaseSchema> $schema) {
         $this->schema = $schema;
@@ -54,7 +54,7 @@ final class TypeInfo extends ASTVisitor {
             |> Vec\map($$, $field ==> $field->getName());
     }
 
-    public function getArgument(): ?\Slack\GraphQL\ArgumentDefinition {
+    public function getArgument(): ?\Slack\GraphQL\Introspection\__InputValue {
         return $this->argument;
     }
 
