@@ -55,7 +55,6 @@ abstract class BaseSchema implements Introspection\__Schema {
 
     <<__Override>>
     final public function getTypes(): vec<Introspection\__Type> {
-        // TODO: should we filter out private types? ie. anything with __
         return Dict\filter_with_key(static::TYPES, ($name, $_) ==> !Str\starts_with($name, '__'))
             |> Vec\map_with_key(static::TYPES, ($name, $_) ==> $this->getIntrospectionType($name) as nonnull);
     }
