@@ -61,6 +61,41 @@ final class BasicTest extends PlaygroundTest {
                 dict['favorite_color' => 'RED'],
                 dict['takes_favorite_color' => true],
             ),
+            'promise resolving to a list with nested promises' => tuple(
+                '
+                query {
+                    listHumans(ids: [1, 2]) {
+                        id
+                        name
+                        team {
+                            id
+                            name
+                        }
+                    }
+                }
+                ',
+                dict[],
+                dict[
+                    'listHumans' => vec[
+                        dict[
+                            'id' => 1,
+                            'name' => 'User 1',
+                            'team' => dict[
+                                'id' => 1,
+                                'name' => 'Test Team 1',
+                            ],
+                        ],
+                        dict[
+                            'id' => 2,
+                            'name' => 'User 2',
+                            'team' => dict[
+                                'id' => 1,
+                                'name' => 'Test Team 1',
+                            ],
+                        ],
+                    ],
+                ],
+            ),
         ];
     }
 }

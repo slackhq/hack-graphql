@@ -144,23 +144,61 @@ final class Team {
 
 abstract final class UserQueryAttributes {
     <<GraphQL\QueryRootField('viewer', 'Authenticated viewer')>>
-    public static async function getViewer(): Awaitable<\User> {
-        return new \Human(shape('id' => 1, 'name' => 'Test User', 'team_id' => 1, 'is_active' => true));
+    public static function getViewer(): GraphQL\Promise<\User> {
+        return new GraphQL\Promise(async () ==> new \Human(shape(
+            'id' => 1,
+            'name' => 'Test User',
+            'team_id' => 1,
+            'is_active' => true
+        )));
     }
 
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
-    public static async function getUser(int $id): Awaitable<\User> {
-        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    public static function getUser(int $id): GraphQL\Promise<\User> {
+        return new GraphQL\Promise(async () ==> new \Human(shape(
+            'id' => $id,
+            'name' => 'User '.$id,
+            'team_id' => 1,
+            'is_active' => true
+        )));
     }
 
     <<GraphQL\QueryRootField('human', 'Fetch a user by ID')>>
-    public static async function getHuman(int $id): Awaitable<\Human> {
-        return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    public static function getHuman(int $id): GraphQL\Promise<\Human> {
+        return new GraphQL\Promise(async () ==> new \Human(shape(
+            'id' => $id,
+            'name' => 'User '.$id,
+            'team_id' => 1,
+            'is_active' => true
+        )));
     }
 
     <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
-    public static async function getBot(int $id): Awaitable<\Bot> {
-        return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
+    public static function getBot(int $id): GraphQL\Promise<\Bot> {
+        return new GraphQL\Promise(async () ==> new \Bot(shape(
+            'id' => $id,
+            'name' => 'User '.$id,
+            'team_id' => 1,
+            'is_active' => true
+        )));
+    }
+
+    <<GraphQL\QueryRootField('listHumans', 'Fetch multiple')>>
+    public static function listUsers(vec<int> $ids): GraphQL\Promise<vec<\User>> {
+        return new GraphQL\Promise(async () ==> vec[
+            new \Bot(shape(
+                'id' => 1,
+                'name' => 'User 1',
+                'team_id' => 1,
+                'is_active' => true
+            )),
+            new \Human(shape(
+                'id' => 2,
+                'name' => 'User 2',
+                'team_id' => 1,
+                'is_active' => true
+            )),
+        ]);
     }
 
     <<GraphQL\QueryRootField('nested_list_sum', 'Test for nested list arguments')>>

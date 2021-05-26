@@ -10,14 +10,6 @@ abstract class FieldResult<+T> {
     final public function getErrors(): vec<UserFacingError> {
         return $this->errors;
     }
-
-    public async function resolveAsync(): Awaitable<FieldResult<T>> {
-        return $this;
-    }
-
-    public function isDeferred(): bool {
-        return $this is DeferredFieldResult<_>;
-    }
 }
 
 final class DeferredFieldResult<+T> extends FieldResult<T> {
@@ -44,7 +36,6 @@ final class DeferredFieldResult<+T> extends FieldResult<T> {
  * - null value with error, if this is a nullable field that failed to resolve
  */
 final class ValidFieldResult<+T> extends FieldResult<T> {
-
     public function __construct(
         private T $value,
         vec<UserFacingError> $errors = vec[],

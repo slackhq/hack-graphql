@@ -113,7 +113,7 @@ final class Resolver {
                 throw new \Error('Unsupported operation: '.$operation_type);
         }
 
-        while ($result->isDeferred()) {
+        while ($result is DeferredFieldResult<_>) {
             // This is where we'd batch load data for all pending promises
             $result = await $result->resolveAsync();
         }

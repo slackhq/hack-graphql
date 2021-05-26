@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2e87035d3a1c154b45a8a4229f2f3c61>>
+ * @generated SignedSource<<1bfd781fc2416ebbfe2f37dc6d925ce2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -29,6 +29,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
     'getObjectShape',
     'human',
     'introspection_test',
+    'listHumans',
     'list_arg_test',
     'nested_list_sum',
     'optional_field_test',
@@ -126,14 +127,14 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case 'bot':
         return new GraphQL\FieldDefinition(
           'bot',
-          Bot::nullableOutput(),
+          Bot::nonNullable()->promise(),
           dict[
             'id' => shape(
               'name' => 'id',
               'type' => Types\IntType::nonNullable(),
             ),
           ],
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getBot(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
         );
@@ -182,14 +183,14 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case 'human':
         return new GraphQL\FieldDefinition(
           'human',
-          Human::nullableOutput(),
+          Human::nonNullable()->promise(),
           dict[
             'id' => shape(
               'name' => 'id',
               'type' => Types\IntType::nonNullable(),
             ),
           ],
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getHuman(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
         );
@@ -199,6 +200,20 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           IntrospectionTestObject::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \IntrospectionTestObject::get(),
+        );
+      case 'listHumans':
+        return new GraphQL\FieldDefinition(
+          'listHumans',
+          User::nonNullable()->nonNullableOutputListOf()->promise(),
+          dict[
+            'ids' => shape(
+              'name' => 'ids',
+              'type' => Types\IntType::nonNullable()->nonNullableInputListOf(),
+            ),
+          ],
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::listUsers(
+            Types\IntType::nonNullable()->nonNullableInputListOf()->coerceNamedNode('ids', $args, $vars),
+          ),
         );
       case 'list_arg_test':
         return new GraphQL\FieldDefinition(
@@ -266,23 +281,23 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
       case 'user':
         return new GraphQL\FieldDefinition(
           'user',
-          User::nullableOutput(),
+          User::nonNullable()->promise(),
           dict[
             'id' => shape(
               'name' => 'id',
               'type' => Types\IntType::nonNullable(),
             ),
           ],
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getUser(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
         );
       case 'viewer':
         return new GraphQL\FieldDefinition(
           'viewer',
-          User::nullableOutput(),
+          User::nonNullable()->promise(),
           dict[],
-          async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getViewer(),
         );
       default:
         return null;

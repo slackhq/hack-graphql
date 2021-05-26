@@ -6,6 +6,7 @@ use namespace Slack\GraphQL;
 use type Graphpinator\Parser\Fragment\Fragment;
 
 final class ExecutionContext {
+
     public function __construct(
         private dict<string, mixed> $coercedVariableValues,
         private dict<string, Fragment> $fragmentDeclarations,
