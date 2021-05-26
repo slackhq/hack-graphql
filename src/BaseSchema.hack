@@ -1,6 +1,6 @@
 namespace Slack\GraphQL;
 
-use namespace HH\Lib\{Dict, Vec};
+use namespace HH\Lib\{Dict, Vec, Str};
 
 // TODO: this should be private
 <<__ConsistentConstruct>>
@@ -56,6 +56,7 @@ abstract class BaseSchema implements Introspection\__Schema {
     <<__Override>>
     final public function getTypes(): vec<Introspection\__Type> {
         // TODO: should we filter out private types? ie. anything with __
-        return Vec\map_with_key(static::TYPES, ($name, $_) ==> $this->getIntrospectionType($name) as nonnull);
+        return Dict\filter_with_key(static::TYPES, ($name, $_) ==> !Str\starts_with($name, '__'))
+            |> Vec\map_with_key(static::TYPES, ($name, $_) ==> $this->getIntrospectionType($name) as nonnull);
     }
 }
