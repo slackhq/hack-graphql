@@ -1,13 +1,12 @@
 namespace Slack\GraphQL;
 
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Vec};
 
 type ArgumentDefinition = shape(
     'name' => string,
     'type' => Types\IInputType,
     ?'description' => string,
     ?'default_value' => mixed,
-    ?'deprecation_reason' => string,
 );
 
 interface IFieldDefinition extends Introspection\__Field {
@@ -69,5 +68,42 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public function getArguments(): dict<string, ArgumentDefinition> {
         return $this->arguments;
+    }
+
+    public function getDeprecationReason(): ?string {
+        // TODO
+        return null;
+    }
+
+    public function isDeprecated(): bool {
+        // TODO
+        return false;
+    }
+
+    public function getDescription(): ?string {
+        // TODO
+        return null;
+    }
+
+    public function getArgs(): vec<Introspection\__InputValue> {
+        return Vec\map(
+            $this->arguments,
+            $arg ==> {
+                $input_value = shape(
+                    'name' => $arg['name'],
+                    'type' => $arg['type'],
+                );
+
+                if (Shapes::keyExists($arg, 'description')) {
+                    $input_value['description'] = $arg['description'];
+                }
+
+                if (Shapes::keyExists($arg, 'default_value')) {
+                    $input_value['defaultValue'] = (string)$arg['default_value'];
+                }
+
+                return $input_value;
+            },
+        );
     }
 }

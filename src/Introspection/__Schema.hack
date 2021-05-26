@@ -5,8 +5,8 @@ use namespace Slack\GraphQL;
 <<GraphQL\ObjectType('__Schema', 'Schema introspection')>>
 interface __Schema {
 
-    // <<GraphQL\Field('types', 'Types contained within the schema')>>
-    // public function getTypes(): vec<__Type>;
+    <<GraphQL\Field('types', 'Types contained within the schema')>>
+    public function getTypes(): vec<__Type>;
 
     <<GraphQL\Field('queryType', 'Query root type')>>
     public function getIntrospectionQueryType(): __Type;
