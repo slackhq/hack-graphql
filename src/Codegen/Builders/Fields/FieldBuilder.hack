@@ -135,7 +135,7 @@ abstract class FieldBuilder {
 
                 $default_value = $param['default_value'] ?? null;
                 if ($default_value is nonnull) {
-                    $hb->addLinef("'default_value' => %s,", $default_value);
+                    $hb->addLinef("'defaultValue' => %s,", \var_export($default_value, true));
                 }
 
                 $hb->unindent()->addLine('),');

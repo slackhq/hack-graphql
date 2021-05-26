@@ -388,6 +388,6 @@ final class IntrospectionTest extends PlaygroundTest {
         $results = await $this->resolve(GraphQL\Introspection\Utilities::getIntrospectionQuery());
         // TODO: would be great to use something like:
         // https://github.com/hhvm/hack-codegen/blob/master/tests/TestLib/ExpectObj.hack#L22
-        \file_put_contents(__DIR__.'/gen/schema.json', \json_encode($results, \JSON_PRETTY_PRINT));
+        \file_put_contents(__DIR__.'/schema.json', \json_encode($results, \JSON_PRETTY_PRINT));
     }
 }

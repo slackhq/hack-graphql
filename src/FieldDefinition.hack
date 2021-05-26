@@ -2,17 +2,10 @@ namespace Slack\GraphQL;
 
 use namespace HH\Lib\{C, Vec};
 
-type ArgumentDefinition = shape(
-    'name' => string,
-    'type' => Types\IInputType,
-    ?'description' => string,
-    ?'default_value' => mixed,
-);
-
 interface IFieldDefinition extends Introspection\__Field {
     public function getName(): string;
     public function getType(): Types\IOutputType;
-    public function getArguments(): dict<string, ArgumentDefinition>;
+    public function getArguments(): dict<string, Introspection\__InputValue>;
 }
 
 interface IResolvableFieldDefinition<TParent> extends IFieldDefinition {
@@ -27,7 +20,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     public function __construct(
         private string $name,
         private Types\IOutputTypeFor<TRet, TResolved> $type,
-        private dict<string, ArgumentDefinition> $arguments,
+        private dict<string, Introspection\__InputValue> $arguments,
         private (function(
             TParent,
             dict<string, \Graphpinator\Parser\Value\Value>,
@@ -66,7 +59,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
         return $this->type;
     }
 
-    public function getArguments(): dict<string, ArgumentDefinition> {
+    public function getArguments(): dict<string, Introspection\__InputValue> {
         return $this->arguments;
     }
 
@@ -86,24 +79,6 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     }
 
     public function getArgs(): vec<Introspection\__InputValue> {
-        return Vec\map(
-            $this->arguments,
-            $arg ==> {
-                $input_value = shape(
-                    'name' => $arg['name'],
-                    'type' => $arg['type'],
-                );
-
-                if (Shapes::keyExists($arg, 'description')) {
-                    $input_value['description'] = $arg['description'];
-                }
-
-                if (Shapes::keyExists($arg, 'default_value')) {
-                    $input_value['defaultValue'] = (string)$arg['default_value'];
-                }
-
-                return $input_value;
-            },
-        );
+        return vec($this->arguments);
     }
 }
