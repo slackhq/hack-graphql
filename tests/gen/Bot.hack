@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<803c718476e0461c3e9d70a1db853f34>>
+ * @generated SignedSource<<22cb1cb75d950b44643784ed0b056eac>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -61,9 +61,9 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullableOutput(),
+          Team::nonNullable()->promise(),
           dict[],
-          async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          async ($parent, $args, $vars) ==> $parent->getTeam(),
         );
       default:
         return null;

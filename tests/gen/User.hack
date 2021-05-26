@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<481a5396998f1863b06a6992d837fe3b>>
+ * @generated SignedSource<<b4b185b29e84e6b7875d1dfbeb73fe51>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -54,9 +54,9 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
       case 'team':
         return new GraphQL\FieldDefinition(
           'team',
-          Team::nullableOutput(),
+          Team::nonNullable()->promise(),
           dict[],
-          async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          async ($parent, $args, $vars) ==> $parent->getTeam(),
         );
       default:
         return null;

@@ -61,6 +61,11 @@ trait TOutputType<THackType, TResolved> implements IOutputTypeFor<THackType, TRe
         return new NullableOutputType($this->nonNullableOutputListOf());
     }
 
+    <<__Memoize>>
+    final public function promise(): PromiseType<THackType, TResolved> {
+        return new PromiseType($this);
+    }
+
     public function resolveError(GraphQL\UserFacingError $error): GraphQL\FieldResult<TResolved> {
         return new GraphQL\InvalidFieldResult(vec[$error]);
     }

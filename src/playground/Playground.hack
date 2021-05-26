@@ -52,7 +52,7 @@ interface User {
     public function getName(): string;
 
     <<GraphQL\Field('team', 'Team the user belongs to')>>
-    public function getTeam(): Awaitable<\Team>;
+    public function getTeam(): GraphQL\Promise<\Team>;
 
     <<GraphQL\Field('is_active', 'Whether the user is active')>>
     public function isActive(): bool;
@@ -76,8 +76,8 @@ abstract class BaseUser implements User {
         return $this->data['name'];
     }
 
-    public async function getTeam(): Awaitable<\Team> {
-        return await TeamStore::getInstance()->getById($this->data['team_id']);
+    public function getTeam(): GraphQL\Promise<Team> {
+        return new GraphQL\Promise(async () ==> await TeamStore::getInstance()->getById($this->data['team_id']));
     }
 
     public function isActive(): bool {

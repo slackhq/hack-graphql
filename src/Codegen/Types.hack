@@ -57,7 +57,8 @@ function output_type(
     $class = get_output_type($unwrapped);
     if ($class is null) {
         throw new \Error(
-            'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute',
+            'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute, not '.
+            $unwrapped,
         );
     }
     return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
@@ -154,6 +155,17 @@ function unwrap_type(IO $io, string $hack_type, bool $nullable = false): (string
         );
         return tuple($unwrapped, $suffix.($nullable ? '->nullable'.$io.'ListOf()' : '->nonNullable'.$io.'ListOf()'));
     }
+
+    if ($io === IO::OUTPUT) {
+        if (Str\starts_with($hack_type, 'Slack\GraphQL\Promise<')) {
+            list($unwrapped, $suffix) = unwrap_type(
+                $io,
+                Str\strip_prefix($hack_type, 'Slack\GraphQL\Promise<') |> Str\strip_suffix($$, '>')
+            );
+            return tuple($unwrapped, $suffix.'->promise()');
+        }
+    }
+
     return tuple($hack_type, $nullable ? '::nullable'.$io.'()' : '::nonNullable()');
 }
 
