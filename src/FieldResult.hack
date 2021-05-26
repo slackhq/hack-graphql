@@ -3,12 +3,35 @@ namespace Slack\GraphQL;
 /**
  * These classes capture the possible results of resolving a GraphQL field during GraphQL execution.
  */
-<<__Sealed(InvalidFieldResult::class, ValidFieldResult::class)>>
+<<__Sealed(DeferredFieldResult::class, InvalidFieldResult::class, ValidFieldResult::class)>>
 abstract class FieldResult<+T> {
     public function __construct(private vec<UserFacingError> $errors) {}
 
     final public function getErrors(): vec<UserFacingError> {
         return $this->errors;
+    }
+
+    public async function resolveAsync(): Awaitable<FieldResult<T>> {
+        return $this;
+    }
+
+    public function isDeferred(): bool {
+        return $this is DeferredFieldResult<_>;
+    }
+}
+
+final class DeferredFieldResult<+T> extends FieldResult<T> {
+
+    public function __construct(
+        private (function (): Awaitable<FieldResult<T>>) $cb,
+        vec<UserFacingError> $errors = vec[]
+    ) {
+        parent::__construct($errors);
+    }
+
+    public async function resolveAsync(): Awaitable<FieldResult<T>> {
+        $cb = $this->cb;
+        return await $cb();
     }
 }
 
@@ -21,6 +44,7 @@ abstract class FieldResult<+T> {
  * - null value with error, if this is a nullable field that failed to resolve
  */
 final class ValidFieldResult<+T> extends FieldResult<T> {
+
     public function __construct(
         private T $value,
         vec<UserFacingError> $errors = vec[],

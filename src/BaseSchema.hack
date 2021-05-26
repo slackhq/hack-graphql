@@ -13,7 +13,7 @@ abstract class BaseSchema implements Introspection\__Schema {
     abstract public static function resolveQuery(
         \Graphpinator\Parser\Operation\Operation $operation,
         ExecutionContext $context,
-    ): Awaitable<ValidFieldResult<?dict<string, mixed>>>;
+    ): Awaitable<FieldResult<?dict<string, mixed>>>;
 
     /**
     * Mutations are optional, if the schema supports it, this method will be
@@ -22,7 +22,7 @@ abstract class BaseSchema implements Introspection\__Schema {
     public static async function resolveMutation(
         \Graphpinator\Parser\Operation\Operation $operation,
         ExecutionContext $context,
-    ): Awaitable<ValidFieldResult<?dict<string, mixed>>> {
+    ): Awaitable<FieldResult<?dict<string, mixed>>> {
         return new ValidFieldResult(null);
     }
 

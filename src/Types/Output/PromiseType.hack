@@ -4,18 +4,22 @@ use namespace HH\Lib\Vec;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Introspection;
 
-final class PromiseType<TInner, TResolved> extends BaseType implements IOutputTypeFor<GraphQL\Promise<TInner>, TResolved> {
+final class PromiseType<TInner, TResolved>
+    extends BaseType
+    implements IOutputTypeFor<GraphQL\Promise<TInner>, TResolved> {
     use TOutputType<GraphQL\Promise<TInner>, TResolved>;
 
     public function __construct(private IOutputTypeFor<TInner, TResolved> $innerType) {}
 
     public async function resolveAsync(
-        GraphQL\Promise<TInner> $value,
+        GraphQL\Promise<TInner> $promise,
         vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
         GraphQL\ExecutionContext $context,
     ): Awaitable<GraphQL\FieldResult<TResolved>> {
-        $value = await $value->resolve();
-        return await $this->innerType->resolveAsync($value, $parent_nodes, $context);
+        return new GraphQL\DeferredFieldResult(async () ==> {
+            $value = await $promise->resolve();
+            return await $this->innerType->resolveAsync($value, $parent_nodes, $context);
+        });
     }
 
     public function unwrapType(): INamedOutputType {

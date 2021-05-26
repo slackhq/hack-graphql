@@ -25,14 +25,25 @@ final class NullableOutputType<TInner as nonnull, TResolved> extends BaseType {
         ?TInner $value,
         vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
         GraphQL\ExecutionContext $context,
-    ): Awaitable<GraphQL\ValidFieldResult<?TResolved>> {
+    ): Awaitable<GraphQL\FieldResult<?TResolved>> {
         if ($value is null) {
             return new GraphQL\ValidFieldResult(null);
         }
         $result = await $this->inner_type->resolveAsync($value, $parent_nodes, $context);
-        return $result is GraphQL\ValidFieldResult<_>
-            ? $result
-            : new GraphQL\ValidFieldResult(null, $result->getErrors());
+        return $this->buildResult($result);
+    }
+
+    private function buildResult(GraphQL\FieldResult<?TResolved> $result): GraphQL\FieldResult<?TResolved> {
+        if ($result is GraphQL\DeferredFieldResult<_>) {
+            return new GraphQL\DeferredFieldResult(async () ==> {
+                $result = await $result->resolveAsync();
+                return $this->buildResult($result);
+            });
+        } elseif ($result is GraphQL\ValidFieldResult<_>) {
+            return $result;
+        } else {
+            return new GraphQL\ValidFieldResult(null, $result->getErrors());
+        }
     }
 
     public function resolveError(GraphQL\UserFacingError $error): GraphQL\ValidFieldResult<null> {

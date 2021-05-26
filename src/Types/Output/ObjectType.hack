@@ -16,10 +16,6 @@ abstract class ObjectType extends CompositeType {
         vec<\Graphpinator\Parser\Field\IHasSelectionSet> $parent_nodes,
         GraphQL\ExecutionContext $context,
     ): Awaitable<GraphQL\FieldResult<dict<string, mixed>>> {
-        $ret = dict[];
-        $errors = vec[];
-        $is_valid = true;
-
         $grouped_child_fields = GraphQL\FieldCollector::collectFields($this, $parent_nodes, $context);
 
         $results = await Dict\map_async(
@@ -38,11 +34,24 @@ abstract class ObjectType extends CompositeType {
                     throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $field_name);
                 }
                 return await $field_definition->resolveAsync($value, $grouped_field_nodes, $context);
-            }
+            },
         );
 
+        return $this->buildResult($results);
+    }
+
+    private function buildResult(
+        dict<string, GraphQL\FieldResult<mixed>> $results,
+        dict<string, mixed> $ret = dict[],
+        vec<GraphQL\UserFacingError> $errors = vec[],
+    ): GraphQL\FieldResult<dict<string, mixed>> {
+        $deferred_results = dict[];
+        $is_valid = C\is_empty($errors);
+
         foreach ($results as $key => $result) {
-            if ($result is GraphQL\ValidFieldResult<_>) {
+            if ($result is GraphQL\DeferredFieldResult<_>) {
+                $deferred_results[$key] = $result;
+            } elseif ($result is GraphQL\ValidFieldResult<_>) {
                 $ret[$key] = $result->getValue();
             } else {
                 $is_valid = false;
@@ -50,6 +59,13 @@ abstract class ObjectType extends CompositeType {
             foreach ($result->getErrors() as $error) {
                 $errors[] = $error->prependPath($key);
             }
+        }
+
+        if (!C\is_empty($deferred_results)) {
+            return new GraphQL\DeferredFieldResult(async () ==> {
+                $results = await Dict\map_async($deferred_results, $result ==> $result->resolveAsync());
+                return $this->buildResult($results, $ret, $errors);
+            });
         }
 
         return $is_valid ? new GraphQL\ValidFieldResult($ret, $errors) : new GraphQL\InvalidFieldResult($errors);

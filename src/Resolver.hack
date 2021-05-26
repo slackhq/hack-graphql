@@ -113,7 +113,16 @@ final class Resolver {
                 throw new \Error('Unsupported operation: '.$operation_type);
         }
 
-        return tuple($result->getValue(), $result->getErrors());
+        while ($result->isDeferred()) {
+            // This is where we'd batch load data for all pending promises
+            $result = await $result->resolveAsync();
+        }
+
+        if ($result is ValidFieldResult<_>) {
+            return tuple($result->getValue(), $result->getErrors());
+        } else {
+            return tuple(dict[], $result->getErrors());
+        }
     }
 
     private function coerceVariables(

@@ -182,7 +182,7 @@ final class Generator {
             ->setPublic()
             ->setIsStatic(true)
             ->setIsAsync(true)
-            ->setReturnType('Awaitable<GraphQL\\ValidFieldResult<?dict<string, mixed>>>')
+            ->setReturnType('Awaitable<GraphQL\\FieldResult<?dict<string, mixed>>>')
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
             ->addParameterf('\%s $context', \Slack\GraphQL\ExecutionContext::class);
 
