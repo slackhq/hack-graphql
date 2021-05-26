@@ -91,7 +91,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             );
 
             $name_literal = \var_export($field_name, true);
-            $type = input_type(($is_optional ? '?' : '').type_structure_to_type_alias($field_ts));
+            $type = input_type(type_structure_to_type_alias($field_ts));
 
             if ($is_optional) {
                 $hb->startIfBlock($get_if_condition($name_literal));
@@ -124,8 +124,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             $hb->addLine('return shape(')->indent();
             $hb->addLinef("'name' => %s,", \var_export($field_name, true));
 
-            $is_optional = $field_ts['optional_shape_field'] ?? false;
-            $type = input_type(($is_optional ? '?' : '').type_structure_to_type_alias($field_ts));
+            $type = input_type(type_structure_to_type_alias($field_ts));
             $hb->addLinef("'type' => %s,", $type);
             // TODO: description, defaultValue
             $hb->unindent()->addLine(');')->unindent();
