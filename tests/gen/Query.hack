@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2e87035d3a1c154b45a8a4229f2f3c61>>
+ * @generated SignedSource<<4a32f83fed9fed8a36ffde8ab2145625>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -73,22 +73,22 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             'after' => shape(
               'name' => 'after',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'before' => shape(
               'name' => 'before',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'first' => shape(
               'name' => 'first',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'last' => shape(
               'name' => 'last',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
           ],
           async ($parent, $args, $vars) ==> \UserQueryAttributes::alphabetConnection()->setPaginationArgs(
@@ -114,7 +114,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             'optional' => shape(
               'name' => 'optional',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => 42,
+              'defaultValue' => '42',
             ),
           ],
           async ($parent, $args, $vars) ==> \ArgumentTestObj::argTest(

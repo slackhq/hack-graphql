@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2bf4232b2861d42a846170b0e37107fb>>
+ * @generated SignedSource<<aee6b0503b3c3a73e42406b9eccfdda6>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -48,7 +48,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
               'type' => Types\BooleanType::nonNullable(),
-              'default_value' => false,
+              'defaultValue' => 'false',
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionEnumValues(
@@ -63,7 +63,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
             'include_deprecated' => shape(
               'name' => 'include_deprecated',
               'type' => Types\BooleanType::nonNullable(),
-              'default_value' => false,
+              'defaultValue' => 'false',
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionFields(

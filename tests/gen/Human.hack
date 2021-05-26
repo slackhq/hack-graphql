@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<610ad67a380dfcc24d35298d39f1ba7a>>
+ * @generated SignedSource<<453bfb5200271c708353fecfc025619b>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -47,22 +47,22 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             'after' => shape(
               'name' => 'after',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'before' => shape(
               'name' => 'before',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'first' => shape(
               'name' => 'first',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'last' => shape(
               'name' => 'last',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
           ],
           async ($parent, $args, $vars) ==> (await $parent->getFriends())->setPaginationArgs(
@@ -105,22 +105,22 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             'after' => shape(
               'name' => 'after',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'before' => shape(
               'name' => 'before',
               'type' => Types\StringType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'first' => shape(
               'name' => 'first',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
             'last' => shape(
               'name' => 'last',
               'type' => Types\IntType::nullableInput(),
-              'default_value' => null,
+              'defaultValue' => 'null',
             ),
           ],
           async ($parent, $args, $vars) ==> (await $parent->getFriendsWithArg(
