@@ -28,13 +28,11 @@ interface __Type {
     <<GraphQL\Field('possibleTypes', 'Possible types that implement this interface, only applies to INTERFACE')>>
     public function getIntrospectionPossibleTypes(): ?vec<__Type>;
 
-    // TODO: enumValues
     <<GraphQL\Field('enumValues', 'Enum values, only applies to ENUM')>>
     public function getIntrospectionEnumValues(bool $include_deprecated = false): ?vec<__EnumValue>;
 
-    // TODO: inputFields
     <<GraphQL\Field('inputFields', 'Input fields, only applies to INPUT_OBJECT')>>
-    public function getIntrospectionInputFields(bool $include_deprecated = false): ?vec<__InputValue>;
+    public function getIntrospectionInputFields(): ?vec<__InputValue>;
 
     <<GraphQL\Field('ofType', 'Underlying wrapped type, only applies to NON_NULL and LIST')>>
     public function getIntrospectionOfType(): ?__Type;

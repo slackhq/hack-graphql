@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{Keyset, Str};
+use namespace HH\Lib\{Keyset, Str, Vec};
 use type Facebook\HackCodegen\{CodegenClass, CodegenMethod, HackBuilderValues, HackCodegenFactory};
 
 
@@ -65,6 +65,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
                         $field_name ==> Str\format('assertValidVariableValue($fields[%s])', $field_name),
                     ),
                 ),
+            $this->generateGetInputValue($cg, $ts['fields']),
         ]);
     }
 
@@ -74,8 +75,8 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
     private static function getFieldCoercionMethodBody<T>(
         HackCodegenFactory $cg,
         KeyedContainer<string, TypeStructure<T>> $fields,
-        (function (string): string) $get_if_condition,
-        (function (string): string) $get_method_call,
+        (function(string): string) $get_if_condition,
+        (function(string): string) $get_method_call,
     ): string {
         $hb = hb($cg)->addLine('$ret = shape();');
 
@@ -103,5 +104,40 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
 
         $hb->addReturn('$ret', HackBuilderValues::literal());
         return $hb->getCode();
+    }
+
+    private function generateGetInputValue<T>(
+        HackCodegenFactory $cg,
+        KeyedContainer<string, TypeStructure<T>> $fields,
+    ): CodegenMethod {
+        $method = $cg->codegenMethod('getInputValue')
+            ->setProtected()
+            ->setIsOverride(true)
+            ->setReturnType('?GraphQL\\Introspection\\__InputValue')
+            ->addParameter('string $field_name');
+
+        $hb = hb($cg)
+            ->startSwitch('$field_name');
+
+        foreach ($fields as $field_name => $field_ts) {
+            $hb->addCase($field_name, HackBuilderValues::export());
+            $hb->addLine('return shape(')->indent();
+            $hb->addLinef("'name' => %s,", \var_export($field_name, true));
+
+            $is_optional = $field_ts['optional_shape_field'] ?? false;
+            $type = input_type(($is_optional ? '?' : '').type_structure_to_type_alias($field_ts));
+            $hb->addLinef("'type' => %s,", $type);
+            // TODO: description, defaultValue
+            $hb->unindent()->addLine(');')->unindent();
+        }
+
+        $hb
+            ->addDefault()
+            ->addLine("return null;")
+            ->endDefault()
+            ->endSwitch();
+
+        $method->setBody($hb->getCode());
+        return $method;
     }
 }

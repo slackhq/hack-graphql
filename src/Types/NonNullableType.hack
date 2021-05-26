@@ -11,7 +11,7 @@ interface INonNullableType {
     public function getInterfaces(): ?dict<string, classname<InterfaceType>>;
     public function getPossibleTypes(): ?vec<classname<ObjectType>>;
     public function getEnumValues(bool $include_deprecated = false): ?vec<Introspection\__EnumValue>;
-    public function getInputFields(bool $include_deprecated = false): ?vec<Introspection\__InputValue>;
+    public function getInputFields(): ?vec<Introspection\__InputValue>;
     public function getOfType(): ?Introspection\__Type;
     public function nullableForIntrospection(): INullableType;
 }
@@ -99,7 +99,7 @@ trait TNonNullableType implements INonNullableType {
         return null;
     }
 
-    public function getInputFields(bool $include_deprecated = false): ?vec<Introspection\__InputValue> {
+    public function getInputFields(): ?vec<Introspection\__InputValue> {
         return null;
     }
 

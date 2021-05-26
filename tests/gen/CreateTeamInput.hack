@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1c07104ec609d81e4a59e21194b769ff>>
+ * @generated SignedSource<<312b5197df4461595cab71ab449fbb0d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -45,5 +45,20 @@ final class CreateTeamInput extends \Slack\GraphQL\Types\InputObjectType {
     $ret = shape();
     $ret['name'] = Types\StringType::nonNullable()->assertValidVariableValue($fields['name']);
     return $ret;
+  }
+
+  <<__Override>>
+  protected function getInputValue(
+    string $field_name,
+  ): ?GraphQL\Introspection\__InputValue {
+    switch ($field_name) {
+      case 'name':
+        return shape(
+          'name' => 'name',
+          'type' => Types\StringType::nonNullable(),
+        );
+      default:
+        return null;
+    }
   }
 }

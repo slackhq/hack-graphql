@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<09209020c33d8df06c4c39667cbcdbef>>
+ * @generated SignedSource<<2bf4232b2861d42a846170b0e37107fb>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -74,16 +74,8 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
         return new GraphQL\FieldDefinition(
           'inputFields',
           __InputValue::nonNullable()->nullableOutputListOf(),
-          dict[
-            'include_deprecated' => shape(
-              'name' => 'include_deprecated',
-              'type' => Types\BooleanType::nonNullable(),
-              'default_value' => false,
-            ),
-          ],
-          async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
-          ),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(),
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(

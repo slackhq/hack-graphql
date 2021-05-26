@@ -8,6 +8,89 @@ final class IntrospectionTest extends PlaygroundTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
+            'validate input fields' => tuple(
+                '{
+                    __type(name: "IntrospectionRootInput") {
+                        inputFields {
+                            name
+                            type {
+                                kind
+                                name
+                                ofType {
+                                    kind
+                                    name
+                                    ofType {
+                                        kind
+                                        name
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    '__type' => dict[
+                        'inputFields' => vec[
+                            dict[
+                                'name' => 'scalar',
+                                'type' => dict[
+                                    'kind' => 'SCALAR',
+                                    'name' => 'String',
+                                    'ofType' => null,
+                                ],
+                            ],
+                            dict[
+                                'name' => 'nested',
+                                'type' => dict[
+                                    'kind' => 'INPUT_OBJECT',
+                                    'name' => 'IntrospectionNestedInput',
+                                    'ofType' => null,
+                                ],
+                            ],
+                            dict[
+                                'name' => 'vec_of_nested_non_nullable',
+                                'type' => dict[
+                                    'kind' => 'LIST',
+                                    'name' => null,
+                                    'ofType' => dict[
+                                        'kind' => 'NON_NULL',
+                                        'name' => null,
+                                        'ofType' => dict[
+                                            'kind' => 'INPUT_OBJECT',
+                                            'name' => 'IntrospectionNestedInput',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            dict[
+                                'name' => 'vec_of_nested_nullable',
+                                'type' => dict[
+                                    'kind' => 'LIST',
+                                    'name' => null,
+                                    'ofType' => dict[
+                                        'kind' => 'INPUT_OBJECT',
+                                        'name' => 'IntrospectionNestedInput',
+                                        'ofType' => null,
+                                    ],
+                                ],
+                            ],
+                            dict[
+                                'name' => 'non_nullable',
+                                'type' => dict[
+                                    'kind' => 'NON_NULL',
+                                    'name' => null,
+                                    'ofType' => dict[
+                                        'kind' => 'SCALAR',
+                                        'name' => 'String',
+                                        'ofType' => null,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ),
             'validate enum values' => tuple(
                 '{
                     __type(name: "IntrospectionEnum") {

@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Types;
 
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Vec};
 use namespace Slack\GraphQL;
 use namespace Graphpinator\Parser\Value;
 
@@ -29,6 +29,7 @@ abstract class InputObjectType extends NamedType {
     }
 
     abstract protected function coerceFieldValues(KeyedContainer<arraykey, mixed> $values): this::THackType;
+    abstract protected function getInputValue(string $field_name): ?GraphQL\Introspection\__InputValue;
 
     <<__Override>>
     final protected function coerceNonVariableNode(
@@ -64,5 +65,10 @@ abstract class InputObjectType extends NamedType {
     <<__Override>>
     final public function getKind(): GraphQL\Introspection\__TypeKind {
         return GraphQL\Introspection\__TypeKind::INPUT_OBJECT;
+    }
+
+    <<__Override>>
+    final public function getInputFields(): vec<GraphQL\Introspection\__InputValue> {
+        return Vec\map(static::FIELD_NAMES, $field_name ==> $this->getInputValue($field_name) as nonnull);
     }
 }
