@@ -1,5 +1,20 @@
 use namespace Slack\GraphQL;
 
+<<GraphQL\InputObjectType('IntrospectionRootInput', '')>>
+type TRootInput = shape(
+    ?'scalar' => ?string,
+    ?'nested' => ?TNestedInput,
+    ?'vec_of_nested_non_nullable' => ?vec<TNestedInput>,
+    ?'vec_of_nested_nullable' => ?vec<?TNestedInput>,
+    'non_nullable' => string,
+);
+
+<<GraphQL\InputObjectType('IntrospectionNestedInput', '')>>
+type TNestedInput = shape(
+    'string' => string,
+    'vec_of_string' => vec<string>,
+);
+
 <<GraphQL\EnumType('IntrospectionEnum', 'IntrospectionEnum')>>
 enum IntrospectionEnum: int {
     A = 0;

@@ -21,7 +21,8 @@ function input_type(string $hack_type): string {
     if ($class is null) {
         throw new \Error(
             'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
-            'attribute, got '.$unwrapped,
+            'attribute, got '.
+            $unwrapped,
         );
     }
     return Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix;
@@ -56,9 +57,7 @@ function output_type(
 
     $class = get_output_type($unwrapped);
     if ($class is null) {
-        throw new \Error(
-            'GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute',
-        );
+        throw new \Error('GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute');
     }
     return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
 }
@@ -176,23 +175,26 @@ enum IO: string as string {
  * Get the type aias for the given type structure.
  */
 function type_structure_to_type_alias<T>(TypeStructure<T> $ts): string {
+    $prefix = ($ts['nullable'] ?? false) ? '?' : '';
+
     $alias = Shapes::idx($ts, 'alias');
     if ($alias is nonnull) {
-        return $alias;
+        return $prefix.$alias;
     }
 
     switch ($ts['kind']) {
         case TypeStructureKind::OF_INT:
-            return 'HH\int';
+            return $prefix.'HH\int';
         case TypeStructureKind::OF_STRING:
-            return 'HH\string';
+            return $prefix.'HH\string';
         case TypeStructureKind::OF_BOOL:
-            return 'HH\bool';
+            return $prefix.'HH\bool';
         case TypeStructureKind::OF_VEC:
-            return Str\format('HH\vec<%s>', type_structure_to_type_alias($ts['generic_types'] as nonnull[0]));
+            return $prefix.Str\format('HH\vec<%s>', type_structure_to_type_alias($ts['generic_types'] as nonnull[0]));
         case TypeStructureKind::OF_ENUM:
-        //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
-            return $ts['classname'] as nonnull;
+        case TypeStructureKind::OF_INTERFACE:
+            //case TypeStructureKind::OF_UNRESOLVED: // not sure if this is needed
+            return $prefix.$ts['classname'] as nonnull;
         default:
             invariant_violation(
                 'Shape fields %s cannot be used as object fields.',
@@ -226,10 +228,12 @@ function returns_connection_type(\ReflectionMethod $rm): bool {
 /**
  * Get the hack type, gql type, and output type for a connection node.
  */
-function get_node_type_info(string $hack_type): ?shape(
+function get_node_type_info(
+    string $hack_type,
+): ?shape(
     'hack_type' => string,
     'gql_type' => string,
-    'output_type' => string
+    'output_type' => string,
 ) {
     $output_type = get_output_type($hack_type);
     if ($output_type is null) {

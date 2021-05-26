@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<23f15b4f21de51255c993f0a0c93c3b1>>
+ * @generated SignedSource<<ce0dce14e824f4421ff9f5e4d9ff60a5>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -75,5 +75,35 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
       $ret['favorite_color'] = FavoriteColor::nullableInput()->assertValidVariableValue($fields['favorite_color']);
     }
     return $ret;
+  }
+
+  <<__Override>>
+  protected function getInputValue(
+    string $field_name,
+  ): ?GraphQL\Introspection\__InputValue {
+    switch ($field_name) {
+      case 'name':
+        return shape(
+          'name' => 'name',
+          'type' => Types\StringType::nonNullable(),
+        );
+      case 'is_active':
+        return shape(
+          'name' => 'is_active',
+          'type' => Types\BooleanType::nullableInput(),
+        );
+      case 'team':
+        return shape(
+          'name' => 'team',
+          'type' => CreateTeamInput::nullableInput(),
+        );
+      case 'favorite_color':
+        return shape(
+          'name' => 'favorite_color',
+          'type' => FavoriteColor::nullableInput(),
+        );
+      default:
+        return null;
+    }
   }
 }
