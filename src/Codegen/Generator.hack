@@ -305,7 +305,7 @@ final class Generator {
         }
 
         $objects[] = new ObjectBuilder(
-            new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
+            new \Slack\GraphQL\ObjectType('Query', 'Query'),
             'Slack\\GraphQL\\Root',
             vec(Dict\sort_by_key($query_fields)),
             $hack_class_to_graphql_interface,
@@ -313,7 +313,7 @@ final class Generator {
 
         if (!C\is_empty($mutation_fields)) {
             $objects[] = new ObjectBuilder(
-                new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
+                new \Slack\GraphQL\ObjectType('Mutation', 'Mutation'),
                 'Slack\\GraphQL\\Root',
                 vec(Dict\sort_by_key($mutation_fields)),
                 $hack_class_to_graphql_interface,
