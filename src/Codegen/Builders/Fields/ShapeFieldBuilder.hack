@@ -12,7 +12,6 @@ final class ShapeFieldBuilder extends FieldBuilder {
     const type TField = shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'declaring_type' => string,
         'is_optional' => bool,
     );
 

@@ -36,7 +36,7 @@ final class Generator {
 
     private static async function init(
         DefinitionFinder\BaseParser $parser,
-        self::TGeneratorConfig $config
+        self::TGeneratorConfig $config,
     ): Awaitable<Generator> {
         $parsers = vec[$parser];
         $parsers[] = await DefinitionFinder\TreeParser::fromPathAsync(__DIR__.'/../Introspection');
@@ -196,7 +196,10 @@ final class Generator {
     private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
         $objects = vec[];
         $inputs = vec[];
-        $query_fields = dict[];
+        $query_fields = dict[
+            '__schema' => FieldBuilder::introspectSchemaField(),
+            '__type' => FieldBuilder::introspectTypeField(),
+        ];
         $mutation_fields = dict[];
 
         $classish_objects = $this->parser->getClassishObjects();
@@ -302,31 +305,23 @@ final class Generator {
             $objects[] = new EnumBuilder($enum_type, $enum->getName());
         }
 
-        // TODO: throw an error if no query fields?
+        $objects[] = new ObjectBuilder(
+            new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
+            'Slack\\GraphQL\\Root',
+            vec(Dict\sort_by_key($query_fields)),
+            $hack_class_to_graphql_interface,
+        );
 
-        if (!C\is_empty($query_fields)) {
-            $top_level_objects = vec[
-                new ObjectBuilder(
-                    new \Slack\GraphQL\__Private\CompositeType('Query', 'Query'),
-                    'Slack\\GraphQL\\Root',
-                    vec(Dict\sort_by_key($query_fields)),
-                    $hack_class_to_graphql_interface,
-                ),
-            ];
-
-            if (!C\is_empty($mutation_fields)) {
-                $top_level_objects[] = new ObjectBuilder(
-                    new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
-                    'Slack\\GraphQL\\Root',
-                    vec(Dict\sort_by_key($mutation_fields)),
-                    $hack_class_to_graphql_interface,
-                );
-            }
-
-            $objects = Vec\concat($top_level_objects, $objects, $inputs);
+        if (!C\is_empty($mutation_fields)) {
+            $objects[] = new ObjectBuilder(
+                new \Slack\GraphQL\__Private\CompositeType('Mutation', 'Mutation'),
+                'Slack\\GraphQL\\Root',
+                vec(Dict\sort_by_key($mutation_fields)),
+                $hack_class_to_graphql_interface,
+            );
         }
 
-        return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
+        return Vec\concat($objects, $inputs) |> Vec\sort_by($$, $object ==> $object->getGraphQLType());
     }
 
     private function getConnectionObjects(DefinitionFinder\ScannedClassish $class): vec<ObjectBuilder> {
@@ -340,15 +335,11 @@ final class Generator {
             $type_info is nonnull,
             'Node type "%s" for "%s" must be a valid GraphQL output type. It may not be a list.',
             $hack_type,
-            $rc->getName()
+            $rc->getName(),
         );
         return vec[
             ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
-            ObjectBuilder::forEdge(
-                $type_info['gql_type'],
-                $type_info['hack_type'],
-                $type_info['output_type']
-            )
+            ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
     }
 }
