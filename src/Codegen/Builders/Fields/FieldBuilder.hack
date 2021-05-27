@@ -11,7 +11,6 @@ abstract class FieldBuilder {
     abstract const type TField as shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'declaring_type' => string,
         ...
     );
 
@@ -34,8 +33,6 @@ abstract class FieldBuilder {
         $data = shape(
             'name' => $field->getName(),
             'method_name' => $rm->getName(),
-            'declaring_type' => $rm->getDeclaringClass()->getName(),
-            'is_root_field' => $is_root_field,
             'output_type' => output_type(
                 $rm->getReturnTypeText(),
                 $rm->getAttributeClass(\Slack\GraphQL\KillsParentOnException::class) is nonnull,
@@ -56,6 +53,10 @@ abstract class FieldBuilder {
             ),
         );
 
+        if ($is_root_field) {
+            $data['root_field_for_type'] = $rm->getDeclaringClass()->getName();
+        }
+
         if (returns_connection_type($rm)) {
             return new ConnectionFieldBuilder($data);
         } else {
@@ -66,11 +67,10 @@ abstract class FieldBuilder {
     /**
      * Construct a GraphQL field from a shape field.
      */
-    public static function fromShapeField<T>(string $name, string $declaring_type, TypeStructure<T> $ts): FieldBuilder {
+    public static function fromShapeField<T>(string $name, TypeStructure<T> $ts): FieldBuilder {
         return new ShapeFieldBuilder(shape(
             'name' => $name,
             'output_type' => output_type(type_structure_to_type_alias($ts), false),
-            'declaring_type' => $declaring_type,
             'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
         ));
     }
@@ -80,6 +80,14 @@ abstract class FieldBuilder {
      */
     public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
         return FieldBuilder::fromReflectionMethod($field, $rm, true);
+    }
+
+    public static function introspectSchemaField(): FieldBuilder {
+        return new IntrospectSchemaFieldBuilder();
+    }
+
+    public static function introspectTypeField(): FieldBuilder {
+        return new IntrospectTypeFieldBuilder();
     }
 
     // Codegen

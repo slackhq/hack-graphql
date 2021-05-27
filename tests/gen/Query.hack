@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4a32f83fed9fed8a36ffde8ab2145625>>
+ * @generated SignedSource<<59466989f18bcbff832a07195d794136>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -49,7 +49,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           '__schema',
           __Schema::nullableOutput(),
           dict[],
-          async ($parent, $args, $vars) ==> \Slack\GraphQL\Introspection\QueryRootFields::getSchema(),
+          async ($parent, $args, $vars) ==> new Schema(),
         );
       case '__type':
         return new GraphQL\FieldDefinition(
@@ -61,7 +61,8 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
               'type' => Types\StringType::nonNullable(),
             ),
           ],
-          async ($parent, $args, $vars) ==> \Slack\GraphQL\Introspection\QueryRootFields::getType(
+          async ($parent, $args, $vars) ==> (new Schema())->getIntrospectionType(
+
             Types\StringType::nonNullable()->coerceNamedNode('name', $args, $vars),
           ),
         );

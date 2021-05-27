@@ -29,10 +29,9 @@ class MethodFieldBuilder extends FieldBuilder {
         'name' => string,
         'method_name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'declaring_type' => string,
         'parameters' => vec<Parameter>,
+        ?'root_field_for_type' => string,
         ?'is_static' => bool,
-        ?'is_root_field' => bool,
     );
 
     <<__Override>>
@@ -45,6 +44,13 @@ class MethodFieldBuilder extends FieldBuilder {
             $this->getMethodCallPrefix(),
             $method_name,
         );
+
+        $this->generateParametersInvocation($hb);
+
+        $hb->add(')');
+    }
+
+    protected function generateParametersInvocation(HackBuilder $hb): void {
         if (!C\is_empty($this->data['parameters'])) {
             $hb->newLine()->indent();
             foreach ($this->data['parameters'] as $param) {
@@ -53,7 +59,6 @@ class MethodFieldBuilder extends FieldBuilder {
             }
             $hb->unindent();
         }
-        $hb->add(')');
     }
 
     <<__Override>>
@@ -61,9 +66,10 @@ class MethodFieldBuilder extends FieldBuilder {
         return $this->data['parameters'];
     }
 
-    private function getMethodCallPrefix(): string {
-        if ($this->data['is_root_field'] ?? false) {
-            return '\\'.$this->data['declaring_type'].'::';
+    protected function getMethodCallPrefix(): string {
+        $root_field_for_type = $this->data['root_field_for_type'] ?? null;
+        if ($root_field_for_type is nonnull) {
+            return '\\'.$root_field_for_type.'::';
         }
         return Str\format('$parent%s', ($this->data['is_static'] ?? false) ? '::' : '->');
     }

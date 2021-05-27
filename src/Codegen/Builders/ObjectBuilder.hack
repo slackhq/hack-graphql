@@ -54,10 +54,7 @@ class ObjectBuilder extends CompositeBuilder {
         return new ObjectBuilder(
             $type_info,
             $type_alias->getName(),
-            Vec\map_with_key(
-                $ts['fields'],
-                ($name, $ts) ==> FieldBuilder::fromShapeField($name, $type_alias->getName(), $ts),
-            ),
+            Vec\map_with_key($ts['fields'], ($name, $ts) ==> FieldBuilder::fromShapeField($name, $ts)),
             dict[], // Objects generated from shapes cannot implement interfaces
         );
     }
@@ -65,7 +62,7 @@ class ObjectBuilder extends CompositeBuilder {
     public static function forConnection(string $name, string $edge_name): ObjectBuilder {
         return new ObjectBuilder(
             new \Slack\GraphQL\ObjectType($name, $name), // TODO: Description
-            $name,  // hack type
+            $name, // hack type
             vec[ // fields
                 new MethodFieldBuilder(shape(
                     'name' => 'edges',
@@ -74,14 +71,12 @@ class ObjectBuilder extends CompositeBuilder {
                         'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
                         'needs_await' => true,
                     ),
-                    'declaring_type' => $name,
                     'parameters' => vec[],
                 )),
                 new MethodFieldBuilder(shape(
                     'name' => 'pageInfo',
                     'method_name' => 'getPageInfo',
                     'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
-                    'declaring_type' => $name,
                     'parameters' => vec[],
                 )),
             ],
@@ -94,20 +89,18 @@ class ObjectBuilder extends CompositeBuilder {
         $name = $gql_type.'Edge';
         return new ObjectBuilder(
             new \Slack\GraphQL\ObjectType($name, $gql_type.' Edge'), // TODO: Description
-            'Slack\GraphQL\Pagination\Edge<'.$hack_type.'>',  // hack type
+            'Slack\GraphQL\Pagination\Edge<'.$hack_type.'>', // hack type
             vec[ // fields
                 new MethodFieldBuilder(shape(
                     'name' => 'node',
                     'method_name' => 'getNode',
                     'output_type' => shape('type' => $output_type.'::nullableOutput()'),
-                    'declaring_type' => $name,
                     'parameters' => vec[],
                 )),
                 new MethodFieldBuilder(shape(
                     'name' => 'cursor',
                     'method_name' => 'getCursor',
                     'output_type' => shape('type' => 'Types\StringType::nullableOutput()'),
-                    'declaring_type' => $name,
                     'parameters' => vec[],
                 )),
             ],
