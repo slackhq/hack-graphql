@@ -195,7 +195,6 @@ final class Generator {
 
     private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
         $objects = vec[];
-        $inputs = vec[];
         $query_fields = dict[
             '__schema' => FieldBuilder::introspectSchemaField(),
             '__type' => FieldBuilder::introspectTypeField(),
@@ -231,7 +230,7 @@ final class Generator {
             $rt = new \ReflectionTypeAlias($type->getName());
             $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
             if ($graphql_input is nonnull) {
-                $inputs[] = new InputObjectBuilder($graphql_input, $rt);
+                $objects[] = new InputObjectBuilder($graphql_input, $rt);
             }
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
@@ -321,7 +320,7 @@ final class Generator {
             );
         }
 
-        return Vec\concat($objects, $inputs) |> Vec\sort_by($$, $object ==> $object->getGraphQLType());
+        return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
     }
 
     private function getConnectionObjects(DefinitionFinder\ScannedClassish $class): vec<ObjectBuilder> {
