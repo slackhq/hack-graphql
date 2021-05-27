@@ -46,7 +46,9 @@ final class FieldCollector {
 
     private function processSelectionSet(Parser\Field\SelectionSet $selection_set): void {
         foreach ($selection_set->getItems() as $item) {
-            // TODO: @skip, @include
+            if ($this->shouldSkip($item)) {
+                continue;
+            }
 
             if ($item is Parser\Field\Field) {
                 $key = $item->getAlias() ?? $item->getName();
@@ -86,5 +88,39 @@ final class FieldCollector {
     private function doesFragmentTypeApply(Parser\TypeRef\NamedTypeRef $fragment_type): bool {
         $name = $fragment_type->getName();
         return $name === $this->parentType->getName() || C\contains_key($this->parentType->getInterfaces(), $name);
+    }
+
+    /**
+     * Field/fragment is skipped if *any* of the provided directives applies. Invalid directives (e.g. missing `if`
+     * argument) are ignored here (they should be caught during validation).
+     */
+    private function shouldSkip(Parser\Field\ISelectionSetItem $item): bool {
+        foreach ($item->getDirectives() ?? vec[] as $directive) {
+            $arg = idx($directive->getArguments(), 'if');
+            if ($arg is null) {
+                // This can only happen if the query wasn't validated.
+                continue;
+            }
+
+            try {
+                $arg_is_true = Types\BooleanType::nonNullable()->coerceNode(
+                    $arg->getValue(),
+                    $this->context->getVariableValues(),
+                );
+            } catch (UserFacingError $_) {
+                // This can only happen if the query wasn't validated or if variable values weren't coerced to the
+                // correct type at the beginning of execution.
+                continue;
+            }
+
+            if (
+                $directive->getName() === 'skip' && $arg_is_true || // @skip(if: true)
+                $directive->getName() === 'include' && !$arg_is_true // @include(if: false)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
