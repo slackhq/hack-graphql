@@ -23,3 +23,6 @@ jobs:
             - name: Test
               run: |
                 docker run -v `pwd`:/app mwildehahn/hack-graphql ./vendor/bin/hacktest tests
+            - name: Diff
+              run: |
+                [ -z "`git status --porcelain`"] && exit 1;
