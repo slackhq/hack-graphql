@@ -61,9 +61,9 @@ final class InterfaceBuilder extends CompositeBuilder {
 
     private function generatePossibleTypesConstant(HackCodegenFactory $cg): CodegenClassConstant {
         $possible_types = keyset[];
-        foreach ($this->hack_class_to_graphql_object as $hack_class => $_) {
+        foreach ($this->hack_class_to_graphql_object as $hack_class => $graphql_class) {
             if (\is_subclass_of($hack_class, $this->hack_type)) {
-                $possible_types[] = Str\format('%s::class', $hack_class);
+                $possible_types[] = Str\format('%s::class', $graphql_class);
             }
         }
 
