@@ -20,7 +20,7 @@ interface __Type {
     public function getIntrospectionDescription(): ?string;
 
     <<GraphQL\Field('fields', 'Fields of the type, only applies to OBJECT and INTERFACE')>>
-    public function getIntrospectionFields(bool $include_deprecated = false): ?vec<__Field>;
+    public function getIntrospectionFields(bool $includeDeprecated = false): ?vec<__Field>;
 
     <<GraphQL\Field('interfaces', 'Interfaces the object implements, only applies to OBJECT')>>
     public function getIntrospectionInterfaces(): ?vec<__Type>;
@@ -29,7 +29,7 @@ interface __Type {
     public function getIntrospectionPossibleTypes(): ?vec<__Type>;
 
     <<GraphQL\Field('enumValues', 'Enum values, only applies to ENUM')>>
-    public function getIntrospectionEnumValues(bool $include_deprecated = false): ?vec<__EnumValue>;
+    public function getIntrospectionEnumValues(bool $includeDeprecated = false): ?vec<__EnumValue>;
 
     <<GraphQL\Field('inputFields', 'Input fields, only applies to INPUT_OBJECT')>>
     public function getIntrospectionInputFields(): ?vec<__InputValue>;

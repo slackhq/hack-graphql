@@ -54,8 +54,8 @@ abstract class EnumType extends LeafType {
     }
 
     <<__Override>>
-    final public function getEnumValues(bool $include_deprecated = false): vec<GraphQL\Introspection\__EnumValue> {
-        return $include_deprecated
+    final public function getEnumValues(bool $includeDeprecated = false): vec<GraphQL\Introspection\__EnumValue> {
+        return $includeDeprecated
             ? static::ENUM_VALUES
             : Vec\filter(static::ENUM_VALUES, $value ==> !$value['isDeprecated']);
     }

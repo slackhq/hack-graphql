@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<aee6b0503b3c3a73e42406b9eccfdda6>>
+ * @generated SignedSource<<46725fb0d0175c7f30579a28e030cf3b>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -45,14 +45,14 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           'enumValues',
           __EnumValue::nonNullable()->nullableOutputListOf(),
           dict[
-            'include_deprecated' => shape(
-              'name' => 'include_deprecated',
+            'includeDeprecated' => shape(
+              'name' => 'includeDeprecated',
               'type' => Types\BooleanType::nonNullable(),
               'defaultValue' => 'false',
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionEnumValues(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
+            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
         );
       case 'fields':
@@ -60,14 +60,14 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           'fields',
           __Field::nonNullable()->nullableOutputListOf(),
           dict[
-            'include_deprecated' => shape(
-              'name' => 'include_deprecated',
+            'includeDeprecated' => shape(
+              'name' => 'includeDeprecated',
               'type' => Types\BooleanType::nonNullable(),
               'defaultValue' => 'false',
             ),
           ],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionFields(
-            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('include_deprecated', $args, $vars, false),
+            Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
         );
       case 'inputFields':

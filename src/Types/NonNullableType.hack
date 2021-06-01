@@ -7,10 +7,10 @@ interface INonNullableType {
     public function getKind(): Introspection\__TypeKind;
     public function getName(): ?string;
     public function getDescription(): ?string;
-    public function getFields(bool $include_deprecated = false): ?vec<Introspection\__Field>;
+    public function getFields(bool $includeDeprecated = false): ?vec<Introspection\__Field>;
     public function getInterfaces(): ?dict<string, classname<InterfaceType>>;
     public function getPossibleTypes(): ?vec<classname<ObjectType>>;
-    public function getEnumValues(bool $include_deprecated = false): ?vec<Introspection\__EnumValue>;
+    public function getEnumValues(bool $includeDeprecated = false): ?vec<Introspection\__EnumValue>;
     public function getInputFields(): ?vec<Introspection\__InputValue>;
     public function getOfType(): ?Introspection\__Type;
     public function nullableForIntrospection(): INullableType;
@@ -40,7 +40,7 @@ trait TNonNullableType implements INonNullableType {
     }
 
     <<__Override>>
-    final public function getIntrospectionFields(bool $include_deprecated = false): ?vec<Introspection\__Field> {
+    final public function getIntrospectionFields(bool $includeDeprecated = false): ?vec<Introspection\__Field> {
         return null;
     }
 
@@ -56,14 +56,14 @@ trait TNonNullableType implements INonNullableType {
 
     <<__Override>>
     final public function getIntrospectionEnumValues(
-        bool $include_deprecated = false,
+        bool $includeDeprecated = false,
     ): ?vec<Introspection\__EnumValue> {
         return null;
     }
 
     <<__Override>>
     final public function getIntrospectionInputFields(
-        bool $include_deprecated = false,
+        bool $includeDeprecated = false,
     ): ?vec<Introspection\__InputValue> {
         return null;
     }
@@ -83,7 +83,7 @@ trait TNonNullableType implements INonNullableType {
         return null;
     }
 
-    public function getFields(bool $include_deprecated = false): ?vec<Introspection\__Field> {
+    public function getFields(bool $includeDeprecated = false): ?vec<Introspection\__Field> {
         return null;
     }
 
@@ -95,7 +95,7 @@ trait TNonNullableType implements INonNullableType {
         return null;
     }
 
-    public function getEnumValues(bool $include_deprecated = false): ?vec<Introspection\__EnumValue> {
+    public function getEnumValues(bool $includeDeprecated = false): ?vec<Introspection\__EnumValue> {
         return null;
     }
 

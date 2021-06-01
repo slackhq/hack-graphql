@@ -30,7 +30,7 @@ trait TNullableType implements INullableType {
     }
 
     <<__Override>>
-    final public function getIntrospectionFields(bool $include_deprecated = false): ?vec<Introspection\__Field> {
+    final public function getIntrospectionFields(bool $includeDeprecated = false): ?vec<Introspection\__Field> {
         return $this->getInnerType()->getFields();
     }
 
@@ -48,14 +48,14 @@ trait TNullableType implements INullableType {
 
     <<__Override>>
     final public function getIntrospectionEnumValues(
-        bool $include_deprecated = false,
+        bool $includeDeprecated = false,
     ): ?vec<Introspection\__EnumValue> {
         return $this->getInnerType()->getEnumValues();
     }
 
     <<__Override>>
     final public function getIntrospectionInputFields(
-        bool $include_deprecated = false,
+        bool $includeDeprecated = false,
     ): ?vec<Introspection\__InputValue> {
         return $this->getInnerType()->getInputFields();
     }
