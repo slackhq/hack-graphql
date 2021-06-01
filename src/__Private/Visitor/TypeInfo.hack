@@ -91,6 +91,16 @@ final class TypeInfo extends ASTVisitor {
                     throw new \Slack\GraphQL\UserFacingError("Unrecognized type: %s", $node->getType());
             }
             $this->type_stack->push($type);
+        } else if (
+            $node is Parser\FragmentSpread\InlineFragmentSpread ||
+            $node is Parser\Fragment\Fragment
+        ) {
+            $schema = $this->schema;
+            $type_condition = $node->getTypeCond();
+            $output_type = $type_condition
+                ? (new $schema())->getType($type_condition->getName())
+                : $this->getType();
+            $this->type_stack->push($output_type is Types\IOutputType ? $output_type : null);
         } elseif ($node is Parser\Value\ArgumentValue) {
             // TODO: Handle directives
             $arg_def = null;
@@ -114,7 +124,11 @@ final class TypeInfo extends ASTVisitor {
         } elseif ($node is Parser\Field\Field) {
             $this->field_def_stack->pop();
             $this->type_stack->pop();
-        } elseif ($node is Parser\Operation\Operation) {
+        } elseif (
+            $node is Parser\Operation\Operation ||
+            $node is Parser\FragmentSpread\InlineFragmentSpread ||
+            $node is Parser\Fragment\Fragment
+        ) {
             $this->type_stack->pop();
         } elseif ($node is Parser\Value\ArgumentValue) {
             $this->argument = null;

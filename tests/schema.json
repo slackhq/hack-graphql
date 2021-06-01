@@ -2502,7 +2502,7 @@
                             "name": "enumValues",
                             "args": [
                                 {
-                                    "name": "include_deprecated",
+                                    "name": "includeDeprecated",
                                     "type": {
                                         "kind": "NON_NULL",
                                         "name": null,
@@ -2535,7 +2535,7 @@
                             "name": "fields",
                             "args": [
                                 {
-                                    "name": "include_deprecated",
+                                    "name": "includeDeprecated",
                                     "type": {
                                         "kind": "NON_NULL",
                                         "name": null,
