@@ -2,11 +2,7 @@ namespace Slack\GraphQL;
 
 use namespace HH\Lib\{C, Str, Vec};
 
-function assert(
-    bool $condition,
-    Str\SprintfFormatString $message,
-    mixed ...$args
-): void {
+function assert(bool $condition, Str\SprintfFormatString $message, mixed ...$args): void {
     if (!$condition) {
         throw new UserFacingError('%s', \vsprintf($message, $args));
     }
@@ -20,22 +16,22 @@ class UserFacingError extends \Exception {
         'message' => string,
         ?'location' => shape('line' => int, 'column' => int),
         ?'path' => vec<arraykey>,
+        ?'cause' => shape(
+            'message' => string,
+            'file' => string,
+            'line' => int,
+            'trace' => string,
+        ),
     );
 
     private vec<arraykey> $reversePath = vec[];
     private ?\Graphpinator\Common\Location $location = null;
 
-    public function __construct(
-      Str\SprintfFormatString $message,
-      mixed ...$args
-    ): void {
+    public function __construct(Str\SprintfFormatString $message, mixed ...$args): void {
         parent::__construct(\vsprintf($message, $args));
     }
 
-    final public function prependMessage(
-        Str\SprintfFormatString $message,
-        mixed ...$args
-    ): this {
+    final public function prependMessage(Str\SprintfFormatString $message, mixed ...$args): this {
         $this->message = \vsprintf($message, $args).': '.$this->message;
         return $this;
     }
@@ -67,7 +63,7 @@ class UserFacingError extends \Exception {
         return $this;
     }
 
-    final public function toShape(): this::TData {
+    final public function toShape(bool $verbose = false): this::TData {
         $out = shape('message' => $this->getMessage());
         $location = $this->getLocation();
         if ($location is nonnull) {
@@ -79,6 +75,15 @@ class UserFacingError extends \Exception {
         $path = $this->getPath();
         if ($path is nonnull) {
             $out['path'] = $path;
+        }
+        if ($verbose && $this is FieldResolverError) {
+            $cause = $this->getCause();
+            $out['cause'] = shape(
+                'message' => $cause->getMessage(),
+                'file' => $cause->getFile(),
+                'line' => $cause->getLine(),
+                'trace' => $cause->getTraceAsString(),
+            );
         }
         return $out;
     }

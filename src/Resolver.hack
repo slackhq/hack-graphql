@@ -14,7 +14,12 @@ final class Resolver {
         ?'extensions' => dict<string, mixed>,
     );
 
-    public function __construct(private classname<BaseSchema> $schema) {}
+    const type TOptions = shape(
+        // Enabling this causes errors to include information about the underlying error.
+        ?'verbose_errors' => bool,
+    );
+
+    public function __construct(private classname<BaseSchema> $schema, private this::TOptions $options = shape()) {}
 
     /**
      * Operation name must be specified if the GraphQL request contains multiple operations.
@@ -146,6 +151,6 @@ final class Resolver {
     }
 
     private function formatErrors(vec<UserFacingError> $errors): vec<UserFacingError::TData> {
-        return Vec\map($errors, $error ==> $error->toShape());
+        return Vec\map($errors, $error ==> $error->toShape($this->options['verbose_errors'] ?? false));
     }
 }
