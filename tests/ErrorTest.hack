@@ -1,3 +1,4 @@
+use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
 
 final class ErrorTest extends PlaygroundTest {
@@ -268,7 +269,8 @@ final class ErrorTest extends PlaygroundTest {
                 shape(
                     'errors' => vec[
                         shape(
-                            'message' => 'Invalid value for variable "favorite_color": Expected a valid value for FavoriteColor, got foo',
+                            'message' =>
+                                'Invalid value for variable "favorite_color": Expected a valid value for FavoriteColor, got foo',
                         ),
                     ],
                 ),
@@ -374,5 +376,38 @@ final class ErrorTest extends PlaygroundTest {
                 ),
             ),
         ];
+    }
+
+    final public async function testVerboseErrors(): Awaitable<void> {
+        $output = await $this->resolve(
+            '
+            query {
+                error_test {
+                    hidden_exception
+                }
+            }
+            ',
+            dict[],
+            shape('verbose_errors' => true),
+        );
+
+        expect($output['data'] ?? null)->toEqual(dict[
+            'error_test' => dict[
+                'hidden_exception' => null,
+            ],
+        ]);
+
+        $errors = expect($output['errors'] ?? null)->toNotBeNull();
+        expect(C\count($errors))->toEqual(1);
+
+        $error = C\firstx($errors);
+        expect($error['message'])->toEqual('Caught exception while resolving field.');
+        expect($error['path'] ?? null)->toEqual(vec['error_test', 'hidden_exception']);
+        expect($error['location'] ?? null)->toBeNull();
+
+        $cause = expect($error['cause'] ?? null)->toNotBeNull();
+        expect($cause['message'])->toEqual('Could not connect to database at 127.0.0.1');
+        expect($cause['file'])->toContainSubstring('playground/ErrorTestObj.hack');
+        expect($cause['line'])->toEqual(35);
     }
 }
