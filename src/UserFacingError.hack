@@ -16,7 +16,7 @@ class UserFacingError extends \Exception {
         'message' => string,
         ?'location' => shape('line' => int, 'column' => int),
         ?'path' => vec<arraykey>,
-        ?'cause' => shape(
+        ?'extensions' => shape(
             'message' => string,
             'file' => string,
             'line' => int,
@@ -78,7 +78,7 @@ class UserFacingError extends \Exception {
         }
         if ($verbose && $this is FieldResolverError) {
             $cause = $this->getCause();
-            $out['cause'] = shape(
+            $out['extensions'] = shape(
                 'message' => $cause->getMessage(),
                 'file' => $cause->getFile(),
                 'line' => $cause->getLine(),

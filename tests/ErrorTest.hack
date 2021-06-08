@@ -405,9 +405,9 @@ final class ErrorTest extends PlaygroundTest {
         expect($error['path'] ?? null)->toEqual(vec['error_test', 'hidden_exception']);
         expect($error['location'] ?? null)->toBeNull();
 
-        $cause = expect($error['cause'] ?? null)->toNotBeNull();
-        expect($cause['message'])->toEqual('Could not connect to database at 127.0.0.1');
-        expect($cause['file'])->toContainSubstring('playground/ErrorTestObj.hack');
-        expect($cause['line'])->toEqual(35);
+        $extension = expect($error['extensions'] ?? null)->toNotBeNull();
+        expect($extension['message'])->toEqual('Could not connect to database at 127.0.0.1');
+        expect($extension['file'])->toContainSubstring('playground/ErrorTestObj.hack');
+        expect($extension['line'])->toEqual(35);
     }
 }
