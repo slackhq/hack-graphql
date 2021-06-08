@@ -1,6 +1,6 @@
 namespace Slack\GraphQL;
 
-use namespace HH\Lib\{Dict, Keyset, Vec, Str};
+use namespace HH\Lib\{Dict, Vec, Str};
 
 // TODO: this should be private
 <<__ConsistentConstruct>>
