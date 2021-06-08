@@ -19,7 +19,7 @@ final class Resolver {
         ?'verbose_errors' => bool,
     );
 
-    public function __construct(private classname<BaseSchema> $schema, private this::TOptions $options = shape()) {}
+    public function __construct(private BaseSchema $schema, private this::TOptions $options = shape()) {}
 
     /**
      * Operation name must be specified if the GraphQL request contains multiple operations.
@@ -108,11 +108,11 @@ final class Resolver {
         $operation_type = $operation->getType();
         switch ($operation_type) {
             case 'query':
-                $result = await $schema::resolveQuery($operation, $context);
+                $result = await $schema->resolveQuery($operation, $context);
                 break;
             case 'mutation':
                 invariant($schema::MUTATION_TYPE, 'mutation operation not supported for schema');
-                $result = await $schema::resolveMutation($operation, $context);
+                $result = await $schema->resolveMutation($operation, $context);
                 break;
             default:
                 throw new \Error('Unsupported operation: '.$operation_type);

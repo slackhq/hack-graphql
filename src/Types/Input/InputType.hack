@@ -170,7 +170,7 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
      * Convert a parser node (e.g. from a variable declaration) to an instance of the input type it represents.
      */
     public static function fromNode(
-        classname<GraphQL\BaseSchema> $schema,
+        GraphQL\BaseSchema $schema,
         TypeRef\TypeRef $node,
         bool $nullable = true,
     ): IInputType {

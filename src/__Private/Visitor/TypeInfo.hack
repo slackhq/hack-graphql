@@ -15,7 +15,7 @@ use type \Slack\GraphQL\__Private\Utils\Stack;
  */
 final class TypeInfo extends ASTVisitor {
 
-    private classname<\Slack\GraphQL\BaseSchema> $schema;
+    private \Slack\GraphQL\BaseSchema $schema;
     private Stack<?Types\IOutputType> $type_stack;
     private Stack<?Types\INamedOutputType> $parent_type_stack;
     private Stack<?Types\IInputType> $input_type_stack;
@@ -23,7 +23,7 @@ final class TypeInfo extends ASTVisitor {
     private Stack<mixed> $default_value_stack;
     private ?\Slack\GraphQL\Introspection\__InputValue $argument = null;
 
-    public function __construct(classname<\Slack\GraphQL\BaseSchema> $schema) {
+    public function __construct(\Slack\GraphQL\BaseSchema $schema) {
         $this->schema = $schema;
         $this->type_stack = new Stack();
         $this->parent_type_stack = new Stack();
@@ -78,13 +78,12 @@ final class TypeInfo extends ASTVisitor {
             $this->field_def_stack->push($field_definition);
             $this->type_stack->push($field_type);
         } elseif ($node is Parser\Operation\Operation) {
-            $schema = $this->schema;
             switch ($node->getType()) {
                 case \Graphpinator\Tokenizer\OperationType::QUERY:
-                    $type = $schema::getQueryType();
+                    $type = $this->schema->getQueryType();
                     break;
                 case \Graphpinator\Tokenizer\OperationType::MUTATION:
-                    $type = $schema::getMutationType();
+                    $type = $this->schema->getMutationType();
                     break;
                 default:
                     // TODO: Subscriptions
@@ -95,10 +94,9 @@ final class TypeInfo extends ASTVisitor {
             $node is Parser\FragmentSpread\InlineFragmentSpread ||
             $node is Parser\Fragment\Fragment
         ) {
-            $schema = $this->schema;
             $type_condition = $node->getTypeCond();
             $output_type = $type_condition
-                ? (new $schema())->getType($type_condition->getName())
+                ? $this->schema->getType($type_condition->getName())
                 : $this->getType();
             $this->type_stack->push($output_type is Types\IOutputType ? $output_type : null);
         } elseif ($node is Parser\Value\ArgumentValue) {
