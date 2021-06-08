@@ -180,7 +180,6 @@ final class Generator {
 
         $resolve_method = $cg->codegenMethod($method_name)
             ->setPublic()
-            ->setIsStatic(true)
             ->setIsAsync(true)
             ->setReturnType('Awaitable<GraphQL\\ValidFieldResult<?dict<string, mixed>>>')
             ->addParameterf('\%s $operation', \Graphpinator\Parser\Operation\Operation::class)
