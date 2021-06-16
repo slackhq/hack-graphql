@@ -1532,42 +1532,6 @@
                     "name": "Query",
                     "fields": [
                         {
-                            "name": "__schema",
-                            "args": [],
-                            "type": {
-                                "kind": "OBJECT",
-                                "name": "__Schema",
-                                "ofType": null
-                            },
-                            "isDeprecated": false,
-                            "deprecationReason": null
-                        },
-                        {
-                            "name": "__type",
-                            "args": [
-                                {
-                                    "name": "name",
-                                    "type": {
-                                        "kind": "NON_NULL",
-                                        "name": null,
-                                        "ofType": {
-                                            "kind": "SCALAR",
-                                            "name": "String",
-                                            "ofType": null
-                                        }
-                                    },
-                                    "defaultValue": null
-                                }
-                            ],
-                            "type": {
-                                "kind": "OBJECT",
-                                "name": "__Type",
-                                "ofType": null
-                            },
-                            "isDeprecated": false,
-                            "deprecationReason": null
-                        },
-                        {
                             "name": "alphabetConnection",
                             "args": [
                                 {
