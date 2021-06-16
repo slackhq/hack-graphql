@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<59466989f18bcbff832a07195d794136>>
+ * @generated SignedSource<<fd73b9d41b5e89b223e335d9e94ca6cc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,8 +16,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
   const NAME = 'Query';
   const type THackType = \Slack\GraphQL\Root;
   const keyset<string> FIELD_NAMES = keyset[
-    '__schema',
-    '__type',
     'alphabetConnection',
     'arg_test',
     'bot',

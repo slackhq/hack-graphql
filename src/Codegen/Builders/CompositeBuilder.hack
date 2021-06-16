@@ -1,6 +1,6 @@
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\Keyset;
+use namespace HH\Lib\{Keyset, Str};
 use type Facebook\HackCodegen\{
     CodegenClass,
     CodegenMethod,
@@ -56,7 +56,8 @@ abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Priva
     }
 
     final public function getFieldNames(): keyset<string> {
-        return Keyset\map($this->fields, $field ==> $field->getName());
+        return Keyset\map($this->fields, $field ==> $field->getName())
+            |> Keyset\filter($$, $name ==> !Str\starts_with($name, '__'));
     }
 
     private function generateFieldNamesConstant(
