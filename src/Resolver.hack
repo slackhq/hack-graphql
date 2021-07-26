@@ -8,104 +8,43 @@ use namespace HH\Lib\{C, Vec};
 
 final class Resolver {
 
-    /**
-     * @see https://spec.graphql.org/draft/#sec-Response
-     */
-    const type TResponse = shape(
-        ?'data' => ?dict<string, mixed>, // missing data and null data are both valid states with different meanings
-        ?'errors' => vec<UserFacingError::TData>, // errors are optional but cannot be null (or empty) if present
-        ?'extensions' => dict<string, mixed>,
-    );
+    public function __construct(private BaseSchema $schema) {}
 
-    const type TOptions = shape(
-        // Enabling this causes errors to include information about the underlying error.
-        ?'verbose_errors' => bool,
-    );
-
-    public function __construct(private BaseSchema $schema, private this::TOptions $options = shape()) {}
-
-    /**
-     * Operation name must be specified if the GraphQL request contains multiple operations.
-     *
-     * @see https://spec.graphql.org/draft/#sec-Execution
-     */
-    public async function resolve(
-        string $input,
-        dict<string, mixed> $variables = dict[],
-        ?string $operation_name = null,
-    ): Awaitable<this::TResponse> {
-        try {
-            $request = $this->parseRequest($input);
-        } catch (GraphQL\UserFacingError $e) {
-            return shape('errors' => $this->formatErrors(vec[$e]));
+    public async function resolve(IRequest $request): Awaitable<IResponse> {
+        $response = new Response($request);
+        if (!$request is WellformedRequest) {
+            return $response;
         }
 
         $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
         $errors = $validator->validate($request);
         if ($errors) {
-            return shape('errors' => $this->formatErrors($errors));
+            return $response->withErrors($errors);
         }
 
-        $ret = shape();
         try {
-            list($ret['data'], $errors) = await $this->resolveRequest($request, $variables, $operation_name);
+            list($data, $errors) = await $this->resolveRequest($request);
+            $response = $response->withData($data);
         } catch (UserFacingError $e) {
             $errors = vec[$e];
         } catch (\Throwable $e) {
             $errors = vec[new FieldResolverError($e)];
         }
 
-        if (!C\is_empty($errors)) {
-            $ret['errors'] = $this->formatErrors($errors);
-        }
-
-        return $ret;
-    }
-
-    private function parseRequest(string $input): \Graphpinator\Parser\ParsedRequest {
-        $source = new \Graphpinator\Source\StringSource($input);
-        $parser = new \Graphpinator\Parser\Parser($source);
-        try {
-            return $parser->parse();
-        } catch (\Graphpinator\Exception\GraphpinatorBase $e) {
-            $user_facing_error = new UserFacingError('%s', $e->getMessage());
-            $location = $e->getLocation();
-            if ($location) {
-                $user_facing_error->setLocation($location);
-            }
-            $path = $e->getPath()?->jsonSerialize();
-            if ($path) {
-                $user_facing_error->setPath($path);
-            }
-            throw $user_facing_error;
-        }
+        return $response->withErrors($errors);
     }
 
     public async function resolveRequest(
-        \Graphpinator\Parser\ParsedRequest $request,
-        dict<string, mixed> $raw_variables,
-        ?string $operation_name,
+        WellformedRequest $request,
     ): Awaitable<(?dict<string, mixed>, vec<UserFacingError>)> {
         $schema = $this->schema;
 
-        if ($operation_name is nonnull) {
-            GraphQL\assert(
-                C\contains_key($request->getOperations(), $operation_name),
-                'Operation %s not found in the request',
-                $operation_name,
-            );
-            $operation = $request->getOperations()[$operation_name];
-        } else {
-            GraphQL\assert(
-                C\count($request->getOperations()) === 1,
-                'Operation name must be specified if the request contains multiple',
-            );
-            $operation = C\onlyx($request->getOperations());
-        }
+        $query = $request->getQuery();
+        $operation = $request->getOperation();
 
         $context = new ExecutionContext(
-            $this->coerceVariables($operation->getVariables(), $raw_variables),
-            $request->getFragments(),
+            $this->coerceVariables($operation->getVariables(), $request->getVariables()),
+            $query->getFragments(),
         );
 
         $operation_type = $operation->getType();
@@ -151,9 +90,5 @@ final class Resolver {
             GraphQL\assert($type is Types\NullableInputType<_>, 'Missing value for required variable "%s"', $name);
         }
         return $coerced_values;
-    }
-
-    private function formatErrors(vec<UserFacingError> $errors): vec<UserFacingError::TData> {
-        return Vec\map($errors, $error ==> $error->toShape($this->options['verbose_errors'] ?? false));
     }
 }

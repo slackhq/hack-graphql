@@ -4,8 +4,9 @@
 namespace Slack\GraphQL\Validation;
 
 use namespace HH\Lib\Vec;
-use type \Slack\GraphQL\__Private\{DependencyInfo, TypeInfo};
-use type \Slack\GraphQL\__Private\ParallelVisitor;
+use namespace Slack\GraphQL;
+use type Slack\GraphQL\__Private\{DependencyInfo, TypeInfo};
+use type Slack\GraphQL\__Private\ParallelVisitor;
 
 final class Validator {
     private keyset<classname<ValidationRule>> $rules = keyset[
@@ -16,17 +17,17 @@ final class Validator {
         ScalarLeafsRule::class,
     ];
 
-    public function __construct(private \Slack\GraphQL\BaseSchema $schema) {}
+    public function __construct(private GraphQL\BaseSchema $schema) {}
 
-    public function validate(\Graphpinator\Parser\ParsedRequest $request): vec<\Slack\GraphQL\UserFacingError> {
+    public function validate(GraphQL\WellformedRequest $request): vec<GraphQL\UserFacingError> {
         $dependencies = new DependencyInfo();
         $type_info = new TypeInfo($this->schema);
-        $ctx = new ValidationContext($this->schema, $request, $type_info);
+        $ctx = new ValidationContext($this->schema, $request->getQuery(), $type_info);
 
         $rules = Vec\map($this->rules, $rule ==> new $rule($ctx));
 
         $visitor = new ParallelVisitor(Vec\concat(vec[$dependencies, $type_info], $rules));
-        $visitor->walk($request);
+        $visitor->walk($request->getQuery());
 
         foreach ($rules as $rule) {
             $rule->finalize($dependencies);

@@ -391,7 +391,7 @@ final class ErrorTest extends FixtureTest {
             }
             ',
             dict[],
-            shape('verbose_errors' => true),
+            true, // verbose_errors
         );
 
         expect($output['data'] ?? null)->toEqual(dict[
