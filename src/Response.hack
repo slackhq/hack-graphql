@@ -21,6 +21,9 @@ interface IResponse {
 
 final class Response implements IResponse {
     private vec<UserFacingError> $errors = vec[];
+
+    // A null value here represents that the data has been "nulled-out" by a child resolver
+    // which threw an exception. An empty dict, on the other hand, means we never invoked any resolvers.
     private ?dict<string, mixed> $data = dict[];
 
     public function __construct(private IRequest $request) {
