@@ -2,7 +2,7 @@
 
 
 use function Facebook\FBExpect\expect;
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{C, Vec};
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Validation;
 
@@ -29,12 +29,15 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
     }
 
     <<\Facebook\HackTest\DataProvider('getTestCases')>>
-    final public async function test(string $query, vec<string> $expected_errors): Awaitable<void> {
-        $source = new \Graphpinator\Source\StringSource($query);
+    final public async function test(string $input, vec<string> $expected_errors): Awaitable<void> {
+        $source = new \Graphpinator\Source\StringSource($input);
         $parser = new \Graphpinator\Parser\Parser($source);
-        $request = $parser->parse();
+        $query = $parser->parse();
+        $operation = C\firstx($query->getOperations());
 
-        $validator = new GraphQL\Validation\Validator(new GraphQL\Test\Generated\Schema());
+        $request = new GraphQL\WellformedRequest($query, $operation, $input);
+
+        $validator = new GraphQL\Validation\Validator(new \Slack\GraphQL\Test\Generated\Schema());
         $validator->setRules(keyset[$this::RULE]);
 
         $errors = $validator->validate($request);

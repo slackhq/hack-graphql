@@ -44,16 +44,18 @@ abstract class FixtureTest extends \Facebook\HackTest\HackTest {
         expect($out)->toHaveSameShapeAs($expected_response);
     }
 
-    private function getResolver(GraphQL\Resolver::TOptions $options = shape()): GraphQL\Resolver {
-        return new GraphQL\Resolver(new \Slack\GraphQL\Test\Generated\Schema(), $options);
+    private function getResolver(): GraphQL\Resolver {
+        return new GraphQL\Resolver(new \Slack\GraphQL\Test\Generated\Schema());
     }
 
     public async function resolve(
         string $query,
         dict<string, mixed> $variables = dict[],
-        GraphQL\Resolver::TOptions $options = shape(),
-    ): Awaitable<GraphQL\Resolver::TResponse> {
-        $resolver = $this->getResolver($options);
-        return await $resolver->resolve($query, $variables);
+        bool $verbose_errors = false,
+    ): Awaitable<GraphQL\IResponse::TShape> {
+        $request = GraphQL\Request::build($query, $variables);
+        $resolver = $this->getResolver();
+        $response = await $resolver->resolve($request);
+        return $response->toShape($verbose_errors);
     }
 }
