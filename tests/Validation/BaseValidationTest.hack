@@ -35,7 +35,7 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
         $query = $parser->parse();
         $operation = C\firstx($query->getOperations());
 
-        $request = new GraphQL\WellformedRequest($query, $operation, $input);
+        $request = new GraphQL\WellformedRequest($input, dict[], $query, $operation);
 
         $validator = new GraphQL\Validation\Validator(new \Slack\GraphQL\Test\Generated\Schema());
         $validator->setRules(keyset[$this::RULE]);

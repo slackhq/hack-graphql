@@ -13,11 +13,24 @@ use namespace HH\Lib\C;
  * request would execute.
  */
 interface IRequest {
+
+    /**
+     * Get any variables included in the request.
+     */
     public function getVariables(): dict<string, mixed>;
+
+    /**
+     * Get the name of the operation which the request will execute, or which was passed in with the request
+     * (in the case of an invalid operation name).
+     */
     public function getOperationName(): ?string;
 }
 
+/**
+ * Shared functionality for GraphQL requests.
+ */
 abstract class Request implements IRequest {
+
     /**
      * Build a GraphQL request.
      *
@@ -28,37 +41,17 @@ abstract class Request implements IRequest {
      */
     final public static function build(
         string $input,
-        dict<string, mixed> $variables = dict[],
+        dict<string, mixed> $variables,
         ?string $operation_name = null,
     ): IRequest {
         try {
             $query = self::parseQuery($input);
             $operation = self::parseOperation($query, $operation_name);
         } catch (UserFacingError $error) {
-            return new MalformedRequest(vec[$error], $input, $variables, $operation_name);
+            return new MalformedRequest($input, $variables, vec[$error], $operation_name);
         }
 
-        return new WellformedRequest($query, $operation, $input, $variables);
-    }
-
-    private static function parseOperation(
-        \Graphpinator\Parser\ParsedRequest $query,
-        ?string $operation_name,
-    ): \Graphpinator\Parser\Operation\Operation {
-        if ($operation_name is nonnull) {
-            GraphQL\assert(
-                C\contains_key($query->getOperations(), $operation_name),
-                'Operation %s not found in the request',
-                $operation_name,
-            );
-            return $query->getOperations()[$operation_name];
-        } else {
-            GraphQL\assert(
-                C\count($query->getOperations()) === 1,
-                'Operation name must be specified if the request contains multiple',
-            );
-            return C\onlyx($query->getOperations());
-        }
+        return new WellformedRequest($input, $variables, $query, $operation);
     }
 
     private static function parseQuery(string $input): \Graphpinator\Parser\ParsedRequest {
@@ -81,6 +74,26 @@ abstract class Request implements IRequest {
         }
     }
 
+    private static function parseOperation(
+        \Graphpinator\Parser\ParsedRequest $query,
+        ?string $operation_name,
+    ): \Graphpinator\Parser\Operation\Operation {
+        if ($operation_name is nonnull) {
+            GraphQL\assert(
+                C\contains_key($query->getOperations(), $operation_name),
+                'Operation %s not found in the request',
+                $operation_name,
+            );
+            return $query->getOperations()[$operation_name];
+        } else {
+            GraphQL\assert(
+                C\count($query->getOperations()) === 1,
+                'Operation name must be specified if the request contains multiple',
+            );
+            return C\onlyx($query->getOperations());
+        }
+    }
+
     public function __construct(private string $input, private dict<string, mixed> $variables = dict[]) {}
 
     public function getVariables(): dict<string, mixed> {
@@ -93,20 +106,23 @@ abstract class Request implements IRequest {
  */
 final class MalformedRequest extends Request {
     public function __construct(
-        private vec<UserFacingError> $errors,
         string $input,
-        dict<string, mixed> $variables = dict[],
+        dict<string, mixed> $variables,
+        private vec<UserFacingError> $errors,
         private ?string $operation_name = null,
     ) {
         parent::__construct($input, $variables);
     }
 
-    public function getErrors(): vec<UserFacingError> {
-        return $this->errors;
-    }
-
     public function getOperationName(): ?string {
         return $this->operation_name;
+    }
+
+    /**
+     * Get errors describing why this request is malformed.
+     */
+    public function getErrors(): vec<UserFacingError> {
+        return $this->errors;
     }
 }
 
@@ -115,23 +131,29 @@ final class MalformedRequest extends Request {
  */
 final class WellformedRequest extends Request {
     public function __construct(
+        string $input,
+        dict<string, mixed> $variables,
         private \Graphpinator\Parser\ParsedRequest $query,
         private \Graphpinator\Parser\Operation\Operation $operation,
-        string $input,
-        dict<string, mixed> $variables = dict[],
     ) {
         parent::__construct($input, $variables);
     }
 
+    public function getOperationName(): string {
+        return $this->operation->getName();
+    }
+
+    /**
+     * Get the query parsed from this request's raw input.
+     */
     public function getQuery(): \Graphpinator\Parser\ParsedRequest {
         return $this->query;
     }
 
+    /**
+     * Get the operation which will be executed by the request (if the request is valid).
+     */
     public function getOperation(): \Graphpinator\Parser\Operation\Operation {
         return $this->operation;
-    }
-
-    public function getOperationName(): string {
-        return $this->operation->getName();
     }
 }

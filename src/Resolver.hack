@@ -10,33 +10,36 @@ final class Resolver {
 
     public function __construct(private BaseSchema $schema) {}
 
+    /**
+     * Validate and resolve a GraphQL request against the schema..
+     */
     public async function resolve(IRequest $request): Awaitable<IResponse> {
         $response = new Response($request);
-        if (!$request is WellformedRequest) {
-            return $response;
+        // If the request is malformed, we can't proceed with execution.
+        if ($request is MalformedRequest) {
+            return $response->withErrors($request->getErrors());
         }
+        $request as WellformedRequest;
 
-        $validator = new \Slack\GraphQL\Validation\Validator($this->schema);
+        $validator = new GraphQL\Validation\Validator($this->schema);
         $errors = $validator->validate($request);
         if ($errors) {
             return $response->withErrors($errors);
         }
 
         try {
-            list($data, $errors) = await $this->resolveRequest($request);
-            $response = $response->withData($data);
+            $result = await $this->resolveRequest($request);
+            return $response->withResult($result);
         } catch (UserFacingError $e) {
-            $errors = vec[$e];
+            return $response->withUserError($e);
         } catch (\Throwable $e) {
-            $errors = vec[new FieldResolverError($e)];
+            return $response->withException($e);
         }
-
-        return $response->withErrors($errors);
     }
 
     public async function resolveRequest(
         WellformedRequest $request,
-    ): Awaitable<(?dict<string, mixed>, vec<UserFacingError>)> {
+    ): Awaitable<ValidFieldResult<?dict<string, mixed>>> {
         $schema = $this->schema;
 
         $query = $request->getQuery();
@@ -60,7 +63,7 @@ final class Resolver {
                 throw new \Error('Unsupported operation: '.$operation_type);
         }
 
-        return tuple($result->getValue(), $result->getErrors());
+        return $result;
     }
 
     private function coerceVariables(
