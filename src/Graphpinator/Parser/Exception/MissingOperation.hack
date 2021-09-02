@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\Exception;
 
 final class MissingOperation extends \Graphpinator\Parser\Exception\ParserError {

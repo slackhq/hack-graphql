@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\Vec;
@@ -47,9 +50,7 @@ trait TNullableType implements INullableType {
     }
 
     <<__Override>>
-    final public function getIntrospectionEnumValues(
-        bool $includeDeprecated = false,
-    ): ?vec<Introspection\__EnumValue> {
+    final public function getIntrospectionEnumValues(bool $includeDeprecated = false): ?vec<Introspection\__EnumValue> {
         return $this->getInnerType()->getEnumValues();
     }
 

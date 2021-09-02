@@ -1,3 +1,6 @@
+
+
+
 use namespace Slack\GraphQL;
 
 /**
@@ -24,8 +27,8 @@ final class ObjectTypeTest extends PlaygroundTest {
                         'foo' => 3,
                         'bar' => null,
                         'baz' => dict[
-                            'abc' => vec[1, 2, 3]
-                        ]
+                            'abc' => vec[1, 2, 3],
+                        ],
                     ],
                 ],
             ),
@@ -42,8 +45,8 @@ final class ObjectTypeTest extends PlaygroundTest {
                 dict[
                     'getObjectShape' => dict[
                         'baz' => dict[
-                            'abc' => vec[1, 2, 3]
-                        ]
+                            'abc' => vec[1, 2, 3],
+                        ],
                     ],
                 ],
             ),

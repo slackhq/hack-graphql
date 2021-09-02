@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\Str;
@@ -228,9 +231,7 @@ function returns_connection_type(\ReflectionMethod $rm): bool {
 /**
  * Get the hack type, gql type, and output type for a connection node.
  */
-function get_node_type_info(
-    string $hack_type,
-): ?shape(
+function get_node_type_info(string $hack_type): ?shape(
     'hack_type' => string,
     'gql_type' => string,
     'output_type' => string,

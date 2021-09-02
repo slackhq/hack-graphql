@@ -1,3 +1,6 @@
+
+
+
 use namespace Slack\GraphQL;
 
 
@@ -7,8 +10,8 @@ abstract final class ObjectTypeTestEntrypoint {
         return shape(
             'foo' => 3,
             'baz' => shape(
-                'abc' => vec[1, 2, 3]
-            )
+                'abc' => vec[1, 2, 3],
+            ),
         );
     }
 }
@@ -18,11 +21,11 @@ abstract final class ObjectTypeTestEntrypoint {
 type ObjectShape = shape(
     'foo' => int,
     ?'bar' => string,
-    'baz' => AnotherObjectShape
+    'baz' => AnotherObjectShape,
 );
 
 
 <<GraphQL\ObjectType('AnotherObjectShape', 'AnotherObjectShape')>>
 type AnotherObjectShape = shape(
-    'abc' => vec<int>
+    'abc' => vec<int>,
 );

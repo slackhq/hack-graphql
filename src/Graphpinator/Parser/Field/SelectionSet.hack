@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\Field;
 
 /**
@@ -5,10 +8,7 @@ namespace Graphpinator\Parser\Field;
  */
 final class SelectionSet extends \Graphpinator\Parser\Node {
 
-    public function __construct(
-        \Graphpinator\Common\Location $location,
-        private vec<ISelectionSetItem> $items,
-    ) {
+    public function __construct(\Graphpinator\Common\Location $location, private vec<ISelectionSetItem> $items) {
         parent::__construct($location);
     }
 

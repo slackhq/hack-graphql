@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser;
 
 use \Graphpinator\Tokenizer\TokenType;
@@ -447,12 +450,12 @@ final class Parser {
 
                 return new \Graphpinator\Parser\Value\VariableRef(
                     $location,
-                    $this->tokenizer->getCurrent()->getValue() as nonnull
+                    $this->tokenizer->getCurrent()->getValue() as nonnull,
                 );
             case TokenType::NAME:
                 return new \Graphpinator\Parser\Value\EnumLiteral(
                     $location,
-                    $this->tokenizer->getCurrent()->getValue() as nonnull
+                    $this->tokenizer->getCurrent()->getValue() as nonnull,
                 );
             case TokenType::STRING:
                 return new \Graphpinator\Parser\Value\StringLiteral(
@@ -462,12 +465,12 @@ final class Parser {
             case TokenType::INT:
                 return new \Graphpinator\Parser\Value\IntLiteral(
                     $location,
-                    (int)$this->tokenizer->getCurrent()->getValue()
+                    (int)$this->tokenizer->getCurrent()->getValue(),
                 );
             case TokenType::FLOAT:
                 return new \Graphpinator\Parser\Value\FloatLiteral(
                     $location,
-                    (float)$this->tokenizer->getCurrent()->getValue()
+                    (float)$this->tokenizer->getCurrent()->getValue(),
                 );
             case TokenType::TRUE:
                 return new \Graphpinator\Parser\Value\BooleanLiteral($location, true);
@@ -524,8 +527,7 @@ final class Parser {
             case TokenType::NAME:
                 $type = new \Graphpinator\Parser\TypeRef\NamedTypeRef(
                     $location,
-                    $this->tokenizer->getCurrent()->getValue()
-                    as nonnull
+                    $this->tokenizer->getCurrent()->getValue() as nonnull,
                 );
 
                 break;

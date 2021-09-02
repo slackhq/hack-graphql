@@ -1,4 +1,4 @@
-FROM hhvm/hhvm:4.56.6
+FROM hhvm/hhvm:4.102.2
 
 RUN apt update -y
 RUN DEBIAN_FRONTEND=noninteractive apt install -y php-cli zip unzip openssh-client

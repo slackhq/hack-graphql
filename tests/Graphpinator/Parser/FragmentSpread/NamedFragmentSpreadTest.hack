@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\Tests\Unit\FragmentSpread;
 
 use namespace HH\Lib\C;
@@ -7,7 +10,7 @@ final class NamedFragmentSpreadTest extends \Facebook\HackTest\HackTest {
     public function testConstructor(): void {
         $val = new \Graphpinator\Parser\FragmentSpread\NamedFragmentSpread(
             new \Graphpinator\Common\Location(0, 0),
-            'fragment'
+            'fragment',
         );
         expect($val->getName())->toBeSame('fragment');
         expect(C\count($val->getDirectives()))->toBeSame(0);

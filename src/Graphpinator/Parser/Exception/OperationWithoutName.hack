@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\Exception;
 
 final class OperationWithoutName extends \Graphpinator\Parser\Exception\ParserError {

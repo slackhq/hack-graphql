@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\FragmentSpread;
 
 final class NamedFragmentSpread
@@ -10,7 +13,7 @@ final class NamedFragmentSpread
     public function __construct(
         \Graphpinator\Common\Location $location,
         string $name,
-        ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null
+        ?vec<\Graphpinator\Parser\Directive\Directive> $directives = null,
     ) {
         parent::__construct($location);
         $this->name = $name;

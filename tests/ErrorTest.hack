@@ -1,3 +1,6 @@
+
+
+
 use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
 
@@ -408,6 +411,6 @@ final class ErrorTest extends PlaygroundTest {
         $extension = expect($error['extensions'] ?? null)->toNotBeNull();
         expect($extension['message'])->toEqual('Could not connect to database at 127.0.0.1');
         expect($extension['file'])->toContainSubstring('playground/ErrorTestObj.hack');
-        expect($extension['line'])->toEqual(35);
+        expect($extension['line'])->toEqual(36);
     }
 }

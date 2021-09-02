@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Tokenizer;
 
 use namespace HH\Lib\{C, Vec, Str};
@@ -83,10 +86,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
 
         switch ($this->source->getChar()) {
             case '"':
-                $quotes = $this->eatChars(
-                    $char ==> $char === '"',
-                    3,
-                );
+                $quotes = $this->eatChars($char ==> $char === '"', 3);
 
                 switch (\strlen($quotes)) {
                     case 1:
@@ -284,10 +284,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
         while ($this->source->hasChar()) {
             switch ($this->source->getChar()) {
                 case '"':
-                    $quotes = $this->eatChars(
-                        $char ==> $char === '"',
-                        3,
-                    );
+                    $quotes = $this->eatChars($char ==> $char === '"', 3);
 
                     if (\strlen($quotes) === 3) {
                         return $this->formatBlockString($value);
@@ -298,10 +295,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
                     break;
                 case '\\':
                     $this->source->next();
-                    $quotes = $this->eatChars(
-                        $char ==> $char === '"',
-                        3,
-                    );
+                    $quotes = $this->eatChars($char ==> $char === '"', 3);
 
                     if (\strlen($quotes) === 3) {
                         $value .= '"""';
@@ -374,10 +368,7 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
 
         if ($escapedChar === 'u') {
             $this->source->next();
-            $hexDec = $this->eatChars(
-                $char ==> \ctype_xdigit($char),
-                4,
-            );
+            $hexDec = $this->eatChars($char ==> \ctype_xdigit($char), 4);
 
             if (\strlen($hexDec) !== 4) {
                 throw new \Graphpinator\Exception\Tokenizer\StringLiteralInvalidEscape($this->source->getLocation());

@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Types;
 
 use namespace Slack\GraphQL\Introspection;
@@ -55,9 +58,7 @@ trait TNonNullableType implements INonNullableType {
     }
 
     <<__Override>>
-    final public function getIntrospectionEnumValues(
-        bool $includeDeprecated = false,
-    ): ?vec<Introspection\__EnumValue> {
+    final public function getIntrospectionEnumValues(bool $includeDeprecated = false): ?vec<Introspection\__EnumValue> {
         return null;
     }
 

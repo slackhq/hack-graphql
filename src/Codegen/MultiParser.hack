@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\Vec;
@@ -9,7 +12,7 @@ use namespace Facebook\DefinitionFinder;
 final class MultiParser {
     public function __construct(private vec<DefinitionFinder\BaseParser> $parsers) {}
 
-    private function mapParsers<T>((function (DefinitionFinder\BaseParser): vec<T>) $cb): vec<T> {
+    private function mapParsers<T>((function(DefinitionFinder\BaseParser): vec<T>) $cb): vec<T> {
         return Vec\map($this->parsers, $parser ==> $cb($parser)) |> Vec\flatten($$);
     }
 

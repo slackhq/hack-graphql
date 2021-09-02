@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL;
 
 /**
@@ -21,10 +24,7 @@ abstract class FieldResult<+T> {
  * - null value with error, if this is a nullable field that failed to resolve
  */
 final class ValidFieldResult<+T> extends FieldResult<T> {
-    public function __construct(
-        private T $value,
-        vec<UserFacingError> $errors = vec[],
-    ) {
+    public function __construct(private T $value, vec<UserFacingError> $errors = vec[]) {
         parent::__construct($errors);
     }
 

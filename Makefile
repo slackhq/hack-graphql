@@ -16,4 +16,4 @@ test:
 	docker run -v `pwd`:/app -it mwildehahn/hack-graphql ./vendor/bin/hacktest tests
 
 format:
-	docker run -v `pwd`:/app -it mwildehahn/hack-graphql find {src,tests} -type f -exec hackfmt -i {} \;
+	docker run -v `pwd`:/app -it mwildehahn/hack-graphql find {src,tests} -type f -name "*.hack" -exec hackfmt -i {} \;

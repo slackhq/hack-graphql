@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser;
 
 abstract class Node implements \HH\IMemoizeParam {
@@ -21,4 +24,3 @@ abstract class Node implements \HH\IMemoizeParam {
         return (string)$this->id;
     }
 }
-

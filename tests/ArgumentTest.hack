@@ -1,3 +1,6 @@
+
+
+
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
@@ -9,11 +12,8 @@ final class ArgumentTest extends PlaygroundTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
-            'all arguments' => tuple(
-                '{ arg_test(required: 1, nullable: 2, optional: 3) }',
-                dict[],
-                dict['arg_test' => vec[1, 2, 3]],
-            ),
+            'all arguments' =>
+                tuple('{ arg_test(required: 1, nullable: 2, optional: 3) }', dict[], dict['arg_test' => vec[1, 2, 3]]),
 
             'missing required' => tuple(
                 '{ arg_test }',
@@ -36,8 +36,7 @@ final class ArgumentTest extends PlaygroundTest {
                     'data' => dict['arg_test' => null],
                     'errors' => vec[
                         shape(
-                            'message' =>
-                                'Invalid value for "required": '.
+                            'message' => 'Invalid value for "required": '.
                                 'Expected an Int literal, got Graphpinator\\Parser\\Value\\NullLiteral',
                             'path' => vec['arg_test'],
                         ),
@@ -45,11 +44,8 @@ final class ArgumentTest extends PlaygroundTest {
                 ),
             ),
 
-            'both optional and nullable can be omitted' => tuple(
-                '{ arg_test(required: 69) }',
-                dict[],
-                dict['arg_test' => vec[69, null, 42]],
-            ),
+            'both optional and nullable can be omitted' =>
+                tuple('{ arg_test(required: 69) }', dict[], dict['arg_test' => vec[69, null, 42]]),
 
             'override non-null default value with null' => tuple(
                 '{ arg_test(required: 69, nullable: null, optional: null) }',

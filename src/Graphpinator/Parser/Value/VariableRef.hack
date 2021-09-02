@@ -1,3 +1,6 @@
+
+
+
 namespace Graphpinator\Parser\Value;
 
 final class VariableRef extends \Graphpinator\Parser\Value\Value {
