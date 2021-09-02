@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Introspection;
 
 use Slack\GraphQL;

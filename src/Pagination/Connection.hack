@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Vec};
@@ -150,7 +153,7 @@ abstract class Connection {
     <<__Memoize>>
     final private async function paginate(): Awaitable<shape(
         'edges' => vec<Edge<this::TNode>>,
-        'pageInfo' => PageInfo
+        'pageInfo' => PageInfo,
     )> {
         $page = await $this->fetch($this->args);
 

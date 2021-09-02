@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\{C, Dict};
@@ -38,7 +41,7 @@ abstract class ObjectType extends CompositeType {
                     throw new \Slack\GraphQL\UserFacingError('Unknown field: %s', $field_name);
                 }
                 return await $field_definition->resolveAsync($value, $grouped_field_nodes, $context);
-            }
+            },
         );
 
         foreach ($results as $key => $result) {

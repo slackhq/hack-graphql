@@ -1,12 +1,11 @@
+
+
+
 namespace Graphpinator\Parser\Value;
 
 
 final class ArgumentValue extends \Graphpinator\Parser\Node {
-    public function __construct(
-        \Graphpinator\Common\Location $location,
-        private string $name,
-        private Value $value,
-    ) {
+    public function __construct(\Graphpinator\Common\Location $location, private string $name, private Value $value) {
         parent::__construct($location);
     }
 

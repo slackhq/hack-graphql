@@ -1,3 +1,6 @@
+
+
+
 namespace Infinityloop\Utils\Exception;
 
 final class InvalidTypeToMerge extends \Exception {

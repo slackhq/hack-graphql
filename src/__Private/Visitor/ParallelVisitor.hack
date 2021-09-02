@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\__Private;
 
 use namespace \Graphpinator\Parser;

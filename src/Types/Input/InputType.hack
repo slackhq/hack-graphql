@@ -1,3 +1,6 @@
+
+
+
 namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\C;
@@ -68,8 +71,7 @@ interface IInputTypeFor<THackType> extends IInputType {
     public function nullableInputListOf(): NullableInputType<vec<THackType>>;
 }
 
-interface INonNullableInputTypeFor<THackType as nonnull>
-    extends INonNullableType, IInputTypeFor<THackType> {}
+interface INonNullableInputTypeFor<THackType as nonnull> extends INonNullableType, IInputTypeFor<THackType> {}
 
 trait TInputType<THackType> implements IInputTypeFor<THackType> {
 
@@ -84,10 +86,7 @@ trait TInputType<THackType> implements IInputTypeFor<THackType> {
         dict<string, mixed> $variable_values,
     ): THackType;
 
-    final public function coerceNamedValue(
-        string $name,
-        KeyedContainer<arraykey, mixed> $values,
-    ): THackType {
+    final public function coerceNamedValue(string $name, KeyedContainer<arraykey, mixed> $values): THackType {
         try {
             return $this->coerceValue(idx($values, $name));
         } catch (GraphQL\UserFacingError $e) {

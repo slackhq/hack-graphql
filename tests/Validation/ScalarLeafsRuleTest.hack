@@ -1,3 +1,6 @@
+
+
+
 use namespace Slack\GraphQL\Validation;
 
 final class ScalarLeafsRuleTest extends BaseValidationTest {

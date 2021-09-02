@@ -1,13 +1,12 @@
+
+
+
 use namespace Slack\GraphQL;
 
 abstract final class ArgumentTestObj {
 
     <<GraphQL\QueryRootField('arg_test', 'Root field for testing arguments')>>
-    public static function argTest(
-        int $required,
-        ?int $nullable,
-        ?int $optional = 42,
-    ): vec<?int> {
+    public static function argTest(int $required, ?int $nullable, ?int $optional = 42): vec<?int> {
         return vec[$required, $nullable, $optional];
     }
 
