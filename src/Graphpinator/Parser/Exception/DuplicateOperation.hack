@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\Exception;
 
 final class DuplicateOperation extends \Graphpinator\Parser\Exception\ParserError {

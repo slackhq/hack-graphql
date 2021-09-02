@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\FragmentSpread;
 
 <<__Sealed(InlineFragmentSpread::class, NamedFragmentSpread::class)>>

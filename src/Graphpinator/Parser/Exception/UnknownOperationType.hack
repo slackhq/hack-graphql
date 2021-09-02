@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\Exception;
 
 final class UnknownOperationType extends \Graphpinator\Parser\Exception\ParserError {

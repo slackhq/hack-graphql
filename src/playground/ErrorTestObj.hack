@@ -1,4 +1,6 @@
 
+
+
 use namespace Slack\GraphQL;
 
 <<GraphQL\ObjectType('ErrorTestObj', 'Test object for error handling')>>

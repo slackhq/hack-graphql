@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Exception\Tokenizer;
 
 final class NumericLiteralNegativeFraction extends \Graphpinator\Exception\Tokenizer\TokenizerError {

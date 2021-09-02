@@ -1,4 +1,6 @@
 
+
+
 namespace Slack\GraphQL\Validation;
 
 final class ScalarLeafsRule extends ValidationRule {

@@ -1,4 +1,6 @@
 
+
+
 namespace Slack\GraphQL;
 
 use namespace Slack\GraphQL;

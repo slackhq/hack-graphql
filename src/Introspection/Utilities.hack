@@ -1,4 +1,6 @@
 
+
+
 namespace Slack\GraphQL\Introspection;
 
 final abstract class Utilities {
