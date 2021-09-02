@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Introspection;
 
 use namespace Slack\GraphQL;
@@ -16,4 +14,10 @@ interface __Schema {
 
     <<GraphQL\Field('mutationType', 'Mutation root type')>>
     public function getIntrospectionMutationType(): ?__Type;
+
+    <<GraphQL\Field('subscriptionType', 'Subscription root type')>>
+    public function getIntrospectionSubscriptionType(): ?__Type;
+
+    <<GraphQL\Field('directives', 'Directives supported by the schema')>>
+    public function getDirectives(): vec<__Directive>;
 }

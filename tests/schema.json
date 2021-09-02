@@ -7,6 +7,7 @@
             "mutationType": {
                 "name": "Mutation"
             },
+            "subscriptionType": null,
             "types": [
                 {
                     "kind": "OBJECT",
@@ -2206,6 +2207,76 @@
                 },
                 {
                     "kind": "OBJECT",
+                    "name": "__Directive",
+                    "fields": [
+                        {
+                            "name": "name",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "description",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "locations",
+                            "args": [],
+                            "type": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                }
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "args",
+                            "args": [],
+                            "type": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "__InputValue",
+                                        "ofType": null
+                                    }
+                                }
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        }
+                    ],
+                    "inputFields": null,
+                    "interfaces": [],
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
+                    "kind": "OBJECT",
                     "name": "__EnumValue",
                     "fields": [
                         {
@@ -2401,6 +2472,25 @@
                     "name": "__Schema",
                     "fields": [
                         {
+                            "name": "directives",
+                            "args": [],
+                            "type": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "__Directive",
+                                        "ofType": null
+                                    }
+                                }
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
                             "name": "mutationType",
                             "args": [],
                             "type": {
@@ -2413,6 +2503,17 @@
                         },
                         {
                             "name": "queryType",
+                            "args": [],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "__Type",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "subscriptionType",
                             "args": [],
                             "type": {
                                 "kind": "OBJECT",
@@ -2673,6 +2774,56 @@
                         }
                     ],
                     "possibleTypes": null
+                }
+            ],
+            "directives": [
+                {
+                    "name": "include",
+                    "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
+                    "locations": [
+                        "FIELD",
+                        "FRAGMENT_SPREAD",
+                        "INLINE_FRAGMENT"
+                    ],
+                    "args": [
+                        {
+                            "name": "if",
+                            "type": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                }
+                            },
+                            "defaultValue": null
+                        }
+                    ]
+                },
+                {
+                    "name": "skip",
+                    "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
+                    "locations": [
+                        "FIELD",
+                        "FRAGMENT_SPREAD",
+                        "INLINE_FRAGMENT"
+                    ],
+                    "args": [
+                        {
+                            "name": "if",
+                            "type": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                }
+                            },
+                            "defaultValue": null
+                        }
+                    ]
                 }
             ]
         }

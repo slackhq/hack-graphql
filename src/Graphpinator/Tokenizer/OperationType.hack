@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Tokenizer;
 
 enum OperationType: string as string {

@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL;
 
 class Field implements \HH\MethodAttribute {

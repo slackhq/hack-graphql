@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Types;
 
 use namespace Graphpinator\Parser\Value;

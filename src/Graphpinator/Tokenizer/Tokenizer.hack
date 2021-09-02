@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Tokenizer;
 
 use namespace HH\Lib\{C, Vec, Str};

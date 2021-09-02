@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3bc256c74898b3bd936c06fc61247a45>>
+ * @generated SignedSource<<fa1fbeb74dab39b847042453eb0fb38f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,8 +16,10 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
   const NAME = '__Schema';
   const type THackType = \Slack\GraphQL\Introspection\__Schema;
   const keyset<string> FIELD_NAMES = keyset[
+    'directives',
     'mutationType',
     'queryType',
+    'subscriptionType',
     'types',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
@@ -27,6 +29,13 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
     string $field_name,
   ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
+      case 'directives':
+        return new GraphQL\FieldDefinition(
+          'directives',
+          __Directive::nonNullable()->nullableOutputListOf(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getDirectives(),
+        );
       case 'mutationType':
         return new GraphQL\FieldDefinition(
           'mutationType',
@@ -40,6 +49,13 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionQueryType(),
+        );
+      case 'subscriptionType':
+        return new GraphQL\FieldDefinition(
+          'subscriptionType',
+          __Type::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getIntrospectionSubscriptionType(),
         );
       case 'types':
         return new GraphQL\FieldDefinition(

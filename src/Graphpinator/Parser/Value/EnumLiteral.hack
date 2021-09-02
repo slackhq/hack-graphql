@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Value;
 
 final class EnumLiteral extends \Graphpinator\Parser\Value\Value {

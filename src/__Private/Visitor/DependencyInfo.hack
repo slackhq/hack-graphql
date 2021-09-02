@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\__Private;
 
 use namespace HH\Lib\C;

@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Value;
 
 final class ObjectVal extends \Graphpinator\Parser\Value\Value {

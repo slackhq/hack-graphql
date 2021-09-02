@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Tests\Unit\FragmentSpread;
 
 use namespace HH\Lib\C;

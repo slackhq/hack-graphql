@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Pagination;
 
 use namespace Slack\GraphQL;

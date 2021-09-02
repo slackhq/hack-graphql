@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Exception\Tokenizer;
 
 final class InvalidEllipsis extends \Graphpinator\Exception\Tokenizer\TokenizerError {

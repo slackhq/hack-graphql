@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Exception;
 
 abstract class ParserError extends \Graphpinator\Exception\GraphpinatorBase {

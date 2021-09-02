@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Value;
 
 final class ListVal extends \Graphpinator\Parser\Value\Value {
