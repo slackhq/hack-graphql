@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\TypeRef;
 
 final class NotNullRef extends \Graphpinator\Parser\TypeRef\TypeRef {

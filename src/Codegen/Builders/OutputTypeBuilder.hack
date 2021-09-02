@@ -1,4 +1,6 @@
 
+
+
 namespace Slack\GraphQL\Codegen;
 
 abstract class OutputTypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo>

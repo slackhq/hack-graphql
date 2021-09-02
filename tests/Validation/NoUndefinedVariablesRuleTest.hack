@@ -1,4 +1,6 @@
 
+
+
 use namespace Slack\GraphQL\Validation;
 
 final class NoUndefinedVariablesRuleTest extends BaseValidationTest {

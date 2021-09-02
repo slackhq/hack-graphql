@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Exception\Tokenizer;
 
 final class NumericLiteralMalformed extends \Graphpinator\Exception\Tokenizer\TokenizerError {

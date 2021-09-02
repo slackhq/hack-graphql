@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\TypeRef;
 
 final class ListTypeRef extends \Graphpinator\Parser\TypeRef\TypeRef {

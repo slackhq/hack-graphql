@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Exception;
 
 abstract class GraphpinatorBase extends \Exception implements \JsonSerializable {

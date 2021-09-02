@@ -1,4 +1,6 @@
 
+
+
 use namespace Slack\GraphQL;
 
 <<GraphQL\InterfaceType('InterfaceA', 'InterfaceA')>>

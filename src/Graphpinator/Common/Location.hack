@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Common;
 
 final class Location implements \JsonSerializable {

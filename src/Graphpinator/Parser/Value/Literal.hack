@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\Value;
 
 abstract class Literal extends \Graphpinator\Parser\Value\Value {

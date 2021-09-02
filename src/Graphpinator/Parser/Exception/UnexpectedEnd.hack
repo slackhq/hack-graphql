@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\Exception;
 
 final class UnexpectedEnd extends \Graphpinator\Parser\Exception\ParserError {

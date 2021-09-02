@@ -1,4 +1,6 @@
 
+
+
 namespace Infinityloop\Utils\Exception;
 
 final class InvalidMapOffset extends \Exception {

@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Tokenizer;
 
 final class Token {

@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser;
 
 abstract class Node implements \HH\IMemoizeParam {

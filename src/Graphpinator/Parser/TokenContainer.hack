@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser;
 
 final class TokenContainer implements \IteratorAggregate<\Graphpinator\Tokenizer\Token> {

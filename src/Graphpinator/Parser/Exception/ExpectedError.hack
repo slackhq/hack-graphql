@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Parser\Exception;
 
 <<__ConsistentConstruct>>

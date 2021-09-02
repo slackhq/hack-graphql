@@ -1,4 +1,6 @@
 
+
+
 namespace Graphpinator\Source;
 
 final class StringSource implements \Graphpinator\Source\Source<string> {
