@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Operation;
 
 use namespace Graphpinator\Parser\Field;

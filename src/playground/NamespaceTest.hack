@@ -1,6 +1,4 @@
 
-
-
 namespace Foo;
 
 <<\Slack\GraphQL\InterfaceType('FooInterface', 'Foo Interface')>>

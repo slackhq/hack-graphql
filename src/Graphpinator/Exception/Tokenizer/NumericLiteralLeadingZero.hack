@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Exception\Tokenizer;
 
 final class NumericLiteralLeadingZero extends \Graphpinator\Exception\Tokenizer\TokenizerError {

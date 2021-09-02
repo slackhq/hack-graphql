@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Source;
 
 interface Source<T> extends \HH\KeyedIterator<int, T> {

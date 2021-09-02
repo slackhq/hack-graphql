@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Validation;
 
 final class KnownArgumentNamesRule extends ValidationRule {

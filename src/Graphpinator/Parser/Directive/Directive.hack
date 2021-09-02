@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Directive;
 
 final class Directive extends \Graphpinator\Parser\Node {

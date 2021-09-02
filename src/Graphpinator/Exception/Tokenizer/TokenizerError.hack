@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Exception\Tokenizer;
 
 abstract class TokenizerError extends \Graphpinator\Exception\GraphpinatorBase {

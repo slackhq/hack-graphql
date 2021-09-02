@@ -1,6 +1,4 @@
 
-
-
 use function Facebook\FBExpect\expect;
 
 use namespace Slack\GraphQL;

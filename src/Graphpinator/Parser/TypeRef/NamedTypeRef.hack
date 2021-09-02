@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\TypeRef;
 
 final class NamedTypeRef extends \Graphpinator\Parser\TypeRef\TypeRef {

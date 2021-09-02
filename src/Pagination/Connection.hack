@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Vec};

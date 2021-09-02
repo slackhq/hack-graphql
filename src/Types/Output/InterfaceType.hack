@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Types;
 
 use namespace HH\Lib\{Dict, Vec};

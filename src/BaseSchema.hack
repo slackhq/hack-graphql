@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL;
 
 use namespace HH\Lib\{Dict, Vec, Str};
@@ -49,6 +47,12 @@ abstract class BaseSchema implements Introspection\__Schema {
         return $this->getMutationType()?->nullableForIntrospection();
     }
 
+    <<__Override>>
+    final public function getIntrospectionSubscriptionType(): ?Introspection\__Type {
+        // TODO: Support introspection
+        return null;
+    }
+
     final public function getType(string $name): ?Types\NamedType {
         $type = static::TYPES[$name] ?? null;
         return $type is nonnull ? $type::nonNullable() : null;
@@ -62,5 +66,45 @@ abstract class BaseSchema implements Introspection\__Schema {
     final public function getTypes(): vec<Introspection\__Type> {
         return Dict\filter_keys(static::TYPES, $name ==> !Str\starts_with($name, '__'))
             |> Vec\map_with_key(static::TYPES, ($name, $_) ==> $this->getIntrospectionType($name) as nonnull);
+    }
+
+    <<__Override>>
+    final public function getDirectives(): vec<Introspection\__Directive> {
+        // TODO: This should be generated dynamically
+        return vec[
+            shape(
+                'name' => 'include',
+                'description' =>
+                    'Directs the executor to include this field or fragment only when the `if` argument is true.',
+                'locations' => vec[
+                    'FIELD',
+                    'FRAGMENT_SPREAD',
+                    'INLINE_FRAGMENT',
+                ],
+                'args' => vec[
+                    shape(
+                        'name' => 'if',
+                        'description' => 'Included when true.',
+                        'type' => Types\BooleanType::nonNullable(),
+                    ),
+                ],
+            ),
+            shape(
+                'name' => 'skip',
+                'description' => 'Directs the executor to skip this field or fragment when the `if` argument is true.',
+                'locations' => vec[
+                    'FIELD',
+                    'FRAGMENT_SPREAD',
+                    'INLINE_FRAGMENT',
+                ],
+                'args' => vec[
+                    shape(
+                        'name' => 'if',
+                        'description' => 'Skipped when true.',
+                        'type' => Types\BooleanType::nonNullable(),
+                    ),
+                ],
+            ),
+        ];
     }
 }

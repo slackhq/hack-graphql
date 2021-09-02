@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Introspection;
 
 final abstract class Utilities {
@@ -67,8 +65,17 @@ final abstract class Utilities {
                     {$schema_description}
                     queryType { name }
                     mutationType { name }
+                    subscriptionType { name }
                     types {
                         ...FullType
+                    }
+                    directives {
+                        name
+                        description
+                        locations
+                        args {
+                            ...InputValue
+                        }
                     }
                 }
             }

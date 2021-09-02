@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\FragmentSpread;
 
 final class NamedFragmentSpread

@@ -1,6 +1,4 @@
 
-
-
 use namespace Slack\GraphQL\Validation;
 
 final class KnownTypeNamesRuleTest extends BaseValidationTest {

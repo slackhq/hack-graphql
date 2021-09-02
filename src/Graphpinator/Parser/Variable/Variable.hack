@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Variable;
 
 final class Variable extends \Graphpinator\Parser\Node {

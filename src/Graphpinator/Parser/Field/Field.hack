@@ -1,6 +1,4 @@
 
-
-
 namespace Graphpinator\Parser\Field;
 
 use namespace HH\Lib\Dict;

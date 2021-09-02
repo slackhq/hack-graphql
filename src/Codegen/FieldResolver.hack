@@ -1,6 +1,4 @@
 
-
-
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\{C, Dict};
