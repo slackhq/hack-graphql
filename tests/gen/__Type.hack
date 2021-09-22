@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<48a05c7de06f421d045fa09aaa1da78e>>
+ * @generated SignedSource<<7cbd90ef4f45cdf1581e52cb4bde2388>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -40,7 +40,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionDescription(),
           'Description of the type',
-          false,
           null,
         );
       case 'enumValues':
@@ -58,7 +57,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
           'Enum values, only applies to ENUM',
-          false,
           null,
         );
       case 'fields':
@@ -76,7 +74,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
           'Fields of the type, only applies to OBJECT and INTERFACE',
-          false,
           null,
         );
       case 'inputFields':
@@ -86,7 +83,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(),
           'Input fields, only applies to INPUT_OBJECT',
-          false,
           null,
         );
       case 'interfaces':
@@ -96,7 +92,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInterfaces(),
           'Interfaces the object implements, only applies to OBJECT',
-          false,
           null,
         );
       case 'kind':
@@ -106,7 +101,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionKind(),
           'Kind of the type',
-          false,
           null,
         );
       case 'name':
@@ -116,7 +110,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionName(),
           'Name of the type',
-          false,
           null,
         );
       case 'ofType':
@@ -126,7 +119,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionOfType(),
           'Underlying wrapped type, only applies to NON_NULL and LIST',
-          false,
           null,
         );
       case 'possibleTypes':
@@ -136,7 +128,6 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionPossibleTypes(),
           'Possible types that implement this interface, only applies to INTERFACE',
-          false,
           null,
         );
       default:

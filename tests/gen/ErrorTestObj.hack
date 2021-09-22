@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1d4cf620c9b7b67489f9a5c895199816>>
+ * @generated SignedSource<<0a268b891ecb99ff27ff68d02d8ed3f9>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -43,7 +43,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_n(),
           null,
-          false,
           null,
         );
       case 'bad_int_list_n_of_nn':
@@ -53,7 +52,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_nn(),
           'Nullability of nested types is respected, which may result in killing the whole list (but no parents)',
-          false,
           null,
         );
       case 'bad_int_list_nn_of_nn':
@@ -63,7 +61,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_nn_of_nn(),
           null,
-          false,
           null,
         );
       case 'hidden_exception':
@@ -73,7 +70,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->hidden_exception(),
           'Arbitrary exceptions are hidden from clients, since they might contain sensitive data',
-          false,
           null,
         );
       case 'nested':
@@ -83,7 +79,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested(),
           null,
-          false,
           null,
         );
       case 'nested_list_n_of_n':
@@ -93,7 +88,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_n(),
           null,
-          false,
           null,
         );
       case 'nested_list_n_of_nn':
@@ -103,7 +97,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_nn(),
           null,
-          false,
           null,
         );
       case 'nested_list_nn_of_nn':
@@ -113,7 +106,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
           null,
-          false,
           null,
         );
       case 'nested_nn':
@@ -123,7 +115,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_nn(),
           null,
-          false,
           null,
         );
       case 'no_error':
@@ -133,7 +124,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->no_error(),
           null,
-          false,
           null,
         );
       case 'non_nullable':
@@ -143,7 +133,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->non_nullable(),
           null,
-          false,
           null,
         );
       case 'user_facing_error':
@@ -153,7 +142,6 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->user_facing_error(),
           null,
-          false,
           null,
         );
       default:

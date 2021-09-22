@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<0d8ff776164898a181cc11215e760e78>>
+ * @generated SignedSource<<7c66631690dca9d26e83298fd9af017a>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,7 +39,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable(),
           null,
-          false,
           null,
         );
       case 'awaitable_nullable':
@@ -49,7 +48,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable(),
           null,
-          false,
           null,
         );
       case 'awaitable_nullable_list':
@@ -59,7 +57,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
           null,
-          false,
           null,
         );
       case 'list':
@@ -69,7 +66,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->list(),
           null,
-          false,
           null,
         );
       case 'nested_lists':
@@ -79,7 +75,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_lists(),
           'Note that nested lists can be non-nullable',
-          false,
           null,
         );
       case 'nullable':
@@ -89,7 +84,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->nullable(),
           null,
-          false,
           null,
         );
       case 'output_shape':
@@ -99,7 +93,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->output_shape(),
           null,
-          false,
           null,
         );
       case 'scalar':
@@ -109,7 +102,6 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->scalar(),
           'Note that the GraphQL field will be nullable by default, despite its non-nullable Hack type',
-          false,
           null,
         );
       default:

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2d348637f5fb4c7d4c3197161f277750>>
+ * @generated SignedSource<<6dcb233c0846538dfa0a620a12aee762>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,7 +39,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
           'Favorite color of the user',
-          false,
           null,
         );
       case 'friends':
@@ -75,7 +74,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
           'Friends',
-          false,
           null,
         );
       case 'id':
@@ -85,7 +83,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
           'ID of the user',
-          false,
           null,
         );
       case 'is_active':
@@ -95,7 +92,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
           'Whether the user is active',
-          false,
           null,
         );
       case 'name':
@@ -105,7 +101,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
           'Name of the user',
-          false,
           null,
         );
       case 'named_friends':
@@ -147,7 +142,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
           'Test that we can pass args to a field which returns a connection',
-          false,
           null,
         );
       case 'team':
@@ -157,7 +151,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
           'Team the user belongs to',
-          false,
           null,
         );
       default:

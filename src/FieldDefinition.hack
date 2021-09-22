@@ -30,7 +30,6 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
             Variables,
         ): Awaitable<TRet>) $resolver,
         private ?string $description,
-        private bool $is_deprecated = false,
         private ?string $deprecation_reason = null,
     ) {}
 
@@ -74,7 +73,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     }
 
     public function isDeprecated(): bool {
-        return $this->is_deprecated;
+        return $this->getDeprecationReason() is nonnull;
     }
 
     public function getDescription(): ?string {

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4f9d8cbae367577036392dff97a6275d>>
+ * @generated SignedSource<<4101af3b5a52deed789cbd661b9a8b0d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -42,7 +42,6 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
             Types\BooleanType::nonNullable()->coerceNamedNode('short', $args, $vars),
           ),
           'Description of the team',
-          false,
           null,
         );
       case 'id':
@@ -52,7 +51,6 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
           'ID of the team',
-          false,
           null,
         );
       case 'name':
@@ -62,7 +60,6 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
           'Name of the team',
-          false,
           null,
         );
       case 'num_users':
@@ -72,7 +69,6 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
           'Number of users on the team',
-          false,
           null,
         );
       default:

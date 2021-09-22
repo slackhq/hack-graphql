@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<9cba384158f3aba76251dad8ebed7202>>
+ * @generated SignedSource<<3f80380271d776f8efd8825d50e067d7>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,7 +37,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
           'ID of the user',
-          false,
           null,
         );
       case 'is_active':
@@ -47,7 +46,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
           'Whether the user is active',
-          false,
           null,
         );
       case 'name':
@@ -57,7 +55,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
           'Name of the user',
-          false,
           null,
         );
       case 'team':
@@ -67,7 +64,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
           'Team the user belongs to',
-          false,
           null,
         );
       default:

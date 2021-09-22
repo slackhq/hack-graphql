@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e498c61f1f44204378eadf32d810a0cd>>
+ * @generated SignedSource<<77dade56f824ad0618c83d99f2e67c83>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -35,7 +35,6 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['startCursor'] ?? null,
           null,
-          false,
           null,
         );
       case 'endCursor':
@@ -45,7 +44,6 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['endCursor'] ?? null,
           null,
-          false,
           null,
         );
       case 'hasPreviousPage':
@@ -55,7 +53,6 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['hasPreviousPage'] ?? null,
           null,
-          false,
           null,
         );
       case 'hasNextPage':
@@ -65,7 +62,6 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['hasNextPage'] ?? null,
           null,
-          false,
           null,
         );
       default:

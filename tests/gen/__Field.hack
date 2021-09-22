@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<7a4c88e2f4532732ddad9264db61c821>>
+ * @generated SignedSource<<10c691da2cbe51607ac826b0daa0aa1e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,7 +37,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getArgs(),
           'Args of the field',
-          false,
           null,
         );
       case 'deprecationReason':
@@ -47,7 +46,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
           'Reason the field was deprecated',
-          false,
           null,
         );
       case 'description':
@@ -57,7 +55,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDescription(),
           'Description of the field',
-          false,
           null,
         );
       case 'isDeprecated':
@@ -67,7 +64,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->isDeprecated(),
           'Boolean for whether or not the field is deprecated',
-          false,
           null,
         );
       case 'name':
@@ -77,7 +73,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
           'Name of the field',
-          false,
           null,
         );
       case 'type':
@@ -87,7 +82,6 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getType(),
           'Type of the field',
-          false,
           null,
         );
       default:

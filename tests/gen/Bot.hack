@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<a8a4c8da00711a276025c4f9c4db8cdc>>
+ * @generated SignedSource<<d47efd23d82d2fecfcaa89b4c0d75d04>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,7 +37,6 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
           'ID of the user',
-          false,
           null,
         );
       case 'is_active':
@@ -47,7 +46,6 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
           'Whether the user is active',
-          false,
           null,
         );
       case 'name':
@@ -57,7 +55,6 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
           'Name of the user',
-          false,
           null,
         );
       case 'primary_function':
@@ -67,7 +64,6 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
           'Intended use of the bot',
-          false,
           null,
         );
       case 'team':
@@ -77,7 +73,6 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
           'Team the user belongs to',
-          false,
           null,
         );
       default:

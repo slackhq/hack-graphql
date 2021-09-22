@@ -15,7 +15,6 @@ abstract class FieldBuilder {
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
         ?'description' => string,
-        ?'is_deprecated' => bool,
         ?'deprecation_reason' => string,
         ?'method_name' => string,
         ?'parameters' => vec<Parameter>,
@@ -40,7 +39,6 @@ abstract class FieldBuilder {
         \ReflectionMethod $rm,
         bool $is_root_field = false,
     ): FieldBuilder {
-        $deprecated = $rm->getAttribute('__Deprecated');
         $data = shape(
             'name' => $field->getName(),
             'description' => $field->getDescription(),
@@ -63,9 +61,9 @@ abstract class FieldBuilder {
                     return $data;
                 },
             ),
-            'is_deprecated' => !!$deprecated,
         );
 
+        $deprecated = $rm->getAttribute('__Deprecated');
         if ($deprecated) {
             $data['deprecation_reason'] = C\firstx($deprecated) as string;
         }
@@ -149,17 +147,9 @@ abstract class FieldBuilder {
             $hb->addLine('null,');
         }
 
-        // Deprecation info
-        if ($this->data['is_deprecated'] ?? false) {
-            $hb->addLine('true,');
-            $deprecation_reason = Shapes::idx($this->data, 'deprecation_reason');
-        } else {
-            $hb->addLine('false,');
-            $deprecation_reason = null;
-        }
-
-        if ($deprecation_reason is nonnull) {
-            $hb->addLine(\var_export($deprecation_reason, true).',');
+        // Deprecation reason
+        if (Shapes::keyExists($this->data, 'deprecation_reason')) {
+            $hb->addLine(\var_export($this->data['deprecation_reason'], true).',');
         } else {
             $hb->addLine('null,');
         }

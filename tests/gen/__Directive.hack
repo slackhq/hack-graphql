@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5dbdcd141b9db786ce8b63cb9cddd3f4>>
+ * @generated SignedSource<<796f38c47585b4bd8216598885e63d20>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -35,7 +35,6 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['name'],
           null,
-          false,
           null,
         );
       case 'description':
@@ -45,7 +44,6 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['description'],
           null,
-          false,
           null,
         );
       case 'locations':
@@ -55,7 +53,6 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['locations'],
           null,
-          false,
           null,
         );
       case 'args':
@@ -65,7 +62,6 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent['args'],
           null,
-          false,
           null,
         );
       default:

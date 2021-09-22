@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<067275aa67c4d0b5123b0d4bec136ff8>>
+ * @generated SignedSource<<22d2455b45e30b3d6e20f3dc010d7761>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -49,7 +49,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> new Schema(),
           null,
-          false,
           null,
         );
       case '__type':
@@ -67,7 +66,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\StringType::nonNullable()->coerceNamedNode('name', $args, $vars),
           ),
           null,
-          false,
           null,
         );
       case 'alphabetConnection':
@@ -103,7 +101,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
           'Test for list connection',
-          false,
           null,
         );
       case 'arg_test':
@@ -131,7 +128,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('optional', $args, $vars, 42),
           ),
           'Root field for testing arguments',
-          false,
           null,
         );
       case 'bot':
@@ -148,7 +144,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
           'Fetch a bot by ID',
-          false,
           null,
         );
       case 'error_test':
@@ -158,7 +153,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
           'Root field to get an instance',
-          false,
           null,
         );
       case 'error_test_nn':
@@ -168,7 +162,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
           'A non-nullable root field to get an instance',
-          false,
           null,
         );
       case 'getConcrete':
@@ -178,7 +171,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
           'Root field to get an instance of Concrete',
-          false,
           null,
         );
       case 'getInterfaceA':
@@ -188,7 +180,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
           'Root field to get an instance of InterfaceA',
-          false,
           null,
         );
       case 'getInterfaceB':
@@ -198,7 +189,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
           'Root field to get an instance of InterfaceB',
-          false,
           null,
         );
       case 'getObjectShape':
@@ -208,7 +198,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
           'fetch an object shape',
-          false,
           null,
         );
       case 'human':
@@ -225,7 +214,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
           'Fetch a user by ID',
-          false,
           null,
         );
       case 'introspection_test':
@@ -235,7 +223,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \IntrospectionTestObject::get(),
           'Root field to get an instance',
-          false,
           null,
         );
       case 'list_arg_test':
@@ -252,7 +239,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->nullableInputListOf()->nonNullableInputListOf()->nullableInputListOf()->coerceNamedNode('arg', $args, $vars),
           ),
           'Root field for testing list arguments',
-          false,
           null,
         );
       case 'nested_list_sum':
@@ -269,7 +255,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->nonNullableInputListOf()->nonNullableInputListOf()->coerceNamedNode('numbers', $args, $vars),
           ),
           'Test for nested list arguments',
-          false,
           null,
         );
       case 'optional_field_test':
@@ -286,7 +271,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
           ),
           'Test for an optional input object field',
-          false,
           null,
         );
       case 'output_type_test':
@@ -296,7 +280,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
           'Root field to get an instance',
-          false,
           null,
         );
       case 'takes_favorite_color':
@@ -313,7 +296,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             FavoriteColor::nonNullable()->coerceNamedNode('favorite_color', $args, $vars),
           ),
           'Test for enum arguments',
-          false,
           null,
         );
       case 'user':
@@ -330,7 +312,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
           'Fetch a user by ID',
-          false,
           null,
         );
       case 'viewer':
@@ -340,7 +321,6 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
           'Authenticated viewer',
-          false,
           null,
         );
       default:

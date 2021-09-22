@@ -30,7 +30,7 @@ type Parameter = shape(
 class MethodFieldBuilder extends FieldBuilder {
     <<__Override>>
     protected function generateResolverBody(HackBuilder $hb): void {
-        if ($this->data['is_deprecated'] ?? false) {
+        if ($this->data['deprecation_reason'] ?? null) {
             $hb->add('/* HH_FIXME[4128] Deprecated */ ');
         }
         $type_info = $this->data['output_type'];

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<577219d285f266d0284809956c7984c1>>
+ * @generated SignedSource<<af8fe403ed18a3e1841c169a94b80577>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,7 +36,6 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->bar(),
           'bar',
-          false,
           null,
         );
       case 'baz':
@@ -46,7 +45,6 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->baz(),
           'baz',
-          false,
           null,
         );
       case 'foo':
@@ -56,7 +54,6 @@ final class Concrete extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->foo(),
           'foo',
-          false,
           null,
         );
       default:

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2370253297836f5871fa800f9ed67ad6>>
+ * @generated SignedSource<<28a23bb2fbfd1ea78d4867cfa9f92f20>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,7 +33,6 @@ final class AlphabetConnection extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getEdges(),
           null,
-          false,
           null,
         );
       case 'pageInfo':
@@ -43,7 +42,6 @@ final class AlphabetConnection extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getPageInfo(),
           null,
-          false,
           null,
         );
       default:
