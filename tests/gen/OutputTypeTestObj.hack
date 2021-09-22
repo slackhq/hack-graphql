@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<eb8845d9ace2e6885f07f410aa729249>>
+ * @generated SignedSource<<0d8ff776164898a181cc11215e760e78>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -38,6 +38,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable(),
+          null,
+          false,
+          null,
         );
       case 'awaitable_nullable':
         return new GraphQL\FieldDefinition(
@@ -45,6 +48,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable(),
+          null,
+          false,
+          null,
         );
       case 'awaitable_nullable_list':
         return new GraphQL\FieldDefinition(
@@ -52,6 +58,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->awaitable_nullable_list(),
+          null,
+          false,
+          null,
         );
       case 'list':
         return new GraphQL\FieldDefinition(
@@ -59,6 +68,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->list(),
+          null,
+          false,
+          null,
         );
       case 'nested_lists':
         return new GraphQL\FieldDefinition(
@@ -66,6 +78,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput()->nonNullableOutputListOf()->nullableOutputListOf()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_lists(),
+          'Note that nested lists can be non-nullable',
+          false,
+          null,
         );
       case 'nullable':
         return new GraphQL\FieldDefinition(
@@ -73,6 +88,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nullable(),
+          null,
+          false,
+          null,
         );
       case 'output_shape':
         return new GraphQL\FieldDefinition(
@@ -80,6 +98,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           OutputShape::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->output_shape(),
+          null,
+          false,
+          null,
         );
       case 'scalar':
         return new GraphQL\FieldDefinition(
@@ -87,6 +108,9 @@ final class OutputTypeTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->scalar(),
+          'Note that the GraphQL field will be nullable by default, despite its non-nullable Hack type',
+          false,
+          null,
         );
       default:
         return null;

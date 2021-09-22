@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<46725fb0d0175c7f30579a28e030cf3b>>
+ * @generated SignedSource<<48a05c7de06f421d045fa09aaa1da78e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionDescription(),
+          'Description of the type',
+          false,
+          null,
         );
       case 'enumValues':
         return new GraphQL\FieldDefinition(
@@ -54,6 +57,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getIntrospectionEnumValues(
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
+          'Enum values, only applies to ENUM',
+          false,
+          null,
         );
       case 'fields':
         return new GraphQL\FieldDefinition(
@@ -69,6 +75,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getIntrospectionFields(
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
+          'Fields of the type, only applies to OBJECT and INTERFACE',
+          false,
+          null,
         );
       case 'inputFields':
         return new GraphQL\FieldDefinition(
@@ -76,6 +85,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __InputValue::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(),
+          'Input fields, only applies to INPUT_OBJECT',
+          false,
+          null,
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(
@@ -83,6 +95,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInterfaces(),
+          'Interfaces the object implements, only applies to OBJECT',
+          false,
+          null,
         );
       case 'kind':
         return new GraphQL\FieldDefinition(
@@ -90,6 +105,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __TypeKind::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionKind(),
+          'Kind of the type',
+          false,
+          null,
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -97,6 +115,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionName(),
+          'Name of the type',
+          false,
+          null,
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
@@ -104,6 +125,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionOfType(),
+          'Underlying wrapped type, only applies to NON_NULL and LIST',
+          false,
+          null,
         );
       case 'possibleTypes':
         return new GraphQL\FieldDefinition(
@@ -111,6 +135,9 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionPossibleTypes(),
+          'Possible types that implement this interface, only applies to INTERFACE',
+          false,
+          null,
         );
       default:
         return null;

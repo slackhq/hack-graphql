@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2ec633867a1874f20746329c497145ab>>
+ * @generated SignedSource<<45b21ac4d00e32c0f7a4fbbccca123d1>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,6 +19,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
     'default_list_of_non_nullable_int',
     'default_list_of_nullable_int',
     'default_nullable_string',
+    'deprecated_field',
     'non_null_int',
     'non_null_list_of_non_null',
     'non_null_string',
@@ -37,6 +38,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNonNullableInt(),
+          'Default list of non nullable int',
+          false,
+          null,
         );
       case 'default_list_of_nullable_int':
         return new GraphQL\FieldDefinition(
@@ -44,6 +48,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNullableInt(),
+          'Default list of nullable int',
+          false,
+          null,
         );
       case 'default_nullable_string':
         return new GraphQL\FieldDefinition(
@@ -51,6 +58,19 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultNullableString(),
+          'Default nullable string',
+          false,
+          null,
+        );
+      case 'deprecated_field':
+        return new GraphQL\FieldDefinition(
+          'deprecated_field',
+          Types\StringType::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> /* HH_FIXME[4128] Deprecated */ $parent->getDeprecated(),
+          'Deprecated field',
+          true,
+          'Deprecated for testing',
         );
       case 'non_null_int':
         return new GraphQL\FieldDefinition(
@@ -58,6 +78,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullInt(),
+          'Non nullable int',
+          false,
+          null,
         );
       case 'non_null_list_of_non_null':
         return new GraphQL\FieldDefinition(
@@ -65,6 +88,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullListOfNonNull(),
+          'Non nullable list of non nullables',
+          false,
+          null,
         );
       case 'non_null_string':
         return new GraphQL\FieldDefinition(
@@ -72,6 +98,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullString(),
+          'Non nullable string',
+          false,
+          null,
         );
       case 'nullable_string':
         return new GraphQL\FieldDefinition(
@@ -79,6 +108,9 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNullableString(),
+          'Nullable string',
+          false,
+          null,
         );
       default:
         return null;

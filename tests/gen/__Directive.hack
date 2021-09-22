@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<b2b8e8193ca2bdbe97f6c84230c73417>>
+ * @generated SignedSource<<5dbdcd141b9db786ce8b63cb9cddd3f4>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,6 +34,9 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['name'],
+          null,
+          false,
+          null,
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -41,6 +44,9 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['description'],
+          null,
+          false,
+          null,
         );
       case 'locations':
         return new GraphQL\FieldDefinition(
@@ -48,6 +54,9 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['locations'],
+          null,
+          false,
+          null,
         );
       case 'args':
         return new GraphQL\FieldDefinition(
@@ -55,6 +64,9 @@ final class __Directive extends \Slack\GraphQL\Types\ObjectType {
           __InputValue::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['args'],
+          null,
+          false,
+          null,
         );
       default:
         return null;

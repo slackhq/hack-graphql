@@ -9,6 +9,10 @@ class Field implements \HH\MethodAttribute {
     public function getName(): string {
         return $this->name;
     }
+
+    public function getDescription(): string {
+        return $this->description;
+    }
 }
 
 /**
@@ -30,6 +34,4 @@ class Field implements \HH\MethodAttribute {
  *
  * @see https://spec.graphql.org/draft/#sec-Handling-Field-Errors
  */
-final class KillsParentOnException implements \HH\MethodAttribute {
-    public function __construct() {}
-}
+final class KillsParentOnException implements \HH\MethodAttribute {}

@@ -1092,6 +1092,17 @@
                             "deprecationReason": null
                         },
                         {
+                            "name": "deprecated_field",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": true,
+                            "deprecationReason": "Deprecated for testing"
+                        },
+                        {
                             "name": "non_null_int",
                             "args": [],
                             "type": {

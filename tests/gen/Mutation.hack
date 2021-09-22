@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8effc458f88d700e19fc5f34452ec88f>>
+ * @generated SignedSource<<540c6978daeb3114ca2cdd32f05c0b40>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,9 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
             CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
           ),
+          'Create a new user',
+          false,
+          null,
         );
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
@@ -53,6 +56,9 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
+          'Poke a user by ID',
+          false,
+          null,
         );
       default:
         return null;

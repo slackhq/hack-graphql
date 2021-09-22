@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fa1fbeb74dab39b847042453eb0fb38f>>
+ * @generated SignedSource<<e82a61f3c460022ae085ff1c35d30707>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -35,6 +35,9 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Directive::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDirectives(),
+          'Directives supported by the schema',
+          false,
+          null,
         );
       case 'mutationType':
         return new GraphQL\FieldDefinition(
@@ -42,6 +45,9 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionMutationType(),
+          'Mutation root type',
+          false,
+          null,
         );
       case 'queryType':
         return new GraphQL\FieldDefinition(
@@ -49,6 +55,9 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionQueryType(),
+          'Query root type',
+          false,
+          null,
         );
       case 'subscriptionType':
         return new GraphQL\FieldDefinition(
@@ -56,6 +65,9 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionSubscriptionType(),
+          'Subscription root type',
+          false,
+          null,
         );
       case 'types':
         return new GraphQL\FieldDefinition(
@@ -63,6 +75,9 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getTypes(),
+          'Types contained within the schema',
+          false,
+          null,
         );
       default:
         return null;

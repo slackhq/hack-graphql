@@ -11,10 +11,17 @@ use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
  */
 abstract class FieldBuilder {
 
-    abstract const type TField as shape(
+    const type TField = shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
-        ...
+        ?'description' => string,
+        ?'is_deprecated' => bool,
+        ?'deprecation_reason' => string,
+        ?'method_name' => string,
+        ?'parameters' => vec<Parameter>,
+        ?'root_field_for_type' => string,
+        ?'is_static' => bool,
+        ?'is_optional' => bool,
     );
 
     public function getName(): string {
@@ -33,8 +40,10 @@ abstract class FieldBuilder {
         \ReflectionMethod $rm,
         bool $is_root_field = false,
     ): FieldBuilder {
+        $deprecated = $rm->getAttribute('__Deprecated');
         $data = shape(
             'name' => $field->getName(),
+            'description' => $field->getDescription(),
             'method_name' => $rm->getName(),
             'output_type' => output_type(
                 $rm->getReturnTypeText(),
@@ -54,7 +63,12 @@ abstract class FieldBuilder {
                     return $data;
                 },
             ),
+            'is_deprecated' => !!$deprecated,
         );
+
+        if ($deprecated) {
+            $data['deprecation_reason'] = C\firstx($deprecated) as string;
+        }
 
         if ($is_root_field) {
             $data['root_field_for_type'] = $rm->getDeclaringClass()->getName();
@@ -125,6 +139,30 @@ abstract class FieldBuilder {
         $hb->add('async ($parent, $args, $vars) ==> ');
         $this->generateResolverBody($hb);
         $hb->addLine(',');
+
+        // Field description
+        if ($this->data['description'] ?? '') {
+            $description_literal = \var_export($this->data['description'] ?? '', true);
+            $hb->addLinef('%s,', $description_literal);
+        } else {
+            // Fields built from shape members don't have descriptions as of yet
+            $hb->addLine('null,');
+        }
+
+        // Deprecation info
+        if ($this->data['is_deprecated'] ?? false) {
+            $hb->addLine('true,');
+            $deprecation_reason = Shapes::idx($this->data, 'deprecation_reason');
+        } else {
+            $hb->addLine('false,');
+            $deprecation_reason = null;
+        }
+
+        if ($deprecation_reason is nonnull) {
+            $hb->addLine(\var_export($deprecation_reason, true).',');
+        } else {
+            $hb->addLine('null,');
+        }
 
         // End of new GraphQL\FieldDefinition(
         $hb->unindent()->addLine(');');

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<481a5396998f1863b06a6992d837fe3b>>
+ * @generated SignedSource<<9cba384158f3aba76251dad8ebed7202>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,6 +36,9 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          'ID of the user',
+          false,
+          null,
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -43,6 +46,9 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          'Whether the user is active',
+          false,
+          null,
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -50,6 +56,9 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          'Name of the user',
+          false,
+          null,
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -57,6 +66,9 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          'Team the user belongs to',
+          false,
+          null,
         );
       default:
         return null;

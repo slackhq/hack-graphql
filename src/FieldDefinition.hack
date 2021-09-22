@@ -29,6 +29,9 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
             dict<string, \Graphpinator\Parser\Value\Value>,
             Variables,
         ): Awaitable<TRet>) $resolver,
+        private ?string $description,
+        private bool $is_deprecated = false,
+        private ?string $deprecation_reason = null,
     ) {}
 
     public async function resolveAsync(
@@ -67,18 +70,15 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     }
 
     public function getDeprecationReason(): ?string {
-        // TODO
-        return null;
+        return $this->deprecation_reason;
     }
 
     public function isDeprecated(): bool {
-        // TODO
-        return false;
+        return $this->is_deprecated;
     }
 
     public function getDescription(): ?string {
-        // TODO
-        return null;
+        return $this->description;
     }
 
     public function getArgs(): vec<Introspection\__InputValue> {

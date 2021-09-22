@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e37a09e281723b18b775b5757b7f6675>>
+ * @generated SignedSource<<1f788ce977e0e0bfec24cddd157447ee>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,6 +33,9 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bar(),
+          'bar',
+          false,
+          null,
         );
       case 'foo':
         return new GraphQL\FieldDefinition(
@@ -40,6 +43,9 @@ final class InterfaceB extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->foo(),
+          'foo',
+          false,
+          null,
         );
       default:
         return null;

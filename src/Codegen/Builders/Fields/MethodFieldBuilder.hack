@@ -28,17 +28,11 @@ type Parameter = shape(
  * we can tell `MethodFieldBuilder` exactly what we want, and the runtime will successfully resolve the generic method.
  */
 class MethodFieldBuilder extends FieldBuilder {
-    const type TField = shape(
-        'name' => string,
-        'method_name' => string,
-        'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'parameters' => vec<Parameter>,
-        ?'root_field_for_type' => string,
-        ?'is_static' => bool,
-    );
-
     <<__Override>>
     protected function generateResolverBody(HackBuilder $hb): void {
+        if ($this->data['is_deprecated'] ?? false) {
+            $hb->add('/* HH_FIXME[4128] Deprecated */ ');
+        }
         $type_info = $this->data['output_type'];
         $method_name = Shapes::at($this->data, 'method_name');
         $hb->addf(
@@ -54,9 +48,10 @@ class MethodFieldBuilder extends FieldBuilder {
     }
 
     protected function generateParametersInvocation(HackBuilder $hb): void {
-        if (!C\is_empty($this->data['parameters'])) {
+        $parameters = $this->data['parameters'] ?? vec[];
+        if (!C\is_empty($parameters)) {
             $hb->newLine()->indent();
-            foreach ($this->data['parameters'] as $param) {
+            foreach ($parameters as $param) {
                 $arg = $this->getArgumentInvocationString($param);
                 $hb->addLinef('%s,', $arg);
             }
@@ -66,7 +61,7 @@ class MethodFieldBuilder extends FieldBuilder {
 
     <<__Override>>
     protected function getArgumentDefinitions(): vec<Parameter> {
-        return $this->data['parameters'];
+        return $this->data['parameters'] ?? vec[];
     }
 
     protected function getMethodCallPrefix(): string {
