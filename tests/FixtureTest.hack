@@ -5,7 +5,7 @@ use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
 
-abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
+abstract class FixtureTest extends \Facebook\HackTest\HackTest {
 
     const type TTestCases = dict<string, (string, dict<string, mixed>, mixed)>;
 
@@ -19,7 +19,7 @@ abstract class PlaygroundTest extends \Facebook\HackTest\HackTest {
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
         await GraphQL\Codegen\Generator::forPath(
-            __DIR__.'/../src/playground',
+            __DIR__.'/Fixtures',
             shape(
                 'output_directory' => __DIR__.'/gen',
                 'namespace' => 'Slack\GraphQL\Test\Generated',

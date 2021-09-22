@@ -8,7 +8,7 @@ use namespace Slack\GraphQL;
 /**
  * Test GraphQL pagination
  */
-final class PaginationTest extends PlaygroundTest {
+final class PaginationTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {

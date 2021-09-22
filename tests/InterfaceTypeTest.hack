@@ -6,7 +6,7 @@ use namespace Slack\GraphQL;
 /**
  * Test GraphQL interfaces.
  */
-final class InterfaceTypeTest extends PlaygroundTest {
+final class InterfaceTypeTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {

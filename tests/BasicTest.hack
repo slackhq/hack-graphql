@@ -5,7 +5,7 @@ use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
 use namespace Slack\GraphQL;
 
-final class BasicTest extends PlaygroundTest {
+final class BasicTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {

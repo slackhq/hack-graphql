@@ -4,7 +4,7 @@
 use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
 
-final class ErrorTest extends PlaygroundTest {
+final class ErrorTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
@@ -410,7 +410,7 @@ final class ErrorTest extends PlaygroundTest {
 
         $extension = expect($error['extensions'] ?? null)->toNotBeNull();
         expect($extension['message'])->toEqual('Could not connect to database at 127.0.0.1');
-        expect($extension['file'])->toContainSubstring('playground/ErrorTestObj.hack');
+        expect($extension['file'])->toContainSubstring('Fixtures/ErrorTestObj.hack');
         expect($extension['line'])->toEqual(38);
     }
 }

@@ -5,6 +5,11 @@ namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Math, Str};
 
+/**
+ * A connection which paginates over a vec of items.
+ *
+ * This is useful when you want to imitate real pagination, e.g., during prototyping.
+ */
 abstract class ListConnection extends Connection {
     public function __construct(private vec<this::TNode> $items) {}
 

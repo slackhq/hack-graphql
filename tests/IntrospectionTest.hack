@@ -6,7 +6,7 @@ use namespace Slack\GraphQL;
 use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
 
-final class IntrospectionTest extends PlaygroundTest {
+final class IntrospectionTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
