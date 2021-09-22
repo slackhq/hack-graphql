@@ -2,20 +2,20 @@
 
 Hack-GraphQL is the first (and currently only) open-source [GraphQL](https://graphql.org/) server written in [Hack](https://hacklang.org/). It provides a developer-first approach to declaring a GraphQL schema as Hack code, using attributes and code generation. While not yet fully-featured, Hack-GraphQL supports most of the GraphQL spec.
 
-# Features
+## Features
 * Code-first approach: declare GraphQL types and fields as Hack code.
 * Strongly typed: generated code is 100% type-safe.
 * Supports nearly all GraphQL types: objects, interfaces, enumerations, directives, lists, and input objects.
 * Support for introspection.
 * Ships with support for the [Relay model of pagination](https://relay.dev/graphql/connections.htm).
 
-## Missing Features
+### Missing Features
 * Subscriptions
 * Only a subset of GraphQL's validation rules are implemented. To see which rules have been implemented, take a look at the `src/Validation/Rules` directory.
 * It is not possible to declare custom directives. Only the `include` and `skip` directives are supported.
 * No support for unions (because Hack does not support them).
 
-# Usage
+## Usage
 
 In Hack-GraphQL, we represent GraphQL types and fields as ordinary Hack classes and methods. To create a new GraphQL type, we declare a Hack class and annotate it with the `<<GraphQL\ObjectType>>` attribute. To add a field to the type, we add a method annotated with `<<GraphQL\Field>>` to the Hack class.
 
@@ -35,7 +35,7 @@ final class User {
 }
 ```
 
-Hack-GraphQL supports all GraphQL types except unions. See [Attributes](#Attributes) for details on generating instances of each type from Hack code.
+Hack-GraphQL supports all GraphQL types except unions. See [Attributes](###Attributes) for details on generating instances of each type from Hack code.
 
 Now we need to expose a top-level query which can retrieve our new type:
 
@@ -82,11 +82,11 @@ In the above:
 
 And that's it! You're now ready to serve GraphQL queries and mutations using your new schema.
 
-## Attributes
+### Attributes
 
 Hack-GraphQL exposes the following attributes which can be used to create GraphQL types and fields:
 
-### ObjectType
+#### ObjectType
 
 This attribute annotates a non-abstract class to declare a [GraphQL object](https://spec.graphql.org/June2018/#sec-Objects):
 
@@ -113,7 +113,7 @@ type User = shape(
 
 The disadvantage of annotating shapes in this way is that they don't currently support descriptions of their fields. This is something we'd like to address.
 
-### Field
+#### Field
 
 This attribute declares a GraphQL field by annotating a non-static method on a class or interface annotated with `GraphQL\ObjectType` or `GraphQL\InterfaceType`:
 
@@ -134,7 +134,7 @@ final class User {
 }
 ```
 
-### QueryRootField
+#### QueryRootField
 
 This attribute declares a GraphQL query by annotating a static method on any class:
 
@@ -160,7 +160,7 @@ A GraphQL query written against this field might look like:
 }
 ```
 
-### MutationRootField
+#### MutationRootField
 
 This attribute declares a GraphQL mutation by annotating a static method on any class:
 
@@ -185,7 +185,7 @@ A GraphQL mutation written against this field might look like:
 }
 ```
 
-### InterfaceType
+#### InterfaceType
 This attribute annotates an abstract class or interface to declare a GraphQL interface:
 
 ```hack
@@ -232,7 +232,7 @@ shape(
 );
 ```
 
-### EnumType
+#### EnumType
 
 This attribute annotates an enumeration to declare a GraphQL enum type:
 
@@ -245,7 +245,7 @@ enum Colors: string {
 }
 ```
 
-### InputObjectType
+#### InputObjectType
 
 This attribute annotates a GraphQL shape as input to a GraphQL field:
 
@@ -269,7 +269,7 @@ final class MutationFields {
 }
 ```
 
-## Exceptions
+### Exceptions
 
 In GraphQL, fields which fail to be resolved can either be marked null in the response, or can "bubble-up" and cause their parent fields to be marked null as well. By default, Hack-GraphQL implements the first behavior: any field which throws an error during resolution will simply be null in the response. If the field throws an instance of `GraphQL\UserFacingError`, then an error will be added to the list of `errors` in the response from the resolver.
 
@@ -299,6 +299,6 @@ public function getName(): string {
 
 Now the entire `User` object will be null in the response.
 
-# Contributing
+## Contributing
 
 We welcome contributions to Hack-GraphQL. We do much of our discussion in #hack-graphql channel in the Hacklang Slack group; for an invite, fill out [this form](https://docs.google.com/forms/d/e/1FAIpQLSeiFTB1ppOMce2HxAuU_-qUvupalEpClT6lyKLexq-TPvua9w/viewform).
