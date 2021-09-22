@@ -7,7 +7,7 @@ use namespace HH\Lib\{C, Vec};
 use namespace Slack\GraphQL;
 
 /**
- * Arguments passed to a connection's `paginate` method. These should be used to determine the result set.
+ * Arguments passed to a connection's `fetch` method. These should be used to determine the result set.
  *
  * The framework ensures that at most one of `first` and `last` is provided.
  */
@@ -112,7 +112,7 @@ abstract class Connection {
      * These args are not passed to resolvers directly, so framework users need only handle them when implementing
      * the `paginate` method, and then after they've been coerced to the more amenable `PaginationArgs` shape.
      */
-    public function setPaginationArgs(?string $after, ?string $before, ?int $first, ?int $last): this {
+    final public function setPaginationArgs(?string $after, ?string $before, ?int $first, ?int $last): this {
         $args = shape();
 
         if ($first is nonnull && $last is nonnull) {
@@ -147,7 +147,7 @@ abstract class Connection {
     }
 
     /**
-     * Constuct the correct edges and pageInfo objects from the result of calling the user-implemented `paginate` 
+     * Constuct the correct edges and pageInfo objects from the result of calling the user-implemented `fetch` 
      * method with the pagination args.
      */
     <<__Memoize>>

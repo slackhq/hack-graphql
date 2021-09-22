@@ -8,7 +8,7 @@ use namespace Slack\GraphQL;
 /**
 * Test GraphQL mutations with input types.
 */
-final class InputObjectTypeTest extends PlaygroundTest {
+final class InputObjectTypeTest extends FixtureTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[

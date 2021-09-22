@@ -8,7 +8,7 @@ use namespace Slack\GraphQL;
 /**
 * Test optional/nullable/required arguments with and without variables.
 */
-final class ArgumentTest extends PlaygroundTest {
+final class ArgumentTest extends FixtureTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[

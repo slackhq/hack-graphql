@@ -20,7 +20,7 @@ abstract class BaseValidationTest extends \Facebook\HackTest\HackTest {
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
         await GraphQL\Codegen\Generator::forPath(
-            __DIR__.'/../../src/playground',
+            __DIR__.'/../Fixtures',
             shape(
                 'output_directory' => __DIR__.'/../gen',
                 'namespace' => 'Slack\GraphQL\Test\Generated',

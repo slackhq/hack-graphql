@@ -8,7 +8,7 @@ use namespace Slack\GraphQL;
 /**
  * Test GraphQL fields with various types.
  */
-final class OutputTypeTest extends PlaygroundTest {
+final class OutputTypeTest extends FixtureTest {
 
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
