@@ -67,7 +67,7 @@ final class IntrospectionTestObject {
         return null;
     }
 
-    <<GraphQL\Field('non_null_int', 'Nullable string'), GraphQL\KillsParentOnException>>
+    <<GraphQL\Field('non_null_int', 'Non nullable int'), GraphQL\KillsParentOnException>>
     public function getNonNullInt(): int {
         return 1;
     }
@@ -85,6 +85,11 @@ final class IntrospectionTestObject {
     <<GraphQL\Field('default_list_of_nullable_int', 'Default list of nullable int')>>
     public function getDefaultListOfNullableInt(): vec<?int> {
         return vec[null];
+    }
+
+    <<GraphQL\Field('deprecated_field', 'Deprecated field'), __Deprecated('Deprecated for testing')>>
+    public function getDeprecated(): string {
+        return 'deprecated';
     }
 
 }

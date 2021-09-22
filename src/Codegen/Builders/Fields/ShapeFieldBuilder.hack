@@ -12,12 +12,6 @@ use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
  * In general, call `FieldBuilder::fromShapeField` instead of instantiating this directly.
  */
 final class ShapeFieldBuilder extends FieldBuilder {
-    const type TField = shape(
-        'name' => string,
-        'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'is_optional' => bool,
-    );
-
     <<__Override>>
     protected function getArgumentDefinitions(): vec<Parameter> {
         return vec[];
@@ -26,6 +20,6 @@ final class ShapeFieldBuilder extends FieldBuilder {
     <<__Override>>
     protected function generateResolverBody(HackBuilder $hb): void {
         $name_literal = \var_export($this->data['name'], true);
-        $hb->addf('$parent[%s]%s', $name_literal, $this->data['is_optional'] ? ' ?? null' : '');
+        $hb->addf('$parent[%s]%s', $name_literal, Shapes::idx($this->data, 'is_optional', false) ? ' ?? null' : '');
     }
 }

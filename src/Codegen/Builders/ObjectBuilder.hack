@@ -74,13 +74,11 @@ class ObjectBuilder extends CompositeBuilder {
                         'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
                         'needs_await' => true,
                     ),
-                    'parameters' => vec[],
                 )),
                 new MethodFieldBuilder(shape(
                     'name' => 'pageInfo',
                     'method_name' => 'getPageInfo',
                     'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
-                    'parameters' => vec[],
                 )),
             ],
             dict[], // Connections do not implement any interfaces
@@ -98,13 +96,11 @@ class ObjectBuilder extends CompositeBuilder {
                     'name' => 'node',
                     'method_name' => 'getNode',
                     'output_type' => shape('type' => $output_type.'::nullableOutput()'),
-                    'parameters' => vec[],
                 )),
                 new MethodFieldBuilder(shape(
                     'name' => 'cursor',
                     'method_name' => 'getCursor',
                     'output_type' => shape('type' => 'Types\StringType::nullableOutput()'),
-                    'parameters' => vec[],
                 )),
             ],
             dict[],

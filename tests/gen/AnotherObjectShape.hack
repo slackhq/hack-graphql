@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1df6595e51f53c069509e4a7216ba04f>>
+ * @generated SignedSource<<1563ad2b8703b4a0a402edf70519ea18>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -31,6 +31,8 @@ final class AnotherObjectShape extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['abc'],
+          null,
+          null,
         );
       default:
         return null;

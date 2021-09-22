@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<1d6ae474d70729d9c6200f3336b331be>>
+ * @generated SignedSource<<10c691da2cbe51607ac826b0daa0aa1e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,6 +36,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           __InputValue::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getArgs(),
+          'Args of the field',
+          null,
         );
       case 'deprecationReason':
         return new GraphQL\FieldDefinition(
@@ -43,6 +45,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDeprecationReason(),
+          'Reason the field was deprecated',
+          null,
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -50,6 +54,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDescription(),
+          'Description of the field',
+          null,
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
@@ -57,6 +63,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isDeprecated(),
+          'Boolean for whether or not the field is deprecated',
+          null,
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -64,6 +72,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          'Name of the field',
+          null,
         );
       case 'type':
         return new GraphQL\FieldDefinition(
@@ -71,6 +81,8 @@ final class __Field extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getType(),
+          'Type of the field',
+          null,
         );
       default:
         return null;

@@ -5,12 +5,6 @@ namespace Slack\GraphQL\Codegen;
 use type Facebook\HackCodegen\{HackBuilder};
 
 final class IntrospectSchemaFieldBuilder extends FieldBuilder {
-    const type TField = shape(
-        'name' => string,
-        'output_type' => shape('type' => string, ?'needs_await' => bool),
-        ...
-    );
-
     public function __construct() {
         parent::__construct(shape(
             'name' => '__schema',

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fa1fbeb74dab39b847042453eb0fb38f>>
+ * @generated SignedSource<<ea91574773e407798705331aa423c127>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -35,6 +35,8 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Directive::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDirectives(),
+          'Directives supported by the schema',
+          null,
         );
       case 'mutationType':
         return new GraphQL\FieldDefinition(
@@ -42,6 +44,8 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionMutationType(),
+          'Mutation root type',
+          null,
         );
       case 'queryType':
         return new GraphQL\FieldDefinition(
@@ -49,6 +53,8 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionQueryType(),
+          'Query root type',
+          null,
         );
       case 'subscriptionType':
         return new GraphQL\FieldDefinition(
@@ -56,6 +62,8 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionSubscriptionType(),
+          'Subscription root type',
+          null,
         );
       case 'types':
         return new GraphQL\FieldDefinition(
@@ -63,6 +71,8 @@ final class __Schema extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getTypes(),
+          'Types contained within the schema',
+          null,
         );
       default:
         return null;

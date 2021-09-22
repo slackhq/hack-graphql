@@ -32,7 +32,7 @@ final class ConnectionFieldBuilder extends MethodFieldBuilder {
 
     <<__Override>>
     protected function getArgumentDefinitions(): vec<Parameter> {
-        return Vec\concat($this->data['parameters'], $this->getConnectionParameters());
+        return Vec\concat($this->data['parameters'] ?? vec[], $this->getConnectionParameters());
     }
 
     /**

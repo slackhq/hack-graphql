@@ -269,6 +269,7 @@ final class IntrospectionTest extends FixtureTest {
                         name
                         fields {
                             name
+                            description
                             type {
                                 kind
                                 name
@@ -285,6 +286,8 @@ final class IntrospectionTest extends FixtureTest {
                                     }
                                 }
                             }
+                            isDeprecated
+                            deprecationReason
                         }
                     }
                 }',
@@ -295,6 +298,7 @@ final class IntrospectionTest extends FixtureTest {
                         'fields' => vec[
                             dict[
                                 'name' => 'default_list_of_non_nullable_int',
+                                'description' => 'Default list of non nullable int',
                                 'type' => dict[
                                     'kind' => 'LIST',
                                     'name' => null,
@@ -308,9 +312,12 @@ final class IntrospectionTest extends FixtureTest {
                                         ],
                                     ],
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                             dict[
                                 'name' => 'default_list_of_nullable_int',
+                                'description' => 'Default list of nullable int',
                                 'type' => dict[
                                     'kind' => 'LIST',
                                     'name' => null,
@@ -320,17 +327,34 @@ final class IntrospectionTest extends FixtureTest {
                                         'ofType' => null,
                                     ],
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                             dict[
                                 'name' => 'default_nullable_string',
+                                'description' => 'Default nullable string',
                                 'type' => dict[
                                     'kind' => 'SCALAR',
                                     'name' => 'String',
                                     'ofType' => null,
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
+                            ],
+                            dict[
+                                'name' => 'deprecated_field',
+                                'description' => 'Deprecated field',
+                                'type' => dict[
+                                    'kind' => 'SCALAR',
+                                    'name' => 'String',
+                                    'ofType' => null,
+                                ],
+                                'isDeprecated' => true,
+                                'deprecationReason' => 'Deprecated for testing',
                             ],
                             dict[
                                 'name' => 'non_null_int',
+                                'description' => 'Non nullable int',
                                 'type' => dict[
                                     'kind' => 'NON_NULL',
                                     'name' => null,
@@ -340,9 +364,12 @@ final class IntrospectionTest extends FixtureTest {
                                         'ofType' => null,
                                     ],
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                             dict[
                                 'name' => 'non_null_list_of_non_null',
+                                'description' => 'Non nullable list of non nullables',
                                 'type' => dict[
                                     'kind' => 'NON_NULL',
                                     'name' => null,
@@ -359,9 +386,12 @@ final class IntrospectionTest extends FixtureTest {
                                         ],
                                     ],
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                             dict[
                                 'name' => 'non_null_string',
+                                'description' => 'Non nullable string',
                                 'type' => dict[
                                     'kind' => 'NON_NULL',
                                     'name' => null,
@@ -371,14 +401,19 @@ final class IntrospectionTest extends FixtureTest {
                                         'ofType' => null,
                                     ],
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                             dict[
                                 'name' => 'nullable_string',
+                                'description' => 'Nullable string',
                                 'type' => dict[
                                     'kind' => 'SCALAR',
                                     'name' => 'String',
                                     'ofType' => null,
                                 ],
+                                'isDeprecated' => false,
+                                'deprecationReason' => null,
                             ],
                         ],
                     ],
