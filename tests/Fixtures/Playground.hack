@@ -188,6 +188,21 @@ abstract final class UserQueryAttributes {
     public static function alphabetConnection(): AlphabetConnection {
         return new AlphabetConnection();
     }
+
+    <<GraphQL\QueryRootField('allFooObjects', 'Get all foo objects')>>
+    public static function allFooObjects(): Foo\FooConnection {
+        return new Foo\FooConnection();
+    }
+
+    <<GraphQL\QueryRootField('getFoo', 'Get the one foo object')>>
+    public static function getFoo(): Foo\FooObject {
+        return new Foo\FooObject();
+    }
+
+    <<GraphQL\QueryRootField('getBaz', 'Get the one baz object')>>
+    public static function getBaz(): Foo\Bar\Baz {
+        return new Foo\Bar\Baz();
+    }
 }
 
 abstract final class UserMutationAttributes {

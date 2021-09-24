@@ -4,34 +4,41 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<c985a69e69b4b26408709e41c2f0d2c5>>
+ * @generated SignedSource<<96bd2ebd136797e7bb5774ad210a08b2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class FooObject extends \Slack\GraphQL\Types\ObjectType {
+final class FooObjectEdge extends \Slack\GraphQL\Types\ObjectType {
 
-  const NAME = 'FooObject';
-  const type THackType = \Foo\FooObject;
+  const NAME = 'FooObjectEdge';
+  const type THackType = \Slack\GraphQL\Pagination\Edge<\Foo\FooObject>;
   const keyset<string> FIELD_NAMES = keyset[
-    'value',
+    'node',
+    'cursor',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
-    'FooInterface' => FooInterface::class,
   ];
 
   public function getFieldDefinition(
     string $field_name,
   ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'value':
+      case 'node':
         return new GraphQL\FieldDefinition(
-          'value',
+          'node',
+          FooObject::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getNode(),
+        );
+      case 'cursor':
+        return new GraphQL\FieldDefinition(
+          'cursor',
           Types\StringType::nullableOutput(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getValue(),
+          async ($parent, $args, $vars) ==> $parent->getCursor(),
         );
       default:
         return null;

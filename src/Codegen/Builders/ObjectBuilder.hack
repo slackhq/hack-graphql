@@ -3,7 +3,7 @@
 
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{Vec, Str};
+use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\HackCodegen\{
     CodegenClass,
     HackCodegenFactory,
@@ -63,8 +63,14 @@ class ObjectBuilder extends CompositeBuilder {
     }
 
     public static function forConnection(string $name, string $edge_name): ObjectBuilder {
+        // Remove namespace to generate a sane GQL name
+        // This means that connections in different namespaces can collide with each other;
+        // we could eventually fix that by merging the namespace and GQL name when
+        // generating the connection but doesn't seem worth it currently.
+        $gql_name = Str\split($name, '\\')
+            |> C\lastx($$);
         return new ObjectBuilder(
-            new \Slack\GraphQL\ObjectType($name, $name), // TODO: Description
+            new \Slack\GraphQL\ObjectType($gql_name, $gql_name), // TODO: Description
             $name, // hack type
             vec[ // fields
                 new MethodFieldBuilder(shape(

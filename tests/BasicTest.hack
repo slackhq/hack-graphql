@@ -64,6 +64,10 @@ final class BasicTest extends FixtureTest {
                 dict['favorite_color' => 'RED'],
                 dict['takes_favorite_color' => true],
             ),
+            'namespaced return types' =>
+                tuple('{ getFoo { value } }', dict[], dict['getFoo' => dict['value' => 'bar']]),
+            'doubly-nested namespaced return types' =>
+                tuple('{ getBaz { value } }', dict[], dict['getBaz' => dict['value' => 'qux']]),
         ];
     }
 }

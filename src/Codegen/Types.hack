@@ -3,7 +3,7 @@
 
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{C, Str};
 use namespace Slack\GraphQL\Types;
 
 const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
@@ -61,8 +61,14 @@ function output_type(
     $class = get_output_type($unwrapped);
     if ($class is null) {
         throw new \Error('GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute');
+    } elseif (Str\starts_with($class, 'Slack\\GraphQL\\')) {
+        $class = Str\strip_prefix($class, 'Slack\\GraphQL\\');
+    } else {
+        // Class is user-defined, strip off the namespace since the generated
+        // GQL type isn't namespaced
+        $class = Str\split($class, '\\') |> C\lastx($$);
     }
-    return shape('type' => Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix, 'needs_await' => $needs_await);
+    return shape('type' => $class.$suffix, 'needs_await' => $needs_await);
 }
 
 /**
