@@ -14,6 +14,7 @@ abstract class FieldBuilder {
     abstract const type TField as shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
+        'directives' => vec<string>,
         ...
     );
 
@@ -31,12 +32,9 @@ abstract class FieldBuilder {
     public static function fromReflectionMethod(
         \Slack\GraphQL\Field $field,
         \ReflectionMethod $rm,
+        vec<string> $directives,
         bool $is_root_field = false,
     ): FieldBuilder {
-        if ($rm->getName() === 'getFavoriteColor') {
-            $directives = $rm->getAttributes();
-            \var_dump($directives);
-        }
         $data = shape(
             'name' => $field->getName(),
             'method_name' => $rm->getName(),
@@ -58,6 +56,7 @@ abstract class FieldBuilder {
                     return $data;
                 },
             ),
+            'directives' => $directives
         );
 
         if ($is_root_field) {
@@ -79,6 +78,7 @@ abstract class FieldBuilder {
             'name' => $name,
             'output_type' => output_type(type_structure_to_type_alias($ts), false),
             'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
+            'directives' => vec[],
         ));
     }
 
@@ -86,7 +86,7 @@ abstract class FieldBuilder {
      * Construct a top-level GraphQL field.
      */
     public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
-        return FieldBuilder::fromReflectionMethod($field, $rm, true);
+        return FieldBuilder::fromReflectionMethod($field, $rm, vec[], true);
     }
 
     public static function introspectSchemaField(): FieldBuilder {
@@ -129,6 +129,18 @@ abstract class FieldBuilder {
         $hb->add('async ($parent, $args, $vars) ==> ');
         $this->generateResolverBody($hb);
         $hb->addLine(',');
+
+        // Field directives
+        if ($this->data['directives']) {
+            $hb->addLine('vec[')
+                ->indent();
+            foreach ($this->data['directives'] as $directive) {
+                $hb->addLine($directive.',');
+            }
+            $hb->unindent()->addLine('],');
+        } else {
+            $hb->addLine('vec[],');
+        }
 
         // End of new GraphQL\FieldDefinition(
         $hb->unindent()->addLine(');');

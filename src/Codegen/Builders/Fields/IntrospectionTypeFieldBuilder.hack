@@ -15,6 +15,7 @@ final class IntrospectTypeFieldBuilder extends MethodFieldBuilder {
             'parameters' => vec[
                 shape('name' => 'name', 'type' => 'HH\string', 'is_optional' => false),
             ],
+            'directives' => vec[],
         ));
     }
     <<__Override>>

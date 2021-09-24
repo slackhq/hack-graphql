@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5e9816ae88463151bbbadeb9b46700a7>>
+ * @generated SignedSource<<4e04f7362248af9d50f125809c616da4>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -31,6 +31,7 @@ final class NestedOutputShape extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['vec_of_string'],
+          vec[],
         );
       default:
         return null;

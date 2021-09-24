@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<47c161bdd9510702ccbfb76106d4bc21>>
+ * @generated SignedSource<<f2442107d0cc00283e5e4cc834d95a35>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,6 +37,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -44,6 +45,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -51,6 +53,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'roles':
         return new GraphQL\FieldDefinition(
@@ -58,6 +61,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Role::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getRoles(),
+          vec[],
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -65,6 +69,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          vec[],
         );
       default:
         return null;

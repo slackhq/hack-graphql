@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<10bd530f34fa766a0c89a1f81e8f8ad3>>
+ * @generated SignedSource<<8881f007a7263fc895b7e0d6b52a8956>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -32,6 +32,7 @@ final class UserEdge extends \Slack\GraphQL\Types\ObjectType {
           User::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNode(),
+          vec[],
         );
       case 'cursor':
         return new GraphQL\FieldDefinition(
@@ -39,6 +40,7 @@ final class UserEdge extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getCursor(),
+          vec[],
         );
       default:
         return null;

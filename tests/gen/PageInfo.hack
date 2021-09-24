@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<cca639caaac8b03f1af47f96a942d215>>
+ * @generated SignedSource<<39088bc448c50e4310ce649372f459cf>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,6 +34,7 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['startCursor'] ?? null,
+          vec[],
         );
       case 'endCursor':
         return new GraphQL\FieldDefinition(
@@ -41,6 +42,7 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['endCursor'] ?? null,
+          vec[],
         );
       case 'hasPreviousPage':
         return new GraphQL\FieldDefinition(
@@ -48,6 +50,7 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['hasPreviousPage'] ?? null,
+          vec[],
         );
       case 'hasNextPage':
         return new GraphQL\FieldDefinition(
@@ -55,6 +58,7 @@ final class PageInfo extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['hasNextPage'] ?? null,
+          vec[],
         );
       default:
         return null;

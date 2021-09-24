@@ -31,7 +31,6 @@ final class Generator {
         'output_directory' => string,
         'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
-        ?'custom_directives' => vec<classname<\Slack\GraphQL\Directive>>
     );
 
     private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
@@ -61,7 +60,9 @@ final class Generator {
     }
 
     public async function generate(): Awaitable<void> {
-        $objects = await $this->collectObjects();
+        $custom_directives = $this->collectDirectives();
+        $directives_finder = new DirectivesFinder($custom_directives);
+        $objects = await $this->collectObjects($directives_finder);
 
         self::removeDirectory($this->config['output_directory']);
         \mkdir($this->config['output_directory']);
@@ -196,7 +197,7 @@ final class Generator {
         return $resolve_method;
     }
 
-    private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
+    private async function collectObjects(DirectivesFinder $directive_finder): Awaitable<vec<ITypeBuilder>> {
         $objects = vec[];
         $query_fields = dict[
             '__schema' => FieldBuilder::introspectSchemaField(),
@@ -206,8 +207,8 @@ final class Generator {
 
         $classish_objects = $this->parser->getClassishObjects();
 
-        $field_resolver = new FieldResolver($classish_objects);
-        $class_fields = $field_resolver->resolveFields();
+        $field_resolver = new FieldResolver($classish_objects, $directive_finder);
+        $class_fields = await $field_resolver->resolveFields();
 
         $hack_class_to_graphql_interface = dict[];
         $hack_class_to_graphql_object = dict[];
@@ -343,5 +344,16 @@ final class Generator {
             ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
             ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
+    }
+
+    private function collectDirectives(): keyset<string> {
+        $custom_directives = keyset[];
+        foreach ($this->parser->getClasses() as $class) {
+            $rc = new \ReflectionClass($class->getName());
+            if (C\contains($rc->getInterfaceNames(), \Slack\GraphQL\Directive::class)) {
+                $custom_directives[] = '\\'.$rc->getName();
+            }
+        }
+        return $custom_directives;
     }
 }

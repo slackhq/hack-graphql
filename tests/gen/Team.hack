@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<42f8451c72c0c7713661e2da057f8902>>
+ * @generated SignedSource<<c540cf3e805f69282a0d6e3309770176>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -41,6 +41,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getDescription(
             Types\BooleanType::nonNullable()->coerceNamedNode('short', $args, $vars),
           ),
+          vec[],
         );
       case 'id':
         return new GraphQL\FieldDefinition(
@@ -48,6 +49,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -55,6 +57,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'num_users':
         return new GraphQL\FieldDefinition(
@@ -62,6 +65,7 @@ final class Team extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getNumUsers(),
+          vec[],
         );
       default:
         return null;

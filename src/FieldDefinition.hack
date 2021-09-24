@@ -29,6 +29,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
             dict<string, \Graphpinator\Parser\Value\Value>,
             Variables,
         ): Awaitable<TRet>) $resolver,
+        private vec<FieldDirective> $directives
     ) {}
 
     public async function resolveAsync(
@@ -38,6 +39,9 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
+            foreach ($this->directives as $directive) {
+                await $directive->beforeResolve();
+            }
             $value = await $resolver(
                 $parent,
                 // Validation guarantees all of the grouped field nodes have the same arguments, so it doesn't matter

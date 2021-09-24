@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<3b315c322b594d0d3e3317ae5e0f799e>>
+ * @generated SignedSource<<1567641b10047f4bea25dcbba5c438dc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,6 +37,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -44,6 +45,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -51,6 +53,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
@@ -58,6 +61,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
+          vec[],
         );
       case 'roles':
         return new GraphQL\FieldDefinition(
@@ -65,6 +69,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Role::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getRoles(),
+          vec[],
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -72,6 +77,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          vec[],
         );
       default:
         return null;
