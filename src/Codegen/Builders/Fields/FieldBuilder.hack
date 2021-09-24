@@ -33,6 +33,10 @@ abstract class FieldBuilder {
         \ReflectionMethod $rm,
         bool $is_root_field = false,
     ): FieldBuilder {
+        if ($rm->getName() === 'getFavoriteColor') {
+            $directives = $rm->getAttributes();
+            \var_dump($directives);
+        }
         $data = shape(
             'name' => $field->getName(),
             'method_name' => $rm->getName(),

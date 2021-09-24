@@ -31,6 +31,7 @@ final class Generator {
         'output_directory' => string,
         'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
+        ?'custom_directives' => vec<classname<\Slack\GraphQL\Directive>>
     );
 
     private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
