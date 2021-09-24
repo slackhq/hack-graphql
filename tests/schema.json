@@ -79,6 +79,27 @@
                     "possibleTypes": null
                 },
                 {
+                    "kind": "OBJECT",
+                    "name": "Baz",
+                    "fields": [
+                        {
+                            "name": "value",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        }
+                    ],
+                    "inputFields": null,
+                    "interfaces": [],
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
                     "kind": "SCALAR",
                     "name": "Boolean",
                     "fields": null,
@@ -504,6 +525,46 @@
                     "possibleTypes": null
                 },
                 {
+                    "kind": "OBJECT",
+                    "name": "FooConnection",
+                    "fields": [
+                        {
+                            "name": "edges",
+                            "args": [],
+                            "type": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "FooObjectEdge",
+                                        "ofType": null
+                                    }
+                                }
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "pageInfo",
+                            "args": [],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "PageInfo",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        }
+                    ],
+                    "inputFields": null,
+                    "interfaces": [],
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
                     "kind": "INTERFACE",
                     "name": "FooInterface",
                     "fields": [],
@@ -521,7 +582,19 @@
                 {
                     "kind": "OBJECT",
                     "name": "FooObject",
-                    "fields": [],
+                    "fields": [
+                        {
+                            "name": "value",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        }
+                    ],
                     "inputFields": null,
                     "interfaces": [
                         {
@@ -530,6 +603,38 @@
                             "ofType": null
                         }
                     ],
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
+                    "kind": "OBJECT",
+                    "name": "FooObjectEdge",
+                    "fields": [
+                        {
+                            "name": "node",
+                            "args": [],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "FooObject",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "cursor",
+                            "args": [],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        }
+                    ],
+                    "inputFields": null,
+                    "interfaces": [],
                     "enumValues": null,
                     "possibleTypes": null
                 },
@@ -1533,6 +1638,54 @@
                     "name": "Query",
                     "fields": [
                         {
+                            "name": "allFooObjects",
+                            "args": [
+                                {
+                                    "name": "after",
+                                    "type": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    },
+                                    "defaultValue": "null"
+                                },
+                                {
+                                    "name": "before",
+                                    "type": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    },
+                                    "defaultValue": "null"
+                                },
+                                {
+                                    "name": "first",
+                                    "type": {
+                                        "kind": "SCALAR",
+                                        "name": "Int",
+                                        "ofType": null
+                                    },
+                                    "defaultValue": "null"
+                                },
+                                {
+                                    "name": "last",
+                                    "type": {
+                                        "kind": "SCALAR",
+                                        "name": "Int",
+                                        "ofType": null
+                                    },
+                                    "defaultValue": "null"
+                                }
+                            ],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "FooConnection",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
                             "name": "alphabetConnection",
                             "args": [
                                 {
@@ -1679,11 +1832,33 @@
                             "deprecationReason": null
                         },
                         {
+                            "name": "getBaz",
+                            "args": [],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "Baz",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
                             "name": "getConcrete",
                             "args": [],
                             "type": {
                                 "kind": "OBJECT",
                                 "name": "Concrete",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
+                            "name": "getFoo",
+                            "args": [],
+                            "type": {
+                                "kind": "OBJECT",
+                                "name": "FooObject",
                                 "ofType": null
                             },
                             "isDeprecated": false,

@@ -521,6 +521,32 @@ final class PaginationTest extends FixtureTest {
                     ],
                 ),
             ),
+
+            'namespaced connection' => tuple(
+                '
+                {
+                    allFooObjects {
+                        edges {
+                            node {
+                                value
+                            }
+                        }
+                    }
+                }
+                ',
+                dict[],
+                dict[
+                    'allFooObjects' => dict[
+                        'edges' => vec[
+                            dict[
+                                'node' => dict[
+                                    'value' => 'bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ),
         ];
     }
 }
