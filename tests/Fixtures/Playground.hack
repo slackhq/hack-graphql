@@ -2,8 +2,8 @@
 
 
 use namespace Slack\GraphQL;
-use type Directives\HasRole;
-use type Directives\{TestShapeDirective};
+// use type Directives\HasRole;
+// use type Directives\{TestShapeDirective};
 use namespace HH\Lib\{C, Math, Str, Vec};
 
 <<GraphQL\InputObjectType('CreateTeamInput', 'Arguments for creating a team')>>
@@ -138,9 +138,9 @@ final class PermissionService {
 final class Human extends BaseUser {
     <<
         GraphQL\Field('favorite_color', 'Favorite color of the user'),
-        HasRole(vec['STAFF']),
-        \Directives\LogSampled(33.3, 'foo'),
-        TestShapeDirective(shape('foo' => 1, 'bar' => 'abc'), true)
+        // HasRole(vec['STAFF']),
+        // \Directives\LogSampled(33.3, 'foo'),
+        // TestShapeDirective(shape('foo' => 1, 'bar' => 'abc'), true)
     >>
     public function getFavoriteColor(): FavoriteColor {
         return FavoriteColor::BLUE;

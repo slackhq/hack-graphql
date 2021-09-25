@@ -18,6 +18,7 @@ abstract class FixtureTest extends \Facebook\HackTest\HackTest {
 
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
+        $start_ts = microtime(true);
         await GraphQL\Codegen\Generator::forPath(
             __DIR__.'/Fixtures',
             shape(
@@ -25,6 +26,7 @@ abstract class FixtureTest extends \Facebook\HackTest\HackTest {
                 'namespace' => 'Slack\GraphQL\Test\Generated',
             ),
         );
+        echo "Generated fixtures in: ".(microtime(true) - $start_ts)."\n";
     }
 
     <<\Facebook\HackTest\DataProvider('getTestCases')>>

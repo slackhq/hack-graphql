@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5456f22b07464c25859ffcdd506754a6>>
+ * @generated SignedSource<<f60a3ef8a64a533ea5264e5dbe995712>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,16 +39,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           FavoriteColor::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
-          vec[
-            new \Directives\HasRole(vec [
-              'STAFF',
-            ]),
-            new \Directives\LogSampled(33.3, 'foo'),
-            new \Directives\TestShapeDirective(shape (
-              'foo' => 1,
-              'bar' => 'abc',
-            ), true),
-          ],
+          vec[],
         );
       case 'friends':
         return new GraphQL\FieldDefinition(
