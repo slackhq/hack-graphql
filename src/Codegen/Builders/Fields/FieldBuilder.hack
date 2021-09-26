@@ -56,7 +56,7 @@ abstract class FieldBuilder {
                     return $data;
                 },
             ),
-            'directives' => $directives
+            'directives' => $directives,
         );
 
         if ($is_root_field) {

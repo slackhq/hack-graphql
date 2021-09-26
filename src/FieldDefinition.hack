@@ -29,7 +29,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
             dict<string, \Graphpinator\Parser\Value\Value>,
             Variables,
         ): Awaitable<TRet>) $resolver,
-        private vec<FieldDirective> $directives
+        private vec<FieldDirective> $directives,
     ) {}
 
     public async function resolveAsync(

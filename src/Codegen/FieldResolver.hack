@@ -14,7 +14,10 @@ final class FieldResolver {
     private dict<string, DefinitionFinder\ScannedClassish> $scanned_classes;
     private dict<string, dict<string, FieldBuilder>> $resolved_fields = dict[];
 
-    public function __construct(vec<DefinitionFinder\ScannedClassish> $classes, private DirectivesFinder $directives_finder) {
+    public function __construct(
+        vec<DefinitionFinder\ScannedClassish> $classes,
+        private DirectivesFinder $directives_finder,
+    ) {
         $this->scanned_classes = Dict\from_values($classes, $class ==> $class->getName());
     }
 
@@ -34,7 +37,9 @@ final class FieldResolver {
         ) is nonnull;
     }
 
-    private async function resolveClass(DefinitionFinder\ScannedClassish $class): Awaitable<dict<string, FieldBuilder>> {
+    private async function resolveClass(
+        DefinitionFinder\ScannedClassish $class,
+    ): Awaitable<dict<string, FieldBuilder>> {
         if (C\contains_key($this->resolved_fields, $class->getName())) {
             return $this->resolved_fields[$class->getName()];
         }
@@ -60,7 +65,9 @@ final class FieldResolver {
         return $fields;
     }
 
-    private async function collectObjectFields(DefinitionFinder\ScannedClassish $class): Awaitable<dict<string, FieldBuilder>> {
+    private async function collectObjectFields(
+        DefinitionFinder\ScannedClassish $class,
+    ): Awaitable<dict<string, FieldBuilder>> {
         $fields = dict[];
         foreach ($class->getMethods() as $method) {
             if (C\is_empty($method->getAttributes())) continue;

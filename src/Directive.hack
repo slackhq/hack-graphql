@@ -1,3 +1,4 @@
+
 namespace Slack\GraphQL;
 
 interface Directive {}
