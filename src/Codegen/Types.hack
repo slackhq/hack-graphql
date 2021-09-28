@@ -8,7 +8,6 @@ use namespace Slack\GraphQL\Types;
 
 const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
     Types\IntType::NAME => Types\IntType::class,
-    Types\FloatType::NAME => Types\FloatType::class,
     Types\StringType::NAME => Types\StringType::class,
     Types\BooleanType::NAME => Types\BooleanType::class,
 ];
@@ -92,8 +91,6 @@ function get_graphql_leaf_type(string $hack_type): ?string {
     switch ($hack_type) {
         case 'HH\int':
             return Types\IntType::class;
-        case 'HH\float':
-            return Types\FloatType::class;
         case 'HH\string':
             return Types\StringType::class;
         case 'HH\bool':
