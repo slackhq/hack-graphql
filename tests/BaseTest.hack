@@ -17,7 +17,6 @@ abstract class BaseTest extends \Facebook\HackTest\HackTest {
 
     <<__Memoize>>
     private static async function runCodegenAsync(): Awaitable<void> {
-        $start_ts = microtime(true);
         await GraphQL\Codegen\Generator::forPath(
             __DIR__.'/Fixtures',
             shape(
@@ -38,7 +37,6 @@ abstract class BaseTest extends \Facebook\HackTest\HackTest {
                 ),
             ),
         );
-        echo "Generated fixtures in: ".(microtime(true) - $start_ts)."\n";
     }
 
     private function getResolver(GraphQL\Resolver::TOptions $options = shape()): GraphQL\Resolver {

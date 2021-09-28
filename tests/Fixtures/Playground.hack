@@ -172,7 +172,7 @@ abstract final class UserQueryAttributes {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
-    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
+    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID'), \Directives\LogSampled(1.1, 'foo')>>
     public static async function getBot(int $id): Awaitable<\Bot> {
         return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
@@ -222,7 +222,10 @@ abstract final class UserMutationAttributes {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
-    <<GraphQL\MutationRootField('createUser', 'Create a new user')>>
+    <<
+        GraphQL\MutationRootField('createUser', 'Create a new user'),
+        \Directives\HasRole(vec[\Directives\StaffRoleType::class]),
+    >>
     public static async function createUser(TCreateUserInput $input): Awaitable<\User> {
         $team_input = $input['team'] ?? null;
 

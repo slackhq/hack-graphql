@@ -296,7 +296,11 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField($query_root_field, $rm);
+                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField(
+                        $query_root_field,
+                        $rm,
+                        $directive_finder->findDirectivesForField($rm),
+                    );
                     continue;
                 }
 
@@ -308,6 +312,7 @@ final class Generator {
                     $mutation_fields[$mutation_root_field->getName()] = FieldBuilder::forRootField(
                         $mutation_root_field,
                         $rm,
+                        $directive_finder->findDirectivesForField($rm),
                     );
                 }
             }

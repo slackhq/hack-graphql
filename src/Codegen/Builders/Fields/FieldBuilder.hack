@@ -90,8 +90,12 @@ abstract class FieldBuilder {
     /**
      * Construct a top-level GraphQL field.
      */
-    public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
-        return FieldBuilder::fromReflectionMethod($field, $rm, dict[], true);
+    public static function forRootField(
+        \Slack\GraphQL\Field $field,
+        \ReflectionMethod $rm,
+        dict<string, vec<string>> $directives,
+    ): FieldBuilder {
+        return FieldBuilder::fromReflectionMethod($field, $rm, $directives, true);
     }
 
     public static function introspectSchemaField(): FieldBuilder {

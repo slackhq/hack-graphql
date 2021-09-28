@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e19b22de63fd7a2300e36ddcf66a150c>>
+ * @generated SignedSource<<1fe6f2b89af7fb1bc13a159233c38301>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -176,7 +176,9 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
-          vec[],
+          vec[
+            new \Directives\LogSampled(1.100000, "foo"),
+          ],
         );
       case 'error_test':
         return new GraphQL\FieldDefinition(
