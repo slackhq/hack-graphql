@@ -21,10 +21,10 @@ final class FieldResolver {
         $this->scanned_classes = Dict\from_values($classes, $class ==> $class->getName());
     }
 
-    public async function resolveFields(): Awaitable<dict<string, vec<FieldBuilder>>> {
+    public function resolveFields(): dict<string, vec<FieldBuilder>> {
         foreach ($this->scanned_classes as $class) {
             if (!$this->shouldResolve($class)) continue;
-            await $this->resolveClass($class);
+            $this->resolveClass($class);
         }
         return Dict\map($this->resolved_fields, $fields ==> vec(Dict\sort_by_key($fields)));
     }
@@ -37,9 +37,7 @@ final class FieldResolver {
         ) is nonnull;
     }
 
-    private async function resolveClass(
-        DefinitionFinder\ScannedClassish $class,
-    ): Awaitable<dict<string, FieldBuilder>> {
+    private function resolveClass(DefinitionFinder\ScannedClassish $class): dict<string, FieldBuilder> {
         if (C\contains_key($this->resolved_fields, $class->getName())) {
             return $this->resolved_fields[$class->getName()];
         }
@@ -56,18 +54,16 @@ final class FieldResolver {
         foreach ($parents as $parent) {
             $parent_class = $this->scanned_classes[$parent] ?? null;
             if ($parent_class) {
-                $fields = Dict\merge($fields, await $this->resolveClass($parent_class));
+                $fields = Dict\merge($fields, $this->resolveClass($parent_class));
             }
         }
 
-        $fields = Dict\merge($fields, await $this->collectObjectFields($class));
+        $fields = Dict\merge($fields, $this->collectObjectFields($class));
         $this->resolved_fields[$class->getName()] = $fields;
         return $fields;
     }
 
-    private async function collectObjectFields(
-        DefinitionFinder\ScannedClassish $class,
-    ): Awaitable<dict<string, FieldBuilder>> {
+    private function collectObjectFields(DefinitionFinder\ScannedClassish $class): dict<string, FieldBuilder> {
         $fields = dict[];
         foreach ($class->getMethods() as $method) {
             if (C\is_empty($method->getAttributes())) continue;
@@ -76,7 +72,7 @@ final class FieldResolver {
             $graphql_field = $rm->getAttributeClass(\Slack\GraphQL\Field::class);
             if ($graphql_field is null) continue;
 
-            $directives = await $this->directives_finder->findDirectivesForField($rm);
+            $directives = $this->directives_finder->findDirectivesForField($rm);
 
             $fields[$graphql_field->getName()] = FieldBuilder::fromReflectionMethod($graphql_field, $rm, $directives);
         }

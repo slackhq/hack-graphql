@@ -47,7 +47,7 @@ final class TeamStore {
     }
 }
 
-<<GraphQL\InterfaceType('User', 'User')>>
+<<GraphQL\InterfaceType('User', 'User'), Directives\AnotherDirective>>
 interface User {
     <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int;
@@ -95,14 +95,18 @@ enum FavoriteColor: int {
     BLUE = 2;
 }
 
-<<GraphQL\ObjectType('Human', 'Human')>>
+<<
+    GraphQL\ObjectType('Human', 'Human'),
+    HasRole(vec[Directives\AdminRoleType::class]),
+    Directives\LogSampled(0.0, 'bar'),
+>>
 final class Human extends BaseUser {
     <<
         GraphQL\Field('favorite_color', 'Favorite color of the user'),
-        HasRole(vec['STAFF']),
+        HasRole(vec[Directives\StaffRoleType::class]),
         \Directives\LogSampled(33.3, 'foo'),
         TestShapeDirective(shape('foo' => 1, 'bar' => 'abc'), true),
-        Directives\AnotherFieldDirective,
+        Directives\AnotherDirective,
     >>
     public function getFavoriteColor(): FavoriteColor {
         return FavoriteColor::BLUE;

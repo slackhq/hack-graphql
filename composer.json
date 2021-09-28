@@ -13,6 +13,7 @@
   ],
   "require": {
     "hhvm/hsl": "^4.41.0",
+    "hhvm/type-assert": "=4.2.0",
     "facebook/hack-codegen": "^v4.3.12",
     "facebook/definition-finder": "^v2.13.5"
   },

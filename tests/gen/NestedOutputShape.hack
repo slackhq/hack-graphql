@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4e04f7362248af9d50f125809c616da4>>
+ * @generated SignedSource<<0b7b74b98133923a0745b7bedee84638>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,5 +36,9 @@ final class NestedOutputShape extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

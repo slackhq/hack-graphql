@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4aff110e85a01b651fda1013e243938c>>
+ * @generated SignedSource<<7ea97f7c9dbc2d43a4cb74d7fd481c6f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,15 +39,10 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
           vec[
-            new \Directives\AnotherFieldDirective(),
-            new \Directives\HasRole(vec[
-              'STAFF',
-            ]),
-            new \Directives\LogSampled(33.3, 'foo'),
-            new \Directives\TestShapeDirective(shape(
-              'foo' => 1,
-              'bar' => 'abc',
-            ), true),
+            new \Directives\AnotherDirective(),
+            new \Directives\HasRole(vec[\Directives\StaffRoleType::class]),
+            new \Directives\LogSampled(33.300000, "foo"),
+            new \Directives\TestShapeDirective(shape('foo' => 1, 'bar' => "abc"), true),
           ],
         );
       case 'friends':
@@ -159,5 +154,13 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[
+      new \Directives\AnotherDirective(),
+      new \Directives\HasRole(vec[\Directives\AdminRoleType::class]),
+      new \Directives\LogSampled(0.000000, "bar"),
+    ];
   }
 }

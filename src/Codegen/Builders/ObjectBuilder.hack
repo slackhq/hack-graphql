@@ -20,9 +20,10 @@ class ObjectBuilder extends CompositeBuilder {
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         vec<FieldBuilder> $fields,
+        dict<string, vec<string>> $directives,
         private dict<string, string> $hack_class_to_graphql_interface,
     ) {
-        parent::__construct($type_info, $hack_type, $fields);
+        parent::__construct($type_info, $hack_type, $fields, $directives);
     }
 
     <<__Override>>
@@ -33,10 +34,10 @@ class ObjectBuilder extends CompositeBuilder {
 
     private function generateInterfacesConstant(HackCodegenFactory $cg): CodegenClassConstant {
         $interfaces = dict[];
-        foreach ($this->hack_class_to_graphql_interface as $hack_class => $graphql_type) {
-            if (\is_subclass_of($this->hack_type, $hack_class)) {
-                $interfaces[$graphql_type] = Str\format('%s::class', $graphql_type);
-            }
+        foreach (
+            get_interfaces($this->hack_type, $this->hack_class_to_graphql_interface) as $hack_class => $graphql_type
+        ) {
+            $interfaces[$graphql_type] = Str\format('%s::class', $graphql_type);
         }
 
         return $cg->codegenClassConstant('INTERFACES')
@@ -58,11 +59,16 @@ class ObjectBuilder extends CompositeBuilder {
             $type_info,
             $type_alias->getName(),
             Vec\map_with_key($ts['fields'], ($name, $ts) ==> FieldBuilder::fromShapeField($name, $ts)),
+            dict[], // No directives (maybe we'll support them later)
             dict[], // Objects generated from shapes cannot implement interfaces
         );
     }
 
-    public static function forConnection(string $name, string $edge_name): ObjectBuilder {
+    public static function forConnection(
+        string $name,
+        string $edge_name,
+        dict<string, vec<string>> $directives,
+    ): ObjectBuilder {
         return new ObjectBuilder(
             new \Slack\GraphQL\ObjectType($name, $name), // TODO: Description
             $name, // hack type
@@ -85,6 +91,7 @@ class ObjectBuilder extends CompositeBuilder {
                     'directives' => dict[],
                 )),
             ],
+            $directives,
             dict[], // Connections do not implement any interfaces
         );
     }
@@ -111,6 +118,7 @@ class ObjectBuilder extends CompositeBuilder {
                     'directives' => dict[],
                 )),
             ],
+            dict[], // If we support custom edges, we'll want to support adding directives to them
             dict[],
         );
     }

@@ -504,6 +504,15 @@
                     "possibleTypes": null
                 },
                 {
+                    "kind": "SCALAR",
+                    "name": "Float",
+                    "fields": null,
+                    "inputFields": null,
+                    "interfaces": null,
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
                     "kind": "INTERFACE",
                     "name": "FooInterface",
                     "fields": [],

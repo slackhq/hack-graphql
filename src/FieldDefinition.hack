@@ -39,9 +39,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
     ): Awaitable<FieldResult<TResolved>> {
         $resolver = $this->resolver;
         try {
-            foreach ($this->directives as $directive) {
-                await $directive->beforeResolveField($this);
-            }
+            await $this->beforeResolve($parent);
             $value = await $resolver(
                 $parent,
                 // Validation guarantees all of the grouped field nodes have the same arguments, so it doesn't matter
@@ -87,5 +85,16 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
 
     public function getArgs(): vec<Introspection\__InputValue> {
         return vec($this->arguments);
+    }
+
+    private async function beforeResolve(TParent $parent): Awaitable<void> {
+        foreach ($this->directives as $directive) {
+            await $directive->beforeResolveField($parent, $this->getName());
+        }
+
+        $unwrapped_type = $this->type->unwrapType();
+        if ($unwrapped_type is Types\CompositeType) {
+            await $unwrapped_type->beforeResolveObject();
+        }
     }
 }

@@ -10,6 +10,7 @@ use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
  * Base builder for constructing GraphQL fields.
  */
 abstract class FieldBuilder {
+    use DirectivesBuilder;
 
     abstract const type TField as shape(
         'name' => string,
@@ -24,7 +25,11 @@ abstract class FieldBuilder {
 
     // Constructors
 
-    public function __construct(protected this::TField $data) {}
+    protected dict<string, vec<string>> $directives;
+
+    public function __construct(protected this::TField $data) {
+        $this->directives = $data['directives'];
+    }
 
     /**
      * Construct a GraphQL field from a Hack method.
@@ -131,16 +136,7 @@ abstract class FieldBuilder {
         $hb->addLine(',');
 
         // Field directives
-        if ($this->data['directives']) {
-            $hb->addLine('vec[')
-                ->indent();
-            foreach ($this->data['directives'] as $directive => $arguments) {
-                $hb->addLinef('new \%s(%s),', $directive, Str\join($arguments, ', '));
-            }
-            $hb->unindent()->addLine('],');
-        } else {
-            $hb->addLine('vec[],');
-        }
+        $hb = $this->buildDirectives($hb)->addLine(',');
 
         // End of new GraphQL\FieldDefinition(
         $hb->unindent()->addLine(');');

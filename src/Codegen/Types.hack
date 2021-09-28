@@ -3,11 +3,12 @@
 
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{Dict, Str};
 use namespace Slack\GraphQL\Types;
 
 const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
     Types\IntType::NAME => Types\IntType::class,
+    Types\FloatType::NAME => Types\FloatType::class,
     Types\StringType::NAME => Types\StringType::class,
     Types\BooleanType::NAME => Types\BooleanType::class,
 ];
@@ -85,6 +86,8 @@ function get_graphql_leaf_type(string $hack_type): ?string {
     switch ($hack_type) {
         case 'HH\int':
             return Types\IntType::class;
+        case 'HH\float':
+            return Types\FloatType::class;
         case 'HH\string':
             return Types\StringType::class;
         case 'HH\bool':
@@ -100,6 +103,10 @@ function get_graphql_leaf_type(string $hack_type): ?string {
             }
             return null;
     }
+}
+
+function is_float_type(string $hack_type): bool {
+    return $hack_type === 'HH\float' || $hack_type === '?HH\float';
 }
 
 /**
@@ -255,5 +262,15 @@ function get_node_type_info(string $hack_type): ?shape(
         'hack_type' => $hack_type,
         'gql_type' => $gql_type,
         'output_type' => $output_type,
+    );
+}
+
+function get_interfaces(
+    string $hack_type,
+    dict<string, string> $hack_class_to_graphql_interface,
+): dict<string, string> {
+    return Dict\filter_with_key(
+        $hack_class_to_graphql_interface,
+        ($interface, $_gql_type) ==> \is_subclass_of($hack_type, $interface),
     );
 }

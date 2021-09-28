@@ -20,9 +20,10 @@ final class InterfaceBuilder extends CompositeBuilder {
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         vec<FieldBuilder> $fields,
+        dict<string, vec<string>> $directives,
         private dict<string, string> $hack_class_to_graphql_object,
     ) {
-        parent::__construct($type_info, $hack_type, $fields);
+        parent::__construct($type_info, $hack_type, $fields, $directives);
     }
 
     <<__Override>>

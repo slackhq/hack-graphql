@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<d86e4ea769ee2789554592aff6358a15>>
+ * @generated SignedSource<<e1892ba80fa927e0108fd172cd1fc6e2>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -28,6 +28,10 @@ final class FooInterface extends \Slack\GraphQL\Types\InterfaceType {
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 
   public async function resolveAsync(
