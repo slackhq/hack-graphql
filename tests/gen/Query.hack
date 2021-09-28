@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<c2061fbc806e4ec473d750ee030fc5c1>>
+ * @generated SignedSource<<e19b22de63fd7a2300e36ddcf66a150c>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -16,12 +16,15 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
   const NAME = 'Query';
   const type THackType = \Slack\GraphQL\Root;
   const keyset<string> FIELD_NAMES = keyset[
+    'allFooObjects',
     'alphabetConnection',
     'arg_test',
     'bot',
     'error_test',
     'error_test_nn',
+    'getBaz',
     'getConcrete',
+    'getFoo',
     'getInterfaceA',
     'getInterfaceB',
     'getObjectShape',
@@ -63,6 +66,40 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> (new Schema())->getIntrospectionType(
 
             Types\StringType::nonNullable()->coerceNamedNode('name', $args, $vars),
+          ),
+          vec[],
+        );
+      case 'allFooObjects':
+        return new GraphQL\FieldDefinition(
+          'allFooObjects',
+          FooConnection::nullableOutput(),
+          dict[
+            'after' => shape(
+              'name' => 'after',
+              'type' => Types\StringType::nullableInput(),
+              'defaultValue' => 'null',
+            ),
+            'before' => shape(
+              'name' => 'before',
+              'type' => Types\StringType::nullableInput(),
+              'defaultValue' => 'null',
+            ),
+            'first' => shape(
+              'name' => 'first',
+              'type' => Types\IntType::nullableInput(),
+              'defaultValue' => 'null',
+            ),
+            'last' => shape(
+              'name' => 'last',
+              'type' => Types\IntType::nullableInput(),
+              'defaultValue' => 'null',
+            ),
+          ],
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::allFooObjects()->setPaginationArgs(
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('after', $args, $vars, null),
+            Types\StringType::nullableInput()->coerceOptionalNamedNode('before', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
+            Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
           vec[],
         );
@@ -157,12 +194,28 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
           vec[],
         );
+      case 'getBaz':
+        return new GraphQL\FieldDefinition(
+          'getBaz',
+          Baz::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getBaz(),
+          vec[],
+        );
       case 'getConcrete':
         return new GraphQL\FieldDefinition(
           'getConcrete',
           Concrete::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
+          vec[],
+        );
+      case 'getFoo':
+        return new GraphQL\FieldDefinition(
+          'getFoo',
+          FooObject::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> \UserQueryAttributes::getFoo(),
           vec[],
         );
       case 'getInterfaceA':

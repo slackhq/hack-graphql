@@ -251,8 +251,12 @@ final class Generator {
         }
 
         foreach ($classish_objects as $class) {
-            if (Str\ends_with($class->getName(), 'Connection')) {
-                // TODO: Assert that any class which subclasses Connection<T> has a name ending in `Connection`.
+            if (\is_subclass_of($class->getName(), \Slack\GraphQL\Pagination\Connection::class)) {
+                invariant(
+                    Str\ends_with($class->getName(), 'Connection'),
+                    "All connection types must have names ending with `Connection`. `%s` does not.",
+                    $class->getName(),
+                );
                 $objects = Vec\concat($objects, $this->getConnectionObjects($class, $directive_finder));
             } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
@@ -343,7 +347,6 @@ final class Generator {
         DirectivesFinder $df,
     ): vec<ObjectBuilder> {
         $rc = new \ReflectionClass($class->getName());
-        invariant(is_connection_type($rc), '"%s" must subclass "Connection"', $rc->getName());
         $hack_type = $rc->getTypeConstants()
             |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
         invariant($hack_type is nonnull, '"%s" must declare a type constant "TNode"', $rc->getName());

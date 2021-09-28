@@ -4,34 +4,42 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fbf0199474a4b1b215782082ae1c2256>>
+ * @generated SignedSource<<48c4764c438d48a28882faeec41c7594>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
 use namespace Slack\GraphQL\Types;
 use namespace HH\Lib\{C, Dict};
 
-final class FooObject extends \Slack\GraphQL\Types\ObjectType {
+final class FooConnection extends \Slack\GraphQL\Types\ObjectType {
 
-  const NAME = 'FooObject';
-  const type THackType = \Foo\FooObject;
+  const NAME = 'FooConnection';
+  const type THackType = \Foo\FooConnection;
   const keyset<string> FIELD_NAMES = keyset[
-    'value',
+    'edges',
+    'pageInfo',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
-    'FooInterface' => FooInterface::class,
   ];
 
   public function getFieldDefinition(
     string $field_name,
   ): ?GraphQL\IResolvableFieldDefinition<this::THackType> {
     switch ($field_name) {
-      case 'value':
+      case 'edges':
         return new GraphQL\FieldDefinition(
-          'value',
-          Types\StringType::nullableOutput(),
+          'edges',
+          FooObjectEdge::nonNullable()->nullableOutputListOf(),
           dict[],
-          async ($parent, $args, $vars) ==> $parent->getValue(),
+          async ($parent, $args, $vars) ==> await $parent->getEdges(),
+          vec[],
+        );
+      case 'pageInfo':
+        return new GraphQL\FieldDefinition(
+          'pageInfo',
+          PageInfo::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> await $parent->getPageInfo(),
           vec[],
         );
       default:
