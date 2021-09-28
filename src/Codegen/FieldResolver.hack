@@ -76,7 +76,7 @@ final class FieldResolver {
             $graphql_field = $rm->getAttributeClass(\Slack\GraphQL\Field::class);
             if ($graphql_field is null) continue;
 
-            $directives = await $this->directives_finder->findDirectivesForField($method);
+            $directives = await $this->directives_finder->findDirectivesForField($rm);
 
             $fields[$graphql_field->getName()] = FieldBuilder::fromReflectionMethod($graphql_field, $rm, $directives);
         }

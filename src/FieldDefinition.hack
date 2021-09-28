@@ -40,7 +40,7 @@ final class FieldDefinition<TParent, TRet, TResolved> implements IResolvableFiel
         $resolver = $this->resolver;
         try {
             foreach ($this->directives as $directive) {
-                await $directive->beforeResolve($this);
+                await $directive->beforeResolveField($this);
             }
             $value = await $resolver(
                 $parent,

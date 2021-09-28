@@ -16,7 +16,7 @@ final class ShapeFieldBuilder extends FieldBuilder {
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
         'is_optional' => bool,
-        'directives' => vec<string>,
+        'directives' => dict<string, vec<string>>,
     );
 
     <<__Override>>

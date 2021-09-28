@@ -31,6 +31,10 @@ final class Generator {
         'output_directory' => string,
         'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
+        ?'custom_directives' => shape(
+            ?'fields' => vec<classname<\Slack\GraphQL\FieldDirective>>,
+            ?'objects' => vec<classname<\Slack\GraphQL\ObjectDirective>>,
+        ),
     );
 
     private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
@@ -60,8 +64,7 @@ final class Generator {
     }
 
     public async function generate(): Awaitable<void> {
-        $custom_directives = $this->collectDirectives();
-        $directives_finder = new DirectivesFinder($custom_directives);
+        $directives_finder = new DirectivesFinder($this->config['custom_directives'] ?? shape());
         $objects = await $this->collectObjects($directives_finder);
 
         self::removeDirectory($this->config['output_directory']);
@@ -344,16 +347,5 @@ final class Generator {
             ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
             ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
-    }
-
-    private function collectDirectives(): keyset<string> {
-        $custom_directives = keyset[];
-        foreach ($this->parser->getClasses() as $class) {
-            $rc = new \ReflectionClass($class->getName());
-            if (C\contains($rc->getInterfaceNames(), \Slack\GraphQL\Directive::class)) {
-                $custom_directives[] = '\\'.$rc->getName();
-            }
-        }
-        return $custom_directives;
     }
 }

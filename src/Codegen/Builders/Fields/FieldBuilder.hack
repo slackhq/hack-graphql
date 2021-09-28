@@ -14,7 +14,7 @@ abstract class FieldBuilder {
     abstract const type TField as shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
-        'directives' => vec<string>,
+        'directives' => dict<string, vec<string>>,
         ...
     );
 
@@ -32,7 +32,7 @@ abstract class FieldBuilder {
     public static function fromReflectionMethod(
         \Slack\GraphQL\Field $field,
         \ReflectionMethod $rm,
-        vec<string> $directives,
+        dict<string, vec<string>> $directives,
         bool $is_root_field = false,
     ): FieldBuilder {
         $data = shape(
@@ -78,7 +78,7 @@ abstract class FieldBuilder {
             'name' => $name,
             'output_type' => output_type(type_structure_to_type_alias($ts), false),
             'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
-            'directives' => vec[],
+            'directives' => dict[],
         ));
     }
 
@@ -86,7 +86,7 @@ abstract class FieldBuilder {
      * Construct a top-level GraphQL field.
      */
     public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
-        return FieldBuilder::fromReflectionMethod($field, $rm, vec[], true);
+        return FieldBuilder::fromReflectionMethod($field, $rm, dict[], true);
     }
 
     public static function introspectSchemaField(): FieldBuilder {
@@ -134,8 +134,8 @@ abstract class FieldBuilder {
         if ($this->data['directives']) {
             $hb->addLine('vec[')
                 ->indent();
-            foreach ($this->data['directives'] as $directive) {
-                $hb->addLine($directive.',');
+            foreach ($this->data['directives'] as $directive => $arguments) {
+                $hb->addLinef('new \%s(%s),', $directive, Str\join($arguments, ', '));
             }
             $hb->unindent()->addLine('],');
         } else {

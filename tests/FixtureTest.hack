@@ -24,6 +24,14 @@ abstract class FixtureTest extends \Facebook\HackTest\HackTest {
             shape(
                 'output_directory' => __DIR__.'/gen',
                 'namespace' => 'Slack\GraphQL\Test\Generated',
+                'custom_directives' => shape(
+                    'fields' => vec[
+                        Directives\AnotherFieldDirective::class,
+                        Directives\HasRole::class,
+                        Directives\LogSampled::class,
+                        Directives\TestShapeDirective::class,
+                    ]
+                )
             ),
         );
         echo "Generated fixtures in: ".(microtime(true) - $start_ts)."\n";
