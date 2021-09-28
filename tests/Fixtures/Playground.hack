@@ -60,15 +60,6 @@ interface User {
 
     <<GraphQL\Field('is_active', 'Whether the user is active')>>
     public function isActive(): bool;
-
-    <<GraphQL\Field('roles', 'Roles the user has')>>
-    public function getRoles(): vec<Role>;
-}
-
-<<GraphQL\EnumType('Role', 'Roles a user can have')>>
-enum Role: string {
-    ADMIN = 'ADMIN';
-    STAFF = 'STAFF';
 }
 
 abstract class BaseUser implements User {
@@ -78,7 +69,6 @@ abstract class BaseUser implements User {
             'name' => string,
             'team_id' => int,
             'is_active' => bool,
-            ?'roles' => vec<Role>,
         ) $data,
     ) {}
 
@@ -97,41 +87,12 @@ abstract class BaseUser implements User {
     public function isActive(): bool {
         return $this->data['is_active'];
     }
-
-    public function getRoles(): vec<Role> {
-        return $this->data['roles'] ?? vec[];
-    }
 }
 
 <<GraphQL\EnumType('FavoriteColor', 'Favorite Color')>>
 enum FavoriteColor: int {
     RED = 1;
     BLUE = 2;
-}
-
-final class PermissionService {
-    private static ?PermissionService $service = null;
-
-    public static function getInstance(): PermissionService {
-        if (static::$service is null) {
-            static::$service = new self();
-        }
-        return static::$service as nonnull;
-    }
-
-    private User $user;
-
-    public function __construct(?User $user = null) {
-        $this->user = new Human(shape('id' => 1, 'name' => 'foo', 'team_id' => 1, 'is_active' => true));
-    }
-
-    public function getCurrentUser(): User {
-        return $this->user;
-    }
-
-    public function setCurrentUser(User $user): void {
-        $this->user = $user;
-    }
 }
 
 <<GraphQL\ObjectType('Human', 'Human')>>

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<5456f22b07464c25859ffcdd506754a6>>
+ * @generated SignedSource<<1fa3be81354e83f33011553aedd901c7>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -22,7 +22,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     'is_active',
     'name',
     'named_friends',
-    'roles',
     'team',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
@@ -40,14 +39,15 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
           vec[
-            new \Directives\HasRole(vec [
+            new \Directives\HasRole(vec[
               'STAFF',
             ]),
             new \Directives\LogSampled(33.3, 'foo'),
-            new \Directives\TestShapeDirective(shape (
+            new \Directives\TestShapeDirective(shape(
               'foo' => 1,
               'bar' => 'abc',
             ), true),
+            new \Directives\AnotherFieldDirective(),
           ],
         );
       case 'friends':
@@ -146,14 +146,6 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
-          vec[],
-        );
-      case 'roles':
-        return new GraphQL\FieldDefinition(
-          'roles',
-          Role::nonNullable()->nullableOutputListOf(),
-          dict[],
-          async ($parent, $args, $vars) ==> $parent->getRoles(),
           vec[],
         );
       case 'team':

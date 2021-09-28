@@ -45,11 +45,12 @@ final class DirectivesFinder {
                 //
                 $needle = Str\split($attribute, '\\')
                     |> C\firstx($$);
+                $attribute = '\\'.$attribute;
                 foreach ($use_decls as $decl) {
                     if (C\contains_key($decl['leaves'], $needle)) {
                         // We have a match such as `Bar\Baz` with `use namespace Foo\Bar`;
                         // build the qualified name as `Foo\Bar\Baz`.
-                        $attribute = '\\'.$decl['root'].'\\'.$attribute;
+                        $attribute = '\\'.$decl['root'].$attribute;
                         break;
                     }
                 }
@@ -64,7 +65,10 @@ final class DirectivesFinder {
                         $arg ==> \var_export($arg, true)
                             |> Str\replace($$, 'varray', 'vec')
                             |> Str\replace($$, 'darray', 'dict')
-                            |> Str\replace($$, 'array', 'shape'),
+                            |> Str\replace($$, 'array', 'shape')
+                            |> Str\replace($$, 'vec ', 'vec')
+                            |> Str\replace($$, 'dict ', 'dict')
+                            |> Str\replace($$, 'shape ', 'shape')
                     )
                         |> Str\join($$, ', '),
                 );

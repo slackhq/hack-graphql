@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<f2442107d0cc00283e5e4cc834d95a35>>
+ * @generated SignedSource<<ce9b099f94650b543567619b2780f2bd>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -19,7 +19,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
     'id',
     'is_active',
     'name',
-    'roles',
     'team',
   ];
   const keyset<classname<Types\ObjectType>> POSSIBLE_TYPES = keyset[
@@ -53,14 +52,6 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
-          vec[],
-        );
-      case 'roles':
-        return new GraphQL\FieldDefinition(
-          'roles',
-          Role::nonNullable()->nullableOutputListOf(),
-          dict[],
-          async ($parent, $args, $vars) ==> $parent->getRoles(),
           vec[],
         );
       case 'team':
