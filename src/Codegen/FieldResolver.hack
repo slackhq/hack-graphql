@@ -14,7 +14,10 @@ final class FieldResolver {
     private dict<string, DefinitionFinder\ScannedClassish> $scanned_classes;
     private dict<string, dict<string, FieldBuilder>> $resolved_fields = dict[];
 
-    public function __construct(vec<DefinitionFinder\ScannedClassish> $classes) {
+    public function __construct(
+        vec<DefinitionFinder\ScannedClassish> $classes,
+        private DirectivesFinder $directives_finder,
+    ) {
         $this->scanned_classes = Dict\from_values($classes, $class ==> $class->getName());
     }
 
@@ -69,7 +72,9 @@ final class FieldResolver {
             $graphql_field = $rm->getAttributeClass(\Slack\GraphQL\Field::class);
             if ($graphql_field is null) continue;
 
-            $fields[$graphql_field->getName()] = FieldBuilder::fromReflectionMethod($graphql_field, $rm);
+            $directives = $this->directives_finder->findDirectivesForField($rm);
+
+            $fields[$graphql_field->getName()] = FieldBuilder::fromReflectionMethod($graphql_field, $rm, $directives);
         }
 
         return $fields;

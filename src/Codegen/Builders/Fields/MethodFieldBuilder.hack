@@ -33,6 +33,7 @@ class MethodFieldBuilder extends FieldBuilder {
         'method_name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
         'parameters' => vec<Parameter>,
+        'directives' => dict<string, vec<string>>,
         ?'root_field_for_type' => string,
         ?'is_static' => bool,
     );

@@ -31,6 +31,10 @@ final class Generator {
         'output_directory' => string,
         'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
+        ?'custom_directives' => shape(
+            ?'fields' => keyset<classname<\Slack\GraphQL\FieldDirective>>,
+            ?'objects' => keyset<classname<\Slack\GraphQL\ObjectDirective>>,
+        ),
     );
 
     private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
@@ -205,9 +209,6 @@ final class Generator {
 
         $classish_objects = $this->parser->getClassishObjects();
 
-        $field_resolver = new FieldResolver($classish_objects);
-        $class_fields = $field_resolver->resolveFields();
-
         $hack_class_to_graphql_interface = dict[];
         $hack_class_to_graphql_object = dict[];
         foreach ($classish_objects as $class) {
@@ -226,6 +227,14 @@ final class Generator {
         }
         $hack_class_to_graphql_object = Dict\sort_by_key($hack_class_to_graphql_object);
         $hack_class_to_graphql_interface = Dict\sort_by_key($hack_class_to_graphql_interface);
+
+        $directive_finder = new DirectivesFinder(
+            $this->config['custom_directives'] ?? shape(),
+            $hack_class_to_graphql_interface,
+        );
+
+        $field_resolver = new FieldResolver($classish_objects, $directive_finder);
+        $class_fields = $field_resolver->resolveFields();
 
         $input_types = $this->parser->getTypes();
         foreach ($input_types as $type) {
@@ -248,7 +257,7 @@ final class Generator {
                     "All connection types must have names ending with `Connection`. `%s` does not.",
                     $class->getName(),
                 );
-                $objects = Vec\concat($objects, $this->getConnectionObjects($class));
+                $objects = Vec\concat($objects, $this->getConnectionObjects($class, $directive_finder));
             } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
@@ -264,6 +273,7 @@ final class Generator {
                         $graphql_interface,
                         $rc->getName(),
                         $fields,
+                        $directive_finder->findDirectivesForObject($rc),
                         $hack_class_to_graphql_object,
                     );
                 } else if ($graphql_object is nonnull) {
@@ -271,6 +281,7 @@ final class Generator {
                         $graphql_object,
                         $rc->getName(),
                         $fields,
+                        $directive_finder->findDirectivesForObject($rc),
                         $hack_class_to_graphql_interface,
                     );
                 }
@@ -285,7 +296,11 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField($query_root_field, $rm);
+                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField(
+                        $query_root_field,
+                        $rm,
+                        $directive_finder->findDirectivesForField($rm),
+                    );
                     continue;
                 }
 
@@ -297,6 +312,7 @@ final class Generator {
                     $mutation_fields[$mutation_root_field->getName()] = FieldBuilder::forRootField(
                         $mutation_root_field,
                         $rm,
+                        $directive_finder->findDirectivesForField($rm),
                     );
                 }
             }
@@ -314,6 +330,7 @@ final class Generator {
             new \Slack\GraphQL\ObjectType('Query', 'Query'),
             'Slack\\GraphQL\\Root',
             vec(Dict\sort_by_key($query_fields)),
+            dict[],
             $hack_class_to_graphql_interface,
         );
 
@@ -322,6 +339,7 @@ final class Generator {
                 new \Slack\GraphQL\ObjectType('Mutation', 'Mutation'),
                 'Slack\\GraphQL\\Root',
                 vec(Dict\sort_by_key($mutation_fields)),
+                dict[],
                 $hack_class_to_graphql_interface,
             );
         }
@@ -329,7 +347,10 @@ final class Generator {
         return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
     }
 
-    private function getConnectionObjects(DefinitionFinder\ScannedClassish $class): vec<ObjectBuilder> {
+    private function getConnectionObjects(
+        DefinitionFinder\ScannedClassish $class,
+        DirectivesFinder $df,
+    ): vec<ObjectBuilder> {
         $rc = new \ReflectionClass($class->getName());
         $hack_type = $rc->getTypeConstants()
             |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
@@ -342,7 +363,11 @@ final class Generator {
             $rc->getName(),
         );
         return vec[
-            ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
+            ObjectBuilder::forConnection(
+                $class->getName(),
+                $type_info['gql_type'].'Edge',
+                $df->findDirectivesForObject($rc),
+            ),
             ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
     }

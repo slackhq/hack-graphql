@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<803c718476e0461c3e9d70a1db853f34>>
+ * @generated SignedSource<<03be695df2735f4f7ae8ed28a01c23de>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,6 +36,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -43,6 +44,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -50,6 +52,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'primary_function':
         return new GraphQL\FieldDefinition(
@@ -57,6 +60,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
+          vec[],
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -64,9 +68,16 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[
+      new \Directives\AnotherDirective(),
+    ];
   }
 }

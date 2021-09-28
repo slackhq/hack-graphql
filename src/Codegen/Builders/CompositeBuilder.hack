@@ -19,11 +19,13 @@ use type Facebook\HackCodegen\{
  * The annotated Hack type should be either a class, interface, or shape.
  */
 abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
+    use DirectivesBuilder;
 
     public function __construct(
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         protected vec<FieldBuilder> $fields,
+        protected dict<string, vec<string>> $directives,
     ) {
         parent::__construct($type_info, $hack_type);
     }
@@ -31,6 +33,7 @@ abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Priva
     public function build(HackCodegenFactory $cg): CodegenClass {
         return parent::build($cg)
             ->addMethod($this->generateGetFieldDefinition($cg))
+            ->addMethod($this->generateGetDirectives($cg))
             ->addConstant($this->generateFieldNamesConstant($cg, $this->getFieldNames()));
     }
 
@@ -56,6 +59,18 @@ abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Priva
         $method->setBody($hb->getCode());
 
         return $method;
+    }
+
+    private function generateGetDirectives(HackCodegenFactory $cg): CodegenMethod {
+        $hb = hb($cg);
+        $hb->add('return ');
+        $hb = $this->buildDirectives($hb);
+        $hb->addLine(';');
+
+        return $cg->codegenMethod('getDirectives')
+            ->setPublic()
+            ->setReturnType('vec<GraphQL\ObjectDirective>')
+            ->setBody($hb->getCode());
     }
 
     final public function getFieldNames(): keyset<string> {

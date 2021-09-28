@@ -10,10 +10,12 @@ use type Facebook\HackCodegen\{HackBuilder, HackBuilderValues};
  * Base builder for constructing GraphQL fields.
  */
 abstract class FieldBuilder {
+    use DirectivesBuilder;
 
     abstract const type TField as shape(
         'name' => string,
         'output_type' => shape('type' => string, ?'needs_await' => bool),
+        'directives' => dict<string, vec<string>>,
         ...
     );
 
@@ -23,7 +25,11 @@ abstract class FieldBuilder {
 
     // Constructors
 
-    public function __construct(protected this::TField $data) {}
+    protected dict<string, vec<string>> $directives;
+
+    public function __construct(protected this::TField $data) {
+        $this->directives = $data['directives'];
+    }
 
     /**
      * Construct a GraphQL field from a Hack method.
@@ -31,6 +37,7 @@ abstract class FieldBuilder {
     public static function fromReflectionMethod(
         \Slack\GraphQL\Field $field,
         \ReflectionMethod $rm,
+        dict<string, vec<string>> $directives,
         bool $is_root_field = false,
     ): FieldBuilder {
         $data = shape(
@@ -54,6 +61,7 @@ abstract class FieldBuilder {
                     return $data;
                 },
             ),
+            'directives' => $directives,
         );
 
         if ($is_root_field) {
@@ -75,14 +83,19 @@ abstract class FieldBuilder {
             'name' => $name,
             'output_type' => output_type(type_structure_to_type_alias($ts), false),
             'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
+            'directives' => dict[],
         ));
     }
 
     /**
      * Construct a top-level GraphQL field.
      */
-    public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
-        return FieldBuilder::fromReflectionMethod($field, $rm, true);
+    public static function forRootField(
+        \Slack\GraphQL\Field $field,
+        \ReflectionMethod $rm,
+        dict<string, vec<string>> $directives,
+    ): FieldBuilder {
+        return FieldBuilder::fromReflectionMethod($field, $rm, $directives, true);
     }
 
     public static function introspectSchemaField(): FieldBuilder {
@@ -125,6 +138,9 @@ abstract class FieldBuilder {
         $hb->add('async ($parent, $args, $vars) ==> ');
         $this->generateResolverBody($hb);
         $hb->addLine(',');
+
+        // Field directives
+        $hb = $this->buildDirectives($hb)->addLine(',');
 
         // End of new GraphQL\FieldDefinition(
         $hb->unindent()->addLine(');');

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<46725fb0d0175c7f30579a28e030cf3b>>
+ * @generated SignedSource<<4b5c85309c11eb94cbd9e65361724b45>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionDescription(),
+          vec[],
         );
       case 'enumValues':
         return new GraphQL\FieldDefinition(
@@ -54,6 +55,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getIntrospectionEnumValues(
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
+          vec[],
         );
       case 'fields':
         return new GraphQL\FieldDefinition(
@@ -69,6 +71,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> $parent->getIntrospectionFields(
             Types\BooleanType::nonNullable()->coerceOptionalNamedNode('includeDeprecated', $args, $vars, false),
           ),
+          vec[],
         );
       case 'inputFields':
         return new GraphQL\FieldDefinition(
@@ -76,6 +79,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __InputValue::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInputFields(),
+          vec[],
         );
       case 'interfaces':
         return new GraphQL\FieldDefinition(
@@ -83,6 +87,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionInterfaces(),
+          vec[],
         );
       case 'kind':
         return new GraphQL\FieldDefinition(
@@ -90,6 +95,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __TypeKind::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionKind(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -97,6 +103,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionName(),
+          vec[],
         );
       case 'ofType':
         return new GraphQL\FieldDefinition(
@@ -104,6 +111,7 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionOfType(),
+          vec[],
         );
       case 'possibleTypes':
         return new GraphQL\FieldDefinition(
@@ -111,9 +119,14 @@ final class __Type extends \Slack\GraphQL\Types\ObjectType {
           __Type::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getIntrospectionPossibleTypes(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

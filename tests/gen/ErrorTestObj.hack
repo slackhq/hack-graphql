@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4938ded1db5fdd04f9875088d7f4978d>>
+ * @generated SignedSource<<a8b464f941a60a9e87511968e1544e7d>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -42,6 +42,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_n(),
+          vec[],
         );
       case 'bad_int_list_n_of_nn':
         return new GraphQL\FieldDefinition(
@@ -49,6 +50,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_n_of_nn(),
+          vec[],
         );
       case 'bad_int_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
@@ -56,6 +58,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->bad_int_list_nn_of_nn(),
+          vec[],
         );
       case 'hidden_exception':
         return new GraphQL\FieldDefinition(
@@ -63,6 +66,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->hidden_exception(),
+          vec[],
         );
       case 'nested':
         return new GraphQL\FieldDefinition(
@@ -70,6 +74,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested(),
+          vec[],
         );
       case 'nested_list_n_of_n':
         return new GraphQL\FieldDefinition(
@@ -77,6 +82,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nullableOutput()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_n(),
+          vec[],
         );
       case 'nested_list_n_of_nn':
         return new GraphQL\FieldDefinition(
@@ -84,6 +90,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_n_of_nn(),
+          vec[],
         );
       case 'nested_list_nn_of_nn':
         return new GraphQL\FieldDefinition(
@@ -91,6 +98,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nonNullable()->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_list_nn_of_nn(),
+          vec[],
         );
       case 'nested_nn':
         return new GraphQL\FieldDefinition(
@@ -98,6 +106,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->nested_nn(),
+          vec[],
         );
       case 'no_error':
         return new GraphQL\FieldDefinition(
@@ -105,6 +114,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->no_error(),
+          vec[],
         );
       case 'non_nullable':
         return new GraphQL\FieldDefinition(
@@ -112,6 +122,7 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->non_nullable(),
+          vec[],
         );
       case 'user_facing_error':
         return new GraphQL\FieldDefinition(
@@ -119,9 +130,14 @@ final class ErrorTestObj extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->user_facing_error(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

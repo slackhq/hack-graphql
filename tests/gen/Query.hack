@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fa1ca424a98ff51976408a73d53305d4>>
+ * @generated SignedSource<<1fe6f2b89af7fb1bc13a159233c38301>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -51,6 +51,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           __Schema::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> new Schema(),
+          vec[],
         );
       case '__type':
         return new GraphQL\FieldDefinition(
@@ -66,6 +67,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
 
             Types\StringType::nonNullable()->coerceNamedNode('name', $args, $vars),
           ),
+          vec[],
         );
       case 'allFooObjects':
         return new GraphQL\FieldDefinition(
@@ -99,6 +101,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
+          vec[],
         );
       case 'alphabetConnection':
         return new GraphQL\FieldDefinition(
@@ -132,6 +135,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
+          vec[],
         );
       case 'arg_test':
         return new GraphQL\FieldDefinition(
@@ -157,6 +161,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceNamedNode('nullable', $args, $vars),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('optional', $args, $vars, 42),
           ),
+          vec[],
         );
       case 'bot':
         return new GraphQL\FieldDefinition(
@@ -171,6 +176,9 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getBot(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
+          vec[
+            new \Directives\LogSampled(1.100000, "foo"),
+          ],
         );
       case 'error_test':
         return new GraphQL\FieldDefinition(
@@ -178,6 +186,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \ErrorTestObj::get(),
+          vec[],
         );
       case 'error_test_nn':
         return new GraphQL\FieldDefinition(
@@ -185,6 +194,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ErrorTestObj::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> \ErrorTestObj::getNonNullable(),
+          vec[],
         );
       case 'getBaz':
         return new GraphQL\FieldDefinition(
@@ -192,6 +202,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           Baz::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \UserQueryAttributes::getBaz(),
+          vec[],
         );
       case 'getConcrete':
         return new GraphQL\FieldDefinition(
@@ -199,6 +210,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           Concrete::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getConcrete(),
+          vec[],
         );
       case 'getFoo':
         return new GraphQL\FieldDefinition(
@@ -206,6 +218,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           FooObject::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \UserQueryAttributes::getFoo(),
+          vec[],
         );
       case 'getInterfaceA':
         return new GraphQL\FieldDefinition(
@@ -213,6 +226,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           InterfaceA::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getInterfaceA(),
+          vec[],
         );
       case 'getInterfaceB':
         return new GraphQL\FieldDefinition(
@@ -220,6 +234,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           InterfaceB::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \Concrete::getInterfaceB(),
+          vec[],
         );
       case 'getObjectShape':
         return new GraphQL\FieldDefinition(
@@ -227,6 +242,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           ObjectShape::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \ObjectTypeTestEntrypoint::getObjectShape(),
+          vec[],
         );
       case 'human':
         return new GraphQL\FieldDefinition(
@@ -241,6 +257,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getHuman(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
+          vec[],
         );
       case 'introspection_test':
         return new GraphQL\FieldDefinition(
@@ -248,6 +265,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           IntrospectionTestObject::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \IntrospectionTestObject::get(),
+          vec[],
         );
       case 'list_arg_test':
         return new GraphQL\FieldDefinition(
@@ -262,6 +280,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \ArgumentTestObj::listArgTest(
             Types\IntType::nonNullable()->nullableInputListOf()->nonNullableInputListOf()->nullableInputListOf()->coerceNamedNode('arg', $args, $vars),
           ),
+          vec[],
         );
       case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
@@ -276,6 +295,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \UserQueryAttributes::getNestedListSum(
             Types\IntType::nonNullable()->nonNullableInputListOf()->nonNullableInputListOf()->coerceNamedNode('numbers', $args, $vars),
           ),
+          vec[],
         );
       case 'optional_field_test':
         return new GraphQL\FieldDefinition(
@@ -290,6 +310,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \UserQueryAttributes::optionalFieldTest(
             CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
           ),
+          vec[],
         );
       case 'output_type_test':
         return new GraphQL\FieldDefinition(
@@ -297,6 +318,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           OutputTypeTestObj::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> \OutputTypeTestObj::get(),
+          vec[],
         );
       case 'takes_favorite_color':
         return new GraphQL\FieldDefinition(
@@ -311,6 +333,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> \UserQueryAttributes::takesFavoriteColor(
             FavoriteColor::nonNullable()->coerceNamedNode('favorite_color', $args, $vars),
           ),
+          vec[],
         );
       case 'user':
         return new GraphQL\FieldDefinition(
@@ -325,6 +348,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
+          vec[],
         );
       case 'viewer':
         return new GraphQL\FieldDefinition(
@@ -332,9 +356,14 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           User::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getViewer(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

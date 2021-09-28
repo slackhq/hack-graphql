@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2ec633867a1874f20746329c497145ab>>
+ * @generated SignedSource<<45e41c9745331f6573116572a8ba8efc>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -37,6 +37,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNonNullableInt(),
+          vec[],
         );
       case 'default_list_of_nullable_int':
         return new GraphQL\FieldDefinition(
@@ -44,6 +45,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultListOfNullableInt(),
+          vec[],
         );
       case 'default_nullable_string':
         return new GraphQL\FieldDefinition(
@@ -51,6 +53,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getDefaultNullableString(),
+          vec[],
         );
       case 'non_null_int':
         return new GraphQL\FieldDefinition(
@@ -58,6 +61,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullInt(),
+          vec[],
         );
       case 'non_null_list_of_non_null':
         return new GraphQL\FieldDefinition(
@@ -65,6 +69,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nonNullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullListOfNonNull(),
+          vec[],
         );
       case 'non_null_string':
         return new GraphQL\FieldDefinition(
@@ -72,6 +77,7 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nonNullable(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNonNullString(),
+          vec[],
         );
       case 'nullable_string':
         return new GraphQL\FieldDefinition(
@@ -79,9 +85,14 @@ final class IntrospectionTestObject extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getNullableString(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e91079c818844bd61c1aeffb29962598>>
+ * @generated SignedSource<<c3ac729d3d40fe5c7175504fdfde0a01>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,6 +34,7 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['name'],
+          vec[],
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -41,6 +42,7 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['description'] ?? null,
+          vec[],
         );
       case 'type':
         return new GraphQL\FieldDefinition(
@@ -48,6 +50,7 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
           __Type::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['type'],
+          vec[],
         );
       case 'defaultValue':
         return new GraphQL\FieldDefinition(
@@ -55,9 +58,14 @@ final class __InputValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['defaultValue'] ?? null,
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

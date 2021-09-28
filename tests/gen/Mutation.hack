@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<8effc458f88d700e19fc5f34452ec88f>>
+ * @generated SignedSource<<cf8bf2a4c28798ae1e661e0222131f71>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -39,6 +39,9 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::createUser(
             CreateUserInput::nonNullable()->coerceNamedNode('input', $args, $vars),
           ),
+          vec[
+            new \Directives\HasRole(vec[\Directives\StaffRoleType::class]),
+          ],
         );
       case 'pokeUser':
         return new GraphQL\FieldDefinition(
@@ -53,9 +56,14 @@ final class Mutation extends \Slack\GraphQL\Types\ObjectType {
           async ($parent, $args, $vars) ==> await \UserMutationAttributes::pokeUser(
             Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

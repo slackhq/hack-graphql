@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<481a5396998f1863b06a6992d837fe3b>>
+ * @generated SignedSource<<c3d4ff1a2e58df58b07f19230f584fab>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -36,6 +36,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -43,6 +44,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -50,6 +52,7 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -57,10 +60,17 @@ final class User extends \Slack\GraphQL\Types\InterfaceType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[
+      new \Directives\AnotherDirective(),
+    ];
   }
 
   public async function resolveAsync(

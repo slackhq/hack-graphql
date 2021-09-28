@@ -2,7 +2,9 @@
 
 
 use namespace Slack\GraphQL;
-use namespace HH\Lib\{Math, Str, Vec};
+use type Directives\HasRole;
+use type Directives\{TestShapeDirective};
+use namespace HH\Lib\{C, Math, Str, Vec};
 
 <<GraphQL\InputObjectType('CreateTeamInput', 'Arguments for creating a team')>>
 type TCreateTeamInput = shape(
@@ -31,7 +33,6 @@ final class TeamStore {
         if (self::$store is null) {
             self::$store = new self();
         }
-
         return self::$store;
     }
 
@@ -46,7 +47,7 @@ final class TeamStore {
     }
 }
 
-<<GraphQL\InterfaceType('User', 'User')>>
+<<GraphQL\InterfaceType('User', 'User'), Directives\AnotherDirective>>
 interface User {
     <<GraphQL\Field('id', 'ID of the user')>>
     public function getId(): int;
@@ -94,9 +95,19 @@ enum FavoriteColor: int {
     BLUE = 2;
 }
 
-<<GraphQL\ObjectType('Human', 'Human')>>
+<<
+    GraphQL\ObjectType('Human', 'Human'),
+    HasRole(vec[Directives\AdminRoleType::class]),
+    Directives\LogSampled(0.0, 'bar'),
+>>
 final class Human extends BaseUser {
-    <<GraphQL\Field('favorite_color', 'Favorite color of the user')>>
+    <<
+        GraphQL\Field('favorite_color', 'Favorite color of the user'),
+        HasRole(vec[Directives\StaffRoleType::class]),
+        \Directives\LogSampled(33.3, 'foo'),
+        TestShapeDirective(shape('foo' => 1, 'bar' => 'abc'), true),
+        Directives\AnotherDirective,
+    >>
     public function getFavoriteColor(): FavoriteColor {
         return FavoriteColor::BLUE;
     }
@@ -161,7 +172,7 @@ abstract final class UserQueryAttributes {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
-    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID')>>
+    <<GraphQL\QueryRootField('bot', 'Fetch a bot by ID'), \Directives\LogSampled(1.1, 'foo')>>
     public static async function getBot(int $id): Awaitable<\Bot> {
         return new \Bot(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
@@ -211,7 +222,10 @@ abstract final class UserMutationAttributes {
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
-    <<GraphQL\MutationRootField('createUser', 'Create a new user')>>
+    <<
+        GraphQL\MutationRootField('createUser', 'Create a new user'),
+        \Directives\HasRole(vec[\Directives\StaffRoleType::class]),
+    >>
     public static async function createUser(TCreateUserInput $input): Awaitable<\User> {
         $team_input = $input['team'] ?? null;
 

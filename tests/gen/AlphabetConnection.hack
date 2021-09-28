@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<62edee806dca502f5b400aefff59f52a>>
+ * @generated SignedSource<<5f8b6c004891baeb9f3ebe6ccc928ed0>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -32,6 +32,7 @@ final class AlphabetConnection extends \Slack\GraphQL\Types\ObjectType {
           StringTypeEdge::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getEdges(),
+          vec[],
         );
       case 'pageInfo':
         return new GraphQL\FieldDefinition(
@@ -39,9 +40,14 @@ final class AlphabetConnection extends \Slack\GraphQL\Types\ObjectType {
           PageInfo::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getPageInfo(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

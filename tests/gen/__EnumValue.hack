@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<2a376d1323cd8b83e6af8c63aa02034c>>
+ * @generated SignedSource<<ba6a7ab8d87872d6060b9434be0358c1>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -34,6 +34,7 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['name'],
+          vec[],
         );
       case 'isDeprecated':
         return new GraphQL\FieldDefinition(
@@ -41,6 +42,7 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['isDeprecated'],
+          vec[],
         );
       case 'description':
         return new GraphQL\FieldDefinition(
@@ -48,6 +50,7 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['description'] ?? null,
+          vec[],
         );
       case 'deprecationReason':
         return new GraphQL\FieldDefinition(
@@ -55,9 +58,14 @@ final class __EnumValue extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['deprecationReason'] ?? null,
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

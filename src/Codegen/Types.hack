@@ -3,7 +3,7 @@
 
 namespace Slack\GraphQL\Codegen;
 
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{C, Dict, Str};
 use namespace Slack\GraphQL\Types;
 
 const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
@@ -261,5 +261,15 @@ function get_node_type_info(string $hack_type): ?shape(
         'hack_type' => $hack_type,
         'gql_type' => $gql_type,
         'output_type' => $output_type,
+    );
+}
+
+function get_interfaces(
+    string $hack_type,
+    dict<string, string> $hack_class_to_graphql_interface,
+): dict<string, string> {
+    return Dict\filter_with_key(
+        $hack_class_to_graphql_interface,
+        ($interface, $_gql_type) ==> \is_subclass_of($hack_type, $interface),
     );
 }

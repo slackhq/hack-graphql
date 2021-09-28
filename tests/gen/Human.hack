@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<453bfb5200271c708353fecfc025619b>>
+ * @generated SignedSource<<7ea97f7c9dbc2d43a4cb74d7fd481c6f>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -38,6 +38,12 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           FavoriteColor::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getFavoriteColor(),
+          vec[
+            new \Directives\AnotherDirective(),
+            new \Directives\HasRole(vec[\Directives\StaffRoleType::class]),
+            new \Directives\LogSampled(33.300000, "foo"),
+            new \Directives\TestShapeDirective(shape('foo' => 1, 'bar' => "abc"), true),
+          ],
         );
       case 'friends':
         return new GraphQL\FieldDefinition(
@@ -71,6 +77,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
+          vec[],
         );
       case 'id':
         return new GraphQL\FieldDefinition(
@@ -78,6 +85,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getId(),
+          vec[],
         );
       case 'is_active':
         return new GraphQL\FieldDefinition(
@@ -85,6 +93,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           Types\BooleanType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->isActive(),
+          vec[],
         );
       case 'name':
         return new GraphQL\FieldDefinition(
@@ -92,6 +101,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getName(),
+          vec[],
         );
       case 'named_friends':
         return new GraphQL\FieldDefinition(
@@ -131,6 +141,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
+          vec[],
         );
       case 'team':
         return new GraphQL\FieldDefinition(
@@ -138,9 +149,18 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
           Team::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getTeam(),
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[
+      new \Directives\AnotherDirective(),
+      new \Directives\HasRole(vec[\Directives\AdminRoleType::class]),
+      new \Directives\LogSampled(0.000000, "bar"),
+    ];
   }
 }

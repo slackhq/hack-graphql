@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<4ee05a200f698afc8c2432c2a1b97359>>
+ * @generated SignedSource<<6891ec753bf59d5345f3cdfff3f16249>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,6 +33,7 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['foo'],
+          vec[],
         );
       case 'bar':
         return new GraphQL\FieldDefinition(
@@ -40,6 +41,7 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['bar'] ?? null,
+          vec[],
         );
       case 'baz':
         return new GraphQL\FieldDefinition(
@@ -47,9 +49,14 @@ final class ObjectShape extends \Slack\GraphQL\Types\ObjectType {
           AnotherObjectShape::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['baz'],
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }

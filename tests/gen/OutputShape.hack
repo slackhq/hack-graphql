@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<e783aa2cd35435149e850d40f67a79a9>>
+ * @generated SignedSource<<7e99f57dacb997591c72087d6edf3f08>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -33,6 +33,7 @@ final class OutputShape extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['string'],
+          vec[],
         );
       case 'vec_of_int':
         return new GraphQL\FieldDefinition(
@@ -40,6 +41,7 @@ final class OutputShape extends \Slack\GraphQL\Types\ObjectType {
           Types\IntType::nonNullable()->nullableOutputListOf(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['vec_of_int'],
+          vec[],
         );
       case 'nested_shape':
         return new GraphQL\FieldDefinition(
@@ -47,9 +49,14 @@ final class OutputShape extends \Slack\GraphQL\Types\ObjectType {
           NestedOutputShape::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent['nested_shape'],
+          vec[],
         );
       default:
         return null;
     }
+  }
+
+  public function getDirectives(): vec<GraphQL\ObjectDirective> {
+    return vec[];
   }
 }
