@@ -111,10 +111,6 @@ function get_graphql_leaf_type(string $hack_type): ?string {
     }
 }
 
-function is_float_type(string $hack_type): bool {
-    return $hack_type === 'HH\float' || $hack_type === '?HH\float';
-}
-
 /**
  * Get the GraphQL type to output for a hack type.
  */
