@@ -62,7 +62,7 @@ class ObjectBuilder extends CompositeBuilder {
         );
     }
 
-    public static function forConnection(string $name, string $edge_name): ObjectBuilder {
+    public static function forConnection(string $name, string $edge_name, vec<FieldBuilder> $additional_fields): ObjectBuilder {
         // Remove namespace to generate a sane GQL name
         // This means that connections in different namespaces can collide with each other;
         // we could eventually fix that by merging the namespace and GQL name when
@@ -72,23 +72,26 @@ class ObjectBuilder extends CompositeBuilder {
         return new ObjectBuilder(
             new \Slack\GraphQL\ObjectType($gql_name, $gql_name), // TODO: Description
             $name, // hack type
-            vec[ // fields
-                new MethodFieldBuilder(shape(
-                    'name' => 'edges',
-                    'method_name' => 'getEdges',
-                    'output_type' => shape(
-                        'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
-                        'needs_await' => true,
-                    ),
-                    'parameters' => vec[],
-                )),
-                new MethodFieldBuilder(shape(
-                    'name' => 'pageInfo',
-                    'method_name' => 'getPageInfo',
-                    'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
-                    'parameters' => vec[],
-                )),
-            ],
+            Vec\concat(
+                vec[ // fields
+                    new MethodFieldBuilder(shape(
+                        'name' => 'edges',
+                        'method_name' => 'getEdges',
+                        'output_type' => shape(
+                            'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
+                            'needs_await' => true,
+                        ),
+                        'parameters' => vec[],
+                    )),
+                    new MethodFieldBuilder(shape(
+                        'name' => 'pageInfo',
+                        'method_name' => 'getPageInfo',
+                        'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
+                        'parameters' => vec[],
+                    )),
+                ],
+                $additional_fields
+            ),
             dict[], // Connections do not implement any interfaces
         );
     }

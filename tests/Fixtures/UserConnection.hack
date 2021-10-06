@@ -9,6 +9,11 @@ final class UserConnection extends GraphQL\Pagination\Connection {
 
     public function __construct(private string $name_prefix = 'User') {}
 
+    <<GraphQL\Field('totalCount', 'Total number of users')>>
+    public async function getTotalCount(): Awaitable<int> {
+        return 5;
+    }
+
     protected async function fetch(
         GraphQL\Pagination\PaginationArgs $args,
     ): Awaitable<vec<GraphQL\Pagination\Edge<User>>> {

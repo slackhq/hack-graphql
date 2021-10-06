@@ -46,6 +46,8 @@ type PaginationArgs = shape(
  * a wide variety of data sources, you're encouraged to create reusable subclasses which connect to the data sources
  * you use.
  *
+ * You can also add custom fields to a connection subclass by annotating methods with `Slack\GraphQL\Field`.
+ *
  * @see https://relay.dev/graphql/connections.htm for more information about GraphQL pagination.
  * @see src/playground/UserConnection.hack for an example.
  */
