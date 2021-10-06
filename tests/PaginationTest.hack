@@ -560,7 +560,7 @@ final class PaginationTest extends FixtureTest {
                 dict[
                     'human' => dict[
                         'friends' => dict[
-                            'totalCount' => 5
+                            'totalCount' => 5,
                         ],
                     ],
                 ],

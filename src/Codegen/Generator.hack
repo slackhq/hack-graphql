@@ -329,7 +329,10 @@ final class Generator {
         return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
     }
 
-    private function getConnectionObjects(DefinitionFinder\ScannedClassish $class, vec<FieldBuilder> $additional_fields): vec<ObjectBuilder> {
+    private function getConnectionObjects(
+        DefinitionFinder\ScannedClassish $class,
+        vec<FieldBuilder> $additional_fields,
+    ): vec<ObjectBuilder> {
         $rc = new \ReflectionClass($class->getName());
         $hack_type = $rc->getTypeConstants()
             |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
