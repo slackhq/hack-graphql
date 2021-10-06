@@ -547,6 +547,24 @@ final class PaginationTest extends FixtureTest {
                     ],
                 ],
             ),
+
+            'custom connection fields' => tuple(
+                '{
+                    human(id: 20) {
+                        friends {
+                            totalCount
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    'human' => dict[
+                        'friends' => dict[
+                            'totalCount' => 5
+                        ],
+                    ],
+                ],
+            ),
         ];
     }
 }

@@ -248,7 +248,7 @@ final class Generator {
                     "All connection types must have names ending with `Connection`. `%s` does not.",
                     $class->getName(),
                 );
-                $objects = Vec\concat($objects, $this->getConnectionObjects($class));
+                $objects = Vec\concat($objects, $this->getConnectionObjects($class, $class_fields[$class->getName()]));
             } elseif (!C\is_empty($class->getAttributes())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
@@ -329,7 +329,7 @@ final class Generator {
         return Vec\sort_by($objects, $object ==> $object->getGraphQLType());
     }
 
-    private function getConnectionObjects(DefinitionFinder\ScannedClassish $class): vec<ObjectBuilder> {
+    private function getConnectionObjects(DefinitionFinder\ScannedClassish $class, vec<FieldBuilder> $additional_fields): vec<ObjectBuilder> {
         $rc = new \ReflectionClass($class->getName());
         $hack_type = $rc->getTypeConstants()
             |> C\find($$, $c ==> $c->getName() === 'TNode')?->getAssignedTypeText();
@@ -342,7 +342,7 @@ final class Generator {
             $rc->getName(),
         );
         return vec[
-            ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge'),
+            ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge', $additional_fields),
             ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
     }

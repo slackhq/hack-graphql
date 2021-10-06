@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<10f75bca86cba0f89742c4b2faf55f99>>
+ * @generated SignedSource<<de84673219a9d22d8dd249e265079fde>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -18,6 +18,7 @@ final class UserConnection extends \Slack\GraphQL\Types\ObjectType {
   const keyset<string> FIELD_NAMES = keyset[
     'edges',
     'pageInfo',
+    'totalCount',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
   ];
@@ -39,6 +40,13 @@ final class UserConnection extends \Slack\GraphQL\Types\ObjectType {
           PageInfo::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> await $parent->getPageInfo(),
+        );
+      case 'totalCount':
+        return new GraphQL\FieldDefinition(
+          'totalCount',
+          Types\IntType::nullableOutput(),
+          dict[],
+          async ($parent, $args, $vars) ==> await $parent->getTotalCount(),
         );
       default:
         return null;

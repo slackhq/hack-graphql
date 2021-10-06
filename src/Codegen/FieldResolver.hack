@@ -28,10 +28,18 @@ final class FieldResolver {
 
     private function shouldResolve(DefinitionFinder\ScannedClassish $class): bool {
         $rc = new \ReflectionClass($class->getName());
-        return (
+        if (
             $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class) ??
             $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class)
-        ) is nonnull;
+        ) {
+            return true;
+        }
+
+        if (is_connection_type($rc)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function resolveClass(DefinitionFinder\ScannedClassish $class): dict<string, FieldBuilder> {
