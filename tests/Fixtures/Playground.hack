@@ -9,12 +9,19 @@ type TCreateTeamInput = shape(
     'name' => string,
 );
 
+<<GraphQL\EnumType('Role', 'Role')>>
+enum Role: string {
+    ADMIN = 'admin';
+    STAFF = 'staff';
+}
+
 <<GraphQL\InputObjectType('CreateUserInput', 'Arguments for creating a user')>>
 type TCreateUserInput = shape(
     'name' => string,
     ?'is_active' => ?bool,
     ?'team' => ?TCreateTeamInput,
     ?'favorite_color' => ?FavoriteColor,
+    ?'roles' => ?vec<Role>,
 );
 
 final class TeamStore {
@@ -59,6 +66,9 @@ interface User {
 
     <<GraphQL\Field('is_active', 'Whether the user is active')>>
     public function isActive(): bool;
+
+    <<GraphQL\Field('roles', 'Roles the user has')>>
+    public function getRoles(): vec<Role>;
 }
 
 abstract class BaseUser implements User {
@@ -68,6 +78,7 @@ abstract class BaseUser implements User {
             'name' => string,
             'team_id' => int,
             'is_active' => bool,
+            ?'roles' => vec<Role>,
         ) $data,
     ) {}
 
@@ -85,6 +96,10 @@ abstract class BaseUser implements User {
 
     public function isActive(): bool {
         return $this->data['is_active'];
+    }
+
+    public function getRoles(): vec<Role> {
+        return $this->data['roles'] ?? vec[];
     }
 }
 
@@ -225,6 +240,7 @@ abstract final class UserMutationAttributes {
             'name' => $input['name'],
             'is_active' => $input['is_active'] ?? true,
             'team_id' => $team?->getId() ?? 1,
+            'roles' => $input['roles'] ?? vec[],
         ));
     }
 }

@@ -232,6 +232,38 @@ final class InputObjectTypeTest extends FixtureTest {
                 dict['color' => null],
                 dict['optional_field_test' => 'color is null'],
             ),
+
+            'input with nested array of enums' => tuple(
+                'mutation CreateUser($input: CreateUserInput!) {
+                    createUser(input: $input) {
+                        id
+                        is_active
+                        name
+                        team {
+                            name
+                        }
+                        roles
+                    }
+                }',
+                dict[
+                    'input' => shape(
+                        'name' => 'New User',
+                        'is_active' => false,
+                        'roles' => vec['STAFF', 'ADMIN'],
+                    ),
+                ],
+                dict[
+                    'createUser' => dict[
+                        'id' => 3,
+                        'name' => 'New User',
+                        'is_active' => false,
+                        'team' => dict[
+                            'name' => 'Test Team 1',
+                        ],
+                        'roles' => vec['STAFF', 'ADMIN'],
+                    ],
+                ],
+            ),
         ];
     }
 
