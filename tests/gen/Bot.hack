@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<803c718476e0461c3e9d70a1db853f34>>
+ * @generated SignedSource<<3b315c322b594d0d3e3317ae5e0f799e>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,6 +20,7 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
     'is_active',
     'name',
     'primary_function',
+    'roles',
     'team',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
@@ -57,6 +58,13 @@ final class Bot extends \Slack\GraphQL\Types\ObjectType {
           Types\StringType::nullableOutput(),
           dict[],
           async ($parent, $args, $vars) ==> $parent->getPrimaryFunction(),
+        );
+      case 'roles':
+        return new GraphQL\FieldDefinition(
+          'roles',
+          Role::nonNullable()->nullableOutputListOf(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getRoles(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(

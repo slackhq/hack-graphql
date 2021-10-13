@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<ce0dce14e824f4421ff9f5e4d9ff60a5>>
+ * @generated SignedSource<<86d2f8ea13b22e54fc1a4b72e77ff429>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -20,6 +20,7 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     'is_active',
     'team',
     'favorite_color',
+    'roles',
   ];
 
   <<__Override>>
@@ -36,6 +37,9 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     }
     if (C\contains_key($fields, 'favorite_color')) {
       $ret['favorite_color'] = FavoriteColor::nullableInput()->coerceNamedValue('favorite_color', $fields);
+    }
+    if (C\contains_key($fields, 'roles')) {
+      $ret['roles'] = Role::nonNullable()->nullableInputListOf()->coerceNamedValue('roles', $fields);
     }
     return $ret;
   }
@@ -56,6 +60,9 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     if ($this->hasValue('favorite_color', $fields, $vars)) {
       $ret['favorite_color'] = FavoriteColor::nullableInput()->coerceNamedNode('favorite_color', $fields, $vars);
     }
+    if ($this->hasValue('roles', $fields, $vars)) {
+      $ret['roles'] = Role::nonNullable()->nullableInputListOf()->coerceNamedNode('roles', $fields, $vars);
+    }
     return $ret;
   }
 
@@ -73,6 +80,9 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
     }
     if (C\contains_key($fields, 'favorite_color')) {
       $ret['favorite_color'] = FavoriteColor::nullableInput()->assertValidVariableValue($fields['favorite_color']);
+    }
+    if (C\contains_key($fields, 'roles')) {
+      $ret['roles'] = Role::nonNullable()->nullableInputListOf()->assertValidVariableValue($fields['roles']);
     }
     return $ret;
   }
@@ -101,6 +111,11 @@ final class CreateUserInput extends \Slack\GraphQL\Types\InputObjectType {
         return shape(
           'name' => 'favorite_color',
           'type' => FavoriteColor::nullableInput(),
+        );
+      case 'roles':
+        return shape(
+          'name' => 'roles',
+          'type' => Role::nonNullable()->nullableInputListOf(),
         );
       default:
         return null;

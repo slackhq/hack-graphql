@@ -38,7 +38,7 @@ final class ListInputType<TInner> extends BaseType implements INonNullableInputT
 
     <<__Override>>
     public function assertValidVariableValue(mixed $value): vec<TInner> {
-        return Vec\map($value as vec<_>, $item ==> $this->inner_type->coerceValue($item));
+        return Vec\map($value as vec<_>, $item ==> $this->inner_type->assertValidVariableValue($item));
     }
 
     /**

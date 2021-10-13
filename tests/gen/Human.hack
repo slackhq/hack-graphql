@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<453bfb5200271c708353fecfc025619b>>
+ * @generated SignedSource<<74cee04a80f9d7fcba46fd5b48e66987>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -22,6 +22,7 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
     'is_active',
     'name',
     'named_friends',
+    'roles',
     'team',
   ];
   const dict<string, classname<Types\InterfaceType>> INTERFACES = dict[
@@ -131,6 +132,13 @@ final class Human extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nullableInput()->coerceOptionalNamedNode('first', $args, $vars, null),
             Types\IntType::nullableInput()->coerceOptionalNamedNode('last', $args, $vars, null),
           ),
+        );
+      case 'roles':
+        return new GraphQL\FieldDefinition(
+          'roles',
+          Role::nonNullable()->nullableOutputListOf(),
+          dict[],
+          async ($parent, $args, $vars) ==> $parent->getRoles(),
         );
       case 'team':
         return new GraphQL\FieldDefinition(
