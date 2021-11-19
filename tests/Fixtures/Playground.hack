@@ -1,6 +1,5 @@
 
 
-
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Str, Vec};
 
@@ -252,4 +251,10 @@ final class AlphabetConnection extends GraphQL\Pagination\ListConnection {
     public function __construct() {
         parent::__construct(Str\split('abcdefghijklmnopqrstuvwxyz', ''));
     }
+}
+
+
+<<__ConsistentConstruct>>
+final class NonGraphQLClass {
+
 }
