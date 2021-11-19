@@ -249,13 +249,9 @@ final class Generator {
                     $class->getName(),
                 );
                 $objects = Vec\concat($objects, $this->getConnectionObjects($class, $class_fields[$class->getName()]));
-            } elseif (!C\is_empty($class->getAttributes())) {
-                $fields = idx($class_fields, $class->getName());
-                if ($fields == null) {
-                  continue;
-                }
-                
+            } elseif (C\contains_key($class_fields, $class->getName())) {
                 $rc = new \ReflectionClass($class->getName());
+                $fields = $class_fields[$class->getName()];
                 $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
                 $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
                 invariant(
