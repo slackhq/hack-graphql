@@ -159,7 +159,10 @@ abstract class Connection {
     )> {
         $page = await $this->fetch($this->args);
 
-        $page_info = shape();
+        $page_info = shape(
+            'hasNextPage' => false,
+            'hasPreviousPage' => false,
+        );
 
         // Determine whether more results are available by checking whether the number of items returned from
         // `paginate` is more than the number of items requested by the client. We always request one more item

@@ -202,6 +202,64 @@ final class PaginationTest extends FixtureTest {
                 ],
             ),
 
+            'test get only one' => tuple(
+                'query {
+                    human(id: 20) {
+                        friends(first: 3) {
+                            edges {
+                                node {
+                                    id
+                                    name
+                                }
+                                cursor
+                            }
+                            pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                                startCursor
+                                endCursor
+                            }
+                        }
+                    }
+                }',
+                dict[],
+                dict[
+                    'human' => dict[
+                        'friends' => dict[
+                            'edges' => vec[
+                                dict[
+                                    'node' => dict[
+                                        'id' => 0,
+                                        'name' => 'User 0',
+                                    ],
+                                    'cursor' => base64_encode('0'),
+                                ],
+                                dict[
+                                    'node' => dict[
+                                        'id' => 1,
+                                        'name' => 'User 1',
+                                    ],
+                                    'cursor' => base64_encode('1'),
+                                ],
+                                dict[
+                                    'node' => dict[
+                                        'id' => 2,
+                                        'name' => 'User 2',
+                                    ],
+                                    'cursor' => base64_encode('2'),
+                                ],
+                            ],
+                            'pageInfo' => dict[
+                                'hasNextPage' => true,
+                                'hasPreviousPage' => false,
+                                'startCursor' => base64_encode('0'),
+                                'endCursor' => base64_encode('2'),
+                            ],
+                        ],
+                    ],
+                ],
+            ),
+
             'test retrieving the first edges in the dataset' => tuple(
                 'query ($before: String!) {
                     human(id: 20) {
