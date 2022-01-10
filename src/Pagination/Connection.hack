@@ -88,19 +88,19 @@ abstract class Connection {
 
     /**
      * Whether a page exists before the `after` cursor, was such a cursor provided.
-     * As this often cannot be determined efficiently, this method returns false by default.
+     * Can be overridden for efficiency.
      */
     public async function hasPageBeforeAfterCursor(string $after_cursor): Awaitable<bool> {
-        return false;
-    }
+		return C\count(await $this->fetch(shape('first' => 1, 'after' => $after_cursor))) > 0;
+	}
 
     /**
      * Whether a page exists after the `before` cursor, was such a cursor provided.
-     * As this cannot often be determined efficiently, this method returns false by default.
+     * Can be overridden for efficiency.
      */
-    public async function hasPageAfterBeforeCursor(string $before_cursor): Awaitable<bool> {
-        return false;
-    }
+	public async function hasPageAfterBeforeCursor(string $before_cursor): Awaitable<bool> {
+		return C\count(await $this->fetch(shape('last' => 1, 'before' => $before_cursor))) > 0;
+	}
 
     //
     // Implementation Details
@@ -157,7 +157,7 @@ abstract class Connection {
         'edges' => vec<Edge<this::TNode>>,
         'pageInfo' => PageInfo,
     )> {
-        $page = await $this->fetch($this->args);
+        $edges = await $this->fetch($this->args);
 
         $page_info = shape(
             'hasNextPage' => false,
@@ -170,33 +170,33 @@ abstract class Connection {
 
         $first = $this->args['first'] ?? null;
         if ($first is nonnull) {
-            $page_info['hasNextPage'] = C\count($page) > $first - 1;
+            $page_info['hasNextPage'] = C\count($edges) > $first - 1;
             if (Shapes::keyExists($this->args, 'after')) {
                 $page_info['hasPreviousPage'] = await $this->hasPageBeforeAfterCursor($this->args['after']);
             }
             if ($page_info['hasNextPage']) {
-                $page = Vec\take($page, $first - 1);
+                $edges = Vec\take($edges, $first - 1);
             }
         }
 
         $last = $this->args['last'] ?? null;
         if ($last is nonnull) {
-            $page_info['hasPreviousPage'] = C\count($page) > $last - 1;
+            $page_info['hasPreviousPage'] = C\count($edges) > $last - 1;
             if (Shapes::keyExists($this->args, 'before')) {
                 $page_info['hasNextPage'] = await $this->hasPageAfterBeforeCursor($this->args['before']);
             }
             if ($page_info['hasPreviousPage']) {
-                $page = Vec\drop($page, 1);
+                $edges = Vec\drop($edges, 1);
             }
         }
 
         // Set the start and end cursors if the query had results.
-        if (!C\is_empty($page)) {
-            $page_info['startCursor'] = C\firstx($page)->getCursor();
-            $page_info['endCursor'] = C\lastx($page)->getCursor();
+        if (!C\is_empty($edges)) {
+            $page_info['startCursor'] = C\firstx($edges)->getCursor();
+            $page_info['endCursor'] = C\lastx($edges)->getCursor();
         }
 
-        return shape('edges' => $page, 'pageInfo' => $page_info);
+        return shape('edges' => $edges, 'pageInfo' => $page_info);
     }
 
     /**
