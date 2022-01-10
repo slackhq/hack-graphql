@@ -26,6 +26,7 @@ final class PaginationTest extends FixtureTest {
                             }
                             pageInfo {
                                 hasNextPage
+                                hasPreviousPage
                                 startCursor
                                 endCursor
                             }
@@ -54,6 +55,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('2'),
                                 'endCursor' => base64_encode('3'),
                             ],
@@ -75,6 +77,7 @@ final class PaginationTest extends FixtureTest {
                             }
                             pageInfo {
                                 hasNextPage
+                                hasPreviousPage
                                 startCursor
                                 endCursor
                             }
@@ -96,6 +99,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => false,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('4'),
                                 'endCursor' => base64_encode('4'),
                             ],
@@ -116,6 +120,7 @@ final class PaginationTest extends FixtureTest {
                                 cursor
                             }
                             pageInfo {
+                                hasNextPage
                                 hasPreviousPage
                                 startCursor
                                 endCursor
@@ -144,6 +149,7 @@ final class PaginationTest extends FixtureTest {
                                 ],
                             ],
                             'pageInfo' => dict[
+                                'hasNextPage' => false,
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('2'),
                                 'endCursor' => base64_encode('3'),
@@ -166,6 +172,7 @@ final class PaginationTest extends FixtureTest {
                             }
                             pageInfo {
                                 hasNextPage
+                                hasPreviousPage
                                 startCursor
                                 endCursor
                             }
@@ -194,6 +201,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('0'),
                                 'endCursor' => base64_encode('1'),
                             ],
@@ -272,6 +280,7 @@ final class PaginationTest extends FixtureTest {
                                 cursor
                             }
                             pageInfo {
+                                hasNextPage
                                 hasPreviousPage
                                 startCursor
                                 endCursor
@@ -293,6 +302,7 @@ final class PaginationTest extends FixtureTest {
                                 ],
                             ],
                             'pageInfo' => dict[
+                                'hasNextPage' => false,
                                 'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('0'),
                                 'endCursor' => base64_encode('0'),
@@ -314,6 +324,7 @@ final class PaginationTest extends FixtureTest {
                                 cursor
                             }
                             pageInfo {
+                                hasNextPage
                                 hasPreviousPage
                                 startCursor
                                 endCursor
@@ -342,6 +353,7 @@ final class PaginationTest extends FixtureTest {
                                 ],
                             ],
                             'pageInfo' => dict[
+                                'hasNextPage' => false,
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('3'),
                                 'endCursor' => base64_encode('4'),
@@ -364,6 +376,7 @@ final class PaginationTest extends FixtureTest {
                             }
                             pageInfo {
                                 hasNextPage
+                                hasPreviousPage
                                 startCursor
                                 endCursor
                             }
@@ -385,6 +398,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('0'),
                                 'endCursor' => base64_encode('0'),
                             ],
@@ -405,6 +419,7 @@ final class PaginationTest extends FixtureTest {
                                 cursor
                             }
                             pageInfo {
+                                hasNextPage
                                 hasPreviousPage
                                 startCursor
                                 endCursor
@@ -437,6 +452,7 @@ final class PaginationTest extends FixtureTest {
                         }
                         pageInfo {
                             hasNextPage
+                            hasPreviousPage
                             startCursor
                             endCursor
                         }
@@ -458,6 +474,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('0'),
                                 'endCursor' => base64_encode('1'),
                             ],
@@ -475,6 +492,7 @@ final class PaginationTest extends FixtureTest {
                         }
                         pageInfo {
                             hasNextPage
+                            hasPreviousPage
                             startCursor
                             endCursor
                         }
@@ -496,6 +514,7 @@ final class PaginationTest extends FixtureTest {
                             ],
                             'pageInfo' => dict[
                                 'hasNextPage' => true,
+                                'hasPreviousPage' => false,
                                 'startCursor' => base64_encode('2'),
                                 'endCursor' => base64_encode('3'),
                             ],
@@ -512,6 +531,7 @@ final class PaginationTest extends FixtureTest {
                             cursor
                         }
                         pageInfo {
+                            hasNextPage
                             hasPreviousPage 
                             startCursor
                             endCursor
@@ -533,6 +553,7 @@ final class PaginationTest extends FixtureTest {
                                 ],
                             ],
                             'pageInfo' => dict[
+                                'hasNextPage' => false,
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('24'),
                                 'endCursor' => base64_encode('25'),
@@ -550,6 +571,7 @@ final class PaginationTest extends FixtureTest {
                             cursor
                         }
                         pageInfo {
+                            hasNextPage
                             hasPreviousPage 
                             startCursor
                             endCursor
@@ -571,6 +593,7 @@ final class PaginationTest extends FixtureTest {
                                 ],
                             ],
                             'pageInfo' => dict[
+                                'hasNextPage' => false,
                                 'hasPreviousPage' => true,
                                 'startCursor' => base64_encode('22'),
                                 'endCursor' => base64_encode('23'),
