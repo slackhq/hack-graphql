@@ -90,7 +90,7 @@ abstract class Connection {
      * Whether a page exists before the `after` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasPageBeforeAfterCursor(string $after_cursor): Awaitable<bool> {
+    public async function hasNextPage(string $after_cursor): Awaitable<bool> {
 		return C\count(await $this->fetch(shape('first' => 1, 'after' => $after_cursor))) > 0;
 	}
 
@@ -98,7 +98,7 @@ abstract class Connection {
      * Whether a page exists after the `before` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-	public async function hasPageAfterBeforeCursor(string $before_cursor): Awaitable<bool> {
+	public async function hasPreviousPage(string $before_cursor): Awaitable<bool> {
 		return C\count(await $this->fetch(shape('last' => 1, 'before' => $before_cursor))) > 0;
 	}
 
@@ -125,14 +125,14 @@ abstract class Connection {
             if ($first < 0) {
                 throw new GraphQL\UserFacingError('"first" must be a non-negative integer.');
             }
-            // Always fetch an extra item so we can efficiently determine if there's a next page.
-            $args['first'] = $first + 1;
+
+            $args['first'] = $first;
         } elseif ($last is nonnull) {
             if ($last < 0) {
                 throw new GraphQL\UserFacingError('"last" must be a non-negative integer.');
             }
-            // Always fetch an extra item so we can efficiently determine if there's a prior page.
-            $args['last'] = $last + 1;
+
+            $args['last'] = $last;
         }
 
         // Decode cursors
@@ -164,36 +164,11 @@ abstract class Connection {
             'hasPreviousPage' => false,
         );
 
-        // Determine whether more results are available by checking whether the number of items returned from
-        // `paginate` is more than the number of items requested by the client. We always request one more item
-        // than the client requested so as to simplify this calculation.
-
-        $first = $this->args['first'] ?? null;
-        if ($first is nonnull) {
-            $page_info['hasNextPage'] = C\count($edges) > $first - 1;
-            if (Shapes::keyExists($this->args, 'after')) {
-                $page_info['hasPreviousPage'] = await $this->hasPageBeforeAfterCursor($this->args['after']);
-            }
-            if ($page_info['hasNextPage']) {
-                $edges = Vec\take($edges, $first - 1);
-            }
-        }
-
-        $last = $this->args['last'] ?? null;
-        if ($last is nonnull) {
-            $page_info['hasPreviousPage'] = C\count($edges) > $last - 1;
-            if (Shapes::keyExists($this->args, 'before')) {
-                $page_info['hasNextPage'] = await $this->hasPageAfterBeforeCursor($this->args['before']);
-            }
-            if ($page_info['hasPreviousPage']) {
-                $edges = Vec\drop($edges, 1);
-            }
-        }
-
-        // Set the start and end cursors if the query had results.
         if (!C\is_empty($edges)) {
             $page_info['startCursor'] = C\firstx($edges)->getCursor();
             $page_info['endCursor'] = C\lastx($edges)->getCursor();
+            $page_info['hasNextPage'] = await $this->hasNextPage($this->decodeCursor($page_info['endCursor']));
+            $page_info['hasPreviousPage'] = await $this->hasPreviousPage($this->decodeCursor($page_info['startCursor']));
         }
 
         return shape('edges' => $edges, 'pageInfo' => $page_info);
