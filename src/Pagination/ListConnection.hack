@@ -18,22 +18,22 @@ abstract class ListConnection extends Connection {
         $end_id = C\count($this->items);
 
         $after = $args['after'] ?? null;
-        if ($after) {
+        if ($after is nonnull) {
             $start_id = Str\to_int($after) as nonnull + 1; // Add one to skip the `after` cursor.
         }
 
         $before = $args['before'] ?? null;
-        if ($before) {
+        if ($before is nonnull) {
             $end_id = Str\to_int($before) as nonnull;
         }
 
         $first = $args['first'] ?? null;
-        if ($first) {
+        if ($first is nonnull) {
             $end_id = Math\minva($end_id, $start_id + $first);
         }
 
         $last = $args['last'] ?? null;
-        if ($last) {
+        if ($last is nonnull) {
             $start_id = Math\maxva($start_id, $end_id - $last);
         }
 

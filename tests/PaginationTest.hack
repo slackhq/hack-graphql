@@ -13,56 +13,6 @@ final class PaginationTest extends FixtureTest {
     <<__Override>>
     public static function getTestCases(): this::TTestCases {
         return dict[
-            // 'get all' => tuple(
-            //     'query ($after: String!) {
-            //         human(id: 20) {
-            //             friends(first: 1000) {
-            //                 edges {
-            //                     node {
-            //                         id
-            //                         name
-            //                     }
-            //                     cursor
-            //                 }
-            //                 pageInfo {
-            //                     hasNextPage
-            //                     hasPreviousPage
-            //                     startCursor
-            //                     endCursor
-            //                 }
-            //             }
-            //         }
-            //     }',
-            //     dict['after' => base64_encode("1")],
-            //     dict[
-            //         'human' => dict[
-            //             'friends' => dict[
-            //                 'edges' => vec[
-            //                     dict[
-            //                         'node' => dict[
-            //                             'id' => 2,
-            //                             'name' => 'User 2',
-            //                         ],
-            //                         'cursor' => base64_encode('2'),
-            //                     ],
-            //                     dict[
-            //                         'node' => dict[
-            //                             'id' => 3,
-            //                             'name' => 'User 3',
-            //                         ],
-            //                         'cursor' => base64_encode('3'),
-            //                     ],
-            //                 ],
-            //                 'pageInfo' => dict[
-            //                     'hasNextPage' => true,
-            //                     'hasPreviousPage' => false,
-            //                     'startCursor' => base64_encode('2'),
-            //                     'endCursor' => base64_encode('3'),
-            //                 ],
-            //             ],
-            //         ],
-            //     ],
-            // ),
             'test retrieving edges after an index' => tuple(
                 'query ($after: String!) {
                     human(id: 20) {

@@ -19,23 +19,23 @@ final class UserConnection extends GraphQL\Pagination\Connection {
     ): Awaitable<vec<GraphQL\Pagination\Edge<User>>> {
         $after = $args['after'] ?? null;
         $start_id = 0;
-        if ($after) {
+        if ($after is nonnull) {
             $start_id = Str\to_int($after) as nonnull + 1; // Add one to skip the `after` cursor.
         }
 
         $before = $args['before'] ?? null;
         $end_id = 5;
-        if ($before) {
+        if ($before is nonnull) {
             $end_id = Str\to_int($before) as nonnull;
         }
 
         $first = $args['first'] ?? null;
-        if ($first) {
+        if ($first is nonnull) {
             $end_id = Math\minva($end_id, $start_id + $first);
         }
 
         $last = $args['last'] ?? null;
-        if ($last) {
+        if ($last is nonnull) {
             $start_id = Math\maxva($start_id, $end_id - $last);
         }
 
