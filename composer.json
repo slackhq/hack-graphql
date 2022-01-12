@@ -12,14 +12,13 @@
     }
   ],
   "require": {
-    "hhvm/hsl": "^4.41.0",
     "facebook/hack-codegen": "^v4.3.12",
     "facebook/definition-finder": "^v2.13.5"
   },
   "require-dev": {
-    "hhvm/hhast": "^4.53.4",
-    "facebook/fbexpect": "^2.7.4",
-    "hhvm/hacktest": "^2.1.2"
+    "hhvm/hhast": "^v4.135.1",
+    "facebook/fbexpect": "^v2.8.0",
+    "hhvm/hacktest": "^v2.2.3"
   },
   "autoload": {
     "classmap": [
@@ -30,5 +29,10 @@
     "classmap": [
       "tests/"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
   }
 }
