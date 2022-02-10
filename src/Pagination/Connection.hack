@@ -89,7 +89,7 @@ abstract class Connection {
      * Whether a page exists before the `after` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasNextPage(string $start_cursor, string $end_cursor): Awaitable<bool> {
+    public async function hasNextPage(PaginationArgs $args, string $start_cursor, string $end_cursor): Awaitable<bool> {
         return C\count(await $this->fetch(shape('first' => 1, 'after' => $end_cursor))) > 0;
     }
 
@@ -97,7 +97,11 @@ abstract class Connection {
      * Whether a page exists after the `before` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasPreviousPage(string $start_cursor, string $end_cursor): Awaitable<bool> {
+    public async function hasPreviousPage(
+        PaginationArgs $args,
+        string $start_cursor,
+        string $end_cursor,
+    ): Awaitable<bool> {
         return C\count(await $this->fetch(shape('last' => 1, 'before' => $start_cursor))) > 0;
     }
 
@@ -167,10 +171,12 @@ abstract class Connection {
             $page_info['startCursor'] = C\firstx($edges)->getCursor();
             $page_info['endCursor'] = C\lastx($edges)->getCursor();
             $page_info['hasNextPage'] = await $this->hasNextPage(
+                $this->args,
                 $this->decodeCursor($page_info['startCursor']),
                 $this->decodeCursor($page_info['endCursor']),
             );
             $page_info['hasPreviousPage'] = await $this->hasPreviousPage(
+                $this->args,
                 $this->decodeCursor($page_info['startCursor']),
                 $this->decodeCursor($page_info['endCursor']),
             );
