@@ -1,6 +1,5 @@
 
 
-
 namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Vec};
@@ -90,17 +89,17 @@ abstract class Connection {
      * Whether a page exists before the `after` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasNextPage(string $after_cursor): Awaitable<bool> {
-		return C\count(await $this->fetch(shape('first' => 1, 'after' => $after_cursor))) > 0;
-	}
+    public async function hasNextPage(string $start_cursor, string $end_cursor): Awaitable<bool> {
+        return C\count(await $this->fetch(shape('first' => 1, 'after' => $end_cursor))) > 0;
+    }
 
     /**
      * Whether a page exists after the `before` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-	public async function hasPreviousPage(string $before_cursor): Awaitable<bool> {
-		return C\count(await $this->fetch(shape('last' => 1, 'before' => $before_cursor))) > 0;
-	}
+    public async function hasPreviousPage(string $start_cursor, string $end_cursor): Awaitable<bool> {
+        return C\count(await $this->fetch(shape('last' => 1, 'before' => $start_cursor))) > 0;
+    }
 
     //
     // Implementation Details
@@ -167,8 +166,14 @@ abstract class Connection {
         if (!C\is_empty($edges)) {
             $page_info['startCursor'] = C\firstx($edges)->getCursor();
             $page_info['endCursor'] = C\lastx($edges)->getCursor();
-            $page_info['hasNextPage'] = await $this->hasNextPage($this->decodeCursor($page_info['endCursor']));
-            $page_info['hasPreviousPage'] = await $this->hasPreviousPage($this->decodeCursor($page_info['startCursor']));
+            $page_info['hasNextPage'] = await $this->hasNextPage(
+                $this->decodeCursor($page_info['startCursor']),
+                $this->decodeCursor($page_info['endCursor']),
+            );
+            $page_info['hasPreviousPage'] = await $this->hasPreviousPage(
+                $this->decodeCursor($page_info['startCursor']),
+                $this->decodeCursor($page_info['endCursor']),
+            );
         }
 
         return shape('edges' => $edges, 'pageInfo' => $page_info);
