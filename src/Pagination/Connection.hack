@@ -94,15 +94,7 @@ abstract class Connection {
         string $start_cursor,
         string $end_cursor,
     ): Awaitable<bool> {
-        if (Shapes::keyExists($args, 'last') && !Shapes::keyExists($args, 'before')) {
-            return false;
-        }
-
-        if (
-            Shapes::keyExists($args, 'after') &&
-            !Shapes::keyExists($args, 'first') &&
-            !Shapes::keyExists($args, 'before')
-        ) {
+        if (!Shapes::keyExists($args, 'first') && !Shapes::keyExists($args, 'before')) {
             return false;
         }
 
@@ -118,15 +110,7 @@ abstract class Connection {
         string $start_cursor,
         string $end_cursor,
     ): Awaitable<bool> {
-        if (Shapes::keyExists($args, 'first') && !Shapes::keyExists($args, 'after')) {
-            return false;
-        }
-
-        if (
-            Shapes::keyExists($args, 'before') &&
-            !Shapes::keyExists($args, 'last') &&
-            !Shapes::keyExists($args, 'after')
-        ) {
+        if (!Shapes::keyExists($args, 'last') && !Shapes::keyExists($args, 'after')) {
             return false;
         }
 
