@@ -89,7 +89,27 @@ abstract class Connection {
      * Whether a page exists before the `after` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasNextPage(PaginationArgs $args, string $start_cursor, string $end_cursor): Awaitable<bool> {
+    protected async function hasNextPage(
+        PaginationArgs $args,
+        string $start_cursor,
+        string $end_cursor,
+    ): Awaitable<bool> {
+        if (
+            Shapes::keyExists($args, 'last') &&
+            !Shapes::keyExists($args, 'before') &&
+            !Shapes::keyExists($args, 'after')
+        ) {
+            return false;
+        }
+
+        if (
+            Shapes::keyExists($args, 'after') &&
+            !Shapes::keyExists($args, 'first') &&
+            !Shapes::keyExists($args, 'before')
+        ) {
+            return false;
+        }
+
         return C\count(await $this->fetch(shape('first' => 1, 'after' => $end_cursor))) > 0;
     }
 
@@ -97,11 +117,27 @@ abstract class Connection {
      * Whether a page exists after the `before` cursor, was such a cursor provided.
      * Can be overridden for efficiency.
      */
-    public async function hasPreviousPage(
+    protected async function hasPreviousPage(
         PaginationArgs $args,
         string $start_cursor,
         string $end_cursor,
     ): Awaitable<bool> {
+        if (
+            Shapes::keyExists($args, 'first') &&
+            !Shapes::keyExists($args, 'before') &&
+            !Shapes::keyExists($args, 'after')
+        ) {
+            return false;
+        }
+
+        if (
+            Shapes::keyExists($args, 'before') &&
+            !Shapes::keyExists($args, 'last') &&
+            !Shapes::keyExists($args, 'after')
+        ) {
+            return false;
+        }
+
         return C\count(await $this->fetch(shape('last' => 1, 'before' => $start_cursor))) > 0;
     }
 
