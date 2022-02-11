@@ -198,16 +198,12 @@ abstract class Connection {
         if (!C\is_empty($edges)) {
             $page_info['startCursor'] = C\firstx($edges)->getCursor();
             $page_info['endCursor'] = C\lastx($edges)->getCursor();
-            $page_info['hasNextPage'] = await $this->hasNextPage(
-                $this->args,
-                $this->decodeCursor($page_info['startCursor']),
-                $this->decodeCursor($page_info['endCursor']),
-            );
-            $page_info['hasPreviousPage'] = await $this->hasPreviousPage(
-                $this->args,
-                $this->decodeCursor($page_info['startCursor']),
-                $this->decodeCursor($page_info['endCursor']),
-            );
+            $decoded_start_cursor = $this->decodeCursor($page_info['startCursor']);
+            $decoded_end_cursor = $this->decodeCursor($page_info['endCursor']);
+            $page_info['hasNextPage'] =
+                await $this->hasNextPage($this->args, $decoded_start_cursor, $decoded_end_cursor);
+            $page_info['hasPreviousPage'] =
+                await $this->hasPreviousPage($this->args, $decoded_start_cursor, $decoded_end_cursor);
         }
 
         return shape('edges' => $edges, 'pageInfo' => $page_info);
