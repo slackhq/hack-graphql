@@ -57,6 +57,7 @@ abstract class Connection {
      *
      * This should be the Hack class over which you want to paginate.
      */
+     <<__Enforceable>>
     abstract const type TNode;
 
     /**
