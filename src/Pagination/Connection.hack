@@ -50,7 +50,6 @@ type PaginationArgs = shape(
  * @see https://relay.dev/graphql/connections.htm for more information about GraphQL pagination.
  * @see src/playground/UserConnection.hack for an example.
  */
- <<GraphQL\ObjectType('Connection', 'Connection')>>
 abstract class Connection {
 
     /**
