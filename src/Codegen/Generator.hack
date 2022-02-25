@@ -242,7 +242,11 @@ final class Generator {
         }
 
         foreach ($classish_objects as $class) {
-            if (\is_subclass_of($class->getName(), \Slack\GraphQL\Pagination\Connection::class)) {
+            $rc = new \ReflectionClass($class->getName());
+            if (
+                \is_subclass_of($class->getName(), \Slack\GraphQL\Pagination\Connection::class) &&
+                $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class)
+            ) {
                 invariant(
                     Str\ends_with($class->getName(), 'Connection'),
                     "All connection types must have names ending with `Connection`. `%s` does not.",
