@@ -50,6 +50,7 @@ type PaginationArgs = shape(
  * @see https://relay.dev/graphql/connections.htm for more information about GraphQL pagination.
  * @see src/playground/UserConnection.hack for an example.
  */
+ <<GraphQL\ObjectType('Connection', 'Connection')>>
 abstract class Connection {
 
     /**
@@ -57,6 +58,7 @@ abstract class Connection {
      *
      * This should be the Hack class over which you want to paginate.
      */
+     <<__Enforceable>>
     abstract const type TNode;
 
     /**
