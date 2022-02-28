@@ -1,5 +1,6 @@
 
 
+
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Str, Vec};
 
@@ -245,6 +246,7 @@ abstract final class UserMutationAttributes {
 }
 
 
+<<GraphQL\ObjectType('AlphabetConnection', 'AlphabetConnection')>>
 final class AlphabetConnection extends GraphQL\Pagination\ListConnection {
     const type TNode = string;
 

@@ -156,10 +156,8 @@ function unwrap_type(IO $io, string $hack_type, bool $nullable = false): (string
         return unwrap_type($io, Str\strip_prefix($hack_type, '?'), true);
     }
     if (Str\starts_with($hack_type, 'HH\vec<')) {
-        list($unwrapped, $suffix) = unwrap_type(
-            $io,
-            Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'),
-        );
+        list($unwrapped, $suffix) =
+            unwrap_type($io, Str\strip_prefix($hack_type, 'HH\vec<') |> Str\strip_suffix($$, '>'));
         return tuple($unwrapped, $suffix.($nullable ? '->nullable'.$io.'ListOf()' : '->nonNullable'.$io.'ListOf()'));
     }
     return tuple($hack_type, $nullable ? '::nullable'.$io.'()' : '::nonNullable()');

@@ -33,9 +33,8 @@ final class NullableOutputType<TInner as nonnull, TResolved> extends BaseType {
             return new GraphQL\ValidFieldResult(null);
         }
         $result = await $this->inner_type->resolveAsync($value, $parent_nodes, $context);
-        return $result is GraphQL\ValidFieldResult<_>
-            ? $result
-            : new GraphQL\ValidFieldResult(null, $result->getErrors());
+        return
+            $result is GraphQL\ValidFieldResult<_> ? $result : new GraphQL\ValidFieldResult(null, $result->getErrors());
     }
 
     public function resolveError(GraphQL\UserFacingError $error): GraphQL\ValidFieldResult<null> {

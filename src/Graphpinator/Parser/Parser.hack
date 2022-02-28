@@ -69,9 +69,8 @@ final class Parser {
             default:
                 foreach ($operations as $operation) {
                     if ($operation->getName() === null) {
-                        throw new \Graphpinator\Parser\Exception\OperationWithoutName(
-                            $locations[$operation->getName()],
-                        );
+                        throw
+                            new \Graphpinator\Parser\Exception\OperationWithoutName($locations[$operation->getName()]);
                     }
                 }
         }
@@ -352,13 +351,8 @@ final class Parser {
                 $default = $this->parseValue(true);
             }
 
-            $variables[$name] = new \Graphpinator\Parser\Variable\Variable(
-                $location,
-                $name,
-                $type,
-                $default,
-                $this->parseDirectives(),
-            );
+            $variables[$name] =
+                new \Graphpinator\Parser\Variable\Variable($location, $name, $type, $default, $this->parseDirectives());
         }
 
         $this->tokenizer->getNext();

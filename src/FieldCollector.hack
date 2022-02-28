@@ -106,10 +106,8 @@ final class FieldCollector {
             }
 
             try {
-                $arg_is_true = Types\BooleanType::nonNullable()->coerceNode(
-                    $arg->getValue(),
-                    $this->context->getVariableValues(),
-                );
+                $arg_is_true =
+                    Types\BooleanType::nonNullable()->coerceNode($arg->getValue(), $this->context->getVariableValues());
             } catch (UserFacingError $_) {
                 // This can only happen if the query wasn't validated or if variable values weren't coerced to the
                 // correct type at the beginning of execution.

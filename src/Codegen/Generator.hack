@@ -154,11 +154,8 @@ final class Generator {
     private static function classnameDict(dict<string, string> $dict): string {
         $lines = vec['dict['];
         foreach (Dict\sort_by_key($dict) as $key => $value) {
-            $lines[] = Str\format(
-                "  %s => %s::class,",
-                \var_export($key, true),
-                Str\strip_prefix($value, 'Slack\\GraphQL\\'),
-            );
+            $lines[] =
+                Str\format("  %s => %s::class,", \var_export($key, true), Str\strip_prefix($value, 'Slack\\GraphQL\\'));
         }
         $lines[] = ']';
         return Str\join($lines, "\n");
@@ -245,14 +242,21 @@ final class Generator {
             $rc = new \ReflectionClass($class->getName());
             if (
                 \is_subclass_of($class->getName(), \Slack\GraphQL\Pagination\Connection::class) &&
-                $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class)
+                $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) is nonnull
             ) {
                 invariant(
                     Str\ends_with($class->getName(), 'Connection'),
                     "All connection types must have names ending with `Connection`. `%s` does not.",
                     $class->getName(),
                 );
-                $objects = Vec\concat($objects, $this->getConnectionObjects($class, $class_fields[$class->getName()]));
+                $objects = Vec\concat(
+                    $objects,
+                    $this->getConnectionObjects(
+                        $class,
+                        $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class) as nonnull,
+                        $class_fields[$class->getName()],
+                    ),
+                );
             } elseif (C\contains_key($class_fields, $class->getName())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
@@ -271,12 +275,8 @@ final class Generator {
                         $hack_class_to_graphql_object,
                     );
                 } else if ($graphql_object is nonnull) {
-                    $objects[] = new ObjectBuilder(
-                        $graphql_object,
-                        $rc->getName(),
-                        $fields,
-                        $hack_class_to_graphql_interface,
-                    );
+                    $objects[] =
+                        new ObjectBuilder($graphql_object, $rc->getName(), $fields, $hack_class_to_graphql_interface);
                 }
             }
 
@@ -298,10 +298,8 @@ final class Generator {
                 if ($mutation_root_field is nonnull) {
                     $this->has_mutations = true;
 
-                    $mutation_fields[$mutation_root_field->getName()] = FieldBuilder::forRootField(
-                        $mutation_root_field,
-                        $rm,
-                    );
+                    $mutation_fields[$mutation_root_field->getName()] =
+                        FieldBuilder::forRootField($mutation_root_field, $rm);
                 }
             }
         }
@@ -335,6 +333,7 @@ final class Generator {
 
     private function getConnectionObjects(
         DefinitionFinder\ScannedClassish $class,
+        \Slack\GraphQL\ObjectType $object_type,
         vec<FieldBuilder> $additional_fields,
     ): vec<ObjectBuilder> {
         $rc = new \ReflectionClass($class->getName());
@@ -349,7 +348,12 @@ final class Generator {
             $rc->getName(),
         );
         return vec[
-            ObjectBuilder::forConnection($class->getName(), $type_info['gql_type'].'Edge', $additional_fields),
+            ObjectBuilder::forConnection(
+                $class->getName(),
+                $object_type,
+                $type_info['gql_type'].'Edge',
+                $additional_fields,
+            ),
             ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
         ];
     }

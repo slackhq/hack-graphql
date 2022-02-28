@@ -391,9 +391,8 @@ final class Tokenizer implements \HH\KeyedIterator<int, ?Token> {
 
         if ($this->source->getChar() === '-') {
             if (!$negative) {
-                throw new \Graphpinator\Exception\Tokenizer\NumericLiteralNegativeFraction(
-                    $this->source->getLocation(),
-                );
+                throw
+                    new \Graphpinator\Exception\Tokenizer\NumericLiteralNegativeFraction($this->source->getLocation());
             }
 
             $sign = '-';

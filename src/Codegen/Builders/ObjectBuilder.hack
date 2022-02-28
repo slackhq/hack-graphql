@@ -64,17 +64,12 @@ class ObjectBuilder extends CompositeBuilder {
 
     public static function forConnection(
         string $name,
+        \Slack\GraphQL\ObjectType $object_type,
         string $edge_name,
         vec<FieldBuilder> $additional_fields,
     ): ObjectBuilder {
-        // Remove namespace to generate a sane GQL name
-        // This means that connections in different namespaces can collide with each other;
-        // we could eventually fix that by merging the namespace and GQL name when
-        // generating the connection but doesn't seem worth it currently.
-        $gql_name = Str\split($name, '\\')
-            |> C\lastx($$);
         return new ObjectBuilder(
-            new \Slack\GraphQL\ObjectType($gql_name, $gql_name), // TODO: Description
+            $object_type,
             $name, // hack type
             Vec\concat(
                 vec[ // fields
