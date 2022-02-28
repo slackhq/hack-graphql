@@ -4,7 +4,12 @@
 use namespace Slack\GraphQL;
 use namespace HH\Lib\{Math, Str};
 
-final class UserConnection extends GraphQL\Pagination\Connection {
+// Assert that we skip generating type for connections which aren't
+// annotated with `ObjectType`.
+abstract class MyConnection extends GraphQL\Pagination\Connection {}
+
+<<GraphQL\ObjectType('UserConnection', 'Connection providing access to User objects')>>
+final class UserConnection extends MyConnection {
     const type TNode = User;
 
     public function __construct(private string $name_prefix = 'User') {}

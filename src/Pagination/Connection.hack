@@ -1,5 +1,6 @@
 
 
+
 namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Vec};
@@ -57,7 +58,6 @@ abstract class Connection {
      *
      * This should be the Hack class over which you want to paginate.
      */
-     <<__Enforceable>>
     abstract const type TNode;
 
     /**
@@ -177,7 +177,7 @@ abstract class Connection {
      * method with the pagination args.
      */
     <<__Memoize>>
-    final private async function paginate(): Awaitable<shape(
+    private async function paginate(): Awaitable<shape(
         'edges' => vec<Edge<this::TNode>>,
         'pageInfo' => PageInfo,
     )> {

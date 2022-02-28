@@ -16,6 +16,7 @@ namespace Foo {
         }
     }
 
+    <<GraphQL\ObjectType('FooConnection', 'FooConnection')>>
     final class FooConnection extends GraphQL\Pagination\Connection {
         const type TNode = FooObject;
 

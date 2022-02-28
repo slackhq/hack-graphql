@@ -11,7 +11,7 @@ abstract class NamedType extends BaseType implements INonNullableType {
     abstract const type THackType as nonnull;
     abstract const string NAME;
 
-    final private function __construct() {}
+    private function __construct() {}
 
     <<__Override>>
     final public function getName(): string {
