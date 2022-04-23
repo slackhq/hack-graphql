@@ -199,6 +199,15 @@
                     "possibleTypes": null
                 },
                 {
+                    "kind": "SCALAR",
+                    "name": "ChannelID",
+                    "fields": null,
+                    "inputFields": null,
+                    "interfaces": null,
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
                     "kind": "OBJECT",
                     "name": "Concrete",
                     "fields": [
@@ -2046,6 +2055,31 @@
                             "deprecationReason": null
                         },
                         {
+                            "name": "mutateChannel",
+                            "args": [
+                                {
+                                    "name": "channel",
+                                    "type": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "SCALAR",
+                                            "name": "ChannelID",
+                                            "ofType": null
+                                        }
+                                    },
+                                    "defaultValue": null
+                                }
+                            ],
+                            "type": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
+                                "ofType": null
+                            },
+                            "isDeprecated": false,
+                            "deprecationReason": null
+                        },
+                        {
                             "name": "nested_list_sum",
                             "args": [
                                 {
@@ -2157,7 +2191,7 @@
                                         "name": null,
                                         "ofType": {
                                             "kind": "SCALAR",
-                                            "name": "Int",
+                                            "name": "UserID",
                                             "ofType": null
                                         }
                                     },
@@ -2482,6 +2516,15 @@
                     ],
                     "inputFields": null,
                     "interfaces": [],
+                    "enumValues": null,
+                    "possibleTypes": null
+                },
+                {
+                    "kind": "SCALAR",
+                    "name": "UserID",
+                    "fields": null,
+                    "inputFields": null,
+                    "interfaces": null,
                     "enumValues": null,
                     "possibleTypes": null
                 },

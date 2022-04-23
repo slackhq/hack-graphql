@@ -18,9 +18,11 @@ const dict<string, classname<Types\LeafType>> BUILTIN_TYPES = dict[
  *   ?int      -> IntInputType::nullable()
  *   ?vec<int> -> IntInputType::nonNullable()->nullableListOf()
  */
-function input_type(string $hack_type): string {
+function input_type(string $hack_type, dict<string, classname<Types\NamedType>> $custom_types): string {
     list($unwrapped, $suffix) = unwrap_type(IO::INPUT, $hack_type);
-    $class = get_graphql_leaf_type($unwrapped) ?? get_input_object_type($unwrapped);
+    $class = get_graphql_leaf_type($unwrapped) ??
+        get_input_object_type($unwrapped) ??
+        get_custom_type($unwrapped, $custom_types);
     if ($class is null) {
         throw new \Error(
             'GraphQL\Field argument types must be scalar or be enums/input objects annnotated with a GraphQL '.
@@ -29,6 +31,14 @@ function input_type(string $hack_type): string {
         );
     }
     return Str\strip_prefix($class, 'Slack\\GraphQL\\').$suffix;
+}
+
+function get_custom_type(string $hack_type, dict<string, classname<Types\NamedType>> $custom_types): ?string {
+    $custom_type = $custom_types[$hack_type] ?? null;
+    if ($custom_type) {
+        return Str\format('\%s', $custom_type);
+    }
+    return $custom_type;
 }
 
 /**

@@ -1,6 +1,5 @@
 
 
-
 namespace Slack\GraphQL\Codegen;
 
 use namespace Slack\GraphQL\Types;
@@ -26,15 +25,18 @@ function hb(HackCodegenFactory $cg): HackBuilder {
 final class Generator {
     private HackCodegenFactory $cg;
     private bool $has_mutations = false;
+    private Context $ctx;
 
     const type TGeneratorConfig = shape(
         'output_directory' => string,
         'namespace' => string,
         ?'codegen_config' => IHackCodegenConfig,
+        ?'custom_types' => dict<string, classname<\Slack\GraphQL\Types\NamedType>>,
     );
 
     private function __construct(private MultiParser $parser, private self::TGeneratorConfig $config) {
         $this->cg = new HackCodegenFactory($config['codegen_config'] ?? new HackCodegenConfig());
+        $this->ctx = new Context($config['custom_types'] ?? dict[]);
     }
 
     private static async function init(
@@ -73,6 +75,10 @@ final class Generator {
             if ($object is TypeBuilder<_>) {
                 $types = self::add($types, $object->getGraphQLType(), $class->getName());
             }
+        }
+
+        foreach ($this->config['custom_types'] ?? dict[] as $_ => $type) {
+            $types = self::add($types, $type::NAME, Str\format('\%s', $type));
         }
 
         $this->generateFile($this->generateSchemaType($this->cg, $types));
@@ -195,14 +201,14 @@ final class Generator {
     private async function collectObjects(): Awaitable<vec<ITypeBuilder>> {
         $objects = vec[];
         $query_fields = dict[
-            '__schema' => FieldBuilder::introspectSchemaField(),
-            '__type' => FieldBuilder::introspectTypeField(),
+            '__schema' => FieldBuilder::introspectSchemaField($this->ctx),
+            '__type' => FieldBuilder::introspectTypeField($this->ctx),
         ];
         $mutation_fields = dict[];
 
         $classish_objects = $this->parser->getClassishObjects();
 
-        $field_resolver = new FieldResolver($classish_objects);
+        $field_resolver = new FieldResolver($this->ctx, $classish_objects);
         $class_fields = $field_resolver->resolveFields();
 
         $hack_class_to_graphql_interface = dict[];
@@ -229,12 +235,12 @@ final class Generator {
             $rt = new \ReflectionTypeAlias($type->getName());
             $graphql_input = $rt->getAttributeClass(\Slack\GraphQL\InputObjectType::class);
             if ($graphql_input is nonnull) {
-                $objects[] = new InputObjectBuilder($graphql_input, $rt);
+                $objects[] = new InputObjectBuilder($this->ctx, $graphql_input, $rt);
             }
 
             $graphql_output = $rt->getAttributeClass(\Slack\GraphQL\ObjectType::class);
             if ($graphql_output is nonnull) {
-                $objects[] = ObjectBuilder::fromTypeAlias($graphql_output, $rt);
+                $objects[] = ObjectBuilder::fromTypeAlias($this->ctx, $graphql_output, $rt);
             }
         }
 
@@ -269,14 +275,20 @@ final class Generator {
                 );
                 if ($graphql_interface is nonnull) {
                     $objects[] = new InterfaceBuilder(
+                        $this->ctx,
                         $graphql_interface,
                         $rc->getName(),
                         $fields,
                         $hack_class_to_graphql_object,
                     );
                 } else if ($graphql_object is nonnull) {
-                    $objects[] =
-                        new ObjectBuilder($graphql_object, $rc->getName(), $fields, $hack_class_to_graphql_interface);
+                    $objects[] = new ObjectBuilder(
+                        $this->ctx,
+                        $graphql_object,
+                        $rc->getName(),
+                        $fields,
+                        $hack_class_to_graphql_interface,
+                    );
                 }
             }
 
@@ -289,7 +301,8 @@ final class Generator {
                 $rm = new \ReflectionMethod($class->getName(), $method_name);
                 $query_root_field = $rm->getAttributeClass(\Slack\GraphQL\QueryRootField::class);
                 if ($query_root_field is nonnull) {
-                    $query_fields[$query_root_field->getName()] = FieldBuilder::forRootField($query_root_field, $rm);
+                    $query_fields[$query_root_field->getName()] =
+                        FieldBuilder::forRootField($this->ctx, $query_root_field, $rm);
                     continue;
                 }
 
@@ -299,7 +312,7 @@ final class Generator {
                     $this->has_mutations = true;
 
                     $mutation_fields[$mutation_root_field->getName()] =
-                        FieldBuilder::forRootField($mutation_root_field, $rm);
+                        FieldBuilder::forRootField($this->ctx, $mutation_root_field, $rm);
                 }
             }
         }
@@ -309,10 +322,11 @@ final class Generator {
             $rc = new \ReflectionClass($enum->getName());
             $enum_type = $rc->getAttributeClass(\Slack\GraphQL\EnumType::class);
             if ($enum_type is null) continue;
-            $objects[] = new EnumBuilder($enum_type, $enum->getName());
+            $objects[] = new EnumBuilder($this->ctx, $enum_type, $enum->getName());
         }
 
         $objects[] = new ObjectBuilder(
+            $this->ctx,
             new \Slack\GraphQL\ObjectType('Query', 'Query'),
             'Slack\\GraphQL\\Root',
             vec(Dict\sort_by_key($query_fields)),
@@ -321,6 +335,7 @@ final class Generator {
 
         if (!C\is_empty($mutation_fields)) {
             $objects[] = new ObjectBuilder(
+                $this->ctx,
                 new \Slack\GraphQL\ObjectType('Mutation', 'Mutation'),
                 'Slack\\GraphQL\\Root',
                 vec(Dict\sort_by_key($mutation_fields)),
@@ -349,12 +364,18 @@ final class Generator {
         );
         return vec[
             ObjectBuilder::forConnection(
+                $this->ctx,
                 $class->getName(),
                 $object_type,
                 $type_info['gql_type'].'Edge',
                 $additional_fields,
             ),
-            ObjectBuilder::forEdge($type_info['gql_type'], $type_info['hack_type'], $type_info['output_type']),
+            ObjectBuilder::forEdge(
+                $this->ctx,
+                $type_info['gql_type'],
+                $type_info['hack_type'],
+                $type_info['output_type'],
+            ),
         ];
     }
 }

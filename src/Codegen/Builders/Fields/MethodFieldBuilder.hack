@@ -80,7 +80,7 @@ class MethodFieldBuilder extends FieldBuilder {
     final protected function getArgumentInvocationString(Parameter $param): string {
         return Str\format(
             '%s->coerce%sNamedNode(%s, $args, $vars%s)',
-            input_type($param['type']),
+            input_type($param['type'], $this->ctx->getCustomTypes()),
             $param['is_optional'] ? 'Optional' : '',
             \var_export($param['name'], true),
             Shapes::keyExists($param, 'default_value') ? ', '.$param['default_value'] : '',

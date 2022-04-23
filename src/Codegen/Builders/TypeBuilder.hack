@@ -24,7 +24,7 @@ abstract class TypeBuilder<T as \Slack\GraphQL\__Private\GraphQLTypeInfo> {
 
     abstract const classname<\Slack\GraphQL\Types\BaseType> SUPERCLASS;
 
-    public function __construct(protected T $type_info, protected string $hack_type) {}
+    public function __construct(protected Context $ctx, protected T $type_info, protected string $hack_type) {}
 
     final public function getGraphQLType(): string {
         return $this->type_info->getType();

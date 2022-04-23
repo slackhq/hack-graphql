@@ -167,7 +167,8 @@ abstract final class UserQueryAttributes {
     }
 
     <<GraphQL\QueryRootField('user', 'Fetch a user by ID')>>
-    public static async function getUser(int $id): Awaitable<\User> {
+    public static async function getUser(user_id_t $id): Awaitable<\User> {
+        $id = user_id_to_int($id);
         return new \Human(shape('id' => $id, 'name' => 'User '.$id, 'team_id' => 1, 'is_active' => true));
     }
 
@@ -242,6 +243,11 @@ abstract final class UserMutationAttributes {
             'team_id' => $team?->getId() ?? 1,
             'roles' => $input['roles'] ?? vec[],
         ));
+    }
+
+    <<GraphQL\QueryRootField('mutateChannel', 'Update the channel')>>
+    public static function mutateChannel(Channel $channel): bool {
+        return true;
     }
 }
 

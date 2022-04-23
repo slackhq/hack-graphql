@@ -4,7 +4,7 @@
  * To re-generate this file run vendor/bin/hacktest
  *
  *
- * @generated SignedSource<<fa1ca424a98ff51976408a73d53305d4>>
+ * @generated SignedSource<<483338310fc52d714e54c4e4673f1a44>>
  */
 namespace Slack\GraphQL\Test\Generated;
 use namespace Slack\GraphQL;
@@ -31,6 +31,7 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
     'human',
     'introspection_test',
     'list_arg_test',
+    'mutateChannel',
     'nested_list_sum',
     'optional_field_test',
     'output_type_test',
@@ -263,6 +264,20 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
             Types\IntType::nonNullable()->nullableInputListOf()->nonNullableInputListOf()->nullableInputListOf()->coerceNamedNode('arg', $args, $vars),
           ),
         );
+      case 'mutateChannel':
+        return new GraphQL\FieldDefinition(
+          'mutateChannel',
+          Types\BooleanType::nullableOutput(),
+          dict[
+            'channel' => shape(
+              'name' => 'channel',
+              'type' => \ChannelInputType::nonNullable(),
+            ),
+          ],
+          async ($parent, $args, $vars) ==> \UserMutationAttributes::mutateChannel(
+            \ChannelInputType::nonNullable()->coerceNamedNode('channel', $args, $vars),
+          ),
+        );
       case 'nested_list_sum':
         return new GraphQL\FieldDefinition(
           'nested_list_sum',
@@ -319,11 +334,11 @@ final class Query extends \Slack\GraphQL\Types\ObjectType {
           dict[
             'id' => shape(
               'name' => 'id',
-              'type' => Types\IntType::nonNullable(),
+              'type' => \UserIdInputType::nonNullable(),
             ),
           ],
           async ($parent, $args, $vars) ==> await \UserQueryAttributes::getUser(
-            Types\IntType::nonNullable()->coerceNamedNode('id', $args, $vars),
+            \UserIdInputType::nonNullable()->coerceNamedNode('id', $args, $vars),
           ),
         );
       case 'viewer':
