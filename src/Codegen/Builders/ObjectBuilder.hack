@@ -17,12 +17,13 @@ class ObjectBuilder extends CompositeBuilder {
 
     <<__Override>>
     public function __construct(
+        Context $ctx,
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         vec<FieldBuilder> $fields,
         private dict<string, string> $hack_class_to_graphql_interface,
     ) {
-        parent::__construct($type_info, $hack_type, $fields);
+        parent::__construct($ctx, $type_info, $hack_type, $fields);
     }
 
     <<__Override>>
@@ -45,6 +46,7 @@ class ObjectBuilder extends CompositeBuilder {
     }
 
     public static function fromTypeAlias<T>(
+        Context $ctx,
         \Slack\GraphQL\ObjectType $type_info,
         \ReflectionTypeAlias $type_alias,
     ): ObjectBuilder {
@@ -55,39 +57,48 @@ class ObjectBuilder extends CompositeBuilder {
             TypeStructureKind::getNames()[$ts['kind']],
         );
         return new ObjectBuilder(
+            $ctx,
             $type_info,
             $type_alias->getName(),
-            Vec\map_with_key($ts['fields'], ($name, $ts) ==> FieldBuilder::fromShapeField($name, $ts)),
+            Vec\map_with_key($ts['fields'], ($name, $ts) ==> FieldBuilder::fromShapeField($ctx, $name, $ts)),
             dict[], // Objects generated from shapes cannot implement interfaces
         );
     }
 
     public static function forConnection(
+        Context $ctx,
         string $name,
         \Slack\GraphQL\ObjectType $object_type,
         string $edge_name,
         vec<FieldBuilder> $additional_fields,
     ): ObjectBuilder {
         return new ObjectBuilder(
+            $ctx,
             $object_type,
             $name, // hack type
             Vec\concat(
                 vec[ // fields
-                    new MethodFieldBuilder(shape(
-                        'name' => 'edges',
-                        'method_name' => 'getEdges',
-                        'output_type' => shape(
-                            'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
-                            'needs_await' => true,
+                    new MethodFieldBuilder(
+                        $ctx,
+                        shape(
+                            'name' => 'edges',
+                            'method_name' => 'getEdges',
+                            'output_type' => shape(
+                                'type' => $edge_name.'::nonNullable()->nullableOutputListOf()',
+                                'needs_await' => true,
+                            ),
+                            'parameters' => vec[],
                         ),
-                        'parameters' => vec[],
-                    )),
-                    new MethodFieldBuilder(shape(
-                        'name' => 'pageInfo',
-                        'method_name' => 'getPageInfo',
-                        'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
-                        'parameters' => vec[],
-                    )),
+                    ),
+                    new MethodFieldBuilder(
+                        $ctx,
+                        shape(
+                            'name' => 'pageInfo',
+                            'method_name' => 'getPageInfo',
+                            'output_type' => shape('type' => 'PageInfo::nullableOutput()', 'needs_await' => true),
+                            'parameters' => vec[],
+                        ),
+                    ),
                 ],
                 $additional_fields,
             ),
@@ -96,24 +107,36 @@ class ObjectBuilder extends CompositeBuilder {
     }
 
     // TODO: It should be possible to create user-defined edges which contain additional fields.
-    public static function forEdge(string $gql_type, string $hack_type, string $output_type): ObjectBuilder {
+    public static function forEdge(
+        Context $ctx,
+        string $gql_type,
+        string $hack_type,
+        string $output_type,
+    ): ObjectBuilder {
         $name = $gql_type.'Edge';
         return new ObjectBuilder(
+            $ctx,
             new \Slack\GraphQL\ObjectType($name, $gql_type.' Edge'), // TODO: Description
             'Slack\GraphQL\Pagination\Edge<'.$hack_type.'>', // hack type
             vec[ // fields
-                new MethodFieldBuilder(shape(
-                    'name' => 'node',
-                    'method_name' => 'getNode',
-                    'output_type' => shape('type' => $output_type.'::nullableOutput()'),
-                    'parameters' => vec[],
-                )),
-                new MethodFieldBuilder(shape(
-                    'name' => 'cursor',
-                    'method_name' => 'getCursor',
-                    'output_type' => shape('type' => 'Types\StringType::nullableOutput()'),
-                    'parameters' => vec[],
-                )),
+                new MethodFieldBuilder(
+                    $ctx,
+                    shape(
+                        'name' => 'node',
+                        'method_name' => 'getNode',
+                        'output_type' => shape('type' => $output_type.'::nullableOutput()'),
+                        'parameters' => vec[],
+                    ),
+                ),
+                new MethodFieldBuilder(
+                    $ctx,
+                    shape(
+                        'name' => 'cursor',
+                        'method_name' => 'getCursor',
+                        'output_type' => shape('type' => 'Types\StringType::nullableOutput()'),
+                        'parameters' => vec[],
+                    ),
+                ),
             ],
             dict[],
         );

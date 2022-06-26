@@ -23,12 +23,13 @@ abstract class FieldBuilder {
 
     // Constructors
 
-    public function __construct(protected this::TField $data) {}
+    public function __construct(protected Context $ctx, protected this::TField $data) {}
 
     /**
      * Construct a GraphQL field from a Hack method.
      */
     public static function fromReflectionMethod(
+        Context $ctx,
         \Slack\GraphQL\Field $field,
         \ReflectionMethod $rm,
         bool $is_root_field = false,
@@ -61,36 +62,43 @@ abstract class FieldBuilder {
         }
 
         if (returns_connection_type($rm)) {
-            return new ConnectionFieldBuilder($data);
+            return new ConnectionFieldBuilder($ctx, $data);
         } else {
-            return new MethodFieldBuilder($data);
+            return new MethodFieldBuilder($ctx, $data);
         }
     }
 
     /**
      * Construct a GraphQL field from a shape field.
      */
-    public static function fromShapeField<T>(string $name, TypeStructure<T> $ts): FieldBuilder {
-        return new ShapeFieldBuilder(shape(
-            'name' => $name,
-            'output_type' => output_type(type_structure_to_type_alias($ts), false),
-            'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
-        ));
+    public static function fromShapeField<T>(Context $ctx, string $name, TypeStructure<T> $ts): FieldBuilder {
+        return new ShapeFieldBuilder(
+            $ctx,
+            shape(
+                'name' => $name,
+                'output_type' => output_type(type_structure_to_type_alias($ts), false),
+                'is_optional' => Shapes::idx($ts, 'optional_shape_field') ?? false,
+            ),
+        );
     }
 
     /**
      * Construct a top-level GraphQL field.
      */
-    public static function forRootField(\Slack\GraphQL\Field $field, \ReflectionMethod $rm): FieldBuilder {
-        return FieldBuilder::fromReflectionMethod($field, $rm, true);
+    public static function forRootField(
+        Context $ctx,
+        \Slack\GraphQL\Field $field,
+        \ReflectionMethod $rm,
+    ): FieldBuilder {
+        return FieldBuilder::fromReflectionMethod($ctx, $field, $rm, true);
     }
 
-    public static function introspectSchemaField(): FieldBuilder {
-        return new IntrospectSchemaFieldBuilder();
+    public static function introspectSchemaField(Context $ctx): FieldBuilder {
+        return new IntrospectSchemaFieldBuilder($ctx);
     }
 
-    public static function introspectTypeField(): FieldBuilder {
-        return new IntrospectTypeFieldBuilder();
+    public static function introspectTypeField(Context $ctx): FieldBuilder {
+        return new IntrospectTypeFieldBuilder($ctx);
     }
 
     // Codegen
@@ -141,7 +149,7 @@ abstract class FieldBuilder {
 
                 $hb->addLinef("'name' => %s,", $argument_name);
 
-                $type = input_type($param['type']);
+                $type = input_type($param['type'], $this->ctx->getCustomTypes());
                 $hb->addLinef("'type' => %s,", $type);
 
                 $default_value = $param['default_value'] ?? null;

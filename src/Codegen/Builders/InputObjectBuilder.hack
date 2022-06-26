@@ -11,8 +11,12 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
 
     const classname<\Slack\GraphQL\Types\InputObjectType> SUPERCLASS = \Slack\GraphQL\Types\InputObjectType::class;
 
-    public function __construct(\Slack\GraphQL\InputObjectType $type_info, private \ReflectionTypeAlias $type_alias) {
-        parent::__construct($type_info, $type_alias->getName());
+    public function __construct(
+        Context $ctx,
+        \Slack\GraphQL\InputObjectType $type_info,
+        private \ReflectionTypeAlias $type_alias,
+    ) {
+        parent::__construct($ctx, $type_info, $type_alias->getName());
     }
 
     public function build(HackCodegenFactory $cg): CodegenClass {
@@ -36,7 +40,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
                 ->addParameter('KeyedContainer<arraykey, mixed> $fields')
                 ->setReturnType('this::THackType')
                 ->setBody(
-                    self::getFieldCoercionMethodBody(
+                    $this->getFieldCoercionMethodBody(
                         $cg,
                         $ts['fields'],
                         $field_name ==> Str\format('C\\contains_key($fields, %s)', $field_name),
@@ -49,7 +53,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
                 ->addParameter('dict<string, mixed> $vars')
                 ->setReturnType('this::THackType')
                 ->setBody(
-                    self::getFieldCoercionMethodBody(
+                    $this->getFieldCoercionMethodBody(
                         $cg,
                         $ts['fields'],
                         $field_name ==> Str\format('$this->hasValue(%s, $fields, $vars)', $field_name),
@@ -61,7 +65,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
                 ->addParameter('KeyedContainer<arraykey, mixed> $fields')
                 ->setReturnType('this::THackType')
                 ->setBody(
-                    self::getFieldCoercionMethodBody(
+                    $this->getFieldCoercionMethodBody(
                         $cg,
                         $ts['fields'],
                         $field_name ==> Str\format('C\\contains_key($fields, %s)', $field_name),
@@ -75,7 +79,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
     /**
      * Shared logic for coerceFieldValues(), coerceFieldNodes() and assertValidFieldValues()
      */
-    private static function getFieldCoercionMethodBody<T>(
+    private function getFieldCoercionMethodBody<T>(
         HackCodegenFactory $cg,
         KeyedContainer<string, TypeStructure<T>> $fields,
         (function(string): string) $get_if_condition,
@@ -94,7 +98,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             );
 
             $name_literal = \var_export($field_name, true);
-            $type = input_type(type_structure_to_type_alias($field_ts));
+            $type = input_type(type_structure_to_type_alias($field_ts), $this->ctx->getCustomTypes());
 
             if ($is_optional) {
                 $hb->startIfBlock($get_if_condition($name_literal));
@@ -127,7 +131,7 @@ class InputObjectBuilder extends InputTypeBuilder<\Slack\GraphQL\InputObjectType
             $hb->addLine('return shape(')->indent();
             $hb->addLinef("'name' => %s,", \var_export($field_name, true));
 
-            $type = input_type(type_structure_to_type_alias($field_ts));
+            $type = input_type(type_structure_to_type_alias($field_ts), $this->ctx->getCustomTypes());
             $hb->addLinef("'type' => %s,", $type);
             // TODO: description, defaultValue
             $hb->unindent()->addLine(');')->unindent();

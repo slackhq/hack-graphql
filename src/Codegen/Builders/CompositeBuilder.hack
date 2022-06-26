@@ -21,11 +21,12 @@ use type Facebook\HackCodegen\{
 abstract class CompositeBuilder extends OutputTypeBuilder<\Slack\GraphQL\__Private\CompositeType> {
 
     public function __construct(
+        Context $ctx,
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         protected vec<FieldBuilder> $fields,
     ) {
-        parent::__construct($type_info, $hack_type);
+        parent::__construct($ctx, $type_info, $hack_type);
     }
 
     public function build(HackCodegenFactory $cg): CodegenClass {

@@ -17,12 +17,13 @@ final class InterfaceBuilder extends CompositeBuilder {
 
     <<__Override>>
     public function __construct(
+        Context $ctx,
         \Slack\GraphQL\__Private\CompositeType $type_info,
         string $hack_type,
         vec<FieldBuilder> $fields,
         private dict<string, string> $hack_class_to_graphql_object,
     ) {
-        parent::__construct($type_info, $hack_type, $fields);
+        parent::__construct($ctx, $type_info, $hack_type, $fields);
     }
 
     <<__Override>>

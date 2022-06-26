@@ -23,6 +23,10 @@ abstract class FixtureTest extends \Facebook\HackTest\HackTest {
             shape(
                 'output_directory' => __DIR__.'/gen',
                 'namespace' => 'Slack\GraphQL\Test\Generated',
+                'custom_types' => dict[
+                    Channel::class => ChannelInputType::class,
+                    user_id_t::class => UserIdInputType::class,
+                ],
             ),
         );
     }
