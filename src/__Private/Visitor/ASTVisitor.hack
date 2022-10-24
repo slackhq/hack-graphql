@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\__Private;
 
 use namespace \Graphpinator\Parser;
@@ -58,11 +55,11 @@ abstract class ASTVisitor {
         $this->enter($node);
         if ($node is Parser\Field\Field) {
             $this->visitField($node);
-        } elseif ($node is Parser\FragmentSpread\InlineFragmentSpread) {
+        } else if ($node is Parser\FragmentSpread\InlineFragmentSpread) {
             $this->visitFragmentSpread($node);
-        } elseif ($node is Parser\Fragment\Fragment) {
+        } else if ($node is Parser\Fragment\Fragment) {
             $this->visitFragment($node);
-        } elseif ($node is Parser\Operation\Operation) {
+        } else if ($node is Parser\Operation\Operation) {
             $this->visitOperation($node);
         }
         $this->leave($node);
@@ -107,7 +104,7 @@ abstract class ASTVisitor {
             foreach ($node->getValue() as $value) {
                 $this->visitValue($value);
             }
-        } elseif ($node is Parser\Value\ObjectVal) {
+        } else if ($node is Parser\Value\ObjectVal) {
             foreach ($node->getValue() as $value) {
                 $this->visitValue($value);
             }
@@ -146,7 +143,7 @@ abstract class ASTVisitor {
         $this->enter($node);
         if ($node is Parser\FragmentSpread\NamedFragmentSpread) {
             $this->visitNamedFragmentSpread($node);
-        } elseif ($node is Parser\FragmentSpread\InlineFragmentSpread) {
+        } else if ($node is Parser\FragmentSpread\InlineFragmentSpread) {
             $this->visitInlineFragmentSpread($node);
         }
         $this->leave($node);

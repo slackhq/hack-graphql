@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\Pagination;
 
 use namespace HH\Lib\{C, Vec};
@@ -145,13 +142,13 @@ abstract class Connection {
             // We might relax this requirement at some point.
             // For now, handling both `first` and `last` at the same time is more trouble than it's worth.
             throw new GraphQL\UserFacingError('Only provide one of either "first" or "last".');
-        } elseif ($first is nonnull) {
+        } else if ($first is nonnull) {
             if ($first < 0) {
                 throw new GraphQL\UserFacingError('"first" must be a non-negative integer.');
             }
 
             $args['first'] = $first;
-        } elseif ($last is nonnull) {
+        } else if ($last is nonnull) {
             if ($last < 0) {
                 throw new GraphQL\UserFacingError('"last" must be a non-negative integer.');
             }

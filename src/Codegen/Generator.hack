@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\Codegen;
 
 use namespace Slack\GraphQL\Types;
@@ -257,7 +254,7 @@ final class Generator {
                         $class_fields[$class->getName()],
                     ),
                 );
-            } elseif (C\contains_key($class_fields, $class->getName())) {
+            } else if (C\contains_key($class_fields, $class->getName())) {
                 $rc = new \ReflectionClass($class->getName());
                 $fields = $class_fields[$class->getName()];
                 $graphql_interface = $rc->getAttributeClass(\Slack\GraphQL\InterfaceType::class);
