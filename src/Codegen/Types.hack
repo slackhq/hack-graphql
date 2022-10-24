@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\Codegen;
 
 use namespace HH\Lib\{C, Str};
@@ -61,7 +58,7 @@ function output_type(
     $class = get_output_type($unwrapped);
     if ($class is null) {
         throw new \Error('GraphQL\Field return types must be scalar or be classes annnotated with a GraphQL attribute');
-    } elseif (Str\starts_with($class, 'Slack\\GraphQL\\')) {
+    } else if (Str\starts_with($class, 'Slack\\GraphQL\\')) {
         $class = Str\strip_prefix($class, 'Slack\\GraphQL\\');
     } else {
         // Class is user-defined, strip off the namespace since the generated
@@ -125,7 +122,7 @@ function get_output_class(string $hack_type): ?string {
         $graphql_object = $rc->getAttributeClass(\Slack\GraphQL\ObjectType::class);
         if ($graphql_object) {
             return $graphql_object->getType();
-        } elseif (is_connection_type($rc)) {
+        } else if (is_connection_type($rc)) {
             return $rc->getName();
         }
 

@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\__Private;
 
 use namespace HH\Lib\Vec;
@@ -68,7 +65,7 @@ final class TypeInfo extends ASTVisitor {
         if ($node is Parser\Field\SelectionSet) {
             $named_type = $this->type_stack->peek()?->unwrapType();
             $this->parent_type_stack->push($named_type is Types\CompositeType ? $named_type : null);
-        } elseif ($node is Parser\Field\Field) {
+        } else if ($node is Parser\Field\Field) {
             $parent_type = $this->getParentType();
             $field_definition = null;
             $field_type = null;
@@ -80,7 +77,7 @@ final class TypeInfo extends ASTVisitor {
             }
             $this->field_def_stack->push($field_definition);
             $this->type_stack->push($field_type);
-        } elseif ($node is Parser\Operation\Operation) {
+        } else if ($node is Parser\Operation\Operation) {
             switch ($node->getType()) {
                 case \Graphpinator\Tokenizer\OperationType::QUERY:
                     $type = $this->schema->getQueryType();
@@ -97,7 +94,7 @@ final class TypeInfo extends ASTVisitor {
             $type_condition = $node->getTypeCond();
             $output_type = $type_condition ? $this->schema->getType($type_condition->getName()) : $this->getType();
             $this->type_stack->push($output_type is Types\IOutputType ? $output_type : null);
-        } elseif ($node is Parser\Value\ArgumentValue) {
+        } else if ($node is Parser\Value\ArgumentValue) {
             // TODO: Handle directives
             $arg_def = null;
             $arg_type = null;
@@ -117,16 +114,16 @@ final class TypeInfo extends ASTVisitor {
     public function leave(Parser\Node $node): void {
         if ($node is Parser\Field\SelectionSet) {
             $this->parent_type_stack->pop();
-        } elseif ($node is Parser\Field\Field) {
+        } else if ($node is Parser\Field\Field) {
             $this->field_def_stack->pop();
             $this->type_stack->pop();
-        } elseif (
+        } else if (
             $node is Parser\Operation\Operation ||
             $node is Parser\FragmentSpread\InlineFragmentSpread ||
             $node is Parser\Fragment\Fragment
         ) {
             $this->type_stack->pop();
-        } elseif ($node is Parser\Value\ArgumentValue) {
+        } else if ($node is Parser\Value\ArgumentValue) {
             $this->argument = null;
             $this->default_value_stack->pop();
             $this->input_type_stack->pop();

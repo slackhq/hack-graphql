@@ -1,6 +1,3 @@
-
-
-
 namespace Slack\GraphQL\__Private;
 
 use namespace HH\Lib\C;
@@ -21,13 +18,13 @@ final class DependencyInfo extends ASTVisitor {
             if ($node is Parser\Fragment\Fragment) {
                 $this->fragments[$node->getName()] = $node;
             }
-        } elseif ($node is Parser\FragmentSpread\NamedFragmentSpread) {
+        } else if ($node is Parser\FragmentSpread\NamedFragmentSpread) {
             $parent = $this->current_parent;
             if ($parent is nonnull) {
                 $this->named_spreads[$parent->getId()] ??= vec[];
                 $this->named_spreads[$parent->getId()][] = $node;
             }
-        } elseif ($node is Parser\Value\VariableRef) {
+        } else if ($node is Parser\Value\VariableRef) {
             $parent = $this->current_parent;
             if ($parent is nonnull) {
                 $this->variables[$parent->getId()] ??= vec[];
